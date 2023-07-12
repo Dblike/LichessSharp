@@ -1,8 +1,19 @@
 ﻿namespace Lichess.NET.Games
 {
-    public class SearchPlayerGameOptions
+    public class SearchPlayerGameOptions : IQueryParams
     {
-        public static SearchPlayerGameOptions Default { get; } = new SearchPlayerGameOptions();
+        private static SearchPlayerGameOptions Default { get; } = new SearchPlayerGameOptions();
+        public static Dictionary<string, string?> QueryParams { get; } = new()
+        {
+            { "variant", Default.Variant.ToString().ToLower() },
+            { "fen", Default.Fen },
+            { "play", Default.Play },
+            { "speeds", string.Join(",", Default.Speeds.Select(speed => speed.ToString().ToLower())) },
+            { "since", Default.Since },
+            { "until", Default.Until },
+            { "moves", Default.Moves.ToString() },
+            { "recentGames", Default.RecentGames.ToString() }
+        };
 
         /// <summary>
         ///     Variant

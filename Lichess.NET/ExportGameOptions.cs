@@ -1,8 +1,19 @@
 ﻿namespace Lichess.NET
 {
-    public class ExportGameOptions
+    public class ExportGameOptions : IQueryParams
     {
         public static ExportGameOptions Default { get; } = new ExportGameOptions();
+        public static Dictionary<string, string?> QueryParams { get; } = new()
+        {
+            { "moves", Default.IncludeMoves.ToString() },
+            { "pgnInJson", Default.IncludePgnInJson.ToString() },
+            { "tags", Default.IncludePgnTags.ToString() },
+            { "clocks", Default.IncludeClockStatus.ToString() },
+            { "evals", Default.IncludeEvals.ToString() },
+            { "accuracy", Default.IncludeAccuracy.ToString() },
+            { "opening", Default.IncludeOpening.ToString() },
+            { "literate", Default.IncludeAnnotations.ToString() }
+        };
 
         /// <summary>
         ///     Include the PGN moves.

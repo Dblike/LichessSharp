@@ -2,7 +2,7 @@
 {
     public class ExportGameOptions
     {
-        public static ExportGameOptions Default { get; } = new ExportGameOptions();
+        private static ExportGameOptions Default { get; } = new ExportGameOptions();
         public static Dictionary<string, string> QueryParams { get; } = new()
         {
             { "moves", Default.IncludeMoves.ToString() },

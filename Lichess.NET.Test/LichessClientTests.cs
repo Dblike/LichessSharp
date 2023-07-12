@@ -32,7 +32,7 @@ public class LichessClientTests
     public async Task ExportGamesByIdsAsync()
     {
         var gamesIds = new List<string> { "TJxUmbWK", "4OtIh2oh", "ILwozzRZ" };
-        var games = await _client.ExportGamesByIdsAsync(gamesIds, new Games.ExportGameOptions());
+        var games = await _client.ExportGamesByIdsAsync(gamesIds);
 
         Assert.True(games.Count == gamesIds.Count);
     }

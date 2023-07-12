@@ -2,8 +2,6 @@
 using Lichess.NET.Exceptions;
 using Lichess.NET.Games;
 
-using Microsoft.AspNetCore.WebUtilities;
-
 namespace Lichess.NET;
 
 public class LichessClient : BaseClient
@@ -32,7 +30,7 @@ public class LichessClient : BaseClient
         }
 
         var query = $"https://lichess.org/game/export/{gameId}";
-        var queryParams = options != null ? new Dictionary<string, string>
+        var queryParams = options != null ? new()
         {
             { "moves", options.IncludeMoves.ToString() },
             { "pgnInJson", options.IncludePgnInJson.ToString() },
@@ -43,6 +41,7 @@ public class LichessClient : BaseClient
             { "opening", options.IncludeOpening.ToString() },
             { "literate", options.IncludeAnnotations.ToString() }
         } : ExportGameOptions.QueryParams;
+
         query = QueryHelpers.AddQueryString(query, queryParams);
 
         return await SendAndRetryAsync<GameExplorerResult>(HttpMethod.Get, query);
@@ -58,7 +57,7 @@ public class LichessClient : BaseClient
     public async Task<GameExplorerResult> ExportOngoingGameByUserAsync(string username, ExportGameOptions? options = null)
     {
         var query = $"https://lichess.org/api/user/{username}/current-game";
-        var queryParams = options != null ? new Dictionary<string, string>
+        var queryParams = options != null ? new()
         {
             { "moves", options.IncludeMoves.ToString() },
             { "pgnInJson", options.IncludePgnInJson.ToString() },
@@ -69,6 +68,7 @@ public class LichessClient : BaseClient
             { "opening", options.IncludeOpening.ToString() },
             { "literate", options.IncludeAnnotations.ToString() }
         } : ExportGameOptions.QueryParams;
+
         query = QueryHelpers.AddQueryString(query, queryParams);
 
         return await SendAndRetryAsync<GameExplorerResult>(HttpMethod.Get, query);
@@ -77,21 +77,21 @@ public class LichessClient : BaseClient
     public async IAsyncEnumerable<List<GameExplorerResult>> ExportGamesByUserAsync(string username, ExportGamesByUserOptions? options = null)
     {
         var query = $"https://lichess.org/api/games/user/{username}";
-        Dictionary<string, string> queryParams;
+        Dictionary<string, string?> queryParams;
 
         if (options != null)
         {
-            queryParams = new Dictionary<string, string>
+            queryParams = new()
             {
-                { "moves", options?.IncludeMoves.ToString() ?? ExportGamesByUserOptions.Default.IncludeMoves.ToString() },
-                { "pgnInJson", options?.IncludePgnInJson.ToString() ?? ExportGamesByUserOptions.Default.IncludePgnInJson.ToString() },
-                { "tags", options?.IncludePgnTags.ToString() ?? ExportGamesByUserOptions.Default.IncludePgnTags.ToString() },
-                { "clocks", options?.IncludeClockStatus.ToString() ?? ExportGamesByUserOptions.Default.IncludeClockStatus.ToString() },
-                { "evals", options?.IncludeEvals.ToString() ?? ExportGamesByUserOptions.Default.IncludeEvals.ToString() },
-                { "accuracy", options?.IncludeAccuracy.ToString() ?? ExportGamesByUserOptions.Default.IncludeAccuracy.ToString() },
-                { "opening", options?.IncludeOpening.ToString() ?? ExportGamesByUserOptions.Default.IncludeOpening.ToString() },
-                { "literate", options?.IncludeAnnotations.ToString() ?? ExportGamesByUserOptions.Default.IncludeAnnotations.ToString() },
-            };
+                { "moves", options.IncludeMoves.ToString() },
+                { "pgnInJson", options.IncludePgnInJson.ToString() },
+                { "tags", options.IncludePgnTags.ToString() },
+                { "clocks", options.IncludeClockStatus.ToString() },
+                { "evals", options.IncludeEvals.ToString() },
+                { "accuracy", options.IncludeAccuracy.ToString() },
+                { "opening", options.IncludeOpening.ToString() },
+                { "literate", options.IncludeAnnotations.ToString() },
+            };  
 
             if (options.Since != null)
             {
@@ -167,7 +167,7 @@ public class LichessClient : BaseClient
     public async Task<List<GameExplorerResult>> ExportGamesByIdsAsync(List<string> gameIds, ExportGameOptions? options = null)
     {
         var query = $"https://lichess.org/api/games/export/_ids";
-        var queryParams = options != null ? new Dictionary<string, string>
+        var queryParams = options != null ? new Dictionary<string, string?>
         {
             { "moves", options.IncludeMoves.ToString() },
             { "pgnInJson", options.IncludePgnInJson.ToString() },
@@ -259,10 +259,8 @@ public class LichessClient : BaseClient
     /// </returns>
     public async Task<OpeningExplorerResult> SearchMasterGames(SearchMasterGameOptions? options = null)
     {
-        options ??= SearchMasterGameOptions.Default;
-
         var query = $"{OpeningExplorerUrl}/masters";
-        var queryParams = options != null ? new Dictionary<string, string>
+        var queryParams = options != null ? new()
         {
             { "fen", options.Fen },
             { "play", options.Play },
@@ -271,6 +269,7 @@ public class LichessClient : BaseClient
             { "moves", options.Moves.ToString() },
             { "topGames", options.TopGames.ToString() }
         } : SearchMasterGameOptions.QueryParams;
+
         query = QueryHelpers.AddQueryString(query, queryParams);
 
         return await SendAndRetryAsync<OpeningExplorerResult>(HttpMethod.Get, query);
@@ -287,10 +286,8 @@ public class LichessClient : BaseClient
     /// </returns>
     public async Task<OpeningExplorerResult> SearchLichessGames(SearchLichessGameOptions? options = null)
     {
-        options ??= SearchLichessGameOptions.Default;
-
         var query = $"{OpeningExplorerUrl}/lichess";
-        var queryParams = options != null ? new Dictionary<string, string>
+        var queryParams = options != null ? new()
         {
             { "variant", options.Variant.ToString().ToLower() },
             { "fen", options.Fen },
@@ -304,6 +301,7 @@ public class LichessClient : BaseClient
             { "recentGames", options.RecentGames.ToString() },
             { "history", options.IncludeHistory.ToString().ToLower() },
         } : SearchLichessGameOptions.QueryParams;
+
         query = QueryHelpers.AddQueryString(query, queryParams);
 
         return await SendAndRetryAsync<OpeningExplorerResult>(HttpMethod.Get, query);
@@ -322,13 +320,15 @@ public class LichessClient : BaseClient
     /// </returns>
     public async Task<OpeningExplorerResult> SearchPlayerGames(string playerId, Color color, SearchPlayerGameOptions? options = null)
     {
-        options ??= SearchPlayerGameOptions.Default;
-
         var query = $"{OpeningExplorerUrl}/player";
-        var queryParams = new Dictionary<string, string>
+        var queryParams = new Dictionary<string, string?>()
         {
             { "player", playerId },
-            { "color", color.ToString().ToLower() },
+            { "color", color.ToString().ToLower() }
+        };
+
+        var additionalParams = options != null ? new()
+        {
             { "variant", options.Variant.ToString().ToLower() },
             { "fen", options.Fen },
             { "play", options.Play },
@@ -337,7 +337,9 @@ public class LichessClient : BaseClient
             { "until", options.Until },
             { "moves", options.Moves.ToString() },
             { "recentGames", options.RecentGames.ToString() }
-        };
+        } : SearchPlayerGameOptions.QueryParams;
+
+        queryParams = queryParams.Union(queryParams).ToDictionary(pair => pair.Key, pair => pair.Value);
         query = QueryHelpers.AddQueryString(query, queryParams);
 
         return await SendAndRetryAsync<OpeningExplorerResult>(HttpMethod.Get, query);

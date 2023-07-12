@@ -1,9 +1,9 @@
 ﻿namespace Lichess.NET.Games
 {
-    public class SearchMasterGameOptions
+    public class SearchMasterGameOptions : IQueryParams
     {
         public static SearchMasterGameOptions Default { get; } = new SearchMasterGameOptions();
-        public static Dictionary<string, string> QueryParams { get; } = new()
+        public static Dictionary<string, string?> QueryParams { get; } = new()
         {
             { "fen", Default.Fen },
             { "play", Default.Play },

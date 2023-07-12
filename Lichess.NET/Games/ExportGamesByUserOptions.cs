@@ -1,9 +1,9 @@
 ﻿namespace Lichess.NET.Games
 {
-    public class ExportGamesByUserOptions
+    public class ExportGamesByUserOptions : IQueryParams
     {
-        public static ExportGamesByUserOptions Default { get; } = new ExportGamesByUserOptions();
-        public static Dictionary<string, string> QueryParams { get; } = new()
+        private static ExportGamesByUserOptions Default { get; } = new ExportGamesByUserOptions();
+        public static Dictionary<string, string?> QueryParams { get; } = new()
         {
             { "moves", Default.IncludeMoves.ToString() },
             { "pgnInJson", Default.IncludePgnInJson.ToString() },
