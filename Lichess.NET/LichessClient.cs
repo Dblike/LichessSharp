@@ -2,6 +2,8 @@
 using Lichess.NET.Exceptions;
 using Lichess.NET.Games;
 
+using Microsoft.AspNetCore.WebUtilities;
+
 namespace Lichess.NET;
 
 public class LichessClient : BaseClient
@@ -227,6 +229,9 @@ public class LichessClient : BaseClient
     //StreamGameMovesAsync
     //ImportGameAsync - NeedO OAuth2
 
+    //Users
+    //Relations
+    //Games
     //TV
     //Puzzles
     //Teams
@@ -254,6 +259,8 @@ public class LichessClient : BaseClient
     /// </returns>
     public async Task<OpeningExplorerResult> SearchMasterGames(SearchMasterGameOptions? options = null)
     {
+        options ??= SearchMasterGameOptions.Default;
+
         var query = $"{OpeningExplorerUrl}/masters";
         var queryParams = options != null ? new Dictionary<string, string>
         {
@@ -280,6 +287,8 @@ public class LichessClient : BaseClient
     /// </returns>
     public async Task<OpeningExplorerResult> SearchLichessGames(SearchLichessGameOptions? options = null)
     {
+        options ??= SearchLichessGameOptions.Default;
+
         var query = $"{OpeningExplorerUrl}/lichess";
         var queryParams = options != null ? new Dictionary<string, string>
         {
