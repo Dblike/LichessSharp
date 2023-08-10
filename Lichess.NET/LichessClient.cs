@@ -18,14 +18,36 @@ public class LichessClient : BaseClient
 
     #region Account - OAuth2
 
+    // GetMyProfile
+    // GetMyEmailAddress
+    // GetMyPreferences
+    // GetMyKidModeStatus
+    // SetMyKidModeStatus
+
     #endregion
     #region Users
+
+    // GetRealTimeUsersStatus
+    // GetAllTopTen
+    // GetOneLeaderboard
+    // GetUserPublicData
+    // GetRatingHistoryByUser
+    // GetPerformanceStatsByUser
+    // GetUserActivity
+    // GetUsersByIds
+    // GetMembersOfTeam
+    // GetLiveStreamers
+    // GetCrossTable
+    // AutocompleteUsernames
+    // AddNoteForUser
+    // GetNotesByUser
 
     #endregion
     #region Relations - OAuth2
 
-    #endregion
-    #region Users
+    // GetUsersFollowed
+    // FollowPlayer
+    // UnfollowPlayer
 
     #endregion
     #region Relations - OAuth2
@@ -249,66 +271,153 @@ public class LichessClient : BaseClient
     #endregion
     #region TV
 
-    
+    // GetCurrentTvGames
+    // StreamCurrentTvGame
+    // GetBestOngoingGamesOfTvChannel
 
     #endregion
     #region Puzzles
 
-    
+    // GetDailyPuzzle
+    // GetPuzzleById
+    // GetPuzzleActivity
+    // GetPuzzleDashboard
+    // GetStormDashboardByPlayer
+    // CreateAndJoinPuzzleRace
 
     #endregion
     #region Teams
 
-    
+    // GetTeamSwissTournaments
+    // GetTeam
+    // GetPopularTeams
+    // GetTeamsByPlayer
+    // SearchTeams
+    // GetMembersOfTeam
+    // GetTeamArenaTournaments
+    // JoinTeam
+    // LeaveTeam
+    // GetJoinRequests
+    // AcceptJoinRequest
+    // DeclineJoinRequest
+    // KickUserFromTeam
+    // MessageAllMembers
 
     #endregion
     #region Board - OAuth2
 
-    
+    // StreamIncomingEvents
+    // CreateSeek
+    // StreamBoardState
+    // MakeMove
+    // WriteInChat
+    // FetchGameChat
+    // AbortGame
+    // ResignGame
+    // HandleDrawOffer
+    // HandleTakebackOffer
+    // ClaimVictory
+    // BerserkTournamentGame
 
     #endregion
     #region Bot - OAuth2
 
-    
+    // StreamIncomingEvents
+    // GetOnlineBots
+    // UpgradeToBotAccount
+    // StreamBotState
+    // MakeBotMove
+    // WriteInChat
+    // FetchGameChat
+    // AbortGame
+    // ResignGame
 
     #endregion
     #region Challenges - OAuth2
 
-    
+    // ListChallenges
+    // CreateChallenges
+    // AcceptChallenges
+    // DeclineChallenges
+    // CancelChallenge
+    // OpenEndedChallenge
+    // StartGameClock
+    // AddTimeToOpponentClock
+    // AdminChallengeTokens
 
     #endregion
     #region Bulk pairings - OAuth2
-    
+
+    // ViewUpcomingBulkPairings
+    // CreateBulkPairing
+    // ManuallyStartClocks
+    // CancelBulkPairing
 
     #endregion
     #region Arena tournaments
 
-    
+    // GetCurrentTournaments
+    // CreateNewArenaTournament
+    // GetInfoAboutArenaTournament
+    // UpdateArenaTournament
+    // JoinArenaTournament
+    // PauseOrLeaveArenaTournament
+    // TerminateArenaTournament
+    // ExportGamesOfArenaTournament
+    // GetResults
+    // GetTeamStanding
+    // GetTournamentsByUser
+    // GetTeamTournaments
 
     #endregion
     #region Swiss tournaments
 
-    
+    // GetCurrentTournaments
+    // CreateNewArenaTournament
+    // GetInfoAboutArenaTournament
+    // UpdateArenaTournament
+    // JoinArenaTournament
+    // PauseOrLeaveArenaTournament
+    // TerminateArenaTournament
+    // ExportGamesOfArenaTournament
+    // GetResults
+    // GetTeamStanding
+    // GetTournamentsByUser
+    // GetTeamTournaments
 
     #endregion
     #region Simuls
 
-    
+    // GetCurrentSimuls
 
     #endregion
     #region Studies
 
-    
+    // ExportOneChapter
+    // ExportAllChapters
+    // StudyMetadata
+    // ExportAllStudies
+    // ListStudiesByUser
 
     #endregion
     #region Messaging - OAuth2
 
-    
+    // SendPrivateMessage
 
     #endregion
     #region Broadcasts
 
-    
+    // GetOfficialBroadcasts
+    // CreateBroadcastTournament
+    // GetBroadcastTournament
+    // UpdateBroadcastTournament
+    // CreateBroadcastRound
+    // GetBroadcastRound
+    // UpdateBroadcastRound
+    // PushPgnToBroadcastRound
+    // StreamOngoingBroadcast
+    // ExportRound
+    // ExportAllRounds
 
     #endregion
     #region Analysis
@@ -329,6 +438,15 @@ public class LichessClient : BaseClient
     #endregion
     #region ExternalEngine - OAuth2
     
+    // ListExternalEngines
+    // CreateExternalEngine
+    // GetExternalEngine
+    // UpdateExternalEngine
+    // DeleteExternalEngine
+    // AnalyzeWithExternalEngine
+    // AcquireAnalysisRequest
+    // AnswerAnalysisRequest
+
     #endregion
     #region OpeningExpolorer
     /// <summary>
@@ -446,7 +564,10 @@ public class LichessClient : BaseClient
     #endregion
     #region OAuth
 
-    
+    // RequestAuthCode
+    // ObtainAccessToken
+    // RevokeAccessToken
+    // TestMultipleAuthTokens
 
     #endregion
 }
