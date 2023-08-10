@@ -1,9 +1,9 @@
-﻿namespace Lichess.NET.Games
+﻿namespace Lichess.NET.Options.Games
 {
-    public class ExportGamesByUserOptions : IQueryParams
+    public class ExportGameOptions
     {
-        private static ExportGamesByUserOptions Default { get; } = new ExportGamesByUserOptions();
-        public static Dictionary<string, string?> QueryParams { get; } = new()
+        private static ExportGameOptions Default { get; } = new ExportGameOptions();
+        public static Dictionary<string, string> QueryParams { get; } = new()
         {
             { "moves", Default.IncludeMoves.ToString() },
             { "pgnInJson", Default.IncludePgnInJson.ToString() },
@@ -14,47 +14,6 @@
             { "opening", Default.IncludeOpening.ToString() },
             { "literate", Default.IncludeAnnotations.ToString() }
         };
-
-        /// <summary>
-        ///     Include only games from this month or later
-        /// </summary>
-        public int? Since { get; set; }
-
-        /// <summary>
-        ///     Include only games from this month or earlier
-        /// </summary>
-        public int? Until { get; set; }
-
-        /// <summary>
-        ///     How many games to download. Leave empty to download all games.
-        /// </summary>
-        public int? MaxGames { get; set; }
-
-        /// <summary>
-        ///     [Filter] Only games played against this opponent
-        /// </summary>
-        public string? Vs { get; set; }
-
-        /// <summary>
-        ///     [Filter] Only rated (true) or casual (false) game
-        /// </summary>
-        public bool? IncludeOnlyRated { get; set; }
-
-        /// <summary>
-        ///     [Filter] Only games in these speeds or variants.
-        ///     Multiple perf types can be specified, separated by a comma.
-        /// </summary>
-        public string? PerfType { get; set; }
-
-        /// <summary>
-        ///     [Filter] Only games played as this color.
-        /// </summary>
-        public Color? IncludeOnlyColor { get; set; }
-
-        /// <summary>
-        ///     [Filter] Only games with or without a computer analysis available
-        /// </summary>
-        public bool? IncludeOnlyAnalyzed { get; set; }
 
         /// <summary>
         ///     Include the PGN moves.

@@ -2,6 +2,6 @@
 {
     public interface IQueryParams
     {
-        static Dictionary<string, string?>? QueryParams { get; }
+        static IDictionary<string, string?>? QueryParams { get; }
     }
 }

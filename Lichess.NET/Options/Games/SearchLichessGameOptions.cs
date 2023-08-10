@@ -1,18 +1,21 @@
-﻿namespace Lichess.NET.Games
+﻿namespace Lichess.NET.Options.Games
 {
-    public class SearchPlayerGameOptions : IQueryParams
+    public class SearchLichessGameOptions : IQueryParams
     {
-        private static SearchPlayerGameOptions Default { get; } = new SearchPlayerGameOptions();
+        public static SearchLichessGameOptions Default { get; } = new SearchLichessGameOptions();
         public static Dictionary<string, string?> QueryParams { get; } = new()
         {
-            { "variant", Default.Variant.ToString().ToLower() },
+            { "variant", Default.Variant.ToString() },
             { "fen", Default.Fen },
             { "play", Default.Play },
             { "speeds", string.Join(",", Default.Speeds.Select(speed => speed.ToString().ToLower())) },
+            { "ratings", string.Join(",", Default.Ratings.Select(rating => rating.ToString().ToLower())) },
             { "since", Default.Since },
             { "until", Default.Until },
             { "moves", Default.Moves.ToString() },
-            { "recentGames", Default.RecentGames.ToString() }
+            { "topGames", Default.TopGames.ToString() },
+            { "recentGames", Default.RecentGames.ToString() },
+            { "history", Default.IncludeHistory.ToString().ToLower() },
         };
 
         /// <summary>
@@ -42,9 +45,9 @@
         public Speed[] Speeds { get; set; } = Array.Empty<Speed>();
 
         /// <summary>
-        ///     Comma separated list of modes
+        ///     Comma separated list of ratings groups to filter by. Each group ranges from its value to the next higher group in the enum (0 from 0 to 999, 1000 from 1000 to 1199, ..., 2500 from 2500 to any rating above).
         /// </summary>
-        public Mode[] Modes { get; set; } = Array.Empty<Mode>();
+        public Rating[] Ratings { get; set; } = Array.Empty<Rating>();
 
         /// <summary>
         ///     Include only games from this month or later
@@ -62,20 +65,55 @@
         public int Moves { get; set; } = 12;
 
         /// <summary>
-        ///     Number of recent games to display. Maximum number of games is 8.
+        ///     Number of top games to display. Maximum number of games is 4.
         /// </summary>
-        public int RecentGames { get; set; } = 8;
+        public int TopGames { get; set; } = 4;
+
+        /// <summary>
+        ///     Number of recent games to display. Maximum number of games is 4.
+        /// </summary>
+        public int RecentGames { get; set; } = 4;
+
+        /// <summary>
+        ///     Optionally retrieve history
+        /// </summary>
+        public bool IncludeHistory { get; set; } = false;
     }
 
-    public enum Color
+    public enum Variant
     {
-        White,
-        Black
+        Standard,
+        Chess960,
+        Crazyhouse,
+        Antichess,
+        Atomic,
+        Horde,
+        KingOfTheHill,
+        RacingKings,
+        ThreeCheck,
+        FromPosition
     }
 
-    public enum Mode
+    public enum Speed
     {
-        Casual,
-        Rated
+        UltraBullet,
+        Bullet,
+        Blitz,
+        Rapid,
+        Classical,
+        Correspondence
+    }
+
+    public enum Rating
+    {
+        ELO0,
+        ELO1000,
+        ELO1200,
+        ELO1400,
+        ELO1600,
+        ELO1800,
+        ELO2000,
+        ELO2200,
+        ELO2500
     }
 }

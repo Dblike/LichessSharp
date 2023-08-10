@@ -1,4 +1,4 @@
-﻿namespace Lichess.NET.Games
+﻿namespace Lichess.NET.Options.Games
 {
     public class SearchMasterGameOptions : IQueryParams
     {

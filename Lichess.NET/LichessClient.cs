@@ -1,17 +1,39 @@
 ﻿using Lichess.NET.Entities;
 using Lichess.NET.Exceptions;
-using Lichess.NET.Games;
+using Lichess.NET.Options.Analysis;
+using Lichess.NET.Options.Games;
 
 namespace Lichess.NET;
 
 public class LichessClient : BaseClient
 {
+    private const string LichessApiUrl = "https://lichess.org/api";
+    private const string AccountUrl = "https://lichess.org/account/preferences/game-display";
+    private const string UsersUrl = "https://lichess.org/player";
+    private const string GamesUrl = "https://lichess.org/games";
+    private const string TvUrl = "https://lichess.org/tv";
     private const string OpeningExplorerUrl = "https://explorer.lichess.ovh";
+    private const string AnalysisUrl = "https://lichess.org/analysis";
+    private const string TablebaseUrl = "https://tablebase.lichess.ovh";
 
-    //Account - need OAuth2
-    //Users
-    //Relations - need OAuth2
-    //Games
+    #region Account - OAuth2
+
+    #endregion
+    #region Users
+
+    #endregion
+    #region Relations - OAuth2
+
+    #endregion
+    #region Users
+
+    #endregion
+    #region Relations - OAuth2
+
+
+
+    #endregion
+    #region Games
     /// <summary>
     ///     Download one game in either PGN or JSON format.
     ///     Ongoing games have their last 3 moves omitted after move 5, as to prevent cheat bots from using this API.
@@ -91,7 +113,7 @@ public class LichessClient : BaseClient
                 { "accuracy", options.IncludeAccuracy.ToString() },
                 { "opening", options.IncludeOpening.ToString() },
                 { "literate", options.IncludeAnnotations.ToString() },
-            };  
+            };
 
             if (options.Since != null)
             {
@@ -224,30 +246,91 @@ public class LichessClient : BaseClient
             yield return game;
         }
     }
+    #endregion
+    #region TV
 
-    //GetOngoingGamesAsync - Need OAuth2
-    //StreamGameMovesAsync
-    //ImportGameAsync - NeedO OAuth2
+    
 
-    //Users
-    //Relations
-    //Games
-    //TV
-    //Puzzles
-    //Teams
-    //Board
-    //Bot
-    //Challenges
-    //Bulk pairings
-    //Arena tournaments
-    //Swiss tournaments
-    //Simuls
-    //Studies
-    //Messaging
-    //Broadcasting
-    //Analysis
-    //External engine
-    //Opening Explorer
+    #endregion
+    #region Puzzles
+
+    
+
+    #endregion
+    #region Teams
+
+    
+
+    #endregion
+    #region Board - OAuth2
+
+    
+
+    #endregion
+    #region Bot - OAuth2
+
+    
+
+    #endregion
+    #region Challenges - OAuth2
+
+    
+
+    #endregion
+    #region Bulk pairings - OAuth2
+    
+
+    #endregion
+    #region Arena tournaments
+
+    
+
+    #endregion
+    #region Swiss tournaments
+
+    
+
+    #endregion
+    #region Simuls
+
+    
+
+    #endregion
+    #region Studies
+
+    
+
+    #endregion
+    #region Messaging - OAuth2
+
+    
+
+    #endregion
+    #region Broadcasts
+
+    
+
+    #endregion
+    #region Analysis
+    public async Task<OpeningExplorerResult> CloudEvaluation(CloudEvaluationOptions? options = null)
+    {
+        var query = $"{AnalysisUrl}/api/cloud-eval";
+        var queryParams = options != null ? new()
+        {
+            { "multiPv", options.MultiPv.ToString() },
+            { "variant", options.Variant.ToString() }
+        } : SearchMasterGameOptions.QueryParams;
+
+        query = QueryHelpers.AddQueryString(query, queryParams);
+
+        return await SendAndRetryAsync<OpeningExplorerResult>(HttpMethod.Get, query);
+    }
+
+    #endregion
+    #region ExternalEngine - OAuth2
+    
+    #endregion
+    #region OpeningExpolorer
     /// <summary>
     ///     Search Master games.
     /// </summary>
@@ -339,11 +422,31 @@ public class LichessClient : BaseClient
             { "recentGames", options.RecentGames.ToString() }
         } : SearchPlayerGameOptions.QueryParams;
 
-        queryParams = queryParams.Union(queryParams).ToDictionary(pair => pair.Key, pair => pair.Value);
+        queryParams = queryParams.Union(additionalParams).ToDictionary(pair => pair.Key, pair => pair.Value);
         query = QueryHelpers.AddQueryString(query, queryParams);
 
         return await SendAndRetryAsync<OpeningExplorerResult>(HttpMethod.Get, query);
     }
-    //Tablebase
-    //OAuth
+    #endregion
+    #region Tablebase
+    public async Task<TablebaseResult> LookupTablebasePosition(string fen, Variant variant)
+    {
+        var query = TablebaseUrl;
+
+        query += variant switch
+        {
+            Variant.Standard => "/standard",
+            Variant.Atomic => "/atomic",
+            Variant.Antichess => "/antichess",
+            _ => throw new ArgumentOutOfRangeException(nameof(variant), variant, null),
+        };
+
+        return await SendAndRetryAsync<TablebaseResult>(HttpMethod.Get, $"{query}/{fen}");
+    }
+    #endregion
+    #region OAuth
+
+    
+
+    #endregion
 }
