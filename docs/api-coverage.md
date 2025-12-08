@@ -6,8 +6,8 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Status | Count | APIs |
 |--------|-------|------|
-| **Implemented** | 9 APIs (42 endpoints) | Account, Users, Relations, Games, TV, Puzzles, Analysis, Opening Explorer, Tablebase |
-| **Planned** | 10 APIs | Teams, Board, Bot, Challenges, Bulk Pairings, Arena, Swiss, Simuls, Studies, Messaging, Broadcasts |
+| **Implemented** | 12 APIs (72 endpoints) | Account, Users, Relations, Games, TV, Puzzles, Analysis, Opening Explorer, Tablebase, Challenges, Board, Bot |
+| **Planned** | 7 APIs | Teams, Bulk Pairings, Arena, Swiss, Simuls, Studies, Messaging, Broadcasts |
 
 ## Legend
 
@@ -95,41 +95,49 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Endpoint | Status | Method |
 |----------|--------|--------|
-| Stream events | Planned | `Board.StreamEventsAsync()` |
-| Stream game state | Planned | `Board.StreamGameAsync()` |
-| Make a move | Planned | `Board.MakeMoveAsync()` |
-| Write in chat | Planned | `Board.WriteChatAsync()` |
-| Abort game | Planned | `Board.AbortAsync()` |
-| Resign game | Planned | `Board.ResignAsync()` |
-| Handle draw | Planned | `Board.HandleDrawOfferAsync()` |
-| Handle takeback | Planned | `Board.HandleTakebackAsync()` |
-| Claim victory | Planned | `Board.ClaimVictoryAsync()` |
-| Seek game | Planned | `Board.SeekAsync()` |
+| Stream incoming events | Implemented | `Board.StreamEventsAsync()` |
+| Stream game state | Implemented | `Board.StreamGameAsync()` |
+| Make a move | Implemented | `Board.MakeMoveAsync()` |
+| Fetch chat | Implemented | `Board.GetChatAsync()` |
+| Write in chat | Implemented | `Board.WriteChatAsync()` |
+| Abort game | Implemented | `Board.AbortAsync()` |
+| Resign game | Implemented | `Board.ResignAsync()` |
+| Handle draw | Implemented | `Board.HandleDrawAsync()` |
+| Handle takeback | Implemented | `Board.HandleTakebackAsync()` |
+| Claim victory | Implemented | `Board.ClaimVictoryAsync()` |
+| Berserk a game | Implemented | `Board.BerserkAsync()` |
+| Create a seek | Implemented | `Board.SeekAsync()` |
 
 ## Bot API
 
 | Endpoint | Status | Method |
 |----------|--------|--------|
-| Upgrade to bot | Planned | `Bot.UpgradeAccountAsync()` |
-| Stream events | Planned | `Bot.StreamEventsAsync()` |
-| Stream game state | Planned | `Bot.StreamGameAsync()` |
-| Make a move | Planned | `Bot.MakeMoveAsync()` |
-| Write in chat | Planned | `Bot.WriteChatAsync()` |
-| Abort game | Planned | `Bot.AbortAsync()` |
-| Resign game | Planned | `Bot.ResignAsync()` |
-| Get online bots | Planned | `Bot.GetOnlineBotsAsync()` |
+| Upgrade to bot | Implemented | `Bot.UpgradeAccountAsync()` |
+| Stream incoming events | Implemented | `Bot.StreamEventsAsync()` |
+| Stream game state | Implemented | `Bot.StreamGameAsync()` |
+| Make a move | Implemented | `Bot.MakeMoveAsync()` |
+| Fetch chat | Implemented | `Bot.GetChatAsync()` |
+| Write in chat | Implemented | `Bot.WriteChatAsync()` |
+| Abort game | Implemented | `Bot.AbortAsync()` |
+| Resign game | Implemented | `Bot.ResignAsync()` |
+| Handle draw | Implemented | `Bot.HandleDrawAsync()` |
+| Handle takeback | Implemented | `Bot.HandleTakebackAsync()` |
+| Get online bots | Implemented | `Bot.GetOnlineBotsAsync()` |
 
 ## Challenges API
 
 | Endpoint | Status | Method |
 |----------|--------|--------|
-| List challenges | Planned | `Challenges.GetPendingAsync()` |
-| Create challenge | Planned | `Challenges.CreateAsync()` |
-| Accept challenge | Planned | `Challenges.AcceptAsync()` |
-| Decline challenge | Planned | `Challenges.DeclineAsync()` |
-| Cancel challenge | Planned | `Challenges.CancelAsync()` |
-| Challenge AI | Planned | `Challenges.ChallengeAiAsync()` |
-| Open challenge | Planned | `Challenges.CreateOpenAsync()` |
+| List pending challenges | Implemented | `Challenges.GetPendingAsync()` |
+| Show a challenge | Implemented | `Challenges.ShowAsync()` |
+| Create a challenge | Implemented | `Challenges.CreateAsync()` |
+| Accept a challenge | Implemented | `Challenges.AcceptAsync()` |
+| Decline a challenge | Implemented | `Challenges.DeclineAsync()` |
+| Cancel a challenge | Implemented | `Challenges.CancelAsync()` |
+| Challenge the AI | Implemented | `Challenges.ChallengeAiAsync()` |
+| Open-ended challenge | Implemented | `Challenges.CreateOpenAsync()` |
+| Start clocks | Implemented | `Challenges.StartClocksAsync()` |
+| Add time to opponent's clock | Implemented | `Challenges.AddTimeAsync()` |
 
 ## Analysis API
 
@@ -241,22 +249,22 @@ This section outlines the recommended order for implementing remaining APIs base
 - ~~Read-only, no authentication required~~
 - ~~Streaming patterns already established in Games API~~
 
-### Phase 2: Game Play (High Value, Medium Complexity)
+### Phase 2: Game Play (High Value, Medium Complexity) - COMPLETED
 
-**Challenges API** - 9 endpoints
-- Core functionality for initiating games
-- Required for Board/Bot APIs
-- Mix of authenticated read/write operations
+**Challenges API** - 10 endpoints ✅
+- ~~Core functionality for initiating games~~
+- ~~Required for Board/Bot APIs~~
+- ~~Mix of authenticated read/write operations~~
 
-**Board API** - 10 endpoints
-- Physical board and third-party client support
-- Long-lived streaming connections
-- Real-time move submission
+**Board API** - 12 endpoints ✅
+- ~~Physical board and third-party client support~~
+- ~~Long-lived streaming connections~~
+- ~~Real-time move submission~~
 
-**Bot API** - 8 endpoints
-- Engine-assisted play
-- Similar patterns to Board API
-- Requires bot account upgrade
+**Bot API** - 11 endpoints ✅
+- ~~Engine-assisted play~~
+- ~~Similar patterns to Board API~~
+- ~~Requires bot account upgrade~~
 
 ### Phase 3: Social & Competition (Medium Value, Medium Complexity)
 

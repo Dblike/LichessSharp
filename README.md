@@ -7,7 +7,7 @@ A fully-featured .NET client library for the [Lichess API](https://lichess.org/a
 
 ## Features
 
-- **9 API areas fully implemented** with 42+ endpoints (Account, Users, Relations, Games, TV, Puzzles, Analysis, Opening Explorer, Tablebase)
+- **12 API areas fully implemented** with 72+ endpoints (Account, Users, Relations, Games, TV, Puzzles, Analysis, Opening Explorer, Tablebase, Challenges, Board, Bot)
 - Async-first design with `CancellationToken` support on all methods
 - Streaming support via `IAsyncEnumerable<T>` for real-time NDJSON data
 - Strong typing with comprehensive models and enums
@@ -84,10 +84,10 @@ await foreach (var evt in client.Tv.StreamCurrentGameAsync())
 | Opening Explorer | ✅ Implemented | Masters, Lichess, and player databases |
 | Tablebase | ✅ Implemented | Standard, Atomic, Antichess tablebases |
 | TV | ✅ Implemented | TV channels, streams, and channel games |
+| Challenges | ✅ Implemented | Create, accept, decline challenges, AI, open challenges |
+| Board | ✅ Implemented | Play games from external boards/apps |
+| Bot | ✅ Implemented | Bot account management and game play |
 | Teams | 🔜 Planned | Team management |
-| Board | 🔜 Planned | Physical board API |
-| Bot | 🔜 Planned | Bot account API |
-| Challenges | 🔜 Planned | Send/receive challenges |
 | Bulk Pairings | 🔜 Planned | Bulk game creation |
 | Arena Tournaments | 🔜 Planned | Arena management |
 | Swiss Tournaments | 🔜 Planned | Swiss management |
