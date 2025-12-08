@@ -106,3 +106,75 @@ catch (LichessAuthorizationException ex)
     Console.WriteLine($"Missing scope: {ex.RequiredScope}");
 }
 ```
+
+## Running Authenticated Tests
+
+The library includes integration tests that require authentication. To run these tests:
+
+### 1. Create a Test Token
+
+1. Go to [lichess.org/account/oauth/token](https://lichess.org/account/oauth/token)
+2. Create a token with the following scopes for full test coverage:
+   - `email:read`
+   - `preference:read`
+   - `preference:write`
+   - `follow:read`
+   - `follow:write`
+   - `challenge:read`
+   - `challenge:write`
+   - `challenge:bulk`
+   - `msg:write`
+   - `team:read`
+   - `team:write`
+   - `study:read`
+   - `study:write`
+
+### 2. Set the Environment Variable
+
+```bash
+# Linux/macOS
+export LICHESS_TEST_TOKEN="lip_your_test_token_here"
+
+# Windows (Command Prompt)
+set LICHESS_TEST_TOKEN=lip_your_test_token_here
+
+# Windows (PowerShell)
+$env:LICHESS_TEST_TOKEN = "lip_your_test_token_here"
+```
+
+### 3. Run the Tests
+
+```bash
+# Run all tests (authenticated tests will be skipped without token)
+dotnet test
+
+# Run only authenticated tests
+dotnet test --filter "Category=Authenticated"
+
+# Run only unauthenticated integration tests
+dotnet test --filter "Category=Integration&Category!=Authenticated"
+
+# Skip all integration tests (unit tests only)
+dotnet test --filter "Category!=Integration"
+```
+
+### Test Categories
+
+| Category | Description | Requires Token |
+|----------|-------------|----------------|
+| `Integration` | All integration tests (live API) | Some |
+| `Authenticated` | Tests requiring authentication | Yes |
+
+### CI/CD Configuration
+
+For GitHub Actions, add the token as a repository secret:
+
+```yaml
+# .github/workflows/tests.yml
+- name: Run Integration Tests
+  env:
+    LICHESS_TEST_TOKEN: ${{ secrets.LICHESS_TEST_TOKEN }}
+  run: dotnet test --filter "Category=Integration"
+```
+
+For local development, consider using a `.env` file (not committed) with a tool like `dotenv`.
