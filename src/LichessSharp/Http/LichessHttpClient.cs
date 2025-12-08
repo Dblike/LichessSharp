@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Headers;
+using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using LichessSharp.Exceptions;
@@ -184,32 +185,58 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         HttpContent? content,
         CancellationToken cancellationToken)
     {
-        var retryCount = 0;
-        var maxRetries = _options.AutoRetryOnRateLimit ? _options.MaxRateLimitRetries : 0;
+        var rateLimitRetryCount = 0;
+        var transientRetryCount = 0;
+        var maxRateLimitRetries = _options.AutoRetryOnRateLimit ? _options.MaxRateLimitRetries : 0;
+        var maxTransientRetries = _options.EnableTransientRetry ? _options.MaxTransientRetries : 0;
 
         while (true)
         {
-            using var request = new HttpRequestMessage(method, endpoint);
+            HttpResponseMessage response;
 
-            if (content != null)
+            try
             {
-                request.Content = content;
+                using var request = new HttpRequestMessage(method, endpoint);
+
+                if (content != null)
+                {
+                    request.Content = content;
+                }
+
+                _logger.LogDebug("Sending {Method} request to {Endpoint}", method, endpoint);
+
+                response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex) when (!cancellationToken.IsCancellationRequested &&
+                                       transientRetryCount < maxTransientRetries &&
+                                       IsTransientException(ex))
+            {
+                transientRetryCount++;
+                var delay = CalculateTransientRetryDelay(transientRetryCount);
+
+                _logger.LogWarning(
+                    ex,
+                    "Transient failure on {Method} {Endpoint}. Waiting {Delay} before retry {RetryCount}/{MaxRetries}",
+                    method,
+                    endpoint,
+                    delay,
+                    transientRetryCount,
+                    maxTransientRetries);
+
+                await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
+                continue;
             }
 
-            _logger.LogDebug("Sending {Method} request to {Endpoint}", method, endpoint);
-
-            var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
-
-            if (response.StatusCode == HttpStatusCode.TooManyRequests && retryCount < maxRetries)
+            if (response.StatusCode == HttpStatusCode.TooManyRequests && rateLimitRetryCount < maxRateLimitRetries)
             {
-                retryCount++;
+                rateLimitRetryCount++;
                 var retryAfter = GetRetryAfter(response);
 
                 _logger.LogWarning(
                     "Rate limited. Waiting {RetryAfter} before retry {RetryCount}/{MaxRetries}",
                     retryAfter,
-                    retryCount,
-                    maxRetries);
+                    rateLimitRetryCount,
+                    maxRateLimitRetries);
 
                 await Task.Delay(retryAfter, cancellationToken).ConfigureAwait(false);
                 continue;
@@ -227,34 +254,60 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         string acceptHeader,
         CancellationToken cancellationToken)
     {
-        var retryCount = 0;
-        var maxRetries = _options.AutoRetryOnRateLimit ? _options.MaxRateLimitRetries : 0;
+        var rateLimitRetryCount = 0;
+        var transientRetryCount = 0;
+        var maxRateLimitRetries = _options.AutoRetryOnRateLimit ? _options.MaxRateLimitRetries : 0;
+        var maxTransientRetries = _options.EnableTransientRetry ? _options.MaxTransientRetries : 0;
 
         while (true)
         {
-            using var request = new HttpRequestMessage(method, endpoint);
-            request.Headers.Accept.Clear();
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptHeader));
+            HttpResponseMessage response;
 
-            if (content != null)
+            try
             {
-                request.Content = content;
+                using var request = new HttpRequestMessage(method, endpoint);
+                request.Headers.Accept.Clear();
+                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptHeader));
+
+                if (content != null)
+                {
+                    request.Content = content;
+                }
+
+                _logger.LogDebug("Sending {Method} request to {Endpoint} with Accept: {Accept}", method, endpoint, acceptHeader);
+
+                response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex) when (!cancellationToken.IsCancellationRequested &&
+                                       transientRetryCount < maxTransientRetries &&
+                                       IsTransientException(ex))
+            {
+                transientRetryCount++;
+                var delay = CalculateTransientRetryDelay(transientRetryCount);
+
+                _logger.LogWarning(
+                    ex,
+                    "Transient failure on {Method} {Endpoint}. Waiting {Delay} before retry {RetryCount}/{MaxRetries}",
+                    method,
+                    endpoint,
+                    delay,
+                    transientRetryCount,
+                    maxTransientRetries);
+
+                await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
+                continue;
             }
 
-            _logger.LogDebug("Sending {Method} request to {Endpoint} with Accept: {Accept}", method, endpoint, acceptHeader);
-
-            var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
-
-            if (response.StatusCode == HttpStatusCode.TooManyRequests && retryCount < maxRetries)
+            if (response.StatusCode == HttpStatusCode.TooManyRequests && rateLimitRetryCount < maxRateLimitRetries)
             {
-                retryCount++;
+                rateLimitRetryCount++;
                 var retryAfter = GetRetryAfter(response);
 
                 _logger.LogWarning(
                     "Rate limited. Waiting {RetryAfter} before retry {RetryCount}/{MaxRetries}",
                     retryAfter,
-                    retryCount,
-                    maxRetries);
+                    rateLimitRetryCount,
+                    maxRateLimitRetries);
 
                 await Task.Delay(retryAfter, cancellationToken).ConfigureAwait(false);
                 continue;
@@ -271,34 +324,60 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         HttpContent? content,
         CancellationToken cancellationToken)
     {
-        var retryCount = 0;
-        var maxRetries = _options.AutoRetryOnRateLimit ? _options.MaxRateLimitRetries : 0;
+        var rateLimitRetryCount = 0;
+        var transientRetryCount = 0;
+        var maxRateLimitRetries = _options.AutoRetryOnRateLimit ? _options.MaxRateLimitRetries : 0;
+        var maxTransientRetries = _options.EnableTransientRetry ? _options.MaxTransientRetries : 0;
 
         while (true)
         {
-            using var request = new HttpRequestMessage(method, absoluteUrl);
-            request.Headers.Accept.Clear();
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpResponseMessage response;
 
-            if (content != null)
+            try
             {
-                request.Content = content;
+                using var request = new HttpRequestMessage(method, absoluteUrl);
+                request.Headers.Accept.Clear();
+                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                if (content != null)
+                {
+                    request.Content = content;
+                }
+
+                _logger.LogDebug("Sending {Method} request to {Url}", method, absoluteUrl);
+
+                response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex) when (!cancellationToken.IsCancellationRequested &&
+                                       transientRetryCount < maxTransientRetries &&
+                                       IsTransientException(ex))
+            {
+                transientRetryCount++;
+                var delay = CalculateTransientRetryDelay(transientRetryCount);
+
+                _logger.LogWarning(
+                    ex,
+                    "Transient failure on {Method} {Url}. Waiting {Delay} before retry {RetryCount}/{MaxRetries}",
+                    method,
+                    absoluteUrl,
+                    delay,
+                    transientRetryCount,
+                    maxTransientRetries);
+
+                await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
+                continue;
             }
 
-            _logger.LogDebug("Sending {Method} request to {Url}", method, absoluteUrl);
-
-            var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
-
-            if (response.StatusCode == HttpStatusCode.TooManyRequests && retryCount < maxRetries)
+            if (response.StatusCode == HttpStatusCode.TooManyRequests && rateLimitRetryCount < maxRateLimitRetries)
             {
-                retryCount++;
+                rateLimitRetryCount++;
                 var retryAfter = GetRetryAfter(response);
 
                 _logger.LogWarning(
                     "Rate limited. Waiting {RetryAfter} before retry {RetryCount}/{MaxRetries}",
                     retryAfter,
-                    retryCount,
-                    maxRetries);
+                    rateLimitRetryCount,
+                    maxRateLimitRetries);
 
                 await Task.Delay(retryAfter, cancellationToken).ConfigureAwait(false);
                 continue;
@@ -393,5 +472,73 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         }
 
         return content.Length > 200 ? content[..200] : content;
+    }
+
+    /// <summary>
+    /// Determines if an exception represents a transient failure that should be retried.
+    /// </summary>
+    private static bool IsTransientException(Exception ex)
+    {
+        return ex switch
+        {
+            // HttpRequestException covers DNS failures, connection refused, etc.
+            HttpRequestException httpEx => IsTransientHttpRequestException(httpEx),
+
+            // TaskCanceledException with TimeoutException inner exception indicates a timeout
+            TaskCanceledException { InnerException: TimeoutException } => true,
+
+            // Socket exceptions are transient network issues
+            SocketException => true,
+
+            _ => false
+        };
+    }
+
+    /// <summary>
+    /// Determines if an HttpRequestException represents a transient failure.
+    /// </summary>
+    private static bool IsTransientHttpRequestException(HttpRequestException ex)
+    {
+        // Check inner exception for socket/network errors
+        if (ex.InnerException is SocketException)
+        {
+            return true;
+        }
+
+        // DNS resolution failures, connection refused, etc.
+        // HttpRequestError was added in .NET 7 and is non-nullable
+        return ex.HttpRequestError switch
+        {
+            HttpRequestError.NameResolutionError => true,
+            HttpRequestError.ConnectionError => true,
+            HttpRequestError.SecureConnectionError => true,
+            HttpRequestError.HttpProtocolError => true,
+            HttpRequestError.ResponseEnded => true,
+            HttpRequestError.Unknown => true, // Treat unknown as potentially transient
+            _ => false
+        };
+    }
+
+    /// <summary>
+    /// Calculates the delay for a transient retry with exponential backoff and jitter.
+    /// </summary>
+    private TimeSpan CalculateTransientRetryDelay(int retryAttempt)
+    {
+        // Exponential backoff: baseDelay * 2^(retryAttempt-1)
+        var exponentialDelay = _options.TransientRetryBaseDelay.TotalMilliseconds * Math.Pow(2, retryAttempt - 1);
+
+        // Add jitter (0-25% of the delay) to prevent thundering herd
+        var jitter = exponentialDelay * Random.Shared.NextDouble() * 0.25;
+
+        var totalDelayMs = exponentialDelay + jitter;
+
+        // Cap at max delay
+        var maxDelayMs = _options.TransientRetryMaxDelay.TotalMilliseconds;
+        if (totalDelayMs > maxDelayMs)
+        {
+            totalDelayMs = maxDelayMs;
+        }
+
+        return TimeSpan.FromMilliseconds(totalDelayMs);
     }
 }

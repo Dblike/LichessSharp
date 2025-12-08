@@ -11,7 +11,7 @@ A fully-featured .NET client library for the [Lichess API](https://lichess.org/a
 - Async-first design with `CancellationToken` support on all methods
 - Streaming support via `IAsyncEnumerable<T>` for real-time NDJSON data
 - Strong typing with comprehensive models and enums
-- Built-in rate limiting and automatic retry logic
+- Built-in rate limiting and automatic retry logic for transient network failures
 - AOT-compatible with `System.Text.Json` source generators
 - Targets **.NET 10.0**
 
@@ -46,8 +46,15 @@ var options = new LichessClientOptions
 {
     AccessToken = "your-token",
     DefaultTimeout = TimeSpan.FromSeconds(30),
+
+    // Automatic rate limit retry
     AutoRetryOnRateLimit = true,
-    MaxRateLimitRetries = 3
+    MaxRateLimitRetries = 3,
+
+    // Automatic retry on transient network failures (DNS, connection errors)
+    EnableTransientRetry = true,
+    MaxTransientRetries = 3,
+    TransientRetryBaseDelay = TimeSpan.FromSeconds(1)
 };
 
 using var client = new LichessClient(new HttpClient(), options);

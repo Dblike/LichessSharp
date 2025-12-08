@@ -43,8 +43,16 @@ var options = new LichessClientOptions
 {
     AccessToken = "your-token",
     DefaultTimeout = TimeSpan.FromSeconds(60),
+
+    // Rate limit retry settings
     AutoRetryOnRateLimit = true,
-    MaxRateLimitRetries = 5
+    MaxRateLimitRetries = 5,
+
+    // Transient failure retry settings (DNS errors, connection timeouts, etc.)
+    EnableTransientRetry = true,
+    MaxTransientRetries = 3,
+    TransientRetryBaseDelay = TimeSpan.FromSeconds(1),
+    TransientRetryMaxDelay = TimeSpan.FromSeconds(30)
 };
 
 using var client = new LichessClient(new HttpClient(), options);
