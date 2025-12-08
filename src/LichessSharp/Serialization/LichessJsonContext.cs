@@ -111,6 +111,20 @@ namespace LichessSharp.Serialization;
 [JsonSerializable(typeof(BotPerfs))]
 [JsonSerializable(typeof(BotPerfStats))]
 [JsonSerializable(typeof(BotPlayTime))]
+// Teams API types
+[JsonSerializable(typeof(Team))]
+[JsonSerializable(typeof(TeamLeader))]
+[JsonSerializable(typeof(TeamPaginator))]
+[JsonSerializable(typeof(TeamMember))]
+[JsonSerializable(typeof(TeamMemberPerfs))]
+[JsonSerializable(typeof(TeamMemberPerfStats))]
+[JsonSerializable(typeof(TeamRequest))]
+[JsonSerializable(typeof(TeamRequestWithUser))]
+[JsonSerializable(typeof(TeamRequestUser))]
+[JsonSerializable(typeof(TeamPlayTime))]
+[JsonSerializable(typeof(List<Team>))]
+[JsonSerializable(typeof(List<TeamLeader>))]
+[JsonSerializable(typeof(List<TeamRequestWithUser>))]
 internal partial class LichessJsonContext : JsonSerializerContext
 {
 }

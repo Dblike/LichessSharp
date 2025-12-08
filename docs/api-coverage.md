@@ -6,8 +6,8 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Status | Count | APIs |
 |--------|-------|------|
-| **Implemented** | 12 APIs (72 endpoints) | Account, Users, Relations, Games, TV, Puzzles, Analysis, Opening Explorer, Tablebase, Challenges, Board, Bot |
-| **Planned** | 7 APIs | Teams, Bulk Pairings, Arena, Swiss, Simuls, Studies, Messaging, Broadcasts |
+| **Implemented** | 13 APIs (84 endpoints) | Account, Users, Relations, Games, TV, Puzzles, Analysis, Opening Explorer, Tablebase, Challenges, Board, Bot, Teams |
+| **Planned** | 6 APIs | Bulk Pairings, Arena, Swiss, Simuls, Studies, Messaging, Broadcasts |
 
 ## Legend
 
@@ -84,12 +84,18 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Endpoint | Status | Method |
 |----------|--------|--------|
-| Get team info | Planned | `Teams.GetAsync()` |
-| Get user's teams | Planned | `Teams.GetUserTeamsAsync()` |
-| Get team members | Planned | `Teams.StreamMembersAsync()` |
-| Join a team | Planned | `Teams.JoinAsync()` |
-| Leave a team | Planned | `Teams.LeaveAsync()` |
-| Search teams | Planned | `Teams.SearchAsync()` |
+| Get team info | Implemented | `Teams.GetAsync()` |
+| Get popular teams | Implemented | `Teams.GetPopularAsync()` |
+| Get user's teams | Implemented | `Teams.GetUserTeamsAsync()` |
+| Search teams | Implemented | `Teams.SearchAsync()` |
+| Get team members (stream) | Implemented | `Teams.StreamMembersAsync()` |
+| Join a team | Implemented | `Teams.JoinAsync()` |
+| Leave a team | Implemented | `Teams.LeaveAsync()` |
+| Get join requests | Implemented | `Teams.GetJoinRequestsAsync()` |
+| Accept join request | Implemented | `Teams.AcceptJoinRequestAsync()` |
+| Decline join request | Implemented | `Teams.DeclineJoinRequestAsync()` |
+| Kick team member | Implemented | `Teams.KickMemberAsync()` |
+| Message all members | Implemented | `Teams.MessageAllMembersAsync()` |
 
 ## Board API
 
@@ -266,12 +272,12 @@ This section outlines the recommended order for implementing remaining APIs base
 - ~~Similar patterns to Board API~~
 - ~~Requires bot account upgrade~~
 
-### Phase 3: Social & Competition (Medium Value, Medium Complexity)
+### Phase 3: Social & Competition (Medium Value, Medium Complexity) - PARTIALLY COMPLETED
 
-**Teams API** - 6+ endpoints
-- Team management and membership
-- Pagination patterns
-- Mix of read/write operations
+**Teams API** - 12 endpoints ✅
+- ~~Team management and membership~~
+- ~~Pagination patterns~~
+- ~~Mix of read/write operations~~
 
 **Arena Tournaments API** - 10+ endpoints
 - Tournament creation and management

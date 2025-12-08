@@ -122,7 +122,7 @@ public sealed class LichessClient : ILichessClient
         Games = new GamesApi(_httpClient);
         Tv = new TvApi(_httpClient);
         Puzzles = new PuzzlesApi(_httpClient);
-        Teams = new NotImplementedApi<ITeamsApi>();
+        Teams = new TeamsApi(_httpClient);
         Board = new BoardApi(_httpClient);
         Bot = new BotApi(_httpClient);
         Challenges = new ChallengesApi(_httpClient);
@@ -210,11 +210,17 @@ public sealed class LichessClient : ILichessClient
 
         // ITeamsApi
         Task<Team> ITeamsApi.GetAsync(string teamId, CancellationToken ct) => throw NotImplemented();
+        Task<TeamPaginator> ITeamsApi.GetPopularAsync(int page, CancellationToken ct) => throw NotImplemented();
         Task<IReadOnlyList<Team>> ITeamsApi.GetUserTeamsAsync(string username, CancellationToken ct) => throw NotImplemented();
-        IAsyncEnumerable<TeamMember> ITeamsApi.StreamMembersAsync(string teamId, CancellationToken ct) => throw NotImplemented();
+        Task<TeamPaginator> ITeamsApi.SearchAsync(string text, int page, CancellationToken ct) => throw NotImplemented();
+        IAsyncEnumerable<TeamMember> ITeamsApi.StreamMembersAsync(string teamId, bool full, CancellationToken ct) => throw NotImplemented();
         Task<bool> ITeamsApi.JoinAsync(string teamId, string? message, string? password, CancellationToken ct) => throw NotImplemented();
         Task<bool> ITeamsApi.LeaveAsync(string teamId, CancellationToken ct) => throw NotImplemented();
-        Task<TeamSearchResult> ITeamsApi.SearchAsync(string text, int page, CancellationToken ct) => throw NotImplemented();
+        Task<IReadOnlyList<TeamRequestWithUser>> ITeamsApi.GetJoinRequestsAsync(string teamId, bool declined, CancellationToken ct) => throw NotImplemented();
+        Task<bool> ITeamsApi.AcceptJoinRequestAsync(string teamId, string userId, CancellationToken ct) => throw NotImplemented();
+        Task<bool> ITeamsApi.DeclineJoinRequestAsync(string teamId, string userId, CancellationToken ct) => throw NotImplemented();
+        Task<bool> ITeamsApi.KickMemberAsync(string teamId, string userId, CancellationToken ct) => throw NotImplemented();
+        Task<bool> ITeamsApi.MessageAllMembersAsync(string teamId, string message, CancellationToken ct) => throw NotImplemented();
 
         // IBoardApi
         IAsyncEnumerable<BoardAccountEvent> IBoardApi.StreamEventsAsync(CancellationToken ct) => throw NotImplemented();
