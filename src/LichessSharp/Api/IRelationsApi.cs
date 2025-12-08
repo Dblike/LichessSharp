@@ -1,3 +1,5 @@
+using LichessSharp.Models;
+
 namespace LichessSharp.Api;
 
 /// <summary>
@@ -7,6 +9,7 @@ public interface IRelationsApi
 {
     /// <summary>
     /// Follow a user.
+    /// Requires the follow:write OAuth scope.
     /// </summary>
     /// <param name="username">The username to follow.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
@@ -15,6 +18,7 @@ public interface IRelationsApi
 
     /// <summary>
     /// Unfollow a user.
+    /// Requires the follow:write OAuth scope.
     /// </summary>
     /// <param name="username">The username to unfollow.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
@@ -23,6 +27,7 @@ public interface IRelationsApi
 
     /// <summary>
     /// Block a user.
+    /// Requires the follow:write OAuth scope.
     /// </summary>
     /// <param name="username">The username to block.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
@@ -31,6 +36,7 @@ public interface IRelationsApi
 
     /// <summary>
     /// Unblock a user.
+    /// Requires the follow:write OAuth scope.
     /// </summary>
     /// <param name="username">The username to unblock.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
@@ -38,9 +44,10 @@ public interface IRelationsApi
     Task<bool> UnblockAsync(string username, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Stream users who are being followed.
+    /// Stream users who are being followed by the logged in user.
+    /// Requires the follow:read OAuth scope.
     /// </summary>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>Stream of usernames being followed.</returns>
-    IAsyncEnumerable<string> StreamFollowingAsync(CancellationToken cancellationToken = default);
+    /// <returns>Stream of users being followed.</returns>
+    IAsyncEnumerable<UserExtended> StreamFollowingAsync(CancellationToken cancellationToken = default);
 }

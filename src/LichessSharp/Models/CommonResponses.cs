@@ -25,3 +25,27 @@ public class ErrorResponse
     [JsonPropertyName("error")]
     public string? Error { get; init; }
 }
+
+/// <summary>
+/// Email response from Lichess API.
+/// </summary>
+public class EmailResponse
+{
+    /// <summary>
+    /// The email address.
+    /// </summary>
+    [JsonPropertyName("email")]
+    public string? Email { get; init; }
+}
+
+/// <summary>
+/// Kid mode status response from Lichess API.
+/// </summary>
+public class KidModeResponse
+{
+    /// <summary>
+    /// Whether kid mode is enabled.
+    /// </summary>
+    [JsonPropertyName("kid")]
+    public bool Kid { get; init; }
+}

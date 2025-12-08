@@ -317,3 +317,183 @@ public class Judgment
     [JsonPropertyName("comment")]
     public string? Comment { get; init; }
 }
+
+/// <summary>
+/// Response from the ongoing games endpoint.
+/// </summary>
+public class OngoingGamesResponse
+{
+    /// <summary>
+    /// List of games currently being played.
+    /// </summary>
+    [JsonPropertyName("nowPlaying")]
+    public IReadOnlyList<OngoingGame>? NowPlaying { get; init; }
+}
+
+/// <summary>
+/// An ongoing game.
+/// </summary>
+public class OngoingGame
+{
+    /// <summary>
+    /// Full game ID (includes player color suffix).
+    /// </summary>
+    [JsonPropertyName("fullId")]
+    public required string FullId { get; init; }
+
+    /// <summary>
+    /// Game ID (8 characters).
+    /// </summary>
+    [JsonPropertyName("gameId")]
+    public required string GameId { get; init; }
+
+    /// <summary>
+    /// Current FEN position.
+    /// </summary>
+    [JsonPropertyName("fen")]
+    public required string Fen { get; init; }
+
+    /// <summary>
+    /// The color you are playing.
+    /// </summary>
+    [JsonPropertyName("color")]
+    public Color Color { get; init; }
+
+    /// <summary>
+    /// Last move in UCI notation.
+    /// </summary>
+    [JsonPropertyName("lastMove")]
+    public string? LastMove { get; init; }
+
+    /// <summary>
+    /// Game source.
+    /// </summary>
+    [JsonPropertyName("source")]
+    public string? Source { get; init; }
+
+    /// <summary>
+    /// Game status.
+    /// </summary>
+    [JsonPropertyName("status")]
+    public GameStatus Status { get; init; }
+
+    /// <summary>
+    /// Variant information.
+    /// </summary>
+    [JsonPropertyName("variant")]
+    public VariantInfo? Variant { get; init; }
+
+    /// <summary>
+    /// Speed category.
+    /// </summary>
+    [JsonPropertyName("speed")]
+    public Speed Speed { get; init; }
+
+    /// <summary>
+    /// Performance type.
+    /// </summary>
+    [JsonPropertyName("perf")]
+    public string? Perf { get; init; }
+
+    /// <summary>
+    /// Whether the game is rated.
+    /// </summary>
+    [JsonPropertyName("rated")]
+    public bool Rated { get; init; }
+
+    /// <summary>
+    /// Whether the player has moved.
+    /// </summary>
+    [JsonPropertyName("hasMoved")]
+    public bool HasMoved { get; init; }
+
+    /// <summary>
+    /// Opponent information.
+    /// </summary>
+    [JsonPropertyName("opponent")]
+    public OngoingGameOpponent? Opponent { get; init; }
+
+    /// <summary>
+    /// Whether it's your turn.
+    /// </summary>
+    [JsonPropertyName("isMyTurn")]
+    public bool IsMyTurn { get; init; }
+
+    /// <summary>
+    /// Seconds left on your clock.
+    /// </summary>
+    [JsonPropertyName("secondsLeft")]
+    public int? SecondsLeft { get; init; }
+}
+
+/// <summary>
+/// Variant information.
+/// </summary>
+public class VariantInfo
+{
+    /// <summary>
+    /// Variant key.
+    /// </summary>
+    [JsonPropertyName("key")]
+    public string? Key { get; init; }
+
+    /// <summary>
+    /// Variant name.
+    /// </summary>
+    [JsonPropertyName("name")]
+    public string? Name { get; init; }
+}
+
+/// <summary>
+/// Opponent in an ongoing game.
+/// </summary>
+public class OngoingGameOpponent
+{
+    /// <summary>
+    /// Opponent's user ID.
+    /// </summary>
+    [JsonPropertyName("id")]
+    public required string Id { get; init; }
+
+    /// <summary>
+    /// Opponent's username.
+    /// </summary>
+    [JsonPropertyName("username")]
+    public required string Username { get; init; }
+
+    /// <summary>
+    /// Opponent's rating.
+    /// </summary>
+    [JsonPropertyName("rating")]
+    public int? Rating { get; init; }
+
+    /// <summary>
+    /// Rating difference after the game.
+    /// </summary>
+    [JsonPropertyName("ratingDiff")]
+    public int? RatingDiff { get; init; }
+
+    /// <summary>
+    /// AI level if playing against AI.
+    /// </summary>
+    [JsonPropertyName("ai")]
+    public int? Ai { get; init; }
+}
+
+/// <summary>
+/// Response from the import game endpoint.
+/// </summary>
+public class ImportGameResponse
+{
+    /// <summary>
+    /// The imported game ID.
+    /// </summary>
+    [JsonPropertyName("id")]
+    public required string Id { get; init; }
+
+    /// <summary>
+    /// URL to the imported game.
+    /// </summary>
+    [JsonPropertyName("url")]
+    public string? Url { get; init; }
+}

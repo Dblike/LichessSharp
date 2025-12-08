@@ -68,13 +68,13 @@ public interface IGamesApi
     /// <param name="count">Maximum number of games to return (1-50, default 9).</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>List of ongoing games.</returns>
-    Task<IReadOnlyList<Game>> GetOngoingGamesAsync(int count = 9, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<OngoingGame>> GetOngoingGamesAsync(int count = 9, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Import a game from PGN.
     /// </summary>
     /// <param name="pgn">The PGN content.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>The imported game.</returns>
-    Task<Game> ImportPgnAsync(string pgn, CancellationToken cancellationToken = default);
+    /// <returns>The imported game response containing the game ID and URL.</returns>
+    Task<ImportGameResponse> ImportPgnAsync(string pgn, CancellationToken cancellationToken = default);
 }

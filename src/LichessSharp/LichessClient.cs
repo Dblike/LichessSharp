@@ -116,10 +116,10 @@ public sealed class LichessClient : ILichessClient
     {
         // Initialize API implementations
         // These will be implemented incrementally
-        Account = new NotImplementedApi<IAccountApi>();
+        Account = new AccountApi(_httpClient);
         Users = new UsersApi(_httpClient);
-        Relations = new NotImplementedApi<IRelationsApi>();
-        Games = new NotImplementedApi<IGamesApi>();
+        Relations = new RelationsApi(_httpClient);
+        Games = new GamesApi(_httpClient);
         Tv = new NotImplementedApi<ITvApi>();
         Puzzles = new NotImplementedApi<IPuzzlesApi>();
         Teams = new NotImplementedApi<ITeamsApi>();
@@ -181,7 +181,7 @@ public sealed class LichessClient : ILichessClient
         Task<bool> IRelationsApi.UnfollowAsync(string username, CancellationToken ct) => throw NotImplemented();
         Task<bool> IRelationsApi.BlockAsync(string username, CancellationToken ct) => throw NotImplemented();
         Task<bool> IRelationsApi.UnblockAsync(string username, CancellationToken ct) => throw NotImplemented();
-        IAsyncEnumerable<string> IRelationsApi.StreamFollowingAsync(CancellationToken ct) => throw NotImplemented();
+        IAsyncEnumerable<Models.UserExtended> IRelationsApi.StreamFollowingAsync(CancellationToken ct) => throw NotImplemented();
 
         // IGamesApi
         Task<Models.GameJson> IGamesApi.GetAsync(string gameId, ApiOptions.ExportGameOptions? options, CancellationToken ct) => throw NotImplemented();
@@ -190,8 +190,8 @@ public sealed class LichessClient : ILichessClient
         IAsyncEnumerable<Models.GameJson> IGamesApi.StreamUserGamesAsync(string username, ApiOptions.ExportUserGamesOptions? options, CancellationToken ct) => throw NotImplemented();
         IAsyncEnumerable<Models.GameJson> IGamesApi.StreamByIdsAsync(IEnumerable<string> gameIds, ApiOptions.ExportGameOptions? options, CancellationToken ct) => throw NotImplemented();
         IAsyncEnumerable<Models.GameJson> IGamesApi.StreamGamesByUsersAsync(IEnumerable<string> userIds, bool withCurrentGames, CancellationToken ct) => throw NotImplemented();
-        Task<IReadOnlyList<Models.Game>> IGamesApi.GetOngoingGamesAsync(int count, CancellationToken ct) => throw NotImplemented();
-        Task<Models.Game> IGamesApi.ImportPgnAsync(string pgn, CancellationToken ct) => throw NotImplemented();
+        Task<IReadOnlyList<Models.OngoingGame>> IGamesApi.GetOngoingGamesAsync(int count, CancellationToken ct) => throw NotImplemented();
+        Task<Models.ImportGameResponse> IGamesApi.ImportPgnAsync(string pgn, CancellationToken ct) => throw NotImplemented();
 
         // ITvApi
         Task<Dictionary<string, TvGame>> ITvApi.GetCurrentGamesAsync(CancellationToken ct) => throw NotImplemented();

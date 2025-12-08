@@ -27,6 +27,8 @@ namespace LichessSharp.Serialization;
 [JsonSerializable(typeof(PuzzleWithGame))]
 [JsonSerializable(typeof(OkResponse))]
 [JsonSerializable(typeof(ErrorResponse))]
+[JsonSerializable(typeof(EmailResponse))]
+[JsonSerializable(typeof(KidModeResponse))]
 [JsonSerializable(typeof(Dictionary<string, object>))]
 [JsonSerializable(typeof(Dictionary<string, List<User>>))]
 [JsonSerializable(typeof(List<RatingHistory>))]
@@ -40,6 +42,9 @@ namespace LichessSharp.Serialization;
 [JsonSerializable(typeof(ExplorerOpening))]
 [JsonSerializable(typeof(TablebaseResult))]
 [JsonSerializable(typeof(TablebaseMove))]
+[JsonSerializable(typeof(OngoingGamesResponse))]
+[JsonSerializable(typeof(OngoingGame))]
+[JsonSerializable(typeof(ImportGameResponse))]
 internal partial class LichessJsonContext : JsonSerializerContext
 {
 }

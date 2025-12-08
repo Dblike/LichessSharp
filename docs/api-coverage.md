@@ -12,11 +12,11 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Endpoint | Status | Method |
 |----------|--------|--------|
-| Get my profile | Planned | `Account.GetProfileAsync()` |
-| Get my email | Planned | `Account.GetEmailAsync()` |
-| Get my preferences | Planned | `Account.GetPreferencesAsync()` |
-| Get kid mode status | Planned | `Account.GetKidModeAsync()` |
-| Set kid mode status | Planned | `Account.SetKidModeAsync()` |
+| Get my profile | Implemented | `Account.GetProfileAsync()` |
+| Get my email | Implemented | `Account.GetEmailAsync()` |
+| Get my preferences | Implemented | `Account.GetPreferencesAsync()` |
+| Get kid mode status | Implemented | `Account.GetKidModeAsync()` |
+| Set kid mode status | Implemented | `Account.SetKidModeAsync()` |
 
 ## Users API
 
@@ -33,23 +33,24 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Endpoint | Status | Method |
 |----------|--------|--------|
-| Follow a player | Planned | `Relations.FollowAsync()` |
-| Unfollow a player | Planned | `Relations.UnfollowAsync()` |
-| Block a player | Planned | `Relations.BlockAsync()` |
-| Unblock a player | Planned | `Relations.UnblockAsync()` |
+| Follow a player | Implemented | `Relations.FollowAsync()` |
+| Unfollow a player | Implemented | `Relations.UnfollowAsync()` |
+| Block a player | Implemented | `Relations.BlockAsync()` |
+| Unblock a player | Implemented | `Relations.UnblockAsync()` |
+| Stream following | Implemented | `Relations.StreamFollowingAsync()` |
 
 ## Games API
 
 | Endpoint | Status | Method |
 |----------|--------|--------|
-| Export one game | Planned | `Games.GetAsync()` |
-| Export one game (PGN) | Planned | `Games.GetPgnAsync()` |
-| Export ongoing game | Planned | `Games.GetCurrentGameAsync()` |
-| Export games of a user | Planned | `Games.StreamUserGamesAsync()` |
-| Export games by IDs | Planned | `Games.StreamByIdsAsync()` |
-| Stream games by users | Planned | `Games.StreamGamesByUsersAsync()` |
-| Get ongoing games | Planned | `Games.GetOngoingGamesAsync()` |
-| Import one PGN game | Planned | `Games.ImportPgnAsync()` |
+| Export one game | Implemented | `Games.GetAsync()` |
+| Export one game (PGN) | Implemented | `Games.GetPgnAsync()` |
+| Export ongoing game | Implemented | `Games.GetCurrentGameAsync()` |
+| Export games of a user | Implemented | `Games.StreamUserGamesAsync()` |
+| Export games by IDs | Implemented | `Games.StreamByIdsAsync()` |
+| Stream games by users | Implemented | `Games.StreamGamesByUsersAsync()` |
+| Get ongoing games | Implemented | `Games.GetOngoingGamesAsync()` |
+| Import one PGN game | Implemented | `Games.ImportPgnAsync()` |
 
 ## TV API
 

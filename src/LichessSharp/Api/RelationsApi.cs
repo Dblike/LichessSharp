@@ -1,0 +1,63 @@
+using System.Runtime.CompilerServices;
+using LichessSharp.Http;
+using LichessSharp.Models;
+
+namespace LichessSharp.Api;
+
+/// <summary>
+/// Implementation of the Relations API.
+/// </summary>
+internal sealed class RelationsApi : IRelationsApi
+{
+    private readonly ILichessHttpClient _httpClient;
+
+    public RelationsApi(ILichessHttpClient httpClient)
+    {
+        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+    }
+
+    /// <inheritdoc />
+    public async Task<bool> FollowAsync(string username, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+
+        var response = await _httpClient.PostAsync<OkResponse>($"/api/rel/follow/{Uri.EscapeDataString(username)}", null, cancellationToken).ConfigureAwait(false);
+        return response.Ok;
+    }
+
+    /// <inheritdoc />
+    public async Task<bool> UnfollowAsync(string username, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+
+        var response = await _httpClient.PostAsync<OkResponse>($"/api/rel/unfollow/{Uri.EscapeDataString(username)}", null, cancellationToken).ConfigureAwait(false);
+        return response.Ok;
+    }
+
+    /// <inheritdoc />
+    public async Task<bool> BlockAsync(string username, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+
+        var response = await _httpClient.PostAsync<OkResponse>($"/api/rel/block/{Uri.EscapeDataString(username)}", null, cancellationToken).ConfigureAwait(false);
+        return response.Ok;
+    }
+
+    /// <inheritdoc />
+    public async Task<bool> UnblockAsync(string username, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+
+        var response = await _httpClient.PostAsync<OkResponse>($"/api/rel/unblock/{Uri.EscapeDataString(username)}", null, cancellationToken).ConfigureAwait(false);
+        return response.Ok;
+    }
+
+    /// <inheritdoc />
+    public async IAsyncEnumerable<UserExtended> StreamFollowingAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        await foreach (var user in _httpClient.StreamNdjsonAsync<UserExtended>("/api/rel/following", cancellationToken).ConfigureAwait(false))
+        {
+            yield return user;
+        }
+    }
+}
