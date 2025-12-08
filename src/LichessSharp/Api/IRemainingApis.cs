@@ -164,17 +164,17 @@ public class ExplorerResult
     /// <summary>
     /// Total white wins.
     /// </summary>
-    public int White { get; init; }
+    public long White { get; init; }
 
     /// <summary>
     /// Total draws.
     /// </summary>
-    public int Draws { get; init; }
+    public long Draws { get; init; }
 
     /// <summary>
     /// Total black wins.
     /// </summary>
-    public int Black { get; init; }
+    public long Black { get; init; }
 
     /// <summary>
     /// Available moves.
@@ -215,17 +215,17 @@ public class ExplorerMove
     /// <summary>
     /// White wins after this move.
     /// </summary>
-    public int White { get; init; }
+    public long White { get; init; }
 
     /// <summary>
     /// Draws after this move.
     /// </summary>
-    public int Draws { get; init; }
+    public long Draws { get; init; }
 
     /// <summary>
     /// Black wins after this move.
     /// </summary>
-    public int Black { get; init; }
+    public long Black { get; init; }
 
     /// <summary>
     /// Average opponent rating.

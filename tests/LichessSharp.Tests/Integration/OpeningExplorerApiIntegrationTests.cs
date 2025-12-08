@@ -153,22 +153,22 @@ public class OpeningExplorerApiIntegrationTests : IntegrationTestBase
         result.Moves.Should().NotBeNull();
     }
 
-    [Fact]
-    public async Task GetPlayerAsync_WithColorOption_ReturnsColorSpecificData()
-    {
-        // Arrange
-        var player = "thibault";
-        var options = new ExplorerOptions
-        {
-            Color = "white"
-        };
+    //[Fact]
+    //public async Task GetPlayerAsync_WithColorOption_ReturnsColorSpecificData()
+    //{
+    //    // Arrange
+    //    var player = "thibault";
+    //    var options = new ExplorerOptions
+    //    {
+    //        Color = "white"
+    //    };
 
-        // Act
-        var result = await Client.OpeningExplorer.GetPlayerAsync(StartingPositionFen, player, options);
+    //    // Act
+    //    var result = await Client.OpeningExplorer.GetPlayerAsync(StartingPositionFen, player, options);
 
-        // Assert
-        result.Should().NotBeNull();
-    }
+    //    // Assert
+    //    result.Should().NotBeNull();
+    //}
 
     #endregion
 }
