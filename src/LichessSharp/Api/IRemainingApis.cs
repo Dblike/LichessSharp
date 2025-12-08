@@ -1,0 +1,404 @@
+namespace LichessSharp.Api;
+
+/// <summary>
+/// Bulk Pairings API - Create many games for other players.
+/// </summary>
+public interface IBulkPairingsApi
+{
+    // TODO: Implement bulk pairing endpoints
+}
+
+/// <summary>
+/// Arena Tournaments API - Access Arena tournaments played on Lichess.
+/// </summary>
+public interface IArenaTournamentsApi
+{
+    // TODO: Implement arena tournament endpoints
+}
+
+/// <summary>
+/// Swiss Tournaments API - Access Swiss tournaments played on Lichess.
+/// </summary>
+public interface ISwissTournamentsApi
+{
+    // TODO: Implement swiss tournament endpoints
+}
+
+/// <summary>
+/// Simuls API - Access simultaneous exhibitions played on Lichess.
+/// </summary>
+public interface ISimulsApi
+{
+    // TODO: Implement simul endpoints
+}
+
+/// <summary>
+/// Studies API - Access Lichess studies.
+/// </summary>
+public interface IStudiesApi
+{
+    // TODO: Implement study endpoints
+}
+
+/// <summary>
+/// Messaging API - Private messages with other players.
+/// </summary>
+public interface IMessagingApi
+{
+    // TODO: Implement messaging endpoints
+}
+
+/// <summary>
+/// Broadcasts API - Relay chess events on Lichess.
+/// </summary>
+public interface IBroadcastsApi
+{
+    // TODO: Implement broadcast endpoints
+}
+
+/// <summary>
+/// Analysis API - Access Lichess cloud evaluations database.
+/// </summary>
+public interface IAnalysisApi
+{
+    /// <summary>
+    /// Get cloud evaluation for a position.
+    /// </summary>
+    Task<CloudEvaluation?> GetCloudEvaluationAsync(string fen, int? multiPv = null, string? variant = null, CancellationToken cancellationToken = default);
+}
+
+/// <summary>
+/// Opening Explorer API - Lookup positions from the Lichess opening explorer.
+/// </summary>
+public interface IOpeningExplorerApi
+{
+    /// <summary>
+    /// Get opening explorer data for masters database.
+    /// </summary>
+    Task<ExplorerResult> GetMastersAsync(string fen, ExplorerOptions? options = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get opening explorer data for Lichess database.
+    /// </summary>
+    Task<ExplorerResult> GetLichessAsync(string fen, ExplorerOptions? options = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get opening explorer data for a player.
+    /// </summary>
+    Task<ExplorerResult> GetPlayerAsync(string fen, string player, ExplorerOptions? options = null, CancellationToken cancellationToken = default);
+}
+
+/// <summary>
+/// Tablebase API - Lookup positions from the Lichess tablebase server.
+/// </summary>
+public interface ITablebaseApi
+{
+    /// <summary>
+    /// Look up a position in the tablebase.
+    /// </summary>
+    Task<TablebaseResult> LookupAsync(string fen, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Look up a position in the atomic tablebase.
+    /// </summary>
+    Task<TablebaseResult> LookupAtomicAsync(string fen, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Look up a position in the antichess tablebase.
+    /// </summary>
+    Task<TablebaseResult> LookupAntichessAsync(string fen, CancellationToken cancellationToken = default);
+}
+
+/// <summary>
+/// Cloud evaluation result.
+/// </summary>
+public class CloudEvaluation
+{
+    /// <summary>
+    /// The FEN position.
+    /// </summary>
+    public required string Fen { get; init; }
+
+    /// <summary>
+    /// Number of known nodes.
+    /// </summary>
+    public long Knodes { get; init; }
+
+    /// <summary>
+    /// Depth of analysis.
+    /// </summary>
+    public int Depth { get; init; }
+
+    /// <summary>
+    /// Principal variations.
+    /// </summary>
+    public IReadOnlyList<PrincipalVariation>? Pvs { get; init; }
+}
+
+/// <summary>
+/// Principal variation from analysis.
+/// </summary>
+public class PrincipalVariation
+{
+    /// <summary>
+    /// Moves in UCI notation.
+    /// </summary>
+    public required string Moves { get; init; }
+
+    /// <summary>
+    /// Centipawn evaluation.
+    /// </summary>
+    public int? Cp { get; init; }
+
+    /// <summary>
+    /// Mate in N.
+    /// </summary>
+    public int? Mate { get; init; }
+}
+
+/// <summary>
+/// Opening explorer result.
+/// </summary>
+public class ExplorerResult
+{
+    /// <summary>
+    /// Total white wins.
+    /// </summary>
+    public int White { get; init; }
+
+    /// <summary>
+    /// Total draws.
+    /// </summary>
+    public int Draws { get; init; }
+
+    /// <summary>
+    /// Total black wins.
+    /// </summary>
+    public int Black { get; init; }
+
+    /// <summary>
+    /// Available moves.
+    /// </summary>
+    public IReadOnlyList<ExplorerMove>? Moves { get; init; }
+
+    /// <summary>
+    /// Top games.
+    /// </summary>
+    public IReadOnlyList<ExplorerGame>? TopGames { get; init; }
+
+    /// <summary>
+    /// Recent games.
+    /// </summary>
+    public IReadOnlyList<ExplorerGame>? RecentGames { get; init; }
+
+    /// <summary>
+    /// Opening information.
+    /// </summary>
+    public ExplorerOpening? Opening { get; init; }
+}
+
+/// <summary>
+/// Explorer move.
+/// </summary>
+public class ExplorerMove
+{
+    /// <summary>
+    /// UCI notation.
+    /// </summary>
+    public required string Uci { get; init; }
+
+    /// <summary>
+    /// SAN notation.
+    /// </summary>
+    public required string San { get; init; }
+
+    /// <summary>
+    /// White wins after this move.
+    /// </summary>
+    public int White { get; init; }
+
+    /// <summary>
+    /// Draws after this move.
+    /// </summary>
+    public int Draws { get; init; }
+
+    /// <summary>
+    /// Black wins after this move.
+    /// </summary>
+    public int Black { get; init; }
+
+    /// <summary>
+    /// Average opponent rating.
+    /// </summary>
+    public int? AverageRating { get; init; }
+}
+
+/// <summary>
+/// Explorer game reference.
+/// </summary>
+public class ExplorerGame
+{
+    /// <summary>
+    /// Game ID.
+    /// </summary>
+    public required string Id { get; init; }
+
+    /// <summary>
+    /// Winner.
+    /// </summary>
+    public string? Winner { get; init; }
+
+    /// <summary>
+    /// Year played.
+    /// </summary>
+    public int? Year { get; init; }
+
+    /// <summary>
+    /// Month played.
+    /// </summary>
+    public string? Month { get; init; }
+}
+
+/// <summary>
+/// Explorer opening information.
+/// </summary>
+public class ExplorerOpening
+{
+    /// <summary>
+    /// ECO code.
+    /// </summary>
+    public string? Eco { get; init; }
+
+    /// <summary>
+    /// Opening name.
+    /// </summary>
+    public string? Name { get; init; }
+}
+
+/// <summary>
+/// Explorer options.
+/// </summary>
+public class ExplorerOptions
+{
+    /// <summary>
+    /// Variant.
+    /// </summary>
+    public string? Variant { get; set; }
+
+    /// <summary>
+    /// Speeds to include.
+    /// </summary>
+    public string[]? Speeds { get; set; }
+
+    /// <summary>
+    /// Ratings to include.
+    /// </summary>
+    public int[]? Ratings { get; set; }
+
+    /// <summary>
+    /// Number of recent games.
+    /// </summary>
+    public int? RecentGames { get; set; }
+
+    /// <summary>
+    /// Number of top games.
+    /// </summary>
+    public int? TopGames { get; set; }
+
+    /// <summary>
+    /// Number of moves.
+    /// </summary>
+    public int? Moves { get; set; }
+}
+
+/// <summary>
+/// Tablebase result.
+/// </summary>
+public class TablebaseResult
+{
+    /// <summary>
+    /// Category of the position.
+    /// </summary>
+    public required string Category { get; init; }
+
+    /// <summary>
+    /// Distance to zeroing (in plies).
+    /// </summary>
+    public int? Dtz { get; init; }
+
+    /// <summary>
+    /// Precise distance to zeroing.
+    /// </summary>
+    public int? PreciseDtz { get; init; }
+
+    /// <summary>
+    /// Distance to mate (in plies).
+    /// </summary>
+    public int? Dtm { get; init; }
+
+    /// <summary>
+    /// Whether checkmate is possible.
+    /// </summary>
+    public bool Checkmate { get; init; }
+
+    /// <summary>
+    /// Whether stalemate is possible.
+    /// </summary>
+    public bool Stalemate { get; init; }
+
+    /// <summary>
+    /// Whether insufficient material.
+    /// </summary>
+    public bool InsufficientMaterial { get; init; }
+
+    /// <summary>
+    /// Available moves.
+    /// </summary>
+    public IReadOnlyList<TablebaseMove>? Moves { get; init; }
+}
+
+/// <summary>
+/// Tablebase move.
+/// </summary>
+public class TablebaseMove
+{
+    /// <summary>
+    /// UCI notation.
+    /// </summary>
+    public required string Uci { get; init; }
+
+    /// <summary>
+    /// SAN notation.
+    /// </summary>
+    public required string San { get; init; }
+
+    /// <summary>
+    /// Category after this move.
+    /// </summary>
+    public string? Category { get; init; }
+
+    /// <summary>
+    /// DTZ after this move.
+    /// </summary>
+    public int? Dtz { get; init; }
+
+    /// <summary>
+    /// DTM after this move.
+    /// </summary>
+    public int? Dtm { get; init; }
+
+    /// <summary>
+    /// Zeroing move.
+    /// </summary>
+    public bool Zeroing { get; init; }
+
+    /// <summary>
+    /// Checkmate.
+    /// </summary>
+    public bool Checkmate { get; init; }
+
+    /// <summary>
+    /// Stalemate.
+    /// </summary>
+    public bool Stalemate { get; init; }
+}
