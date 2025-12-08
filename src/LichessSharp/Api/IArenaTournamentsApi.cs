@@ -1,6 +1,8 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 using LichessSharp.Models;
+using LichessSharp.Serialization.Converters;
 
 namespace LichessSharp.Api;
 
@@ -503,19 +505,22 @@ public class ArenaTournamentSummary
     /// The chess variant.
     /// </summary>
     [JsonPropertyName("variant")]
+    [JsonConverter(typeof(FlexibleVariantConverter))]
     public ArenaVariant? Variant { get; init; }
 
     /// <summary>
-    /// Tournament start time (Unix timestamp in milliseconds).
+    /// Tournament start time.
     /// </summary>
     [JsonPropertyName("startsAt")]
-    public long StartsAt { get; init; }
+    [JsonConverter(typeof(FlexibleTimestampConverter))]
+    public DateTimeOffset StartsAt { get; init; }
 
     /// <summary>
-    /// Tournament finish time (Unix timestamp in milliseconds).
+    /// Tournament finish time.
     /// </summary>
     [JsonPropertyName("finishesAt")]
-    public long FinishesAt { get; init; }
+    [JsonConverter(typeof(FlexibleTimestampConverter))]
+    public DateTimeOffset FinishesAt { get; init; }
 
     /// <summary>
     /// Tournament status.
@@ -668,7 +673,13 @@ public class ArenaTournament : ArenaTournamentSummary
     public ArenaFeaturedGame? Featured { get; init; }
 
     /// <summary>
-    /// Featured game (alternative field name).
+    /// Current duels (pairings) in the tournament.
+    /// </summary>
+    [JsonPropertyName("duels")]
+    public IReadOnlyList<ArenaDuel>? Duels { get; init; }
+
+    /// <summary>
+    /// Duel teams info for team battles.
     /// </summary>
     [JsonPropertyName("duelTeams")]
     public ArenaDuelTeams? DuelTeams { get; init; }
@@ -1179,15 +1190,65 @@ public class ArenaFeaturedPlayer
 }
 
 /// <summary>
+/// A duel (pairing) in an Arena tournament.
+/// </summary>
+public class ArenaDuel
+{
+    /// <summary>
+    /// Game ID.
+    /// </summary>
+    [JsonPropertyName("id")]
+    public string? Id { get; init; }
+
+    /// <summary>
+    /// Players in this duel.
+    /// </summary>
+    [JsonPropertyName("p")]
+    public IReadOnlyList<ArenaDuelPlayer>? Players { get; init; }
+}
+
+/// <summary>
+/// Player in an Arena duel.
+/// </summary>
+public class ArenaDuelPlayer
+{
+    /// <summary>
+    /// Player name.
+    /// </summary>
+    [JsonPropertyName("n")]
+    public string? Name { get; init; }
+
+    /// <summary>
+    /// Player rating.
+    /// </summary>
+    [JsonPropertyName("r")]
+    public int? Rating { get; init; }
+
+    /// <summary>
+    /// Player rank in the tournament.
+    /// </summary>
+    [JsonPropertyName("k")]
+    public int? Rank { get; init; }
+
+    /// <summary>
+    /// Player title (e.g., "GM", "FM").
+    /// </summary>
+    [JsonPropertyName("t")]
+    public string? Title { get; init; }
+}
+
+/// <summary>
 /// Duel teams info for team battles.
+/// Contains dynamic team data keyed by team ID.
 /// </summary>
 public class ArenaDuelTeams
 {
     /// <summary>
-    /// Team entries.
+    /// Team entries. Keys are team IDs, values are team data.
+    /// Using JsonElement for AOT compatibility with extension data.
     /// </summary>
     [JsonExtensionData]
-    public Dictionary<string, object?>? Data { get; init; }
+    public Dictionary<string, JsonElement>? Data { get; set; }
 }
 
 /// <summary>

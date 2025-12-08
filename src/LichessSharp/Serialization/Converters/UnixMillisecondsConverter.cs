@@ -62,3 +62,89 @@ public sealed class NullableUnixMillisecondsConverter : JsonConverter<DateTimeOf
         }
     }
 }
+
+/// <summary>
+/// Converts timestamps that can be either Unix milliseconds (number) or ISO date strings to/from DateTimeOffset.
+/// The Lichess API returns different formats depending on the endpoint.
+/// </summary>
+public sealed class FlexibleTimestampConverter : JsonConverter<DateTimeOffset>
+{
+    /// <inheritdoc />
+    public override DateTimeOffset Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        if (reader.TokenType == JsonTokenType.Number)
+        {
+            var milliseconds = reader.GetInt64();
+            return DateTimeOffset.FromUnixTimeMilliseconds(milliseconds);
+        }
+
+        if (reader.TokenType == JsonTokenType.String)
+        {
+            var dateString = reader.GetString();
+            if (DateTimeOffset.TryParse(dateString, out var result))
+            {
+                return result;
+            }
+            throw new JsonException($"Unable to parse date string: {dateString}");
+        }
+
+        throw new JsonException($"Unexpected token type for timestamp: {reader.TokenType}");
+    }
+
+    /// <inheritdoc />
+    public override void Write(Utf8JsonWriter writer, DateTimeOffset value, JsonSerializerOptions options)
+    {
+        // Write as Unix milliseconds for consistency
+        writer.WriteNumberValue(value.ToUnixTimeMilliseconds());
+    }
+}
+
+/// <summary>
+/// Converts timestamps that can be either Unix milliseconds (number) or ISO date strings to/from nullable DateTimeOffset.
+/// </summary>
+public sealed class NullableFlexibleTimestampConverter : JsonConverter<DateTimeOffset?>
+{
+    /// <inheritdoc />
+    public override DateTimeOffset? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        if (reader.TokenType == JsonTokenType.Null)
+        {
+            return null;
+        }
+
+        if (reader.TokenType == JsonTokenType.Number)
+        {
+            var milliseconds = reader.GetInt64();
+            return DateTimeOffset.FromUnixTimeMilliseconds(milliseconds);
+        }
+
+        if (reader.TokenType == JsonTokenType.String)
+        {
+            var dateString = reader.GetString();
+            if (string.IsNullOrEmpty(dateString))
+            {
+                return null;
+            }
+            if (DateTimeOffset.TryParse(dateString, out var result))
+            {
+                return result;
+            }
+            throw new JsonException($"Unable to parse date string: {dateString}");
+        }
+
+        throw new JsonException($"Unexpected token type for timestamp: {reader.TokenType}");
+    }
+
+    /// <inheritdoc />
+    public override void Write(Utf8JsonWriter writer, DateTimeOffset? value, JsonSerializerOptions options)
+    {
+        if (value.HasValue)
+        {
+            writer.WriteNumberValue(value.Value.ToUnixTimeMilliseconds());
+        }
+        else
+        {
+            writer.WriteNullValue();
+        }
+    }
+}

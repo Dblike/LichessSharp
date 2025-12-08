@@ -445,6 +445,7 @@ internal sealed class LichessHttpClient : ILichessHttpClient
 
     private async Task<T> DeserializeResponseAsync<T>(HttpResponseMessage response, CancellationToken cancellationToken)
     {
+        var str = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
         await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
         var result = await JsonSerializer.DeserializeAsync<T>(stream, _jsonOptions, cancellationToken).ConfigureAwait(false);
 

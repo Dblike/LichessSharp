@@ -608,8 +608,8 @@ public class ArenaTournamentsApiTests
         NbPlayers = 10,
         Rated = true,
         Status = 20,
-        StartsAt = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-        FinishesAt = DateTimeOffset.UtcNow.AddHours(1).ToUnixTimeMilliseconds()
+        StartsAt = DateTimeOffset.UtcNow,
+        FinishesAt = DateTimeOffset.UtcNow.AddHours(1)
     };
 
     private static ArenaTournament CreateTestTournament(string id) => new()
@@ -621,8 +621,8 @@ public class ArenaTournamentsApiTests
         NbPlayers = 10,
         Rated = true,
         Status = 20,
-        StartsAt = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-        FinishesAt = DateTimeOffset.UtcNow.AddHours(1).ToUnixTimeMilliseconds()
+        StartsAt = DateTimeOffset.UtcNow,
+        FinishesAt = DateTimeOffset.UtcNow.AddHours(1)
     };
 
     #endregion

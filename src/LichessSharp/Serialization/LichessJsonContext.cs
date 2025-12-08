@@ -148,6 +148,8 @@ namespace LichessSharp.Serialization;
 [JsonSerializable(typeof(ArenaPodiumNb))]
 [JsonSerializable(typeof(ArenaFeaturedGame))]
 [JsonSerializable(typeof(ArenaFeaturedPlayer))]
+[JsonSerializable(typeof(ArenaDuel))]
+[JsonSerializable(typeof(ArenaDuelPlayer))]
 [JsonSerializable(typeof(ArenaDuelTeams))]
 [JsonSerializable(typeof(ArenaGreatPlayer))]
 [JsonSerializable(typeof(ArenaPlayerResult))]
@@ -161,6 +163,8 @@ namespace LichessSharp.Serialization;
 [JsonSerializable(typeof(List<ArenaVerdict>))]
 [JsonSerializable(typeof(List<ArenaStandingPlayer>))]
 [JsonSerializable(typeof(List<ArenaPodiumPlayer>))]
+[JsonSerializable(typeof(List<ArenaDuel>))]
+[JsonSerializable(typeof(List<ArenaDuelPlayer>))]
 [JsonSerializable(typeof(List<ArenaTeamResult>))]
 [JsonSerializable(typeof(List<ArenaTeamPlayer>))]
 // Swiss Tournaments API types
