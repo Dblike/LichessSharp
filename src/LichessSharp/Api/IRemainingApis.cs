@@ -9,35 +9,11 @@ public interface IBulkPairingsApi
 }
 
 /// <summary>
-/// Simuls API - Access simultaneous exhibitions played on Lichess.
-/// </summary>
-public interface ISimulsApi
-{
-    // TODO: Implement simul endpoints
-}
-
-/// <summary>
-/// Studies API - Access Lichess studies.
-/// </summary>
-public interface IStudiesApi
-{
-    // TODO: Implement study endpoints
-}
-
-/// <summary>
 /// Messaging API - Private messages with other players.
 /// </summary>
 public interface IMessagingApi
 {
     // TODO: Implement messaging endpoints
-}
-
-/// <summary>
-/// Broadcasts API - Relay chess events on Lichess.
-/// </summary>
-public interface IBroadcastsApi
-{
-    // TODO: Implement broadcast endpoints
 }
 
 /// <summary>

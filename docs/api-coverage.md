@@ -6,8 +6,8 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Status | Count | APIs |
 |--------|-------|------|
-| **Implemented** | 15 APIs (109 endpoints) | Account, Users, Relations, Games, TV, Puzzles, Analysis, Opening Explorer, Tablebase, Challenges, Board, Bot, Teams, Arena Tournaments, Swiss Tournaments |
-| **Planned** | 4 APIs | Bulk Pairings, Simuls, Studies, Messaging, Broadcasts |
+| **Implemented** | 18 APIs (134 endpoints) | Account, Users, Relations, Games, TV, Puzzles, Analysis, Opening Explorer, Tablebase, Challenges, Board, Bot, Teams, Arena Tournaments, Swiss Tournaments, Simuls, Studies, Broadcasts |
+| **Planned** | 2 APIs | Bulk Pairings, Messaging |
 
 ## Legend
 
@@ -215,18 +215,19 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Endpoint | Status | Method |
 |----------|--------|--------|
-| Get simul | Planned | `Simuls.GetAsync()` |
-| Get current simuls | Planned | `Simuls.GetCurrentAsync()` |
+| Get current simuls | Implemented | `Simuls.GetCurrentAsync()` |
 
 ## Studies API
 
 | Endpoint | Status | Method |
 |----------|--------|--------|
-| Export study chapters | Planned | `Studies.ExportChaptersAsync()` |
-| Export study chapter | Planned | `Studies.ExportChapterAsync()` |
-| Export all user studies | Planned | `Studies.ExportUserStudiesAsync()` |
-| List study metadata | Planned | `Studies.ListMetadataAsync()` |
-| Delete study chapter | Planned | `Studies.DeleteChapterAsync()` |
+| Export one chapter (PGN) | Implemented | `Studies.ExportChapterPgnAsync()` |
+| Export all chapters (PGN) | Implemented | `Studies.ExportStudyPgnAsync()` |
+| Export user's studies (PGN) | Implemented | `Studies.ExportUserStudiesPgnAsync()` |
+| Stream user's study metadata | Implemented | `Studies.StreamUserStudiesAsync()` |
+| Import PGN to study | Implemented | `Studies.ImportPgnAsync()` |
+| Update chapter tags | Implemented | `Studies.UpdateChapterTagsAsync()` |
+| Delete study chapter | Implemented | `Studies.DeleteChapterAsync()` |
 
 ## Messaging API
 
@@ -238,15 +239,22 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Endpoint | Status | Method |
 |----------|--------|--------|
-| Get official broadcasts | Planned | `Broadcasts.GetOfficialAsync()` |
-| Create broadcast | Planned | `Broadcasts.CreateAsync()` |
-| Get broadcast | Planned | `Broadcasts.GetAsync()` |
-| Update broadcast | Planned | `Broadcasts.UpdateAsync()` |
-| Create round | Planned | `Broadcasts.CreateRoundAsync()` |
-| Get round | Planned | `Broadcasts.GetRoundAsync()` |
-| Update round | Planned | `Broadcasts.UpdateRoundAsync()` |
-| Push PGN | Planned | `Broadcasts.PushPgnAsync()` |
-| Stream round | Planned | `Broadcasts.StreamRoundAsync()` |
+| Stream official broadcasts | Implemented | `Broadcasts.StreamOfficialBroadcastsAsync()` |
+| Get top broadcasts | Implemented | `Broadcasts.GetTopBroadcastsAsync()` |
+| Stream user broadcasts | Implemented | `Broadcasts.StreamUserBroadcastsAsync()` |
+| Search broadcasts | Implemented | `Broadcasts.SearchBroadcastsAsync()` |
+| Get tournament | Implemented | `Broadcasts.GetTournamentAsync()` |
+| Get round | Implemented | `Broadcasts.GetRoundAsync()` |
+| Stream my rounds | Implemented | `Broadcasts.StreamMyRoundsAsync()` |
+| Create tournament | Implemented | `Broadcasts.CreateTournamentAsync()` |
+| Update tournament | Implemented | `Broadcasts.UpdateTournamentAsync()` |
+| Create round | Implemented | `Broadcasts.CreateRoundAsync()` |
+| Update round | Implemented | `Broadcasts.UpdateRoundAsync()` |
+| Reset round | Implemented | `Broadcasts.ResetRoundAsync()` |
+| Push PGN | Implemented | `Broadcasts.PushPgnAsync()` |
+| Export round PGN | Implemented | `Broadcasts.ExportRoundPgnAsync()` |
+| Export all rounds PGN | Implemented | `Broadcasts.ExportAllRoundsPgnAsync()` |
+| Stream round PGN | Implemented | `Broadcasts.StreamRoundPgnAsync()` |
 
 ---
 
@@ -296,20 +304,23 @@ This section outlines the recommended order for implementing remaining APIs base
 - ~~Round scheduling~~
 - ~~TRF export~~
 
-### Phase 4: Content & Broadcasting (Medium Value, Higher Complexity)
+### Phase 4: Content & Broadcasting (Medium Value, Higher Complexity) - COMPLETED
 
-**Studies API** - 5+ endpoints
-- Study and chapter management
-- PGN import/export
+**Simuls API** - 1 endpoint ✅
+- ~~Simultaneous exhibitions~~
+- ~~Read-only operations~~
 
-**Broadcasts API** - 9+ endpoints
-- Live event broadcasting
-- PGN push functionality
-- Multi-round management
+**Studies API** - 7 endpoints ✅
+- ~~Study and chapter management~~
+- ~~PGN import/export~~
+- ~~Chapter tag management~~
 
-**Simuls API** - 2 endpoints
-- Simultaneous exhibitions
-- Read-only operations
+**Broadcasts API** - 16 endpoints ✅
+- ~~Live event broadcasting~~
+- ~~PGN push functionality~~
+- ~~Multi-round management~~
+- ~~Tournament and round CRUD~~
+- ~~Search and streaming~~
 
 ### Phase 5: Utility & Admin (Lower Priority)
 

@@ -88,6 +88,16 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         return await DeserializeResponseAsync<T>(response, cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task PostNoContentAsync(string endpoint, HttpContent? content = null, CancellationToken cancellationToken = default)
+    {
+        await SendRequestAsync(HttpMethod.Post, endpoint, content, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task DeleteNoContentAsync(string endpoint, CancellationToken cancellationToken = default)
+    {
+        await SendRequestAsync(HttpMethod.Delete, endpoint, null, cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task<T> GetAbsoluteAsync<T>(Uri absoluteUrl, CancellationToken cancellationToken = default)
     {
         var response = await SendAbsoluteRequestAsync(HttpMethod.Get, absoluteUrl, null, cancellationToken).ConfigureAwait(false);

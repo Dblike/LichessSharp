@@ -42,6 +42,16 @@ internal interface ILichessHttpClient
     Task<T> DeleteAsync<T>(string endpoint, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Sends a POST request and expects 204 No Content response.
+    /// </summary>
+    Task PostNoContentAsync(string endpoint, HttpContent? content = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Sends a DELETE request and expects 204 No Content response.
+    /// </summary>
+    Task DeleteNoContentAsync(string endpoint, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Sends a GET request to a fully qualified URL (for external APIs like explorer.lichess.ovh).
     /// </summary>
     Task<T> GetAbsoluteAsync<T>(Uri absoluteUrl, CancellationToken cancellationToken = default);

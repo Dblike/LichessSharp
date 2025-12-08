@@ -129,10 +129,10 @@ public sealed class LichessClient : ILichessClient
         BulkPairings = new NotImplementedApi<IBulkPairingsApi>();
         ArenaTournaments = new ArenaTournamentsApi(_httpClient);
         SwissTournaments = new SwissTournamentsApi(_httpClient);
-        Simuls = new NotImplementedApi<ISimulsApi>();
-        Studies = new NotImplementedApi<IStudiesApi>();
+        Simuls = new SimulsApi(_httpClient);
+        Studies = new StudiesApi(_httpClient);
         Messaging = new NotImplementedApi<IMessagingApi>();
-        Broadcasts = new NotImplementedApi<IBroadcastsApi>();
+        Broadcasts = new BroadcastsApi(_httpClient);
         Analysis = new AnalysisApi(_httpClient);
         OpeningExplorer = new OpeningExplorerApi(_httpClient, _options.ExplorerBaseAddress);
         Tablebase = new TablebaseApi(_httpClient, _options.TablebaseBaseAddress);
@@ -289,6 +289,36 @@ public sealed class LichessClient : ILichessClient
         IAsyncEnumerable<Models.GameJson> ISwissTournamentsApi.StreamGamesAsync(string id, SwissGamesExportOptions? options, CancellationToken ct) => throw NotImplemented();
         IAsyncEnumerable<SwissPlayerResult> ISwissTournamentsApi.StreamResultsAsync(string id, int? nb, CancellationToken ct) => throw NotImplemented();
         IAsyncEnumerable<SwissTournament> ISwissTournamentsApi.StreamTeamTournamentsAsync(string teamId, int? max, CancellationToken ct) => throw NotImplemented();
+
+        // ISimulsApi
+        Task<SimulList> ISimulsApi.GetCurrentAsync(CancellationToken ct) => throw NotImplemented();
+
+        // IStudiesApi
+        Task<string> IStudiesApi.ExportChapterPgnAsync(string studyId, string chapterId, StudyExportOptions? options, CancellationToken ct) => throw NotImplemented();
+        Task<string> IStudiesApi.ExportStudyPgnAsync(string studyId, StudyExportOptions? options, CancellationToken ct) => throw NotImplemented();
+        Task<string> IStudiesApi.ExportUserStudiesPgnAsync(string username, StudyExportOptions? options, CancellationToken ct) => throw NotImplemented();
+        IAsyncEnumerable<StudyMetadata> IStudiesApi.StreamUserStudiesAsync(string username, CancellationToken ct) => throw NotImplemented();
+        Task<StudyImportResult> IStudiesApi.ImportPgnAsync(string studyId, string pgn, StudyImportOptions? options, CancellationToken ct) => throw NotImplemented();
+        Task<bool> IStudiesApi.UpdateChapterTagsAsync(string studyId, string chapterId, string pgnTags, CancellationToken ct) => throw NotImplemented();
+        Task<bool> IStudiesApi.DeleteChapterAsync(string studyId, string chapterId, CancellationToken ct) => throw NotImplemented();
+
+        // IBroadcastsApi
+        IAsyncEnumerable<BroadcastWithRounds> IBroadcastsApi.StreamOfficialBroadcastsAsync(int? nb, bool? html, CancellationToken ct) => throw NotImplemented();
+        Task<BroadcastTopPage> IBroadcastsApi.GetTopBroadcastsAsync(int? page, CancellationToken ct) => throw NotImplemented();
+        IAsyncEnumerable<BroadcastByUser> IBroadcastsApi.StreamUserBroadcastsAsync(string username, int? nb, bool? html, CancellationToken ct) => throw NotImplemented();
+        Task<BroadcastSearchPage> IBroadcastsApi.SearchBroadcastsAsync(string query, int? page, CancellationToken ct) => throw NotImplemented();
+        Task<BroadcastWithRounds> IBroadcastsApi.GetTournamentAsync(string broadcastTournamentId, bool? html, CancellationToken ct) => throw NotImplemented();
+        Task<BroadcastRound> IBroadcastsApi.GetRoundAsync(string broadcastTournamentSlug, string broadcastRoundSlug, string broadcastRoundId, CancellationToken ct) => throw NotImplemented();
+        IAsyncEnumerable<BroadcastMyRound> IBroadcastsApi.StreamMyRoundsAsync(int? nb, CancellationToken ct) => throw NotImplemented();
+        Task<BroadcastWithRounds> IBroadcastsApi.CreateTournamentAsync(BroadcastTournamentOptions options, CancellationToken ct) => throw NotImplemented();
+        Task<BroadcastWithRounds> IBroadcastsApi.UpdateTournamentAsync(string broadcastTournamentId, BroadcastTournamentOptions options, CancellationToken ct) => throw NotImplemented();
+        Task<BroadcastRoundNew> IBroadcastsApi.CreateRoundAsync(string broadcastTournamentId, BroadcastRoundOptions options, CancellationToken ct) => throw NotImplemented();
+        Task<BroadcastRoundNew> IBroadcastsApi.UpdateRoundAsync(string broadcastRoundId, BroadcastRoundOptions options, CancellationToken ct) => throw NotImplemented();
+        Task<bool> IBroadcastsApi.ResetRoundAsync(string broadcastRoundId, CancellationToken ct) => throw NotImplemented();
+        Task<BroadcastPgnPushResult> IBroadcastsApi.PushPgnAsync(string broadcastRoundId, string pgn, CancellationToken ct) => throw NotImplemented();
+        Task<string> IBroadcastsApi.ExportRoundPgnAsync(string broadcastRoundId, CancellationToken ct) => throw NotImplemented();
+        Task<string> IBroadcastsApi.ExportAllRoundsPgnAsync(string broadcastTournamentId, CancellationToken ct) => throw NotImplemented();
+        IAsyncEnumerable<string> IBroadcastsApi.StreamRoundPgnAsync(string broadcastRoundId, CancellationToken ct) => throw NotImplemented();
 
         // IAnalysisApi
         Task<CloudEvaluation?> IAnalysisApi.GetCloudEvaluationAsync(string fen, int? multiPv, string? variant, CancellationToken ct) => throw NotImplemented();
