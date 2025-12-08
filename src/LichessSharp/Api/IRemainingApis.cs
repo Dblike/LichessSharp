@@ -1,22 +1,6 @@
 namespace LichessSharp.Api;
 
 /// <summary>
-/// Bulk Pairings API - Create many games for other players.
-/// </summary>
-public interface IBulkPairingsApi
-{
-    // TODO: Implement bulk pairing endpoints
-}
-
-/// <summary>
-/// Messaging API - Private messages with other players.
-/// </summary>
-public interface IMessagingApi
-{
-    // TODO: Implement messaging endpoints
-}
-
-/// <summary>
 /// Analysis API - Access Lichess cloud evaluations database.
 /// </summary>
 public interface IAnalysisApi

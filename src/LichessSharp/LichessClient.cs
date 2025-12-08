@@ -126,12 +126,12 @@ public sealed class LichessClient : ILichessClient
         Board = new BoardApi(_httpClient);
         Bot = new BotApi(_httpClient);
         Challenges = new ChallengesApi(_httpClient);
-        BulkPairings = new NotImplementedApi<IBulkPairingsApi>();
+        BulkPairings = new BulkPairingsApi(_httpClient);
         ArenaTournaments = new ArenaTournamentsApi(_httpClient);
         SwissTournaments = new SwissTournamentsApi(_httpClient);
         Simuls = new SimulsApi(_httpClient);
         Studies = new StudiesApi(_httpClient);
-        Messaging = new NotImplementedApi<IMessagingApi>();
+        Messaging = new MessagingApi(_httpClient);
         Broadcasts = new BroadcastsApi(_httpClient);
         Analysis = new AnalysisApi(_httpClient);
         OpeningExplorer = new OpeningExplorerApi(_httpClient, _options.ExplorerBaseAddress);
@@ -154,9 +154,9 @@ public sealed class LichessClient : ILichessClient
     /// </summary>
     private sealed class NotImplementedApi<T> :
         IAccountApi, IUsersApi, IRelationsApi, IGamesApi, ITvApi, IPuzzlesApi,
-        ITeamsApi, IBoardApi, IBotApi, IChallengesApi, IBulkPairingsApi,
+        ITeamsApi, IBoardApi, IBotApi, IChallengesApi,
         IArenaTournamentsApi, ISwissTournamentsApi, ISimulsApi, IStudiesApi,
-        IMessagingApi, IBroadcastsApi, IAnalysisApi, IOpeningExplorerApi, ITablebaseApi
+        IBroadcastsApi, IAnalysisApi, IOpeningExplorerApi, ITablebaseApi
     {
         private static NotImplementedException NotImplemented() =>
             new($"The {typeof(T).Name} is not yet implemented. Implementation coming soon!");

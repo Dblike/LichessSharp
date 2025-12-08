@@ -6,8 +6,8 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Status | Count | APIs |
 |--------|-------|------|
-| **Implemented** | 18 APIs (134 endpoints) | Account, Users, Relations, Games, TV, Puzzles, Analysis, Opening Explorer, Tablebase, Challenges, Board, Bot, Teams, Arena Tournaments, Swiss Tournaments, Simuls, Studies, Broadcasts |
-| **Planned** | 2 APIs | Bulk Pairings, Messaging |
+| **Implemented** | 20 APIs (141 endpoints) | Account, Users, Relations, Games, TV, Puzzles, Analysis, Opening Explorer, Tablebase, Challenges, Board, Bot, Teams, Arena Tournaments, Swiss Tournaments, Simuls, Studies, Broadcasts, Bulk Pairings, Messaging |
+| **Planned** | 0 APIs | - |
 
 ## Legend
 
@@ -171,10 +171,13 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Endpoint | Status | Method |
 |----------|--------|--------|
-| Create bulk pairing | Planned | `BulkPairings.CreateAsync()` |
-| Get bulk pairing | Planned | `BulkPairings.GetAsync()` |
-| Start clocks | Planned | `BulkPairings.StartClocksAsync()` |
-| Cancel bulk pairing | Planned | `BulkPairings.CancelAsync()` |
+| Get all bulk pairings | Implemented | `BulkPairings.GetAllAsync()` |
+| Get bulk pairing | Implemented | `BulkPairings.GetAsync()` |
+| Create bulk pairing | Implemented | `BulkPairings.CreateAsync()` |
+| Start clocks | Implemented | `BulkPairings.StartClocksAsync()` |
+| Cancel bulk pairing | Implemented | `BulkPairings.CancelAsync()` |
+| Export games (PGN) | Implemented | `BulkPairings.ExportGamesPgnAsync()` |
+| Stream games (NDJSON) | Implemented | `BulkPairings.StreamGamesAsync()` |
 
 ## Arena Tournaments API
 
@@ -233,7 +236,7 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Endpoint | Status | Method |
 |----------|--------|--------|
-| Send private message | Planned | `Messaging.SendAsync()` |
+| Send private message | Implemented | `Messaging.SendAsync()` |
 
 ## Broadcasts API
 
@@ -322,15 +325,16 @@ This section outlines the recommended order for implementing remaining APIs base
 - ~~Tournament and round CRUD~~
 - ~~Search and streaming~~
 
-### Phase 5: Utility & Admin (Lower Priority)
+### Phase 5: Utility & Admin (Lower Priority) - COMPLETED
 
-**Bulk Pairings API** - 4 endpoints
-- Tournament organizer functionality
-- Admin-level operations
+**Bulk Pairings API** - 7 endpoints ✅
+- ~~Tournament organizer functionality~~
+- ~~Admin-level operations~~
+- ~~Create, manage, and export bulk pairing games~~
 
-**Messaging API** - 1 endpoint
-- Private messaging
-- Simple implementation
+**Messaging API** - 1 endpoint ✅
+- ~~Private messaging~~
+- ~~Simple implementation~~
 
 ### Implementation Notes
 
