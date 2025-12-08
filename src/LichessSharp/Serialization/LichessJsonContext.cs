@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using LichessSharp.Api;
 using LichessSharp.Models;
 
 namespace LichessSharp.Serialization;
@@ -27,6 +28,10 @@ namespace LichessSharp.Serialization;
 [JsonSerializable(typeof(OkResponse))]
 [JsonSerializable(typeof(ErrorResponse))]
 [JsonSerializable(typeof(Dictionary<string, object>))]
+[JsonSerializable(typeof(Dictionary<string, List<User>>))]
+[JsonSerializable(typeof(List<RatingHistory>))]
+[JsonSerializable(typeof(RatingHistory))]
+[JsonSerializable(typeof(LeaderboardResponse))]
 internal partial class LichessJsonContext : JsonSerializerContext
 {
 }

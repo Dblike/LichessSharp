@@ -114,7 +114,7 @@ public sealed class LichessClient : ILichessClient
         // Initialize API implementations
         // These will be implemented incrementally
         Account = new NotImplementedApi<IAccountApi>();
-        Users = new NotImplementedApi<IUsersApi>();
+        Users = new UsersApi(_httpClient);
         Relations = new NotImplementedApi<IRelationsApi>();
         Games = new NotImplementedApi<IGamesApi>();
         Tv = new NotImplementedApi<ITvApi>();

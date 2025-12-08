@@ -34,6 +34,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="LichessSharp.Tests" />
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
   </ItemGroup>
 
 </Project>

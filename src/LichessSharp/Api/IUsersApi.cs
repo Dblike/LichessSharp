@@ -1,5 +1,7 @@
+using System.Text.Json.Serialization;
 using LichessSharp.Api.Options;
 using LichessSharp.Models;
+using LichessSharp.Serialization.Converters;
 
 namespace LichessSharp.Api;
 
@@ -72,6 +74,7 @@ public class RatingHistory
     /// <summary>
     /// The rating data points.
     /// </summary>
+    [JsonConverter(typeof(RatingDataPointArrayConverter))]
     public required IReadOnlyList<RatingDataPoint> Points { get; init; }
 }
 

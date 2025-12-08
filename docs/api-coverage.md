@@ -22,12 +22,12 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Endpoint | Status | Method |
 |----------|--------|--------|
-| Get user public data | Planned | `Users.GetAsync()` |
-| Get users by ID | Planned | `Users.GetManyAsync()` |
-| Get real-time user status | Planned | `Users.GetStatusAsync()` |
-| Get all top 10 | Planned | `Users.GetAllTop10Async()` |
-| Get one leaderboard | Planned | `Users.GetLeaderboardAsync()` |
-| Get rating history | Planned | `Users.GetRatingHistoryAsync()` |
+| Get user public data | Implemented | `Users.GetAsync()` |
+| Get users by ID | Implemented | `Users.GetManyAsync()` |
+| Get real-time user status | Implemented | `Users.GetStatusAsync()` |
+| Get all top 10 | Implemented | `Users.GetAllTop10Async()` |
+| Get one leaderboard | Implemented | `Users.GetLeaderboardAsync()` |
+| Get rating history | Implemented | `Users.GetRatingHistoryAsync()` |
 
 ## Relations API
 
