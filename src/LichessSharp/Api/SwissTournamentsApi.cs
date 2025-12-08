@@ -9,14 +9,9 @@ namespace LichessSharp.Api;
 /// <summary>
 /// Implementation of the Swiss Tournaments API.
 /// </summary>
-internal sealed class SwissTournamentsApi : ISwissTournamentsApi
+internal sealed class SwissTournamentsApi(ILichessHttpClient httpClient) : ISwissTournamentsApi
 {
-    private readonly ILichessHttpClient _httpClient;
-
-    public SwissTournamentsApi(ILichessHttpClient httpClient)
-    {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-    }
+    private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
     /// <inheritdoc />
     public async Task<SwissTournament> GetAsync(string id, CancellationToken cancellationToken = default)

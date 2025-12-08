@@ -205,8 +205,8 @@ public class StudiesApiTests
         var username = "testuser";
         var studies = new List<StudyMetadata>
         {
-            new StudyMetadata { Id = "study1", Name = "Study 1" },
-            new StudyMetadata { Id = "study2", Name = "Study 2" }
+            new() { Id = "study1", Name = "Study 1" },
+            new() { Id = "study2", Name = "Study 2" }
         };
         _httpClientMock
             .Setup(x => x.StreamNdjsonAsync<StudyMetadata>($"/api/study/by/{username}", It.IsAny<CancellationToken>()))
@@ -252,7 +252,7 @@ public class StudiesApiTests
         {
             Chapters = new List<StudyChapter>
             {
-                new StudyChapter { Id = "chapter1", Name = "Chapter 1" }
+                new() { Id = "chapter1", Name = "Chapter 1" }
             }
         };
         _httpClientMock
@@ -284,7 +284,7 @@ public class StudiesApiTests
         {
             Chapters = new List<StudyChapter>
             {
-                new StudyChapter { Id = "chapter1", Name = "Test Chapter" }
+                new() { Id = "chapter1", Name = "Test Chapter" }
             }
         };
         _httpClientMock

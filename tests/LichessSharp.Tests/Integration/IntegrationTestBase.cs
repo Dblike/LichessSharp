@@ -6,13 +6,9 @@ namespace LichessSharp.Tests.Integration;
 /// </summary>
 public abstract class IntegrationTestBase : IDisposable
 {
-    protected LichessClient Client { get; }
+    protected LichessClient Client { get; } = new();
 
-    protected IntegrationTestBase()
-    {
-        // Create client without authentication for public API tests
-        Client = new LichessClient();
-    }
+    // Create client without authentication for public API tests
 
     public void Dispose()
     {

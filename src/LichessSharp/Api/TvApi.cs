@@ -8,14 +8,9 @@ namespace LichessSharp.Api;
 /// <summary>
 /// Implementation of the TV API.
 /// </summary>
-internal sealed class TvApi : ITvApi
+internal sealed class TvApi(ILichessHttpClient httpClient) : ITvApi
 {
-    private readonly ILichessHttpClient _httpClient;
-
-    public TvApi(ILichessHttpClient httpClient)
-    {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-    }
+    private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
     /// <inheritdoc />
     public async Task<TvChannels> GetCurrentGamesAsync(CancellationToken cancellationToken = default)

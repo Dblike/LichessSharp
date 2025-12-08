@@ -8,14 +8,9 @@ namespace LichessSharp.Api;
 /// <summary>
 /// Implementation of the Puzzles API.
 /// </summary>
-internal sealed class PuzzlesApi : IPuzzlesApi
+internal sealed class PuzzlesApi(ILichessHttpClient httpClient) : IPuzzlesApi
 {
-    private readonly ILichessHttpClient _httpClient;
-
-    public PuzzlesApi(ILichessHttpClient httpClient)
-    {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-    }
+    private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
     /// <inheritdoc />
     public async Task<PuzzleWithGame> GetDailyAsync(CancellationToken cancellationToken = default)

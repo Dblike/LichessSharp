@@ -5,14 +5,9 @@ namespace LichessSharp.Api;
 /// <summary>
 /// Implementation of the Simuls API.
 /// </summary>
-internal sealed class SimulsApi : ISimulsApi
+internal sealed class SimulsApi(ILichessHttpClient httpClient) : ISimulsApi
 {
-    private readonly ILichessHttpClient _httpClient;
-
-    public SimulsApi(ILichessHttpClient httpClient)
-    {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-    }
+    private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
     /// <inheritdoc />
     public async Task<SimulList> GetCurrentAsync(CancellationToken cancellationToken = default)

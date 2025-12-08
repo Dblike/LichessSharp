@@ -254,8 +254,8 @@ public class UsersApiTests
         // Arrange
         var expected = new Dictionary<string, List<User>>
         {
-            ["bullet"] = new List<User> { CreateTestUser("player1") },
-            ["blitz"] = new List<User> { CreateTestUser("player2") }
+            ["bullet"] = new() { CreateTestUser("player1") },
+            ["blitz"] = new() { CreateTestUser("player2") }
         };
         _httpClientMock
             .Setup(x => x.GetAsync<Dictionary<string, List<User>>>("/api/player", It.IsAny<CancellationToken>()))

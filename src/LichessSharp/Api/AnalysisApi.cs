@@ -7,14 +7,9 @@ namespace LichessSharp.Api;
 /// <summary>
 /// Implementation of the Analysis API.
 /// </summary>
-internal sealed class AnalysisApi : IAnalysisApi
+internal sealed class AnalysisApi(ILichessHttpClient httpClient) : IAnalysisApi
 {
-    private readonly ILichessHttpClient _httpClient;
-
-    public AnalysisApi(ILichessHttpClient httpClient)
-    {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-    }
+    private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
     /// <inheritdoc />
     public async Task<CloudEvaluation?> GetCloudEvaluationAsync(

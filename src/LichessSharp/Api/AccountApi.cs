@@ -6,14 +6,9 @@ namespace LichessSharp.Api;
 /// <summary>
 /// Implementation of the Account API.
 /// </summary>
-internal sealed class AccountApi : IAccountApi
+internal sealed class AccountApi(ILichessHttpClient httpClient) : IAccountApi
 {
-    private readonly ILichessHttpClient _httpClient;
-
-    public AccountApi(ILichessHttpClient httpClient)
-    {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-    }
+    private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
     /// <inheritdoc />
     public async Task<UserExtended> GetProfileAsync(CancellationToken cancellationToken = default)

@@ -7,14 +7,9 @@ namespace LichessSharp.Api;
 /// <summary>
 /// Implementation of the Relations API.
 /// </summary>
-internal sealed class RelationsApi : IRelationsApi
+internal sealed class RelationsApi(ILichessHttpClient httpClient) : IRelationsApi
 {
-    private readonly ILichessHttpClient _httpClient;
-
-    public RelationsApi(ILichessHttpClient httpClient)
-    {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-    }
+    private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
     /// <inheritdoc />
     public async Task<bool> FollowAsync(string username, CancellationToken cancellationToken = default)

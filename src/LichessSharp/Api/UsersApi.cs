@@ -8,14 +8,9 @@ namespace LichessSharp.Api;
 /// <summary>
 /// Implementation of the Users API.
 /// </summary>
-internal sealed class UsersApi : IUsersApi
+internal sealed class UsersApi(ILichessHttpClient httpClient) : IUsersApi
 {
-    private readonly ILichessHttpClient _httpClient;
-
-    public UsersApi(ILichessHttpClient httpClient)
-    {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-    }
+    private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
     /// <inheritdoc />
     public async Task<UserExtended> GetAsync(string username, GetUserOptions? options = null, CancellationToken cancellationToken = default)

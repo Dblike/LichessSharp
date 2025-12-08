@@ -8,14 +8,9 @@ namespace LichessSharp.Api;
 /// <summary>
 /// Implementation of the Board API.
 /// </summary>
-internal sealed class BoardApi : IBoardApi
+internal sealed class BoardApi(ILichessHttpClient httpClient) : IBoardApi
 {
-    private readonly ILichessHttpClient _httpClient;
-
-    public BoardApi(ILichessHttpClient httpClient)
-    {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-    }
+    private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
     /// <inheritdoc />
     public async IAsyncEnumerable<BoardAccountEvent> StreamEventsAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)

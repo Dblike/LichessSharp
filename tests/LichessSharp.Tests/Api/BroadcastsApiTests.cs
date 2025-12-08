@@ -143,7 +143,7 @@ public class BroadcastsApiTests
         var username = "testuser";
         var broadcasts = new List<BroadcastByUser>
         {
-            new BroadcastByUser { Tour = CreateTestTour("tour1") }
+            new() { Tour = CreateTestTour("tour1") }
         };
         _httpClientMock
             .Setup(x => x.StreamNdjsonAsync<BroadcastByUser>($"/api/broadcast/by/{username}", It.IsAny<CancellationToken>()))
@@ -660,8 +660,8 @@ public class BroadcastsApiTests
     public async Task StreamRoundPgnAsync_CallsCorrectEndpoint()
     {
         // Arrange
-        var roundId = "round123";
-        var expectedPgn = "[Event \"Test\"]\n1. e4 e5 *";
+        const string roundId = "round123";
+        const string expectedPgn = "[Event \"Test\"]\n1. e4 e5 *";
         _httpClientMock
             .Setup(x => x.GetStringWithAcceptAsync($"/api/stream/broadcast/round/{roundId}.pgn", "application/x-chess-pgn", It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedPgn);
@@ -771,7 +771,7 @@ public class BroadcastsApiTests
             Study = CreateTestStudyInfo(),
             Games = new List<BroadcastRoundGame>
             {
-                new BroadcastRoundGame { Id = "game1", Name = "Player1 - Player2" }
+                new() { Id = "game1", Name = "Player1 - Player2" }
             }
         };
     }

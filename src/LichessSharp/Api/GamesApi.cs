@@ -9,14 +9,9 @@ namespace LichessSharp.Api;
 /// <summary>
 /// Implementation of the Games API.
 /// </summary>
-internal sealed class GamesApi : IGamesApi
+internal sealed class GamesApi(ILichessHttpClient httpClient) : IGamesApi
 {
-    private readonly ILichessHttpClient _httpClient;
-
-    public GamesApi(ILichessHttpClient httpClient)
-    {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-    }
+    private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
     /// <inheritdoc />
     public async Task<GameJson> GetAsync(string gameId, ExportGameOptions? options = null, CancellationToken cancellationToken = default)

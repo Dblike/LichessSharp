@@ -8,14 +8,9 @@ namespace LichessSharp.Api;
 /// <summary>
 /// Implementation of the Bulk Pairings API.
 /// </summary>
-internal sealed class BulkPairingsApi : IBulkPairingsApi
+internal sealed class BulkPairingsApi(ILichessHttpClient httpClient) : IBulkPairingsApi
 {
-    private readonly ILichessHttpClient _httpClient;
-
-    public BulkPairingsApi(ILichessHttpClient httpClient)
-    {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-    }
+    private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
     /// <inheritdoc />
     public async Task<IReadOnlyList<BulkPairing>> GetAllAsync(CancellationToken cancellationToken = default)

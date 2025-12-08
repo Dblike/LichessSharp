@@ -7,14 +7,9 @@ namespace LichessSharp.Api;
 /// <summary>
 /// Implementation of the Broadcasts API.
 /// </summary>
-internal sealed class BroadcastsApi : IBroadcastsApi
+internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcastsApi
 {
-    private readonly ILichessHttpClient _httpClient;
-
-    public BroadcastsApi(ILichessHttpClient httpClient)
-    {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-    }
+    private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
     #region Viewing Broadcasts
 

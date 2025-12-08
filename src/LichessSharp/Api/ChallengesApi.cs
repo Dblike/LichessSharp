@@ -8,14 +8,9 @@ namespace LichessSharp.Api;
 /// <summary>
 /// Implementation of the Challenges API.
 /// </summary>
-internal sealed class ChallengesApi : IChallengesApi
+internal sealed class ChallengesApi(ILichessHttpClient httpClient) : IChallengesApi
 {
-    private readonly ILichessHttpClient _httpClient;
-
-    public ChallengesApi(ILichessHttpClient httpClient)
-    {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-    }
+    private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
     /// <inheritdoc />
     public async Task<ChallengeList> GetPendingAsync(CancellationToken cancellationToken = default)

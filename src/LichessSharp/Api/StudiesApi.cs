@@ -7,14 +7,9 @@ namespace LichessSharp.Api;
 /// <summary>
 /// Implementation of the Studies API.
 /// </summary>
-internal sealed class StudiesApi : IStudiesApi
+internal sealed class StudiesApi(ILichessHttpClient httpClient) : IStudiesApi
 {
-    private readonly ILichessHttpClient _httpClient;
-
-    public StudiesApi(ILichessHttpClient httpClient)
-    {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-    }
+    private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
     /// <inheritdoc />
     public async Task<string> ExportChapterPgnAsync(string studyId, string chapterId, StudyExportOptions? options = null, CancellationToken cancellationToken = default)

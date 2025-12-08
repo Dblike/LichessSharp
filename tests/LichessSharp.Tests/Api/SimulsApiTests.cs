@@ -178,7 +178,7 @@ public class SimulsApiTests
             },
             Variants = new List<SimulVariant>
             {
-                new SimulVariant { Key = "standard", Name = "Standard" }
+                new() { Key = "standard", Name = "Standard" }
             },
             IsCreated = false,
             IsRunning = true,
@@ -219,8 +219,8 @@ public class SimulsApiTests
             Host = new SimulHost { Id = "host", Name = "Host" },
             Variants = new List<SimulVariant>
             {
-                new SimulVariant { Key = "standard", Name = "Standard" },
-                new SimulVariant { Key = "chess960", Name = "Chess960" }
+                new() { Key = "standard", Name = "Standard" },
+                new() { Key = "chess960", Name = "Chess960" }
             },
             IsCreated = true,
             IsRunning = false,
@@ -277,7 +277,7 @@ public class SimulsApiTests
             },
             Variants = new List<SimulVariant>
             {
-                new SimulVariant { Key = "standard", Name = "Standard" }
+                new() { Key = "standard", Name = "Standard" }
             },
             IsCreated = id.StartsWith("created"),
             IsRunning = id.StartsWith("started"),

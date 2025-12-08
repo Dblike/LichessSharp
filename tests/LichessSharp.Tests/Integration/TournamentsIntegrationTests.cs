@@ -12,12 +12,7 @@ namespace LichessSharp.Tests.Integration;
 [Trait("Category", "Integration")]
 public class TournamentsIntegrationTests : IDisposable
 {
-    private readonly LichessClient _client;
-
-    public TournamentsIntegrationTests()
-    {
-        _client = new LichessClient();
-    }
+    private readonly LichessClient _client = new();
 
     public void Dispose()
     {

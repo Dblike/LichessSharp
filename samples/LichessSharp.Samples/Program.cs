@@ -13,7 +13,7 @@ Console.WriteLine("   Client created successfully.\n");
 
 // Example 2: Create a client with an access token
 Console.WriteLine("2. Creating an authenticated client...");
-var token = Environment.GetEnvironmentVariable("LICHESS_TOKEN");
+var token = Environment.GetEnvironmentVariable("LICHESS_TEST_TOKEN");
 if (!string.IsNullOrEmpty(token))
 {
     using var authenticatedClient = new LichessClient(token);
@@ -21,7 +21,7 @@ if (!string.IsNullOrEmpty(token))
 }
 else
 {
-    Console.WriteLine("   Skipped - Set LICHESS_TOKEN environment variable to test authenticated access.\n");
+    Console.WriteLine("   Skipped - Set LICHESS_TEST_TOKEN environment variable to test authenticated access.\n");
 }
 
 // Example 3: Create a client with custom options

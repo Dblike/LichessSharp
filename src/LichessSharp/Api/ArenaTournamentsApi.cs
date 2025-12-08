@@ -9,14 +9,9 @@ namespace LichessSharp.Api;
 /// <summary>
 /// Implementation of the Arena Tournaments API.
 /// </summary>
-internal sealed class ArenaTournamentsApi : IArenaTournamentsApi
+internal sealed class ArenaTournamentsApi(ILichessHttpClient httpClient) : IArenaTournamentsApi
 {
-    private readonly ILichessHttpClient _httpClient;
-
-    public ArenaTournamentsApi(ILichessHttpClient httpClient)
-    {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-    }
+    private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
     /// <inheritdoc />
     public async Task<ArenaTournamentList> GetCurrentAsync(CancellationToken cancellationToken = default)

@@ -8,14 +8,9 @@ namespace LichessSharp.Api;
 /// <summary>
 /// Implementation of the Teams API.
 /// </summary>
-internal sealed class TeamsApi : ITeamsApi
+internal sealed class TeamsApi(ILichessHttpClient httpClient) : ITeamsApi
 {
-    private readonly ILichessHttpClient _httpClient;
-
-    public TeamsApi(ILichessHttpClient httpClient)
-    {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-    }
+    private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
     /// <inheritdoc />
     public async Task<Team> GetAsync(string teamId, CancellationToken cancellationToken = default)

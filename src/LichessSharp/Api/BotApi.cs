@@ -8,14 +8,9 @@ namespace LichessSharp.Api;
 /// <summary>
 /// Implementation of the Bot API.
 /// </summary>
-internal sealed class BotApi : IBotApi
+internal sealed class BotApi(ILichessHttpClient httpClient) : IBotApi
 {
-    private readonly ILichessHttpClient _httpClient;
-
-    public BotApi(ILichessHttpClient httpClient)
-    {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-    }
+    private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
     /// <inheritdoc />
     public async Task<bool> UpgradeAccountAsync(CancellationToken cancellationToken = default)

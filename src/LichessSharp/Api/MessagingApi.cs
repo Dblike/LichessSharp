@@ -5,14 +5,9 @@ namespace LichessSharp.Api;
 /// <summary>
 /// Implementation of the Messaging API.
 /// </summary>
-internal sealed class MessagingApi : IMessagingApi
+internal sealed class MessagingApi(ILichessHttpClient httpClient) : IMessagingApi
 {
-    private readonly ILichessHttpClient _httpClient;
-
-    public MessagingApi(ILichessHttpClient httpClient)
-    {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-    }
+    private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
     /// <inheritdoc />
     public async Task<bool> SendAsync(string username, string text, CancellationToken cancellationToken = default)

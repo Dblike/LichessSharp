@@ -444,8 +444,8 @@ public class BulkPairingsApiTests
         // Arrange
         var games = new List<GameJson>
         {
-            new GameJson { Id = "game1" },
-            new GameJson { Id = "game2" }
+            new() { Id = "game1" },
+            new() { Id = "game2" }
         };
         _httpClientMock
             .Setup(x => x.StreamNdjsonAsync<GameJson>("/api/bulk-pairing/test123/games", It.IsAny<CancellationToken>()))
@@ -529,7 +529,7 @@ public class BulkPairingsApiTests
             Id = id,
             Games = new List<BulkPairingGame>
             {
-                new BulkPairingGame
+                new()
                 {
                     Id = $"game_{id}_1",
                     White = "player1",

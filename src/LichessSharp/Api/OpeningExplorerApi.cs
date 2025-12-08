@@ -6,16 +6,10 @@ namespace LichessSharp.Api;
 /// <summary>
 /// Implementation of the Opening Explorer API.
 /// </summary>
-internal sealed class OpeningExplorerApi : IOpeningExplorerApi
+internal sealed class OpeningExplorerApi(ILichessHttpClient httpClient, Uri explorerBaseAddress) : IOpeningExplorerApi
 {
-    private readonly ILichessHttpClient _httpClient;
-    private readonly Uri _baseAddress;
-
-    public OpeningExplorerApi(ILichessHttpClient httpClient, Uri explorerBaseAddress)
-    {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-        _baseAddress = explorerBaseAddress ?? throw new ArgumentNullException(nameof(explorerBaseAddress));
-    }
+    private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+    private readonly Uri _baseAddress = explorerBaseAddress ?? throw new ArgumentNullException(nameof(explorerBaseAddress));
 
     /// <inheritdoc />
     public async Task<ExplorerResult> GetMastersAsync(
