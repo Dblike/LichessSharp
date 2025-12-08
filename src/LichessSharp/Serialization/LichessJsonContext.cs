@@ -46,6 +46,15 @@ namespace LichessSharp.Serialization;
 [JsonSerializable(typeof(OngoingGamesResponse))]
 [JsonSerializable(typeof(OngoingGame))]
 [JsonSerializable(typeof(ImportGameResponse))]
+[JsonSerializable(typeof(PuzzleActivity))]
+[JsonSerializable(typeof(PuzzleActivityPuzzle))]
+[JsonSerializable(typeof(PuzzleDashboard))]
+[JsonSerializable(typeof(PuzzleThemeResults))]
+[JsonSerializable(typeof(PuzzlePerformance))]
+[JsonSerializable(typeof(StormDashboard))]
+[JsonSerializable(typeof(StormHigh))]
+[JsonSerializable(typeof(StormDay))]
+[JsonSerializable(typeof(PuzzleRace))]
 internal partial class LichessJsonContext : JsonSerializerContext
 {
 }

@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using LichessSharp.Models;
 
 namespace LichessSharp.Api;
@@ -71,29 +72,70 @@ public interface IPuzzlesApi
 public class PuzzleActivity
 {
     /// <summary>
-    /// The puzzle ID.
+    /// When the puzzle was played (Unix timestamp in milliseconds).
     /// </summary>
-    public required string Id { get; init; }
-
-    /// <summary>
-    /// When the puzzle was played.
-    /// </summary>
-    public DateTimeOffset Date { get; init; }
+    [JsonPropertyName("date")]
+    public long Date { get; init; }
 
     /// <summary>
     /// Whether the puzzle was solved correctly.
     /// </summary>
+    [JsonPropertyName("win")]
     public bool Win { get; init; }
 
     /// <summary>
-    /// Rating before playing.
+    /// The puzzle that was played.
     /// </summary>
-    public int RatingBefore { get; init; }
+    [JsonPropertyName("puzzle")]
+    public PuzzleActivityPuzzle? Puzzle { get; init; }
+}
+
+/// <summary>
+/// Puzzle details in activity.
+/// </summary>
+public class PuzzleActivityPuzzle
+{
+    /// <summary>
+    /// The puzzle ID.
+    /// </summary>
+    [JsonPropertyName("id")]
+    public required string Id { get; init; }
 
     /// <summary>
-    /// Rating after playing.
+    /// The puzzle rating.
     /// </summary>
-    public int RatingAfter { get; init; }
+    [JsonPropertyName("rating")]
+    public int Rating { get; init; }
+
+    /// <summary>
+    /// Number of times played.
+    /// </summary>
+    [JsonPropertyName("plays")]
+    public int Plays { get; init; }
+
+    /// <summary>
+    /// The FEN position.
+    /// </summary>
+    [JsonPropertyName("fen")]
+    public string? Fen { get; init; }
+
+    /// <summary>
+    /// The last move before the puzzle.
+    /// </summary>
+    [JsonPropertyName("lastMove")]
+    public string? LastMove { get; init; }
+
+    /// <summary>
+    /// Solution moves in UCI notation.
+    /// </summary>
+    [JsonPropertyName("solution")]
+    public string[]? Solution { get; init; }
+
+    /// <summary>
+    /// Puzzle themes.
+    /// </summary>
+    [JsonPropertyName("themes")]
+    public string[]? Themes { get; init; }
 }
 
 /// <summary>
@@ -104,17 +146,38 @@ public class PuzzleDashboard
     /// <summary>
     /// The number of days covered.
     /// </summary>
+    [JsonPropertyName("days")]
     public int Days { get; init; }
 
     /// <summary>
     /// Global puzzle performance.
     /// </summary>
+    [JsonPropertyName("global")]
     public PuzzlePerformance? Global { get; init; }
 
     /// <summary>
     /// Performance by theme.
     /// </summary>
-    public Dictionary<string, PuzzlePerformance>? Themes { get; init; }
+    [JsonPropertyName("themes")]
+    public Dictionary<string, PuzzleThemeResults>? Themes { get; init; }
+}
+
+/// <summary>
+/// Puzzle theme results.
+/// </summary>
+public class PuzzleThemeResults
+{
+    /// <summary>
+    /// The theme name.
+    /// </summary>
+    [JsonPropertyName("theme")]
+    public string? Theme { get; init; }
+
+    /// <summary>
+    /// The results for this theme.
+    /// </summary>
+    [JsonPropertyName("results")]
+    public PuzzlePerformance? Results { get; init; }
 }
 
 /// <summary>
@@ -123,35 +186,34 @@ public class PuzzleDashboard
 public class PuzzlePerformance
 {
     /// <summary>
-    /// First attempt results.
+    /// Number of puzzles played.
     /// </summary>
-    public PuzzleResults? FirstWins { get; init; }
+    [JsonPropertyName("nb")]
+    public int Count { get; init; }
 
     /// <summary>
-    /// Replayable results.
+    /// Number of first attempt wins.
     /// </summary>
-    public PuzzleResults? ReplayWins { get; init; }
-}
-
-/// <summary>
-/// Puzzle results.
-/// </summary>
-public class PuzzleResults
-{
-    /// <summary>
-    /// Number of wins.
-    /// </summary>
-    public int Wins { get; init; }
+    [JsonPropertyName("firstWins")]
+    public int FirstWins { get; init; }
 
     /// <summary>
-    /// Number of losses.
+    /// Number of replay wins.
     /// </summary>
-    public int Losses { get; init; }
+    [JsonPropertyName("replayWins")]
+    public int ReplayWins { get; init; }
 
     /// <summary>
-    /// Number of draws.
+    /// Average puzzle rating.
     /// </summary>
-    public int Draws { get; init; }
+    [JsonPropertyName("puzzleRatingAvg")]
+    public int PuzzleRatingAvg { get; init; }
+
+    /// <summary>
+    /// Performance rating.
+    /// </summary>
+    [JsonPropertyName("performance")]
+    public int Performance { get; init; }
 }
 
 /// <summary>
@@ -162,11 +224,13 @@ public class StormDashboard
     /// <summary>
     /// High scores.
     /// </summary>
+    [JsonPropertyName("high")]
     public StormHigh? High { get; init; }
 
     /// <summary>
     /// Daily history.
     /// </summary>
+    [JsonPropertyName("days")]
     public IReadOnlyList<StormDay>? Days { get; init; }
 }
 
@@ -178,21 +242,25 @@ public class StormHigh
     /// <summary>
     /// All-time high.
     /// </summary>
+    [JsonPropertyName("allTime")]
     public int AllTime { get; init; }
 
     /// <summary>
     /// Monthly high.
     /// </summary>
+    [JsonPropertyName("month")]
     public int Month { get; init; }
 
     /// <summary>
     /// Weekly high.
     /// </summary>
+    [JsonPropertyName("week")]
     public int Week { get; init; }
 
     /// <summary>
     /// Daily high.
     /// </summary>
+    [JsonPropertyName("day")]
     public int Day { get; init; }
 }
 
@@ -202,24 +270,52 @@ public class StormHigh
 public class StormDay
 {
     /// <summary>
-    /// The day identifier (YYYY/MM/DD format).
+    /// The day identifier (YYYY/M/D format).
     /// </summary>
+    [JsonPropertyName("_id")]
     public required string Id { get; init; }
 
     /// <summary>
     /// High score for this day.
     /// </summary>
+    [JsonPropertyName("score")]
     public int Score { get; init; }
 
     /// <summary>
     /// Number of runs.
     /// </summary>
+    [JsonPropertyName("runs")]
     public int Runs { get; init; }
 
     /// <summary>
     /// Time spent in seconds.
     /// </summary>
+    [JsonPropertyName("time")]
     public int Time { get; init; }
+
+    /// <summary>
+    /// Number of moves.
+    /// </summary>
+    [JsonPropertyName("moves")]
+    public int Moves { get; init; }
+
+    /// <summary>
+    /// Number of errors.
+    /// </summary>
+    [JsonPropertyName("errors")]
+    public int Errors { get; init; }
+
+    /// <summary>
+    /// Highest combo.
+    /// </summary>
+    [JsonPropertyName("combo")]
+    public int Combo { get; init; }
+
+    /// <summary>
+    /// Highest puzzle rating reached.
+    /// </summary>
+    [JsonPropertyName("highest")]
+    public int Highest { get; init; }
 }
 
 /// <summary>
@@ -230,10 +326,12 @@ public class PuzzleRace
     /// <summary>
     /// The race ID.
     /// </summary>
+    [JsonPropertyName("id")]
     public required string Id { get; init; }
 
     /// <summary>
     /// URL to the race.
     /// </summary>
+    [JsonPropertyName("url")]
     public required string Url { get; init; }
 }

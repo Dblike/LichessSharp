@@ -121,7 +121,7 @@ public sealed class LichessClient : ILichessClient
         Relations = new RelationsApi(_httpClient);
         Games = new GamesApi(_httpClient);
         Tv = new NotImplementedApi<ITvApi>();
-        Puzzles = new NotImplementedApi<IPuzzlesApi>();
+        Puzzles = new PuzzlesApi(_httpClient);
         Teams = new NotImplementedApi<ITeamsApi>();
         Board = new NotImplementedApi<IBoardApi>();
         Bot = new NotImplementedApi<IBotApi>();
