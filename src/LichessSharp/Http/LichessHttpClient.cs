@@ -105,6 +105,44 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         return await DeserializeResponseAsync<T>(response, cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<T> GetAbsoluteNdjsonLastAsync<T>(Uri absoluteUrl, CancellationToken cancellationToken = default)
+    {
+        var response = await SendAbsoluteRequestAsync(HttpMethod.Get, absoluteUrl, null, cancellationToken).ConfigureAwait(false);
+
+        using var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+        using var reader = new StreamReader(stream);
+
+        T? lastItem = default;
+        string? line;
+        while ((line = await reader.ReadLineAsync(cancellationToken).ConfigureAwait(false)) != null)
+        {
+            if (string.IsNullOrWhiteSpace(line))
+            {
+                continue;
+            }
+
+            try
+            {
+                var item = JsonSerializer.Deserialize<T>(line, _jsonOptions);
+                if (item != null)
+                {
+                    lastItem = item;
+                }
+            }
+            catch (JsonException ex)
+            {
+                _logger.LogWarning(ex, "Failed to deserialize ndjson line: {Line}", line);
+            }
+        }
+
+        if (lastItem == null)
+        {
+            throw new LichessException("No valid JSON lines found in response");
+        }
+
+        return lastItem;
+    }
+
     public async IAsyncEnumerable<T> StreamNdjsonAsync<T>(string endpoint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         await foreach (var item in StreamNdjsonCoreAsync<T>(HttpMethod.Get, endpoint, null, cancellationToken).ConfigureAwait(false))
@@ -188,7 +226,9 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         var rateLimitRetryCount = 0;
         var transientRetryCount = 0;
         var maxRateLimitRetries = _options.AutoRetryOnRateLimit ? _options.MaxRateLimitRetries : 0;
-        var maxTransientRetries = _options.EnableTransientRetry ? _options.MaxTransientRetries : 0;
+        // Transient retry is only safe for requests without content (GET, etc.)
+        // Content cannot be resent after the first attempt as the stream is consumed
+        var maxTransientRetries = content == null && _options.EnableTransientRetry ? _options.MaxTransientRetries : 0;
 
         while (true)
         {
@@ -227,7 +267,11 @@ internal sealed class LichessHttpClient : ILichessHttpClient
                 continue;
             }
 
-            if (response.StatusCode == HttpStatusCode.TooManyRequests && rateLimitRetryCount < maxRateLimitRetries)
+            // Note: Rate limit retry with content is problematic because the content has been consumed.
+            // However, we skip rate limit retry for requests with content to avoid this issue.
+            if (response.StatusCode == HttpStatusCode.TooManyRequests &&
+                content == null &&
+                rateLimitRetryCount < maxRateLimitRetries)
             {
                 rateLimitRetryCount++;
                 var retryAfter = GetRetryAfter(response);
@@ -257,7 +301,9 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         var rateLimitRetryCount = 0;
         var transientRetryCount = 0;
         var maxRateLimitRetries = _options.AutoRetryOnRateLimit ? _options.MaxRateLimitRetries : 0;
-        var maxTransientRetries = _options.EnableTransientRetry ? _options.MaxTransientRetries : 0;
+        // Transient retry is only safe for requests without content (GET, etc.)
+        // Content cannot be resent after the first attempt as the stream is consumed
+        var maxTransientRetries = content == null && _options.EnableTransientRetry ? _options.MaxTransientRetries : 0;
 
         while (true)
         {
@@ -298,7 +344,10 @@ internal sealed class LichessHttpClient : ILichessHttpClient
                 continue;
             }
 
-            if (response.StatusCode == HttpStatusCode.TooManyRequests && rateLimitRetryCount < maxRateLimitRetries)
+            // Skip rate limit retry for requests with content as the content stream is consumed
+            if (response.StatusCode == HttpStatusCode.TooManyRequests &&
+                content == null &&
+                rateLimitRetryCount < maxRateLimitRetries)
             {
                 rateLimitRetryCount++;
                 var retryAfter = GetRetryAfter(response);
@@ -327,7 +376,9 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         var rateLimitRetryCount = 0;
         var transientRetryCount = 0;
         var maxRateLimitRetries = _options.AutoRetryOnRateLimit ? _options.MaxRateLimitRetries : 0;
-        var maxTransientRetries = _options.EnableTransientRetry ? _options.MaxTransientRetries : 0;
+        // Transient retry is only safe for requests without content (GET, etc.)
+        // Content cannot be resent after the first attempt as the stream is consumed
+        var maxTransientRetries = content == null && _options.EnableTransientRetry ? _options.MaxTransientRetries : 0;
 
         while (true)
         {
@@ -368,7 +419,10 @@ internal sealed class LichessHttpClient : ILichessHttpClient
                 continue;
             }
 
-            if (response.StatusCode == HttpStatusCode.TooManyRequests && rateLimitRetryCount < maxRateLimitRetries)
+            // Skip rate limit retry for requests with content as the content stream is consumed
+            if (response.StatusCode == HttpStatusCode.TooManyRequests &&
+                content == null &&
+                rateLimitRetryCount < maxRateLimitRetries)
             {
                 rateLimitRetryCount++;
                 var retryAfter = GetRetryAfter(response);
@@ -504,6 +558,12 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         if (ex.InnerException is SocketException)
         {
             return true;
+        }
+
+        // ObjectDisposedException means the content was already consumed - not transient
+        if (ex.InnerException is ObjectDisposedException)
+        {
+            return false;
         }
 
         // DNS resolution failures, connection refused, etc.

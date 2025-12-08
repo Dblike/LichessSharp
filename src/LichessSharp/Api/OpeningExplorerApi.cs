@@ -52,7 +52,9 @@ internal sealed class OpeningExplorerApi : IOpeningExplorerApi
         ArgumentException.ThrowIfNullOrWhiteSpace(player);
 
         var url = BuildPlayerUrl(fen, player, options);
-        return await _httpClient.GetAbsoluteAsync<ExplorerResult>(url, cancellationToken).ConfigureAwait(false);
+        // The player endpoint returns NDJSON with progressive updates.
+        // We read all lines and return the last (most complete) result.
+        return await _httpClient.GetAbsoluteNdjsonLastAsync<ExplorerResult>(url, cancellationToken).ConfigureAwait(false);
     }
 
     private Uri BuildMastersUrl(string fen, ExplorerOptions? options)

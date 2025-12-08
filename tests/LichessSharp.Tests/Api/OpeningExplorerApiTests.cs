@@ -181,14 +181,14 @@ public class OpeningExplorerApiTests
         var fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
         var player = "DrNykterstein";
         _httpClientMock
-            .Setup(x => x.GetAbsoluteAsync<ExplorerResult>(It.IsAny<Uri>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAbsoluteNdjsonLastAsync<ExplorerResult>(It.IsAny<Uri>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(CreateTestExplorerResult());
 
         // Act
         await _explorerApi.GetPlayerAsync(fen, player);
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAbsoluteAsync<ExplorerResult>(
+        _httpClientMock.Verify(x => x.GetAbsoluteNdjsonLastAsync<ExplorerResult>(
             It.Is<Uri>(u =>
                 u.ToString().StartsWith("https://explorer.lichess.ovh/player?fen=") &&
                 u.ToString().Contains("player=DrNykterstein") &&
@@ -204,14 +204,14 @@ public class OpeningExplorerApiTests
         var player = "DrNykterstein";
         var options = new ExplorerOptions { Color = "black" };
         _httpClientMock
-            .Setup(x => x.GetAbsoluteAsync<ExplorerResult>(It.IsAny<Uri>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAbsoluteNdjsonLastAsync<ExplorerResult>(It.IsAny<Uri>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(CreateTestExplorerResult());
 
         // Act
         await _explorerApi.GetPlayerAsync(fen, player, options);
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAbsoluteAsync<ExplorerResult>(
+        _httpClientMock.Verify(x => x.GetAbsoluteNdjsonLastAsync<ExplorerResult>(
             It.Is<Uri>(u => u.ToString().Contains("color=black")),
             It.IsAny<CancellationToken>()), Times.Once);
     }
