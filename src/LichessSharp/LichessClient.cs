@@ -127,8 +127,8 @@ public sealed class LichessClient : ILichessClient
         Bot = new BotApi(_httpClient);
         Challenges = new ChallengesApi(_httpClient);
         BulkPairings = new NotImplementedApi<IBulkPairingsApi>();
-        ArenaTournaments = new NotImplementedApi<IArenaTournamentsApi>();
-        SwissTournaments = new NotImplementedApi<ISwissTournamentsApi>();
+        ArenaTournaments = new ArenaTournamentsApi(_httpClient);
+        SwissTournaments = new SwissTournamentsApi(_httpClient);
         Simuls = new NotImplementedApi<ISimulsApi>();
         Studies = new NotImplementedApi<IStudiesApi>();
         Messaging = new NotImplementedApi<IMessagingApi>();
@@ -260,6 +260,35 @@ public sealed class LichessClient : ILichessClient
         Task<ChallengeOpenJson> IChallengesApi.CreateOpenAsync(ChallengeOpenOptions? options, CancellationToken ct) => throw NotImplemented();
         Task<bool> IChallengesApi.StartClocksAsync(string gameId, string? token1, string? token2, CancellationToken ct) => throw NotImplemented();
         Task<bool> IChallengesApi.AddTimeAsync(string gameId, int seconds, CancellationToken ct) => throw NotImplemented();
+
+        // IArenaTournamentsApi
+        Task<ArenaTournamentList> IArenaTournamentsApi.GetCurrentAsync(CancellationToken ct) => throw NotImplemented();
+        Task<ArenaTournament> IArenaTournamentsApi.GetAsync(string id, int page, CancellationToken ct) => throw NotImplemented();
+        Task<ArenaTournament> IArenaTournamentsApi.CreateAsync(ArenaCreateOptions options, CancellationToken ct) => throw NotImplemented();
+        Task<ArenaTournament> IArenaTournamentsApi.UpdateAsync(string id, ArenaUpdateOptions options, CancellationToken ct) => throw NotImplemented();
+        Task<bool> IArenaTournamentsApi.JoinAsync(string id, string? password, string? team, bool? pairMeAsap, CancellationToken ct) => throw NotImplemented();
+        Task<bool> IArenaTournamentsApi.WithdrawAsync(string id, CancellationToken ct) => throw NotImplemented();
+        Task<bool> IArenaTournamentsApi.TerminateAsync(string id, CancellationToken ct) => throw NotImplemented();
+        Task<ArenaTournament> IArenaTournamentsApi.UpdateTeamBattleAsync(string id, string teams, int? nbLeaders, CancellationToken ct) => throw NotImplemented();
+        IAsyncEnumerable<Models.GameJson> IArenaTournamentsApi.StreamGamesAsync(string id, ArenaGamesExportOptions? options, CancellationToken ct) => throw NotImplemented();
+        IAsyncEnumerable<ArenaPlayerResult> IArenaTournamentsApi.StreamResultsAsync(string id, int? nb, bool sheet, CancellationToken ct) => throw NotImplemented();
+        Task<ArenaTeamStanding> IArenaTournamentsApi.GetTeamStandingAsync(string id, CancellationToken ct) => throw NotImplemented();
+        IAsyncEnumerable<ArenaTournamentSummary> IArenaTournamentsApi.StreamCreatedByAsync(string username, ArenaStatusFilter? status, CancellationToken ct) => throw NotImplemented();
+        IAsyncEnumerable<ArenaPlayedTournament> IArenaTournamentsApi.StreamPlayedByAsync(string username, int? nb, CancellationToken ct) => throw NotImplemented();
+        IAsyncEnumerable<ArenaTournamentSummary> IArenaTournamentsApi.StreamTeamTournamentsAsync(string teamId, int? max, CancellationToken ct) => throw NotImplemented();
+
+        // ISwissTournamentsApi
+        Task<SwissTournament> ISwissTournamentsApi.GetAsync(string id, CancellationToken ct) => throw NotImplemented();
+        Task<SwissTournament> ISwissTournamentsApi.CreateAsync(string teamId, SwissCreateOptions options, CancellationToken ct) => throw NotImplemented();
+        Task<SwissTournament> ISwissTournamentsApi.UpdateAsync(string id, SwissUpdateOptions options, CancellationToken ct) => throw NotImplemented();
+        Task<bool> ISwissTournamentsApi.ScheduleNextRoundAsync(string id, long date, CancellationToken ct) => throw NotImplemented();
+        Task<bool> ISwissTournamentsApi.JoinAsync(string id, string? password, CancellationToken ct) => throw NotImplemented();
+        Task<bool> ISwissTournamentsApi.WithdrawAsync(string id, CancellationToken ct) => throw NotImplemented();
+        Task<bool> ISwissTournamentsApi.TerminateAsync(string id, CancellationToken ct) => throw NotImplemented();
+        Task<string> ISwissTournamentsApi.ExportTrfAsync(string id, CancellationToken ct) => throw NotImplemented();
+        IAsyncEnumerable<Models.GameJson> ISwissTournamentsApi.StreamGamesAsync(string id, SwissGamesExportOptions? options, CancellationToken ct) => throw NotImplemented();
+        IAsyncEnumerable<SwissPlayerResult> ISwissTournamentsApi.StreamResultsAsync(string id, int? nb, CancellationToken ct) => throw NotImplemented();
+        IAsyncEnumerable<SwissTournament> ISwissTournamentsApi.StreamTeamTournamentsAsync(string teamId, int? max, CancellationToken ct) => throw NotImplemented();
 
         // IAnalysisApi
         Task<CloudEvaluation?> IAnalysisApi.GetCloudEvaluationAsync(string fen, int? multiPv, string? variant, CancellationToken ct) => throw NotImplemented();

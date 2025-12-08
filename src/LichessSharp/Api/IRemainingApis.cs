@@ -9,22 +9,6 @@ public interface IBulkPairingsApi
 }
 
 /// <summary>
-/// Arena Tournaments API - Access Arena tournaments played on Lichess.
-/// </summary>
-public interface IArenaTournamentsApi
-{
-    // TODO: Implement arena tournament endpoints
-}
-
-/// <summary>
-/// Swiss Tournaments API - Access Swiss tournaments played on Lichess.
-/// </summary>
-public interface ISwissTournamentsApi
-{
-    // TODO: Implement swiss tournament endpoints
-}
-
-/// <summary>
 /// Simuls API - Access simultaneous exhibitions played on Lichess.
 /// </summary>
 public interface ISimulsApi

@@ -164,7 +164,7 @@ public class TeamsApiIntegrationTests : IntegrationTestBase
         var act = async () => await Client.Teams.JoinAsync(teamId);
 
         await act.Should().ThrowAsync<LichessException>()
-            .WithMessage("*401*");
+            .WithMessage("Access denied. Your token may not have the required scope for this operation.");
     }
 
     [Fact]
@@ -177,7 +177,7 @@ public class TeamsApiIntegrationTests : IntegrationTestBase
         var act = async () => await Client.Teams.LeaveAsync(teamId);
 
         await act.Should().ThrowAsync<LichessException>()
-            .WithMessage("*401*");
+            .WithMessage("Access denied. Your token may not have the required scope for this operation.");
     }
 
     [Fact]
@@ -190,7 +190,7 @@ public class TeamsApiIntegrationTests : IntegrationTestBase
         var act = async () => await Client.Teams.GetJoinRequestsAsync(teamId);
 
         await act.Should().ThrowAsync<LichessException>()
-            .WithMessage("*401*");
+            .WithMessage("Authentication failed. Please check your access token.");
     }
 
     [Fact]
@@ -227,6 +227,6 @@ public class TeamsApiIntegrationTests : IntegrationTestBase
         var act = async () => await Client.Teams.MessageAllMembersAsync("some-team", "Hello!");
 
         await act.Should().ThrowAsync<LichessException>()
-            .WithMessage("*401*");
+            .WithMessage("Access denied. Your token may not have the required scope for this operation.");
     }
 }

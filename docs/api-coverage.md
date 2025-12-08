@@ -6,8 +6,8 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Status | Count | APIs |
 |--------|-------|------|
-| **Implemented** | 13 APIs (84 endpoints) | Account, Users, Relations, Games, TV, Puzzles, Analysis, Opening Explorer, Tablebase, Challenges, Board, Bot, Teams |
-| **Planned** | 6 APIs | Bulk Pairings, Arena, Swiss, Simuls, Studies, Messaging, Broadcasts |
+| **Implemented** | 15 APIs (109 endpoints) | Account, Users, Relations, Games, TV, Puzzles, Analysis, Opening Explorer, Tablebase, Challenges, Board, Bot, Teams, Arena Tournaments, Swiss Tournaments |
+| **Planned** | 4 APIs | Bulk Pairings, Simuls, Studies, Messaging, Broadcasts |
 
 ## Legend
 
@@ -180,30 +180,36 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Endpoint | Status | Method |
 |----------|--------|--------|
-| Get current tournaments | Planned | `ArenaTournaments.GetCurrentAsync()` |
-| Get tournament | Planned | `ArenaTournaments.GetAsync()` |
-| Create tournament | Planned | `ArenaTournaments.CreateAsync()` |
-| Update tournament | Planned | `ArenaTournaments.UpdateAsync()` |
-| Join tournament | Planned | `ArenaTournaments.JoinAsync()` |
-| Withdraw from tournament | Planned | `ArenaTournaments.WithdrawAsync()` |
-| Terminate tournament | Planned | `ArenaTournaments.TerminateAsync()` |
-| Get standings | Planned | `ArenaTournaments.GetStandingsAsync()` |
-| Stream tournament games | Planned | `ArenaTournaments.StreamGamesAsync()` |
-| Get team battle results | Planned | `ArenaTournaments.GetTeamBattleResultsAsync()` |
+| Get current tournaments | Implemented | `ArenaTournaments.GetCurrentAsync()` |
+| Get tournament | Implemented | `ArenaTournaments.GetAsync()` |
+| Create tournament | Implemented | `ArenaTournaments.CreateAsync()` |
+| Update tournament | Implemented | `ArenaTournaments.UpdateAsync()` |
+| Join tournament | Implemented | `ArenaTournaments.JoinAsync()` |
+| Withdraw from tournament | Implemented | `ArenaTournaments.WithdrawAsync()` |
+| Terminate tournament | Implemented | `ArenaTournaments.TerminateAsync()` |
+| Update team battle | Implemented | `ArenaTournaments.UpdateTeamBattleAsync()` |
+| Stream tournament games | Implemented | `ArenaTournaments.StreamGamesAsync()` |
+| Stream tournament results | Implemented | `ArenaTournaments.StreamResultsAsync()` |
+| Get team standing | Implemented | `ArenaTournaments.GetTeamStandingAsync()` |
+| Stream created by user | Implemented | `ArenaTournaments.StreamCreatedByAsync()` |
+| Stream played by user | Implemented | `ArenaTournaments.StreamPlayedByAsync()` |
+| Stream team tournaments | Implemented | `ArenaTournaments.StreamTeamTournamentsAsync()` |
 
 ## Swiss Tournaments API
 
 | Endpoint | Status | Method |
 |----------|--------|--------|
-| Create Swiss tournament | Planned | `SwissTournaments.CreateAsync()` |
-| Get Swiss tournament | Planned | `SwissTournaments.GetAsync()` |
-| Update Swiss tournament | Planned | `SwissTournaments.UpdateAsync()` |
-| Join Swiss tournament | Planned | `SwissTournaments.JoinAsync()` |
-| Withdraw from Swiss | Planned | `SwissTournaments.WithdrawAsync()` |
-| Terminate Swiss | Planned | `SwissTournaments.TerminateAsync()` |
-| Schedule next round | Planned | `SwissTournaments.ScheduleNextRoundAsync()` |
-| Stream Swiss games | Planned | `SwissTournaments.StreamGamesAsync()` |
-| Get Swiss results | Planned | `SwissTournaments.GetResultsAsync()` |
+| Get Swiss tournament | Implemented | `SwissTournaments.GetAsync()` |
+| Create Swiss tournament | Implemented | `SwissTournaments.CreateAsync()` |
+| Update Swiss tournament | Implemented | `SwissTournaments.UpdateAsync()` |
+| Schedule next round | Implemented | `SwissTournaments.ScheduleNextRoundAsync()` |
+| Join Swiss tournament | Implemented | `SwissTournaments.JoinAsync()` |
+| Withdraw from Swiss | Implemented | `SwissTournaments.WithdrawAsync()` |
+| Terminate Swiss | Implemented | `SwissTournaments.TerminateAsync()` |
+| Export TRF | Implemented | `SwissTournaments.ExportTrfAsync()` |
+| Stream Swiss games | Implemented | `SwissTournaments.StreamGamesAsync()` |
+| Stream Swiss results | Implemented | `SwissTournaments.StreamResultsAsync()` |
+| Stream team tournaments | Implemented | `SwissTournaments.StreamTeamTournamentsAsync()` |
 
 ## Simuls API
 
@@ -272,21 +278,23 @@ This section outlines the recommended order for implementing remaining APIs base
 - ~~Similar patterns to Board API~~
 - ~~Requires bot account upgrade~~
 
-### Phase 3: Social & Competition (Medium Value, Medium Complexity) - PARTIALLY COMPLETED
+### Phase 3: Social & Competition (Medium Value, Medium Complexity) - COMPLETED
 
 **Teams API** - 12 endpoints ✅
 - ~~Team management and membership~~
 - ~~Pagination patterns~~
 - ~~Mix of read/write operations~~
 
-**Arena Tournaments API** - 10+ endpoints
-- Tournament creation and management
-- Complex state management
-- Streaming standings
+**Arena Tournaments API** - 14 endpoints ✅
+- ~~Tournament creation and management~~
+- ~~Complex state management~~
+- ~~Streaming standings and results~~
+- ~~Team battle support~~
 
-**Swiss Tournaments API** - 9+ endpoints
-- Similar to Arena but different format
-- Round scheduling
+**Swiss Tournaments API** - 11 endpoints ✅
+- ~~Similar to Arena but different format~~
+- ~~Round scheduling~~
+- ~~TRF export~~
 
 ### Phase 4: Content & Broadcasting (Medium Value, Higher Complexity)
 
