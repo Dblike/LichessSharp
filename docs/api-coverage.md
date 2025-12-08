@@ -2,9 +2,16 @@
 
 This document tracks the implementation status of each Lichess API endpoint.
 
+## Summary
+
+| Status | Count | APIs |
+|--------|-------|------|
+| **Implemented** | 8 APIs (38 endpoints) | Account, Users, Relations, Games, Puzzles, Analysis, Opening Explorer, Tablebase |
+| **Planned** | 11 APIs | TV, Teams, Board, Bot, Challenges, Bulk Pairings, Arena, Swiss, Simuls, Studies, Messaging, Broadcasts |
+
 ## Legend
 
-- Implemented - Endpoint is fully implemented
+- Implemented - Endpoint is fully implemented and tested
 - Partial - Some functionality implemented
 - Planned - Not yet implemented
 
@@ -65,13 +72,13 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Endpoint | Status | Method |
 |----------|--------|--------|
-| Get daily puzzle | Planned | `Puzzles.GetDailyAsync()` |
-| Get puzzle by ID | Planned | `Puzzles.GetAsync()` |
-| Get next puzzle | Planned | `Puzzles.GetNextAsync()` |
-| Get puzzle activity | Planned | `Puzzles.StreamActivityAsync()` |
-| Get puzzle dashboard | Planned | `Puzzles.GetDashboardAsync()` |
-| Get storm dashboard | Planned | `Puzzles.GetStormDashboardAsync()` |
-| Create puzzle race | Planned | `Puzzles.CreateRaceAsync()` |
+| Get daily puzzle | Implemented | `Puzzles.GetDailyAsync()` |
+| Get puzzle by ID | Implemented | `Puzzles.GetAsync()` |
+| Get next puzzle | Implemented | `Puzzles.GetNextAsync()` |
+| Get puzzle activity | Implemented | `Puzzles.StreamActivityAsync()` |
+| Get puzzle dashboard | Implemented | `Puzzles.GetDashboardAsync()` |
+| Get storm dashboard | Implemented | `Puzzles.GetStormDashboardAsync()` |
+| Create puzzle race | Implemented | `Puzzles.CreateRaceAsync()` |
 
 ## Teams API
 
@@ -145,3 +152,159 @@ This document tracks the implementation status of each Lichess API endpoint.
 | Standard tablebase | Implemented | `Tablebase.LookupAsync()` |
 | Atomic tablebase | Implemented | `Tablebase.LookupAtomicAsync()` |
 | Antichess tablebase | Implemented | `Tablebase.LookupAntichessAsync()` |
+
+## Bulk Pairings API
+
+| Endpoint | Status | Method |
+|----------|--------|--------|
+| Create bulk pairing | Planned | `BulkPairings.CreateAsync()` |
+| Get bulk pairing | Planned | `BulkPairings.GetAsync()` |
+| Start clocks | Planned | `BulkPairings.StartClocksAsync()` |
+| Cancel bulk pairing | Planned | `BulkPairings.CancelAsync()` |
+
+## Arena Tournaments API
+
+| Endpoint | Status | Method |
+|----------|--------|--------|
+| Get current tournaments | Planned | `ArenaTournaments.GetCurrentAsync()` |
+| Get tournament | Planned | `ArenaTournaments.GetAsync()` |
+| Create tournament | Planned | `ArenaTournaments.CreateAsync()` |
+| Update tournament | Planned | `ArenaTournaments.UpdateAsync()` |
+| Join tournament | Planned | `ArenaTournaments.JoinAsync()` |
+| Withdraw from tournament | Planned | `ArenaTournaments.WithdrawAsync()` |
+| Terminate tournament | Planned | `ArenaTournaments.TerminateAsync()` |
+| Get standings | Planned | `ArenaTournaments.GetStandingsAsync()` |
+| Stream tournament games | Planned | `ArenaTournaments.StreamGamesAsync()` |
+| Get team battle results | Planned | `ArenaTournaments.GetTeamBattleResultsAsync()` |
+
+## Swiss Tournaments API
+
+| Endpoint | Status | Method |
+|----------|--------|--------|
+| Create Swiss tournament | Planned | `SwissTournaments.CreateAsync()` |
+| Get Swiss tournament | Planned | `SwissTournaments.GetAsync()` |
+| Update Swiss tournament | Planned | `SwissTournaments.UpdateAsync()` |
+| Join Swiss tournament | Planned | `SwissTournaments.JoinAsync()` |
+| Withdraw from Swiss | Planned | `SwissTournaments.WithdrawAsync()` |
+| Terminate Swiss | Planned | `SwissTournaments.TerminateAsync()` |
+| Schedule next round | Planned | `SwissTournaments.ScheduleNextRoundAsync()` |
+| Stream Swiss games | Planned | `SwissTournaments.StreamGamesAsync()` |
+| Get Swiss results | Planned | `SwissTournaments.GetResultsAsync()` |
+
+## Simuls API
+
+| Endpoint | Status | Method |
+|----------|--------|--------|
+| Get simul | Planned | `Simuls.GetAsync()` |
+| Get current simuls | Planned | `Simuls.GetCurrentAsync()` |
+
+## Studies API
+
+| Endpoint | Status | Method |
+|----------|--------|--------|
+| Export study chapters | Planned | `Studies.ExportChaptersAsync()` |
+| Export study chapter | Planned | `Studies.ExportChapterAsync()` |
+| Export all user studies | Planned | `Studies.ExportUserStudiesAsync()` |
+| List study metadata | Planned | `Studies.ListMetadataAsync()` |
+| Delete study chapter | Planned | `Studies.DeleteChapterAsync()` |
+
+## Messaging API
+
+| Endpoint | Status | Method |
+|----------|--------|--------|
+| Send private message | Planned | `Messaging.SendAsync()` |
+
+## Broadcasts API
+
+| Endpoint | Status | Method |
+|----------|--------|--------|
+| Get official broadcasts | Planned | `Broadcasts.GetOfficialAsync()` |
+| Create broadcast | Planned | `Broadcasts.CreateAsync()` |
+| Get broadcast | Planned | `Broadcasts.GetAsync()` |
+| Update broadcast | Planned | `Broadcasts.UpdateAsync()` |
+| Create round | Planned | `Broadcasts.CreateRoundAsync()` |
+| Get round | Planned | `Broadcasts.GetRoundAsync()` |
+| Update round | Planned | `Broadcasts.UpdateRoundAsync()` |
+| Push PGN | Planned | `Broadcasts.PushPgnAsync()` |
+| Stream round | Planned | `Broadcasts.StreamRoundAsync()` |
+
+---
+
+## Implementation Roadmap
+
+This section outlines the recommended order for implementing remaining APIs based on user value and complexity.
+
+### Phase 1: Real-time Viewing (High Value, Low Complexity)
+
+**TV API** - 4 endpoints
+- Enables watching live games
+- Read-only, no authentication required
+- Streaming patterns already established in Games API
+
+### Phase 2: Game Play (High Value, Medium Complexity)
+
+**Challenges API** - 9 endpoints
+- Core functionality for initiating games
+- Required for Board/Bot APIs
+- Mix of authenticated read/write operations
+
+**Board API** - 10 endpoints
+- Physical board and third-party client support
+- Long-lived streaming connections
+- Real-time move submission
+
+**Bot API** - 8 endpoints
+- Engine-assisted play
+- Similar patterns to Board API
+- Requires bot account upgrade
+
+### Phase 3: Social & Competition (Medium Value, Medium Complexity)
+
+**Teams API** - 6+ endpoints
+- Team management and membership
+- Pagination patterns
+- Mix of read/write operations
+
+**Arena Tournaments API** - 10+ endpoints
+- Tournament creation and management
+- Complex state management
+- Streaming standings
+
+**Swiss Tournaments API** - 9+ endpoints
+- Similar to Arena but different format
+- Round scheduling
+
+### Phase 4: Content & Broadcasting (Medium Value, Higher Complexity)
+
+**Studies API** - 5+ endpoints
+- Study and chapter management
+- PGN import/export
+
+**Broadcasts API** - 9+ endpoints
+- Live event broadcasting
+- PGN push functionality
+- Multi-round management
+
+**Simuls API** - 2 endpoints
+- Simultaneous exhibitions
+- Read-only operations
+
+### Phase 5: Utility & Admin (Lower Priority)
+
+**Bulk Pairings API** - 4 endpoints
+- Tournament organizer functionality
+- Admin-level operations
+
+**Messaging API** - 1 endpoint
+- Private messaging
+- Simple implementation
+
+### Implementation Notes
+
+Each phase should include:
+1. Interface definition (`I*Api.cs`)
+2. Implementation (`*Api.cs`)
+3. Models and DTOs
+4. Unit tests with mocked HTTP client
+5. Integration tests (optional, separate project)
+6. Documentation updates

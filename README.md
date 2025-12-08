@@ -7,13 +7,13 @@ A fully-featured .NET client library for the [Lichess API](https://lichess.org/a
 
 ## Features
 
-- Complete coverage of the Lichess API (20+ API surface areas)
+- **8 API areas fully implemented** with 38+ endpoints (Account, Users, Relations, Games, Puzzles, Analysis, Opening Explorer, Tablebase)
 - Async-first design with `CancellationToken` support on all methods
-- Streaming support via `IAsyncEnumerable<T>` for real-time data
-- Strong typing with comprehensive models
-- Built-in rate limiting and retry logic
+- Streaming support via `IAsyncEnumerable<T>` for real-time NDJSON data
+- Strong typing with comprehensive models and enums
+- Built-in rate limiting and automatic retry logic
 - AOT-compatible with `System.Text.Json` source generators
-- Multi-targeting: .NET 10.0
+- Targets **.NET 10.0**
 
 ## Installation
 
@@ -75,26 +75,28 @@ await foreach (var event in client.Tv.StreamCurrentGameAsync())
 
 | API | Status | Description |
 |-----|--------|-------------|
-| Account | Planned | Profile, email, preferences |
-| Users | Planned | User profiles, status, leaderboards |
-| Relations | Planned | Follow, block users |
-| Games | Planned | Export, stream, import games |
-| TV | Planned | TV channels and streams |
-| Puzzles | Planned | Daily puzzle, dashboard, storm |
-| Teams | Planned | Team management |
-| Board | Planned | Physical board API |
-| Bot | Planned | Bot account API |
-| Challenges | Planned | Send/receive challenges |
-| Bulk Pairings | Planned | Bulk game creation |
-| Arena Tournaments | Planned | Arena management |
-| Swiss Tournaments | Planned | Swiss management |
-| Simuls | Planned | Simultaneous exhibitions |
-| Studies | Planned | Lichess studies |
-| Messaging | Planned | Private messages |
-| Broadcasts | Planned | Event broadcasts |
-| Analysis | Planned | Cloud evaluations |
-| Opening Explorer | Planned | Position lookups |
-| Tablebase | Planned | Endgame tablebases |
+| Account | ✅ Implemented | Profile, email, preferences, kid mode |
+| Users | ✅ Implemented | User profiles, status, leaderboards, rating history |
+| Relations | ✅ Implemented | Follow, unfollow, block, unblock users |
+| Games | ✅ Implemented | Export, stream, import games (JSON/PGN) |
+| Puzzles | ✅ Implemented | Daily puzzle, dashboard, storm, activity |
+| Analysis | ✅ Implemented | Cloud evaluations |
+| Opening Explorer | ✅ Implemented | Masters, Lichess, and player databases |
+| Tablebase | ✅ Implemented | Standard, Atomic, Antichess tablebases |
+| TV | 🔜 Planned | TV channels and streams |
+| Teams | 🔜 Planned | Team management |
+| Board | 🔜 Planned | Physical board API |
+| Bot | 🔜 Planned | Bot account API |
+| Challenges | 🔜 Planned | Send/receive challenges |
+| Bulk Pairings | 🔜 Planned | Bulk game creation |
+| Arena Tournaments | 🔜 Planned | Arena management |
+| Swiss Tournaments | 🔜 Planned | Swiss management |
+| Simuls | 🔜 Planned | Simultaneous exhibitions |
+| Studies | 🔜 Planned | Lichess studies |
+| Messaging | 🔜 Planned | Private messages |
+| Broadcasts | 🔜 Planned | Event broadcasts |
+
+See [docs/api-coverage.md](docs/api-coverage.md) for detailed endpoint-level coverage.
 
 ## Authentication
 
