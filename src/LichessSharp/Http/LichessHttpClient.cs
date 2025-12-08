@@ -57,6 +57,12 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<string> GetStringWithAcceptAsync(string endpoint, string acceptHeader, CancellationToken cancellationToken = default)
+    {
+        var response = await SendRequestWithAcceptAsync(HttpMethod.Get, endpoint, null, acceptHeader, cancellationToken).ConfigureAwait(false);
+        return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task<T> PostAsync<T>(string endpoint, HttpContent? content = null, CancellationToken cancellationToken = default)
     {
         var response = await SendRequestAsync(HttpMethod.Post, endpoint, content, cancellationToken).ConfigureAwait(false);
@@ -181,6 +187,51 @@ internal sealed class LichessHttpClient : ILichessHttpClient
             }
 
             _logger.LogDebug("Sending {Method} request to {Endpoint}", method, endpoint);
+
+            var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+
+            if (response.StatusCode == HttpStatusCode.TooManyRequests && retryCount < maxRetries)
+            {
+                retryCount++;
+                var retryAfter = GetRetryAfter(response);
+
+                _logger.LogWarning(
+                    "Rate limited. Waiting {RetryAfter} before retry {RetryCount}/{MaxRetries}",
+                    retryAfter,
+                    retryCount,
+                    maxRetries);
+
+                await Task.Delay(retryAfter, cancellationToken).ConfigureAwait(false);
+                continue;
+            }
+
+            await EnsureSuccessStatusCodeAsync(response, cancellationToken).ConfigureAwait(false);
+            return response;
+        }
+    }
+
+    private async Task<HttpResponseMessage> SendRequestWithAcceptAsync(
+        HttpMethod method,
+        string endpoint,
+        HttpContent? content,
+        string acceptHeader,
+        CancellationToken cancellationToken)
+    {
+        var retryCount = 0;
+        var maxRetries = _options.AutoRetryOnRateLimit ? _options.MaxRateLimitRetries : 0;
+
+        while (true)
+        {
+            using var request = new HttpRequestMessage(method, endpoint);
+            request.Headers.Accept.Clear();
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptHeader));
+
+            if (content != null)
+            {
+                request.Content = content;
+            }
+
+            _logger.LogDebug("Sending {Method} request to {Endpoint} with Accept: {Accept}", method, endpoint, acceptHeader);
 
             var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
 

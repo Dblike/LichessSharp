@@ -17,6 +17,11 @@ internal interface ILichessHttpClient
     Task<string> GetStringAsync(string endpoint, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Sends a GET request with a custom Accept header and returns the raw response content as a string.
+    /// </summary>
+    Task<string> GetStringWithAcceptAsync(string endpoint, string acceptHeader, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Sends a POST request to the specified endpoint.
     /// </summary>
     Task<T> PostAsync<T>(string endpoint, HttpContent? content = null, CancellationToken cancellationToken = default);

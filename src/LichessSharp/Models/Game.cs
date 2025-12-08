@@ -133,6 +133,43 @@ public class GamePlayers
 }
 
 /// <summary>
+/// Light user information as returned in game responses.
+/// This matches the Lichess LightUser schema which uses "name" instead of "username".
+/// </summary>
+public class GameUser
+{
+    /// <summary>
+    /// The user's unique identifier (lowercase username).
+    /// </summary>
+    [JsonPropertyName("id")]
+    public required string Id { get; init; }
+
+    /// <summary>
+    /// The user's display name.
+    /// </summary>
+    [JsonPropertyName("name")]
+    public required string Name { get; init; }
+
+    /// <summary>
+    /// The user's FIDE/Lichess title, if any.
+    /// </summary>
+    [JsonPropertyName("title")]
+    public Title? Title { get; init; }
+
+    /// <summary>
+    /// Whether the user is a Lichess patron.
+    /// </summary>
+    [JsonPropertyName("patron")]
+    public bool? Patron { get; init; }
+
+    /// <summary>
+    /// The user's flair emoji.
+    /// </summary>
+    [JsonPropertyName("flair")]
+    public string? Flair { get; init; }
+}
+
+/// <summary>
 /// A player in a game.
 /// </summary>
 public class GamePlayer
@@ -141,7 +178,7 @@ public class GamePlayer
     /// The player's user information.
     /// </summary>
     [JsonPropertyName("user")]
-    public User? User { get; init; }
+    public GameUser? User { get; init; }
 
     /// <summary>
     /// The player's rating at the start of the game.

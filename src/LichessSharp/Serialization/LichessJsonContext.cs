@@ -22,6 +22,7 @@ namespace LichessSharp.Serialization;
 [JsonSerializable(typeof(AccountPreferences))]
 [JsonSerializable(typeof(Game))]
 [JsonSerializable(typeof(GameJson))]
+[JsonSerializable(typeof(GameUser))]
 [JsonSerializable(typeof(List<Game>))]
 [JsonSerializable(typeof(Puzzle))]
 [JsonSerializable(typeof(PuzzleWithGame))]

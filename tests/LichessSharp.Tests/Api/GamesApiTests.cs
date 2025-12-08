@@ -132,7 +132,7 @@ public class GamesApiTests
         var gameId = "q7ZvsdUF";
         var expectedPgn = "[Event \"Rated Blitz game\"]\n1. e4 e5 2. Nf3 *";
         _httpClientMock
-            .Setup(x => x.GetStringAsync($"/game/export/{gameId}", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetStringWithAcceptAsync($"/game/export/{gameId}", "application/x-chess-pgn", It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedPgn);
 
         // Act
@@ -140,7 +140,7 @@ public class GamesApiTests
 
         // Assert
         result.Should().Be(expectedPgn);
-        _httpClientMock.Verify(x => x.GetStringAsync($"/game/export/{gameId}", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(x => x.GetStringWithAcceptAsync($"/game/export/{gameId}", "application/x-chess-pgn", It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]

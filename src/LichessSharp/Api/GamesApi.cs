@@ -33,7 +33,7 @@ internal sealed class GamesApi : IGamesApi
         ArgumentException.ThrowIfNullOrWhiteSpace(gameId);
 
         var endpoint = BuildExportGameEndpoint(gameId, options);
-        return await _httpClient.GetStringAsync(endpoint, cancellationToken).ConfigureAwait(false);
+        return await _httpClient.GetStringWithAcceptAsync(endpoint, "application/x-chess-pgn", cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc />
