@@ -127,7 +127,7 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Endpoint | Status | Method |
 |----------|--------|--------|
-| Get cloud evaluation | Planned | `Analysis.GetCloudEvaluationAsync()` |
+| Get cloud evaluation | Implemented | `Analysis.GetCloudEvaluationAsync()` |
 
 ## Opening Explorer API
 

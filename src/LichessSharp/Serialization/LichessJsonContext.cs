@@ -32,6 +32,8 @@ namespace LichessSharp.Serialization;
 [JsonSerializable(typeof(List<RatingHistory>))]
 [JsonSerializable(typeof(RatingHistory))]
 [JsonSerializable(typeof(LeaderboardResponse))]
+[JsonSerializable(typeof(CloudEvaluation))]
+[JsonSerializable(typeof(PrincipalVariation))]
 internal partial class LichessJsonContext : JsonSerializerContext
 {
 }

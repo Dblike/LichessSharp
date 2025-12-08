@@ -130,7 +130,7 @@ public sealed class LichessClient : ILichessClient
         Studies = new NotImplementedApi<IStudiesApi>();
         Messaging = new NotImplementedApi<IMessagingApi>();
         Broadcasts = new NotImplementedApi<IBroadcastsApi>();
-        Analysis = new NotImplementedApi<IAnalysisApi>();
+        Analysis = new AnalysisApi(_httpClient);
         OpeningExplorer = new NotImplementedApi<IOpeningExplorerApi>();
         Tablebase = new NotImplementedApi<ITablebaseApi>();
     }
