@@ -141,6 +141,6 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Endpoint | Status | Method |
 |----------|--------|--------|
-| Standard tablebase | Planned | `Tablebase.LookupAsync()` |
-| Atomic tablebase | Planned | `Tablebase.LookupAtomicAsync()` |
-| Antichess tablebase | Planned | `Tablebase.LookupAntichessAsync()` |
+| Standard tablebase | Implemented | `Tablebase.LookupAsync()` |
+| Atomic tablebase | Implemented | `Tablebase.LookupAtomicAsync()` |
+| Antichess tablebase | Implemented | `Tablebase.LookupAntichessAsync()` |

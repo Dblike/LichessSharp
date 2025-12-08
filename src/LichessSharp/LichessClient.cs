@@ -135,7 +135,7 @@ public sealed class LichessClient : ILichessClient
         Broadcasts = new NotImplementedApi<IBroadcastsApi>();
         Analysis = new AnalysisApi(_httpClient);
         OpeningExplorer = new OpeningExplorerApi(_httpClient, _options.ExplorerBaseAddress);
-        Tablebase = new NotImplementedApi<ITablebaseApi>();
+        Tablebase = new TablebaseApi(_httpClient, _options.TablebaseBaseAddress);
     }
 
     /// <inheritdoc />

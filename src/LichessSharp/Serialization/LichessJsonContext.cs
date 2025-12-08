@@ -38,6 +38,8 @@ namespace LichessSharp.Serialization;
 [JsonSerializable(typeof(ExplorerMove))]
 [JsonSerializable(typeof(ExplorerGame))]
 [JsonSerializable(typeof(ExplorerOpening))]
+[JsonSerializable(typeof(TablebaseResult))]
+[JsonSerializable(typeof(TablebaseMove))]
 internal partial class LichessJsonContext : JsonSerializerContext
 {
 }

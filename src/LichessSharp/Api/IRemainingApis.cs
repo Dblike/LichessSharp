@@ -342,34 +342,56 @@ public class ExplorerOptions
 public class TablebaseResult
 {
     /// <summary>
-    /// Category of the position.
+    /// Category of the position (win, loss, draw, cursed-win, blessed-loss,
+    /// maybe-win, maybe-loss, syzygy-win, syzygy-loss, unknown).
     /// </summary>
     public required string Category { get; init; }
 
     /// <summary>
-    /// Distance to zeroing (in plies).
+    /// DTZ50'' with rounding in plies (for Standard chess positions with not more than 7 pieces
+    /// and variant positions not more than 6 pieces).
     /// </summary>
     public int? Dtz { get; init; }
 
     /// <summary>
-    /// Precise distance to zeroing.
+    /// DTZ50'' in plies, only if guaranteed to not be rounded, or absent if unknown.
     /// </summary>
     public int? PreciseDtz { get; init; }
 
     /// <summary>
-    /// Distance to mate (in plies).
+    /// Depth to Conversion: Moves to next capture, promotion, or checkmate.
+    /// </summary>
+    public int? Dtc { get; init; }
+
+    /// <summary>
+    /// Depth To Mate: Plies to mate (available only for Standard positions with not more than 5 pieces).
     /// </summary>
     public int? Dtm { get; init; }
 
     /// <summary>
-    /// Whether checkmate is possible.
+    /// Depth To Win: Plies to win (available only for Antichess positions with not more than 4 pieces).
+    /// </summary>
+    public int? Dtw { get; init; }
+
+    /// <summary>
+    /// Whether the position is checkmate.
     /// </summary>
     public bool Checkmate { get; init; }
 
     /// <summary>
-    /// Whether stalemate is possible.
+    /// Whether the position is stalemate.
     /// </summary>
     public bool Stalemate { get; init; }
+
+    /// <summary>
+    /// Whether it's a variant win (only in chess variants).
+    /// </summary>
+    public bool VariantWin { get; init; }
+
+    /// <summary>
+    /// Whether it's a variant loss (only in chess variants).
+    /// </summary>
+    public bool VariantLoss { get; init; }
 
     /// <summary>
     /// Whether insufficient material.
@@ -377,7 +399,7 @@ public class TablebaseResult
     public bool InsufficientMaterial { get; init; }
 
     /// <summary>
-    /// Available moves.
+    /// Information about legal moves, best first.
     /// </summary>
     public IReadOnlyList<TablebaseMove>? Moves { get; init; }
 }
@@ -400,7 +422,7 @@ public class TablebaseMove
     /// <summary>
     /// Category after this move.
     /// </summary>
-    public string? Category { get; init; }
+    public required string Category { get; init; }
 
     /// <summary>
     /// DTZ after this move.
@@ -408,22 +430,57 @@ public class TablebaseMove
     public int? Dtz { get; init; }
 
     /// <summary>
-    /// DTM after this move.
+    /// Precise DTZ after this move.
+    /// </summary>
+    public int? PreciseDtz { get; init; }
+
+    /// <summary>
+    /// DTC (Depth to Conversion) after this move.
+    /// </summary>
+    public int? Dtc { get; init; }
+
+    /// <summary>
+    /// DTM (Depth to Mate) after this move.
     /// </summary>
     public int? Dtm { get; init; }
 
     /// <summary>
-    /// Zeroing move.
+    /// DTW (Depth to Win) after this move.
+    /// </summary>
+    public int? Dtw { get; init; }
+
+    /// <summary>
+    /// Whether this is a zeroing move (pawn move or capture).
     /// </summary>
     public bool Zeroing { get; init; }
 
     /// <summary>
-    /// Checkmate.
+    /// Whether this is a conversion move (capture or promotion).
+    /// </summary>
+    public bool Conversion { get; init; }
+
+    /// <summary>
+    /// Whether this move leads to checkmate.
     /// </summary>
     public bool Checkmate { get; init; }
 
     /// <summary>
-    /// Stalemate.
+    /// Whether this move leads to stalemate.
     /// </summary>
     public bool Stalemate { get; init; }
+
+    /// <summary>
+    /// Whether this is a variant win (only in chess variants).
+    /// </summary>
+    public bool VariantWin { get; init; }
+
+    /// <summary>
+    /// Whether this is a variant loss (only in chess variants).
+    /// </summary>
+    public bool VariantLoss { get; init; }
+
+    /// <summary>
+    /// Whether insufficient material.
+    /// </summary>
+    public bool InsufficientMaterial { get; init; }
 }
