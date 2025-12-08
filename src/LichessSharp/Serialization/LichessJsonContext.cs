@@ -34,6 +34,10 @@ namespace LichessSharp.Serialization;
 [JsonSerializable(typeof(LeaderboardResponse))]
 [JsonSerializable(typeof(CloudEvaluation))]
 [JsonSerializable(typeof(PrincipalVariation))]
+[JsonSerializable(typeof(ExplorerResult))]
+[JsonSerializable(typeof(ExplorerMove))]
+[JsonSerializable(typeof(ExplorerGame))]
+[JsonSerializable(typeof(ExplorerOpening))]
 internal partial class LichessJsonContext : JsonSerializerContext
 {
 }

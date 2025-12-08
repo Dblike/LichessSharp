@@ -281,34 +281,59 @@ public class ExplorerOpening
 public class ExplorerOptions
 {
     /// <summary>
-    /// Variant.
+    /// Variant (for Lichess/Player databases).
     /// </summary>
     public string? Variant { get; set; }
 
     /// <summary>
-    /// Speeds to include.
+    /// Speeds to include (for Lichess/Player databases).
     /// </summary>
     public string[]? Speeds { get; set; }
 
     /// <summary>
-    /// Ratings to include.
+    /// Ratings to include (for Lichess/Player databases).
     /// </summary>
     public int[]? Ratings { get; set; }
 
     /// <summary>
-    /// Number of recent games.
+    /// Number of recent games to return.
     /// </summary>
     public int? RecentGames { get; set; }
 
     /// <summary>
-    /// Number of top games.
+    /// Number of top games to return.
     /// </summary>
     public int? TopGames { get; set; }
 
     /// <summary>
-    /// Number of moves.
+    /// Number of moves to return.
     /// </summary>
     public int? Moves { get; set; }
+
+    /// <summary>
+    /// Include only games from this year or later (for Masters database).
+    /// </summary>
+    public int? Since { get; set; }
+
+    /// <summary>
+    /// Include only games from this year or earlier (for Masters database).
+    /// </summary>
+    public int? Until { get; set; }
+
+    /// <summary>
+    /// Include only games from this month or later, format: YYYY-MM (for Lichess/Player databases).
+    /// </summary>
+    public string? SinceMonth { get; set; }
+
+    /// <summary>
+    /// Include only games from this month or earlier, format: YYYY-MM (for Lichess/Player databases).
+    /// </summary>
+    public string? UntilMonth { get; set; }
+
+    /// <summary>
+    /// Color of the player (required for Player database: "white" or "black").
+    /// </summary>
+    public string? Color { get; set; }
 }
 
 /// <summary>

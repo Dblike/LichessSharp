@@ -133,9 +133,9 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Endpoint | Status | Method |
 |----------|--------|--------|
-| Masters database | Planned | `OpeningExplorer.GetMastersAsync()` |
-| Lichess database | Planned | `OpeningExplorer.GetLichessAsync()` |
-| Player database | Planned | `OpeningExplorer.GetPlayerAsync()` |
+| Masters database | Implemented | `OpeningExplorer.GetMastersAsync()` |
+| Lichess database | Implemented | `OpeningExplorer.GetLichessAsync()` |
+| Player database | Implemented | `OpeningExplorer.GetPlayerAsync()` |
 
 ## Tablebase API
 

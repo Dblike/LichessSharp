@@ -37,6 +37,11 @@ internal interface ILichessHttpClient
     Task<T> DeleteAsync<T>(string endpoint, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Sends a GET request to a fully qualified URL (for external APIs like explorer.lichess.ovh).
+    /// </summary>
+    Task<T> GetAbsoluteAsync<T>(Uri absoluteUrl, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Streams newline-delimited JSON from the specified endpoint.
     /// </summary>
     IAsyncEnumerable<T> StreamNdjsonAsync<T>(string endpoint, CancellationToken cancellationToken = default);
