@@ -55,6 +55,14 @@ namespace LichessSharp.Serialization;
 [JsonSerializable(typeof(StormHigh))]
 [JsonSerializable(typeof(StormDay))]
 [JsonSerializable(typeof(PuzzleRace))]
+// TV API types
+[JsonSerializable(typeof(TvChannels))]
+[JsonSerializable(typeof(TvGame))]
+[JsonSerializable(typeof(TvUser))]
+[JsonSerializable(typeof(TvFeedEvent))]
+[JsonSerializable(typeof(TvFeedData))]
+[JsonSerializable(typeof(TvFeedPlayer))]
+[JsonSerializable(typeof(List<TvFeedPlayer>))]
 internal partial class LichessJsonContext : JsonSerializerContext
 {
 }

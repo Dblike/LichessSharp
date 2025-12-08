@@ -7,7 +7,7 @@ A fully-featured .NET client library for the [Lichess API](https://lichess.org/a
 
 ## Features
 
-- **8 API areas fully implemented** with 38+ endpoints (Account, Users, Relations, Games, Puzzles, Analysis, Opening Explorer, Tablebase)
+- **9 API areas fully implemented** with 42+ endpoints (Account, Users, Relations, Games, TV, Puzzles, Analysis, Opening Explorer, Tablebase)
 - Async-first design with `CancellationToken` support on all methods
 - Streaming support via `IAsyncEnumerable<T>` for real-time NDJSON data
 - Strong typing with comprehensive models and enums
@@ -64,10 +64,10 @@ await foreach (var game in client.Games.StreamUserGamesAsync("DrNykterstein"))
     Console.WriteLine($"Game: {game.Id}");
 }
 
-// Stream TV feed
-await foreach (var event in client.Tv.StreamCurrentGameAsync())
+// Stream TV feed (real-time positions and moves)
+await foreach (var evt in client.Tv.StreamCurrentGameAsync())
 {
-    Console.WriteLine($"FEN: {event.Fen}");
+    Console.WriteLine($"Type: {evt.Type}, FEN: {evt.Data?.Fen}");
 }
 ```
 
@@ -83,7 +83,7 @@ await foreach (var event in client.Tv.StreamCurrentGameAsync())
 | Analysis | ✅ Implemented | Cloud evaluations |
 | Opening Explorer | ✅ Implemented | Masters, Lichess, and player databases |
 | Tablebase | ✅ Implemented | Standard, Atomic, Antichess tablebases |
-| TV | 🔜 Planned | TV channels and streams |
+| TV | ✅ Implemented | TV channels, streams, and channel games |
 | Teams | 🔜 Planned | Team management |
 | Board | 🔜 Planned | Physical board API |
 | Bot | 🔜 Planned | Bot account API |

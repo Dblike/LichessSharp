@@ -120,7 +120,7 @@ public sealed class LichessClient : ILichessClient
         Users = new UsersApi(_httpClient);
         Relations = new RelationsApi(_httpClient);
         Games = new GamesApi(_httpClient);
-        Tv = new NotImplementedApi<ITvApi>();
+        Tv = new TvApi(_httpClient);
         Puzzles = new PuzzlesApi(_httpClient);
         Teams = new NotImplementedApi<ITeamsApi>();
         Board = new NotImplementedApi<IBoardApi>();
@@ -194,10 +194,10 @@ public sealed class LichessClient : ILichessClient
         Task<Models.ImportGameResponse> IGamesApi.ImportPgnAsync(string pgn, CancellationToken ct) => throw NotImplemented();
 
         // ITvApi
-        Task<Dictionary<string, TvGame>> ITvApi.GetCurrentGamesAsync(CancellationToken ct) => throw NotImplemented();
+        Task<TvChannels> ITvApi.GetCurrentGamesAsync(CancellationToken ct) => throw NotImplemented();
         IAsyncEnumerable<TvFeedEvent> ITvApi.StreamCurrentGameAsync(CancellationToken ct) => throw NotImplemented();
         IAsyncEnumerable<TvFeedEvent> ITvApi.StreamChannelAsync(string channel, CancellationToken ct) => throw NotImplemented();
-        IAsyncEnumerable<Models.GameJson> ITvApi.GetChannelGamesAsync(string channel, int count, CancellationToken ct) => throw NotImplemented();
+        IAsyncEnumerable<Models.GameJson> ITvApi.StreamChannelGamesAsync(string channel, TvChannelGamesOptions? options, CancellationToken ct) => throw NotImplemented();
 
         // IPuzzlesApi
         Task<Models.PuzzleWithGame> IPuzzlesApi.GetDailyAsync(CancellationToken ct) => throw NotImplemented();

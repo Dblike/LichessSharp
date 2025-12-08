@@ -6,8 +6,8 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Status | Count | APIs |
 |--------|-------|------|
-| **Implemented** | 8 APIs (38 endpoints) | Account, Users, Relations, Games, Puzzles, Analysis, Opening Explorer, Tablebase |
-| **Planned** | 11 APIs | TV, Teams, Board, Bot, Challenges, Bulk Pairings, Arena, Swiss, Simuls, Studies, Messaging, Broadcasts |
+| **Implemented** | 9 APIs (42 endpoints) | Account, Users, Relations, Games, TV, Puzzles, Analysis, Opening Explorer, Tablebase |
+| **Planned** | 10 APIs | Teams, Board, Bot, Challenges, Bulk Pairings, Arena, Swiss, Simuls, Studies, Messaging, Broadcasts |
 
 ## Legend
 
@@ -63,10 +63,10 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Endpoint | Status | Method |
 |----------|--------|--------|
-| Get current TV games | Planned | `Tv.GetCurrentGamesAsync()` |
-| Stream current TV game | Planned | `Tv.StreamCurrentGameAsync()` |
-| Stream TV channel | Planned | `Tv.StreamChannelAsync()` |
-| Get channel games | Planned | `Tv.GetChannelGamesAsync()` |
+| Get current TV games | Implemented | `Tv.GetCurrentGamesAsync()` |
+| Stream current TV game | Implemented | `Tv.StreamCurrentGameAsync()` |
+| Stream TV channel | Implemented | `Tv.StreamChannelAsync()` |
+| Stream channel games | Implemented | `Tv.StreamChannelGamesAsync()` |
 
 ## Puzzles API
 
@@ -234,12 +234,12 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 This section outlines the recommended order for implementing remaining APIs based on user value and complexity.
 
-### Phase 1: Real-time Viewing (High Value, Low Complexity)
+### Phase 1: Real-time Viewing (High Value, Low Complexity) - COMPLETED
 
-**TV API** - 4 endpoints
-- Enables watching live games
-- Read-only, no authentication required
-- Streaming patterns already established in Games API
+**TV API** - 4 endpoints ✅
+- ~~Enables watching live games~~
+- ~~Read-only, no authentication required~~
+- ~~Streaming patterns already established in Games API~~
 
 ### Phase 2: Game Play (High Value, Medium Complexity)
 
