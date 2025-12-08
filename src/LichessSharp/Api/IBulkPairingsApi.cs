@@ -197,6 +197,18 @@ public class BulkPairingExportOptions
 #region Response Models
 
 /// <summary>
+/// Response wrapper for the bulk pairings list endpoint.
+/// </summary>
+public class BulkPairingListResponse
+{
+    /// <summary>
+    /// List of bulk pairings.
+    /// </summary>
+    [JsonPropertyName("bulks")]
+    public IReadOnlyList<BulkPairing>? Bulks { get; init; }
+}
+
+/// <summary>
 /// A bulk pairing.
 /// </summary>
 public class BulkPairing

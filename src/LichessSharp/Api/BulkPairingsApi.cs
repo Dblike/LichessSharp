@@ -20,7 +20,9 @@ internal sealed class BulkPairingsApi : IBulkPairingsApi
     /// <inheritdoc />
     public async Task<IReadOnlyList<BulkPairing>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        return await _httpClient.GetAsync<List<BulkPairing>>("/api/bulk-pairing", cancellationToken).ConfigureAwait(false);
+        // Lichess returns {"bulks": [...]} wrapper object
+        var response = await _httpClient.GetAsync<BulkPairingListResponse>("/api/bulk-pairing", cancellationToken).ConfigureAwait(false);
+        return response.Bulks ?? (IReadOnlyList<BulkPairing>)Array.Empty<BulkPairing>();
     }
 
     /// <inheritdoc />

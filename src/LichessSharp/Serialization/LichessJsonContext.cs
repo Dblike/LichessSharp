@@ -213,6 +213,7 @@ namespace LichessSharp.Serialization;
 [JsonSerializable(typeof(List<BroadcastPgnPushGame>))]
 [JsonSerializable(typeof(Dictionary<string, string>))]
 // Bulk Pairings API types
+[JsonSerializable(typeof(BulkPairingListResponse))]
 [JsonSerializable(typeof(BulkPairing))]
 [JsonSerializable(typeof(BulkPairingGame))]
 [JsonSerializable(typeof(BulkPairingClock))]

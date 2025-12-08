@@ -38,11 +38,14 @@ public class BulkPairingsApiTests
     [Fact]
     public async Task GetAllAsync_CallsCorrectEndpoint()
     {
-        // Arrange
-        var expectedResult = new List<BulkPairing> { CreateTestBulkPairing("test1") };
+        // Arrange - Lichess returns {"bulks": [...]} wrapper object
+        var expectedResponse = new BulkPairingListResponse
+        {
+            Bulks = new List<BulkPairing> { CreateTestBulkPairing("test1") }
+        };
         _httpClientMock
-            .Setup(x => x.GetAsync<List<BulkPairing>>("/api/bulk-pairing", It.IsAny<CancellationToken>()))
-            .ReturnsAsync(expectedResult);
+            .Setup(x => x.GetAsync<BulkPairingListResponse>("/api/bulk-pairing", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedResponse);
 
         // Act
         var result = await _bulkPairingsApi.GetAllAsync();
@@ -50,16 +53,40 @@ public class BulkPairingsApiTests
         // Assert
         result.Should().NotBeNull();
         result.Should().HaveCount(1);
-        _httpClientMock.Verify(x => x.GetAsync<List<BulkPairing>>("/api/bulk-pairing", It.IsAny<CancellationToken>()), Times.Once);
+        result[0].Id.Should().Be("test1");
+        _httpClientMock.Verify(x => x.GetAsync<BulkPairingListResponse>("/api/bulk-pairing", It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
-    public async Task GetAllAsync_ReturnsEmptyList_WhenNoBulkPairings()
+    public async Task GetAllAsync_ReturnsEmptyList_WhenEmptyBulksArray()
     {
-        // Arrange
+        // Arrange - Lichess returns {"bulks": []} when no bulk pairings exist
+        var expectedResponse = new BulkPairingListResponse
+        {
+            Bulks = new List<BulkPairing>()
+        };
         _httpClientMock
-            .Setup(x => x.GetAsync<List<BulkPairing>>("/api/bulk-pairing", It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<BulkPairing>());
+            .Setup(x => x.GetAsync<BulkPairingListResponse>("/api/bulk-pairing", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedResponse);
+
+        // Act
+        var result = await _bulkPairingsApi.GetAllAsync();
+
+        // Assert
+        result.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task GetAllAsync_ReturnsEmptyList_WhenBulksIsNull()
+    {
+        // Arrange - Handle null Bulks property
+        var expectedResponse = new BulkPairingListResponse
+        {
+            Bulks = null
+        };
+        _httpClientMock
+            .Setup(x => x.GetAsync<BulkPairingListResponse>("/api/bulk-pairing", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedResponse);
 
         // Act
         var result = await _bulkPairingsApi.GetAllAsync();
@@ -72,17 +99,17 @@ public class BulkPairingsApiTests
     public async Task GetAllAsync_WithCancellationToken_PassesToken()
     {
         // Arrange
-        var expectedResult = new List<BulkPairing>();
         var cts = new CancellationTokenSource();
+        var expectedResponse = new BulkPairingListResponse { Bulks = new List<BulkPairing>() };
         _httpClientMock
-            .Setup(x => x.GetAsync<List<BulkPairing>>("/api/bulk-pairing", cts.Token))
-            .ReturnsAsync(expectedResult);
+            .Setup(x => x.GetAsync<BulkPairingListResponse>("/api/bulk-pairing", cts.Token))
+            .ReturnsAsync(expectedResponse);
 
         // Act
         await _bulkPairingsApi.GetAllAsync(cts.Token);
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<List<BulkPairing>>("/api/bulk-pairing", cts.Token), Times.Once);
+        _httpClientMock.Verify(x => x.GetAsync<BulkPairingListResponse>("/api/bulk-pairing", cts.Token), Times.Once);
     }
 
     #endregion
