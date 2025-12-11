@@ -94,6 +94,124 @@ internal sealed class UsersApi(ILichessHttpClient httpClient) : IUsersApi
         return history;
     }
 
+    /// <inheritdoc />
+    public async Task<UserPerformance> GetPerformanceAsync(string username, string perfType, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+        ArgumentException.ThrowIfNullOrWhiteSpace(perfType);
+
+        var endpoint = $"/api/user/{Uri.EscapeDataString(username)}/perf/{Uri.EscapeDataString(perfType)}";
+        return await _httpClient.GetAsync<UserPerformance>(endpoint, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<UserActivity>> GetActivityAsync(string username, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+
+        var endpoint = $"/api/user/{Uri.EscapeDataString(username)}/activity";
+        var activity = await _httpClient.GetAsync<List<UserActivity>>(endpoint, cancellationToken).ConfigureAwait(false);
+        return activity ?? [];
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<string>> AutocompleteAsync(string term, bool asObject = false, string? friend = null, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(term);
+
+        var sb = new StringBuilder($"/api/player/autocomplete?term={Uri.EscapeDataString(term)}");
+        if (asObject)
+        {
+            sb.Append("&object=true");
+        }
+        if (!string.IsNullOrEmpty(friend))
+        {
+            sb.Append($"&friend={Uri.EscapeDataString(friend)}");
+        }
+
+        var result = await _httpClient.GetAsync<List<string>>(sb.ToString(), cancellationToken).ConfigureAwait(false);
+        return result ?? [];
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<AutocompletePlayer>> AutocompletePlayersAsync(string term, string? friend = null, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(term);
+
+        var sb = new StringBuilder($"/api/player/autocomplete?term={Uri.EscapeDataString(term)}&object=true");
+        if (!string.IsNullOrEmpty(friend))
+        {
+            sb.Append($"&friend={Uri.EscapeDataString(friend)}");
+        }
+
+        var response = await _httpClient.GetAsync<AutocompleteResponse>(sb.ToString(), cancellationToken).ConfigureAwait(false);
+        return response?.Result ?? [];
+    }
+
+    /// <inheritdoc />
+    public async Task<Crosstable> GetCrosstableAsync(string user1, string user2, bool matchup = false, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(user1);
+        ArgumentException.ThrowIfNullOrWhiteSpace(user2);
+
+        var endpoint = $"/api/crosstable/{Uri.EscapeDataString(user1)}/{Uri.EscapeDataString(user2)}";
+        if (matchup)
+        {
+            endpoint += "?matchup=true";
+        }
+
+        return await _httpClient.GetAsync<Crosstable>(endpoint, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<Streamer>> GetLiveStreamersAsync(CancellationToken cancellationToken = default)
+    {
+        var streamers = await _httpClient.GetAsync<List<Streamer>>("/api/streamer/live", cancellationToken).ConfigureAwait(false);
+        return streamers ?? [];
+    }
+
+    /// <inheritdoc />
+    public async Task<string?> GetNoteAsync(string username, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+
+        var endpoint = $"/api/user/{Uri.EscapeDataString(username)}/note";
+        var response = await _httpClient.GetAsync<NoteResponse>(endpoint, cancellationToken).ConfigureAwait(false);
+        return response?.Text;
+    }
+
+    /// <inheritdoc />
+    public async Task<bool> WriteNoteAsync(string username, string text, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(username);
+        ArgumentNullException.ThrowIfNull(text);
+
+        var endpoint = $"/api/user/{Uri.EscapeDataString(username)}/note";
+        var formData = new Dictionary<string, string> { ["text"] = text };
+        var response = await _httpClient.PostFormAsync<OkResponse>(endpoint, formData, cancellationToken).ConfigureAwait(false);
+        return response?.Ok == true;
+    }
+
+    /// <inheritdoc />
+    public async Task<Timeline> GetTimelineAsync(int? nb = null, DateTimeOffset? since = null, CancellationToken cancellationToken = default)
+    {
+        var sb = new StringBuilder("/api/timeline");
+        var hasQuery = false;
+
+        if (nb.HasValue)
+        {
+            sb.Append(hasQuery ? '&' : '?').Append($"nb={nb.Value}");
+            hasQuery = true;
+        }
+        if (since.HasValue)
+        {
+            var timestamp = since.Value.ToUnixTimeMilliseconds();
+            sb.Append(hasQuery ? '&' : '?').Append($"since={timestamp}");
+        }
+
+        return await _httpClient.GetAsync<Timeline>(sb.ToString(), cancellationToken).ConfigureAwait(false);
+    }
+
     private static string BuildGetUserEndpoint(string username, GetUserOptions? options)
     {
         var sb = new StringBuilder($"/api/user/{username}");

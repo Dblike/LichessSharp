@@ -83,6 +83,13 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         return await DeserializeResponseAsync<T>(response, cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<T> PostFormAsync<T>(string endpoint, IDictionary<string, string> formData, CancellationToken cancellationToken = default)
+    {
+        using var content = new FormUrlEncodedContent(formData);
+        var response = await SendRequestAsync(HttpMethod.Post, endpoint, content, cancellationToken).ConfigureAwait(false);
+        return await DeserializeResponseAsync<T>(response, cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task<T> DeleteAsync<T>(string endpoint, CancellationToken cancellationToken = default)
     {
         var response = await SendRequestAsync(HttpMethod.Delete, endpoint, null, cancellationToken).ConfigureAwait(false);

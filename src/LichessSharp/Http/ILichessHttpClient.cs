@@ -37,6 +37,11 @@ internal interface ILichessHttpClient
     Task<T> PostPlainTextAsync<T>(string endpoint, string body, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Sends a POST request with form-urlencoded body content.
+    /// </summary>
+    Task<T> PostFormAsync<T>(string endpoint, IDictionary<string, string> formData, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Sends a DELETE request to the specified endpoint.
     /// </summary>
     Task<T> DeleteAsync<T>(string endpoint, CancellationToken cancellationToken = default);

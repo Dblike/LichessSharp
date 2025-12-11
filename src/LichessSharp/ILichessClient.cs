@@ -127,4 +127,10 @@ public interface ILichessClient : IDisposable
     /// Lookup positions from the Lichess tablebase server.
     /// </summary>
     ITablebaseApi Tablebase { get; }
+
+    /// <summary>
+    /// Access to FIDE API endpoints.
+    /// Access FIDE player data.
+    /// </summary>
+    IFideApi Fide { get; }
 }

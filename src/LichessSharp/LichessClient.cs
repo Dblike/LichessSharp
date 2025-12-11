@@ -112,6 +112,9 @@ public sealed class LichessClient : ILichessClient
     /// <inheritdoc />
     public ITablebaseApi Tablebase { get; private set; } = null!;
 
+    /// <inheritdoc />
+    public IFideApi Fide { get; private set; } = null!;
+
     private void InitializeApis()
     {
         // Initialize API implementations
@@ -136,6 +139,7 @@ public sealed class LichessClient : ILichessClient
         Analysis = new AnalysisApi(_httpClient);
         OpeningExplorer = new OpeningExplorerApi(_httpClient, _options.ExplorerBaseAddress);
         Tablebase = new TablebaseApi(_httpClient, _options.TablebaseBaseAddress);
+        Fide = new FideApi(_httpClient);
     }
 
     /// <inheritdoc />
@@ -156,7 +160,7 @@ public sealed class LichessClient : ILichessClient
         IAccountApi, IUsersApi, IRelationsApi, IGamesApi, ITvApi, IPuzzlesApi,
         ITeamsApi, IBoardApi, IBotApi, IChallengesApi,
         IArenaTournamentsApi, ISwissTournamentsApi, ISimulsApi, IStudiesApi,
-        IBroadcastsApi, IAnalysisApi, IOpeningExplorerApi, ITablebaseApi
+        IBroadcastsApi, IAnalysisApi, IOpeningExplorerApi, ITablebaseApi, IFideApi
     {
         private static NotImplementedException NotImplemented() =>
             new($"The {typeof(T).Name} is not yet implemented. Implementation coming soon!");
@@ -175,6 +179,15 @@ public sealed class LichessClient : ILichessClient
         Task<Dictionary<string, List<Models.User>>> IUsersApi.GetAllTop10Async(CancellationToken cancellationToken) => throw NotImplemented();
         Task<IReadOnlyList<Models.User>> IUsersApi.GetLeaderboardAsync(string perfType, int count, CancellationToken cancellationToken) => throw NotImplemented();
         Task<IReadOnlyList<RatingHistory>> IUsersApi.GetRatingHistoryAsync(string username, CancellationToken cancellationToken) => throw NotImplemented();
+        Task<Models.UserPerformance> IUsersApi.GetPerformanceAsync(string username, string perfType, CancellationToken cancellationToken) => throw NotImplemented();
+        Task<IReadOnlyList<Models.UserActivity>> IUsersApi.GetActivityAsync(string username, CancellationToken cancellationToken) => throw NotImplemented();
+        Task<IReadOnlyList<string>> IUsersApi.AutocompleteAsync(string term, bool asObject, string? friend, CancellationToken cancellationToken) => throw NotImplemented();
+        Task<IReadOnlyList<Models.AutocompletePlayer>> IUsersApi.AutocompletePlayersAsync(string term, string? friend, CancellationToken cancellationToken) => throw NotImplemented();
+        Task<Models.Crosstable> IUsersApi.GetCrosstableAsync(string user1, string user2, bool matchup, CancellationToken cancellationToken) => throw NotImplemented();
+        Task<IReadOnlyList<Models.Streamer>> IUsersApi.GetLiveStreamersAsync(CancellationToken cancellationToken) => throw NotImplemented();
+        Task<string?> IUsersApi.GetNoteAsync(string username, CancellationToken cancellationToken) => throw NotImplemented();
+        Task<bool> IUsersApi.WriteNoteAsync(string username, string text, CancellationToken cancellationToken) => throw NotImplemented();
+        Task<Models.Timeline> IUsersApi.GetTimelineAsync(int? nb, DateTimeOffset? since, CancellationToken cancellationToken) => throw NotImplemented();
 
         // IRelationsApi
         Task<bool> IRelationsApi.FollowAsync(string username, CancellationToken cancellationToken) => throw NotImplemented();
@@ -332,5 +345,9 @@ public sealed class LichessClient : ILichessClient
         Task<TablebaseResult> ITablebaseApi.LookupAsync(string fen, CancellationToken cancellationToken) => throw NotImplemented();
         Task<TablebaseResult> ITablebaseApi.LookupAtomicAsync(string fen, CancellationToken cancellationToken) => throw NotImplemented();
         Task<TablebaseResult> ITablebaseApi.LookupAntichessAsync(string fen, CancellationToken cancellationToken) => throw NotImplemented();
+
+        // IFideApi
+        Task<Models.FidePlayer> IFideApi.GetPlayerAsync(int playerId, CancellationToken cancellationToken) => throw NotImplemented();
+        Task<IReadOnlyList<Models.FidePlayer>> IFideApi.SearchPlayersAsync(string query, CancellationToken cancellationToken) => throw NotImplemented();
     }
 }

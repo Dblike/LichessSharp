@@ -59,6 +59,88 @@ public interface IUsersApi
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Rating history by perf type.</returns>
     Task<IReadOnlyList<RatingHistory>> GetRatingHistoryAsync(string username, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get performance statistics for a user in a specific variant.
+    /// </summary>
+    /// <param name="username">The username.</param>
+    /// <param name="perfType">The performance type (e.g., bullet, blitz, rapid, classical, chess960, etc.).</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The user's performance statistics for the specified variant.</returns>
+    Task<UserPerformance> GetPerformanceAsync(string username, string perfType, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get the activity feed of a user.
+    /// </summary>
+    /// <param name="username">The username.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The user's activity feed.</returns>
+    Task<IReadOnlyList<UserActivity>> GetActivityAsync(string username, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Autocomplete usernames.
+    /// </summary>
+    /// <param name="term">Search term (at least 3 characters).</param>
+    /// <param name="asObject">If true, returns player objects; if false, returns string usernames.</param>
+    /// <param name="friend">Filter to only friends of the specified user.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>List of matching usernames.</returns>
+    Task<IReadOnlyList<string>> AutocompleteAsync(string term, bool asObject = false, string? friend = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Autocomplete usernames and return player objects.
+    /// </summary>
+    /// <param name="term">Search term (at least 3 characters).</param>
+    /// <param name="friend">Filter to only friends of the specified user.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>List of matching players with details.</returns>
+    Task<IReadOnlyList<AutocompletePlayer>> AutocompletePlayersAsync(string term, string? friend = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get the crosstable (head-to-head) statistics between two users.
+    /// </summary>
+    /// <param name="user1">First username.</param>
+    /// <param name="user2">Second username.</param>
+    /// <param name="matchup">Include current match data if users are playing.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The crosstable statistics.</returns>
+    Task<Crosstable> GetCrosstableAsync(string user1, string user2, bool matchup = false, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get currently live streamers on Lichess.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>List of live streamers.</returns>
+    Task<IReadOnlyList<Streamer>> GetLiveStreamersAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Read a note you have written about another user.
+    /// Requires OAuth with follow:read scope.
+    /// </summary>
+    /// <param name="username">The username to read the note for.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The note text, or null if no note exists.</returns>
+    Task<string?> GetNoteAsync(string username, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Write or update a note about another user.
+    /// Requires OAuth with follow:write scope.
+    /// </summary>
+    /// <param name="username">The username to write a note for.</param>
+    /// <param name="text">The note text.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>True if successful.</returns>
+    Task<bool> WriteNoteAsync(string username, string text, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get the timeline of the authenticated user.
+    /// Requires OAuth.
+    /// </summary>
+    /// <param name="nb">Maximum number of entries to return (default 15, max 30).</param>
+    /// <param name="since">Only return entries after this timestamp.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The user's timeline.</returns>
+    Task<Timeline> GetTimelineAsync(int? nb = null, DateTimeOffset? since = null, CancellationToken cancellationToken = default);
 }
 
 /// <summary>

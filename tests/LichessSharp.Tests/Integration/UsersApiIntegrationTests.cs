@@ -164,4 +164,122 @@ public class UsersApiIntegrationTests : IntegrationTestBase
     }
 
     #endregion
+
+    #region GetPerformanceAsync Tests
+
+    [Fact]
+    public async Task GetPerformanceAsync_WithValidUsernameAndPerfType_ReturnsPerformance()
+    {
+        // Act
+        var performance = await Client.Users.GetPerformanceAsync(ThibaultUsername, "blitz");
+
+        // Assert
+        performance.Should().NotBeNull();
+        performance.Perf.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task GetPerformanceAsync_WithBulletPerf_ReturnsPerformance()
+    {
+        // Act
+        var performance = await Client.Users.GetPerformanceAsync(ThibaultUsername, "bullet");
+
+        // Assert
+        performance.Should().NotBeNull();
+        performance.Stat.Should().NotBeNull();
+    }
+
+    #endregion
+
+    #region GetActivityAsync Tests
+
+    [Fact]
+    public async Task GetActivityAsync_WithValidUsername_ReturnsActivity()
+    {
+        // Act
+        var activity = await Client.Users.GetActivityAsync(ThibaultUsername);
+
+        // Assert
+        activity.Should().NotBeNull();
+        // Activity might be empty if user hasn't been active recently
+    }
+
+    #endregion
+
+    #region AutocompleteAsync Tests
+
+    [Fact]
+    public async Task AutocompleteAsync_WithValidTerm_ReturnsUsernames()
+    {
+        // Act
+        var usernames = await Client.Users.AutocompleteAsync("thibault");
+
+        // Assert
+        usernames.Should().NotBeNull();
+        usernames.Should().NotBeEmpty();
+        usernames.Should().Contain(u => u.Contains("thibault", StringComparison.OrdinalIgnoreCase));
+    }
+
+    #endregion
+
+    #region AutocompletePlayersAsync Tests
+
+    [Fact]
+    public async Task AutocompletePlayersAsync_WithValidTerm_ReturnsPlayers()
+    {
+        // Act
+        var players = await Client.Users.AutocompletePlayersAsync("thibault");
+
+        // Assert
+        players.Should().NotBeNull();
+        players.Should().NotBeEmpty();
+        players.Should().AllSatisfy(p =>
+        {
+            p.Id.Should().NotBeNullOrEmpty();
+            p.Name.Should().NotBeNullOrEmpty();
+        });
+    }
+
+    #endregion
+
+    #region GetCrosstableAsync Tests
+
+    [Fact]
+    public async Task GetCrosstableAsync_WithValidUsernames_ReturnsCrosstable()
+    {
+        // Act
+        var crosstable = await Client.Users.GetCrosstableAsync(ThibaultUsername, "DrNykterstein");
+
+        // Assert
+        crosstable.Should().NotBeNull();
+        crosstable.Users.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task GetCrosstableAsync_WithMatchupOption_ReturnsCrosstable()
+    {
+        // Act
+        var crosstable = await Client.Users.GetCrosstableAsync(ThibaultUsername, "DrNykterstein", matchup: true);
+
+        // Assert
+        crosstable.Should().NotBeNull();
+        crosstable.Users.Should().NotBeNull();
+    }
+
+    #endregion
+
+    #region GetLiveStreamersAsync Tests
+
+    [Fact]
+    public async Task GetLiveStreamersAsync_ReturnsStreamers()
+    {
+        // Act
+        var streamers = await Client.Users.GetLiveStreamersAsync();
+
+        // Assert
+        streamers.Should().NotBeNull();
+        // Streamers list might be empty if no one is streaming
+    }
+
+    #endregion
 }

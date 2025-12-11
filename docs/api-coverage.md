@@ -6,7 +6,7 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Status | Count | APIs |
 |--------|-------|------|
-| **Implemented** | 20 APIs (141 endpoints) | Account, Users, Relations, Games, TV, Puzzles, Analysis, Opening Explorer, Tablebase, Challenges, Board, Bot, Teams, Arena Tournaments, Swiss Tournaments, Simuls, Studies, Broadcasts, Bulk Pairings, Messaging |
+| **Implemented** | 21 APIs (151 endpoints) | Account, Users, Relations, Games, TV, Puzzles, Analysis, Opening Explorer, Tablebase, Challenges, Board, Bot, Teams, Arena Tournaments, Swiss Tournaments, Simuls, Studies, Broadcasts, Bulk Pairings, Messaging, FIDE |
 | **Planned** | 0 APIs | - |
 
 ## Legend
@@ -35,6 +35,15 @@ This document tracks the implementation status of each Lichess API endpoint.
 | Get all top 10 | Implemented | `Users.GetAllTop10Async()` |
 | Get one leaderboard | Implemented | `Users.GetLeaderboardAsync()` |
 | Get rating history | Implemented | `Users.GetRatingHistoryAsync()` |
+| Get performance statistics | Implemented | `Users.GetPerformanceAsync()` |
+| Get user activity | Implemented | `Users.GetActivityAsync()` |
+| Autocomplete usernames | Implemented | `Users.AutocompleteAsync()` |
+| Autocomplete players (object) | Implemented | `Users.AutocompletePlayersAsync()` |
+| Get crosstable | Implemented | `Users.GetCrosstableAsync()` |
+| Get live streamers | Implemented | `Users.GetLiveStreamersAsync()` |
+| Get note about user | Implemented | `Users.GetNoteAsync()` |
+| Write note about user | Implemented | `Users.WriteNoteAsync()` |
+| Get timeline | Implemented | `Users.GetTimelineAsync()` |
 
 ## Relations API
 
@@ -166,6 +175,13 @@ This document tracks the implementation status of each Lichess API endpoint.
 | Standard tablebase | Implemented | `Tablebase.LookupAsync()` |
 | Atomic tablebase | Implemented | `Tablebase.LookupAtomicAsync()` |
 | Antichess tablebase | Implemented | `Tablebase.LookupAntichessAsync()` |
+
+## FIDE API
+
+| Endpoint | Status | Method |
+|----------|--------|--------|
+| Get FIDE player | Implemented | `Fide.GetPlayerAsync()` |
+| Search FIDE players | Implemented | `Fide.SearchPlayersAsync()` |
 
 ## Bulk Pairings API
 

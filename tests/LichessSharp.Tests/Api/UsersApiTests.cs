@@ -373,6 +373,328 @@ public class UsersApiTests
 
     #endregion
 
+    #region GetPerformanceAsync Tests
+
+    [Fact]
+    public async Task GetPerformanceAsync_WithValidParams_CallsCorrectEndpoint()
+    {
+        // Arrange
+        var expected = new UserPerformance { Rank = 100 };
+        _httpClientMock
+            .Setup(x => x.GetAsync<UserPerformance>("/api/user/thibault/perf/bullet", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+
+        // Act
+        var result = await _usersApi.GetPerformanceAsync("thibault", "bullet");
+
+        // Assert
+        result.Rank.Should().Be(100);
+        _httpClientMock.Verify(x => x.GetAsync<UserPerformance>("/api/user/thibault/perf/bullet", It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetPerformanceAsync_WithNullUsername_ThrowsArgumentException()
+    {
+        var act = () => _usersApi.GetPerformanceAsync(null!, "bullet");
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    [Fact]
+    public async Task GetPerformanceAsync_WithNullPerfType_ThrowsArgumentException()
+    {
+        var act = () => _usersApi.GetPerformanceAsync("thibault", null!);
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    #endregion
+
+    #region GetActivityAsync Tests
+
+    [Fact]
+    public async Task GetActivityAsync_WithValidUsername_CallsCorrectEndpoint()
+    {
+        // Arrange
+        var expected = new List<UserActivity> { new() };
+        _httpClientMock
+            .Setup(x => x.GetAsync<List<UserActivity>>("/api/user/thibault/activity", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+
+        // Act
+        var result = await _usersApi.GetActivityAsync("thibault");
+
+        // Assert
+        result.Should().HaveCount(1);
+        _httpClientMock.Verify(x => x.GetAsync<List<UserActivity>>("/api/user/thibault/activity", It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetActivityAsync_WithNullUsername_ThrowsArgumentException()
+    {
+        var act = () => _usersApi.GetActivityAsync(null!);
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    #endregion
+
+    #region AutocompleteAsync Tests
+
+    [Fact]
+    public async Task AutocompleteAsync_WithValidTerm_CallsCorrectEndpoint()
+    {
+        // Arrange
+        var expected = new List<string> { "thibault", "thib" };
+        _httpClientMock
+            .Setup(x => x.GetAsync<List<string>>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+
+        // Act
+        var result = await _usersApi.AutocompleteAsync("thib");
+
+        // Assert
+        result.Should().HaveCount(2);
+        _httpClientMock.Verify(x => x.GetAsync<List<string>>(
+            It.Is<string>(s => s.Contains("/api/player/autocomplete?term=thib")),
+            It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task AutocompleteAsync_WithFriend_IncludesFriendParam()
+    {
+        // Arrange
+        _httpClientMock
+            .Setup(x => x.GetAsync<List<string>>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<string>());
+
+        // Act
+        await _usersApi.AutocompleteAsync("thib", friend: "thibault");
+
+        // Assert
+        _httpClientMock.Verify(x => x.GetAsync<List<string>>(
+            It.Is<string>(s => s.Contains("friend=thibault")),
+            It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task AutocompleteAsync_WithNullTerm_ThrowsArgumentException()
+    {
+        var act = () => _usersApi.AutocompleteAsync(null!);
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    #endregion
+
+    #region AutocompletePlayersAsync Tests
+
+    [Fact]
+    public async Task AutocompletePlayersAsync_WithValidTerm_CallsCorrectEndpoint()
+    {
+        // Arrange
+        var expected = new AutocompleteResponse { Result = new List<AutocompletePlayer> { new() { Id = "thibault", Name = "Thibault" } } };
+        _httpClientMock
+            .Setup(x => x.GetAsync<AutocompleteResponse>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+
+        // Act
+        var result = await _usersApi.AutocompletePlayersAsync("thib");
+
+        // Assert
+        result.Should().HaveCount(1);
+        _httpClientMock.Verify(x => x.GetAsync<AutocompleteResponse>(
+            It.Is<string>(s => s.Contains("/api/player/autocomplete") && s.Contains("object=true")),
+            It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    #endregion
+
+    #region GetCrosstableAsync Tests
+
+    [Fact]
+    public async Task GetCrosstableAsync_WithTwoUsers_CallsCorrectEndpoint()
+    {
+        // Arrange
+        var expected = new Crosstable { NbGames = 10 };
+        _httpClientMock
+            .Setup(x => x.GetAsync<Crosstable>("/api/crosstable/user1/user2", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+
+        // Act
+        var result = await _usersApi.GetCrosstableAsync("user1", "user2");
+
+        // Assert
+        result.NbGames.Should().Be(10);
+        _httpClientMock.Verify(x => x.GetAsync<Crosstable>("/api/crosstable/user1/user2", It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetCrosstableAsync_WithMatchup_AddsQueryParam()
+    {
+        // Arrange
+        _httpClientMock
+            .Setup(x => x.GetAsync<Crosstable>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Crosstable());
+
+        // Act
+        await _usersApi.GetCrosstableAsync("user1", "user2", matchup: true);
+
+        // Assert
+        _httpClientMock.Verify(x => x.GetAsync<Crosstable>("/api/crosstable/user1/user2?matchup=true", It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetCrosstableAsync_WithNullUser1_ThrowsArgumentException()
+    {
+        var act = () => _usersApi.GetCrosstableAsync(null!, "user2");
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    [Fact]
+    public async Task GetCrosstableAsync_WithNullUser2_ThrowsArgumentException()
+    {
+        var act = () => _usersApi.GetCrosstableAsync("user1", null!);
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    #endregion
+
+    #region GetLiveStreamersAsync Tests
+
+    [Fact]
+    public async Task GetLiveStreamersAsync_CallsCorrectEndpoint()
+    {
+        // Arrange
+        var expected = new List<Streamer> { new() { Id = "streamer1", Name = "Streamer1" } };
+        _httpClientMock
+            .Setup(x => x.GetAsync<List<Streamer>>("/api/streamer/live", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+
+        // Act
+        var result = await _usersApi.GetLiveStreamersAsync();
+
+        // Assert
+        result.Should().HaveCount(1);
+        _httpClientMock.Verify(x => x.GetAsync<List<Streamer>>("/api/streamer/live", It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    #endregion
+
+    #region GetNoteAsync Tests
+
+    [Fact]
+    public async Task GetNoteAsync_WithValidUsername_CallsCorrectEndpoint()
+    {
+        // Arrange
+        var expected = new NoteResponse { Text = "Test note" };
+        _httpClientMock
+            .Setup(x => x.GetAsync<NoteResponse>("/api/user/thibault/note", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expected);
+
+        // Act
+        var result = await _usersApi.GetNoteAsync("thibault");
+
+        // Assert
+        result.Should().Be("Test note");
+        _httpClientMock.Verify(x => x.GetAsync<NoteResponse>("/api/user/thibault/note", It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetNoteAsync_WithNullUsername_ThrowsArgumentException()
+    {
+        var act = () => _usersApi.GetNoteAsync(null!);
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    #endregion
+
+    #region WriteNoteAsync Tests
+
+    [Fact]
+    public async Task WriteNoteAsync_WithValidParams_CallsCorrectEndpoint()
+    {
+        // Arrange
+        _httpClientMock
+            .Setup(x => x.PostFormAsync<OkResponse>(
+                "/api/user/thibault/note",
+                It.Is<IDictionary<string, string>>(d => d["text"] == "My note"),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new OkResponse { Ok = true });
+
+        // Act
+        var result = await _usersApi.WriteNoteAsync("thibault", "My note");
+
+        // Assert
+        result.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task WriteNoteAsync_WithNullUsername_ThrowsArgumentException()
+    {
+        var act = () => _usersApi.WriteNoteAsync(null!, "note");
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    [Fact]
+    public async Task WriteNoteAsync_WithNullText_ThrowsArgumentNullException()
+    {
+        var act = () => _usersApi.WriteNoteAsync("thibault", null!);
+        await act.Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    #endregion
+
+    #region GetTimelineAsync Tests
+
+    [Fact]
+    public async Task GetTimelineAsync_WithoutParams_CallsBaseEndpoint()
+    {
+        // Arrange
+        _httpClientMock
+            .Setup(x => x.GetAsync<Timeline>("/api/timeline", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Timeline());
+
+        // Act
+        await _usersApi.GetTimelineAsync();
+
+        // Assert
+        _httpClientMock.Verify(x => x.GetAsync<Timeline>("/api/timeline", It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetTimelineAsync_WithNb_IncludesQueryParam()
+    {
+        // Arrange
+        _httpClientMock
+            .Setup(x => x.GetAsync<Timeline>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Timeline());
+
+        // Act
+        await _usersApi.GetTimelineAsync(nb: 15);
+
+        // Assert
+        _httpClientMock.Verify(x => x.GetAsync<Timeline>(
+            It.Is<string>(s => s.Contains("nb=15")),
+            It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetTimelineAsync_WithSince_IncludesTimestamp()
+    {
+        // Arrange
+        _httpClientMock
+            .Setup(x => x.GetAsync<Timeline>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Timeline());
+        var since = new DateTimeOffset(2024, 1, 1, 0, 0, 0, TimeSpan.Zero);
+
+        // Act
+        await _usersApi.GetTimelineAsync(since: since);
+
+        // Assert
+        _httpClientMock.Verify(x => x.GetAsync<Timeline>(
+            It.Is<string>(s => s.Contains("since=")),
+            It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    #endregion
+
     #region Helper Methods
 
     private static User CreateTestUser(string username) => new()
