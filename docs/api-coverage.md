@@ -6,7 +6,7 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Status | Count | APIs |
 |--------|-------|------|
-| **Implemented** | 21 APIs (165 endpoints) | Account, Users, Relations, Games, TV, Puzzles, Analysis, Opening Explorer, Tablebase, Challenges, Board, Bot, Teams, Arena Tournaments, Swiss Tournaments, Simuls, Studies, Broadcasts, Bulk Pairings, Messaging, FIDE |
+| **Implemented** | 23 APIs (176 endpoints) | Account, Users, Relations, Games, TV, Puzzles, Analysis, Opening Explorer, Tablebase, Challenges, Board, Bot, Teams, Arena Tournaments, Swiss Tournaments, Simuls, Studies, Broadcasts, Bulk Pairings, Messaging, FIDE, OAuth, External Engine |
 | **Planned** | 0 APIs | - |
 
 ## Legend
@@ -194,6 +194,29 @@ This document tracks the implementation status of each Lichess API endpoint.
 |----------|--------|--------|
 | Get FIDE player | Implemented | `Fide.GetPlayerAsync()` |
 | Search FIDE players | Implemented | `Fide.SearchPlayersAsync()` |
+
+## OAuth API
+
+| Endpoint | Status | Method |
+|----------|--------|--------|
+| Obtain access token | Implemented | `OAuth.GetTokenAsync()` |
+| Revoke access token | Implemented | `OAuth.RevokeTokenAsync()` |
+| Test multiple tokens | Implemented | `OAuth.TestTokensAsync()` |
+
+## External Engine API (Alpha)
+
+> **WARNING:** This API is in alpha and subject to change.
+
+| Endpoint | Status | Method |
+|----------|--------|--------|
+| List external engines | Implemented | `ExternalEngine.ListAsync()` |
+| Create external engine | Implemented | `ExternalEngine.CreateAsync()` |
+| Get external engine | Implemented | `ExternalEngine.GetAsync()` |
+| Update external engine | Implemented | `ExternalEngine.UpdateAsync()` |
+| Delete external engine | Implemented | `ExternalEngine.DeleteAsync()` |
+| Analyse with engine | Implemented | `ExternalEngine.AnalyseAsync()` |
+| Acquire analysis work | Implemented | `ExternalEngine.AcquireWorkAsync()` |
+| Submit analysis work | Implemented | `ExternalEngine.SubmitWorkAsync()` |
 
 ## Bulk Pairings API
 

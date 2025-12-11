@@ -133,4 +133,17 @@ public interface ILichessClient : IDisposable
     /// Access FIDE player data.
     /// </summary>
     IFideApi Fide { get; }
+
+    /// <summary>
+    /// Access to OAuth API endpoints.
+    /// Token management for the Lichess API.
+    /// </summary>
+    IOAuthApi OAuth { get; }
+
+    /// <summary>
+    /// Access to External Engine API endpoints.
+    /// Register and manage external analysis engines.
+    /// WARNING: This API is in alpha and subject to change.
+    /// </summary>
+    IExternalEngineApi ExternalEngine { get; }
 }

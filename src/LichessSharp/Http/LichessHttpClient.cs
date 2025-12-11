@@ -96,6 +96,22 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         return await DeserializeResponseAsync<T>(response, cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<T> PutJsonAsync<T>(string endpoint, object body, CancellationToken cancellationToken = default)
+    {
+        var json = JsonSerializer.Serialize(body, _jsonOptions);
+        using var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+        var response = await SendRequestAsync(HttpMethod.Put, endpoint, content, cancellationToken).ConfigureAwait(false);
+        return await DeserializeResponseAsync<T>(response, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<T> PostJsonAsync<T>(string endpoint, object body, CancellationToken cancellationToken = default)
+    {
+        var json = JsonSerializer.Serialize(body, _jsonOptions);
+        using var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+        var response = await SendRequestAsync(HttpMethod.Post, endpoint, content, cancellationToken).ConfigureAwait(false);
+        return await DeserializeResponseAsync<T>(response, cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task PostNoContentAsync(string endpoint, HttpContent? content = null, CancellationToken cancellationToken = default)
     {
         await SendRequestAsync(HttpMethod.Post, endpoint, content, cancellationToken).ConfigureAwait(false);
@@ -175,6 +191,79 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         {
             yield return item;
         }
+    }
+
+    public async Task<T> PostAbsoluteJsonAsync<T>(Uri absoluteUrl, object body, CancellationToken cancellationToken = default)
+    {
+        var json = JsonSerializer.Serialize(body, _jsonOptions);
+        using var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+        var response = await SendAbsoluteRequestAsync(HttpMethod.Post, absoluteUrl, content, cancellationToken).ConfigureAwait(false);
+        return await DeserializeResponseAsync<T>(response, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async IAsyncEnumerable<T> StreamAbsoluteNdjsonPostAsync<T>(Uri absoluteUrl, object body, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        var json = JsonSerializer.Serialize(body, _jsonOptions);
+        using var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+        using var request = new HttpRequestMessage(HttpMethod.Post, absoluteUrl);
+        request.Headers.Accept.Clear();
+        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-ndjson"));
+        request.Content = content;
+
+        using var response = await _httpClient.SendAsync(
+            request,
+            HttpCompletionOption.ResponseHeadersRead,
+            cancellationToken).ConfigureAwait(false);
+
+        await EnsureSuccessStatusCodeAsync(response, cancellationToken).ConfigureAwait(false);
+
+        await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+        using var reader = new StreamReader(stream);
+
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            var line = await reader.ReadLineAsync(cancellationToken).ConfigureAwait(false);
+
+            if (line == null)
+            {
+                break;
+            }
+
+            if (string.IsNullOrWhiteSpace(line))
+            {
+                continue;
+            }
+
+            T? item;
+            try
+            {
+                item = JsonSerializer.Deserialize<T>(line, _jsonOptions);
+            }
+            catch (JsonException ex)
+            {
+                _logger.LogWarning(ex, "Failed to deserialize ndjson line: {Line}", line);
+                continue;
+            }
+
+            if (item != null)
+            {
+                yield return item;
+            }
+        }
+    }
+
+    public async Task PostAbsoluteStreamAsync(Uri absoluteUrl, IAsyncEnumerable<string> lines, CancellationToken cancellationToken = default)
+    {
+        // Create a pipe for streaming content
+        using var pipeContent = new StreamContent(new AsyncEnumerableStream(lines, cancellationToken));
+        pipeContent.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+
+        using var request = new HttpRequestMessage(HttpMethod.Post, absoluteUrl);
+        request.Content = pipeContent;
+
+        using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        await EnsureSuccessStatusCodeAsync(response, cancellationToken).ConfigureAwait(false);
     }
 
     private async IAsyncEnumerable<T> StreamNdjsonCoreAsync<T>(
@@ -619,5 +708,92 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         }
 
         return TimeSpan.FromMilliseconds(totalDelayMs);
+    }
+
+    /// <summary>
+    /// A stream that reads from an async enumerable of strings, converting each to a line.
+    /// </summary>
+    private sealed class AsyncEnumerableStream : Stream
+    {
+        private readonly IAsyncEnumerator<string> _enumerator;
+        private readonly CancellationToken _cancellationToken;
+        private byte[] _currentBuffer = [];
+        private int _currentPosition;
+        private bool _completed;
+
+        public AsyncEnumerableStream(IAsyncEnumerable<string> lines, CancellationToken cancellationToken)
+        {
+            _enumerator = lines.GetAsyncEnumerator(cancellationToken);
+            _cancellationToken = cancellationToken;
+        }
+
+        public override bool CanRead => true;
+        public override bool CanSeek => false;
+        public override bool CanWrite => false;
+        public override long Length => throw new NotSupportedException();
+        public override long Position
+        {
+            get => throw new NotSupportedException();
+            set => throw new NotSupportedException();
+        }
+
+        public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
+            if (_completed)
+            {
+                return 0;
+            }
+
+            // If we have data in the current buffer, return it
+            if (_currentPosition < _currentBuffer.Length)
+            {
+                var bytesToCopy = Math.Min(count, _currentBuffer.Length - _currentPosition);
+                Array.Copy(_currentBuffer, _currentPosition, buffer, offset, bytesToCopy);
+                _currentPosition += bytesToCopy;
+                return bytesToCopy;
+            }
+
+            // Try to get the next line
+            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _cancellationToken);
+            if (!await _enumerator.MoveNextAsync().ConfigureAwait(false))
+            {
+                _completed = true;
+                return 0;
+            }
+
+            // Convert line to bytes with newline
+            _currentBuffer = System.Text.Encoding.UTF8.GetBytes(_enumerator.Current + "\n");
+            _currentPosition = 0;
+
+            var bytesToReturn = Math.Min(count, _currentBuffer.Length);
+            Array.Copy(_currentBuffer, 0, buffer, offset, bytesToReturn);
+            _currentPosition = bytesToReturn;
+            return bytesToReturn;
+        }
+
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            return ReadAsync(buffer, offset, count, CancellationToken.None).GetAwaiter().GetResult();
+        }
+
+        public override void Flush() { }
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+        public override void SetLength(long value) => throw new NotSupportedException();
+        public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _enumerator.DisposeAsync().AsTask().GetAwaiter().GetResult();
+            }
+            base.Dispose(disposing);
+        }
+
+        public override async ValueTask DisposeAsync()
+        {
+            await _enumerator.DisposeAsync().ConfigureAwait(false);
+            await base.DisposeAsync().ConfigureAwait(false);
+        }
     }
 }

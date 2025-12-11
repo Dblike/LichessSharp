@@ -115,6 +115,12 @@ public sealed class LichessClient : ILichessClient
     /// <inheritdoc />
     public IFideApi Fide { get; private set; } = null!;
 
+    /// <inheritdoc />
+    public IOAuthApi OAuth { get; private set; } = null!;
+
+    /// <inheritdoc />
+    public IExternalEngineApi ExternalEngine { get; private set; } = null!;
+
     private void InitializeApis()
     {
         // Initialize API implementations
@@ -140,6 +146,8 @@ public sealed class LichessClient : ILichessClient
         OpeningExplorer = new OpeningExplorerApi(_httpClient, _options.ExplorerBaseAddress);
         Tablebase = new TablebaseApi(_httpClient, _options.TablebaseBaseAddress);
         Fide = new FideApi(_httpClient);
+        OAuth = new OAuthApi(_httpClient);
+        ExternalEngine = new ExternalEngineApi(_httpClient, _options.EngineBaseAddress);
     }
 
     /// <inheritdoc />
@@ -160,7 +168,8 @@ public sealed class LichessClient : ILichessClient
         IAccountApi, IUsersApi, IRelationsApi, IGamesApi, ITvApi, IPuzzlesApi,
         ITeamsApi, IBoardApi, IBotApi, IChallengesApi,
         IArenaTournamentsApi, ISwissTournamentsApi, ISimulsApi, IStudiesApi,
-        IBroadcastsApi, IAnalysisApi, IOpeningExplorerApi, ITablebaseApi, IFideApi
+        IBroadcastsApi, IAnalysisApi, IOpeningExplorerApi, ITablebaseApi, IFideApi,
+        IOAuthApi, IExternalEngineApi
     {
         private static NotImplementedException NotImplemented() =>
             new($"The {typeof(T).Name} is not yet implemented. Implementation coming soon!");
@@ -363,5 +372,20 @@ public sealed class LichessClient : ILichessClient
         // IFideApi
         Task<Models.FidePlayer> IFideApi.GetPlayerAsync(int playerId, CancellationToken cancellationToken) => throw NotImplemented();
         Task<IReadOnlyList<Models.FidePlayer>> IFideApi.SearchPlayersAsync(string query, CancellationToken cancellationToken) => throw NotImplemented();
+
+        // IOAuthApi
+        Task<OAuthToken> IOAuthApi.GetTokenAsync(OAuthTokenRequest request, CancellationToken cancellationToken) => throw NotImplemented();
+        Task IOAuthApi.RevokeTokenAsync(CancellationToken cancellationToken) => throw NotImplemented();
+        Task<IReadOnlyDictionary<string, OAuthTokenInfo?>> IOAuthApi.TestTokensAsync(IEnumerable<string> tokens, CancellationToken cancellationToken) => throw NotImplemented();
+
+        // IExternalEngineApi
+        Task<IReadOnlyList<ExternalEngine>> IExternalEngineApi.ListAsync(CancellationToken cancellationToken) => throw NotImplemented();
+        Task<ExternalEngine> IExternalEngineApi.CreateAsync(ExternalEngineRegistration registration, CancellationToken cancellationToken) => throw NotImplemented();
+        Task<ExternalEngine> IExternalEngineApi.GetAsync(string engineId, CancellationToken cancellationToken) => throw NotImplemented();
+        Task<ExternalEngine> IExternalEngineApi.UpdateAsync(string engineId, ExternalEngineRegistration registration, CancellationToken cancellationToken) => throw NotImplemented();
+        Task IExternalEngineApi.DeleteAsync(string engineId, CancellationToken cancellationToken) => throw NotImplemented();
+        IAsyncEnumerable<EngineAnalysisLine> IExternalEngineApi.AnalyseAsync(string engineId, EngineAnalysisRequest request, CancellationToken cancellationToken) => throw NotImplemented();
+        Task<EngineWork?> IExternalEngineApi.AcquireWorkAsync(string providerSecret, CancellationToken cancellationToken) => throw NotImplemented();
+        Task IExternalEngineApi.SubmitWorkAsync(string workId, IAsyncEnumerable<string> uciLines, CancellationToken cancellationToken) => throw NotImplemented();
     }
 }

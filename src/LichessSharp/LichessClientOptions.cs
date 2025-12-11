@@ -30,6 +30,13 @@ public sealed class LichessClientOptions
     public Uri TablebaseBaseAddress { get; set; } = new("https://tablebase.lichess.ovh");
 
     /// <summary>
+    /// The base address for the External Engine API (analysis endpoints only).
+    /// Defaults to https://engine.lichess.ovh
+    /// Note: CRUD operations use the main BaseAddress.
+    /// </summary>
+    public Uri EngineBaseAddress { get; set; } = new("https://engine.lichess.ovh");
+
+    /// <summary>
     /// The default timeout for HTTP requests.
     /// Defaults to 30 seconds.
     /// </summary>

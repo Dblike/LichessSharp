@@ -47,6 +47,16 @@ internal interface ILichessHttpClient
     Task<T> DeleteAsync<T>(string endpoint, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Sends a PUT request with JSON body content.
+    /// </summary>
+    Task<T> PutJsonAsync<T>(string endpoint, object body, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Sends a POST request with JSON body content.
+    /// </summary>
+    Task<T> PostJsonAsync<T>(string endpoint, object body, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Sends a POST request and expects 204 No Content response.
     /// </summary>
     Task PostNoContentAsync(string endpoint, HttpContent? content = null, CancellationToken cancellationToken = default);
@@ -81,4 +91,19 @@ internal interface ILichessHttpClient
     /// Streams newline-delimited JSON from the specified endpoint using POST.
     /// </summary>
     IAsyncEnumerable<T> StreamNdjsonPostAsync<T>(string endpoint, HttpContent? content = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Sends a POST request with JSON body to a fully qualified URL (for external APIs like engine.lichess.ovh).
+    /// </summary>
+    Task<T> PostAbsoluteJsonAsync<T>(Uri absoluteUrl, object body, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Streams newline-delimited JSON from a fully qualified URL using POST with JSON body.
+    /// </summary>
+    IAsyncEnumerable<T> StreamAbsoluteNdjsonPostAsync<T>(Uri absoluteUrl, object body, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Sends a POST request with streaming plain text body to a fully qualified URL.
+    /// </summary>
+    Task PostAbsoluteStreamAsync(Uri absoluteUrl, IAsyncEnumerable<string> lines, CancellationToken cancellationToken = default);
 }
