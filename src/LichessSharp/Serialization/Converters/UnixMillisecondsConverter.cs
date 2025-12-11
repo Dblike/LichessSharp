@@ -17,6 +17,22 @@ public sealed class UnixMillisecondsConverter : JsonConverter<DateTimeOffset>
             return DateTimeOffset.FromUnixTimeMilliseconds(milliseconds);
         }
 
+        if (reader.TokenType == JsonTokenType.String)
+        {
+            var value = reader.GetString();
+            // Try parsing as Unix timestamp in string form
+            if (long.TryParse(value, out var milliseconds))
+            {
+                return DateTimeOffset.FromUnixTimeMilliseconds(milliseconds);
+            }
+            // Try parsing as ISO date string
+            if (DateTimeOffset.TryParse(value, out var result))
+            {
+                return result;
+            }
+            throw new JsonException($"Unable to parse timestamp string: {value}");
+        }
+
         throw new JsonException($"Unexpected token type: {reader.TokenType}");
     }
 
@@ -44,6 +60,26 @@ public sealed class NullableUnixMillisecondsConverter : JsonConverter<DateTimeOf
         {
             var milliseconds = reader.GetInt64();
             return DateTimeOffset.FromUnixTimeMilliseconds(milliseconds);
+        }
+
+        if (reader.TokenType == JsonTokenType.String)
+        {
+            var value = reader.GetString();
+            if (string.IsNullOrEmpty(value))
+            {
+                return null;
+            }
+            // Try parsing as Unix timestamp in string form
+            if (long.TryParse(value, out var milliseconds))
+            {
+                return DateTimeOffset.FromUnixTimeMilliseconds(milliseconds);
+            }
+            // Try parsing as ISO date string
+            if (DateTimeOffset.TryParse(value, out var result))
+            {
+                return result;
+            }
+            throw new JsonException($"Unable to parse timestamp string: {value}");
         }
 
         throw new JsonException($"Unexpected token type: {reader.TokenType}");

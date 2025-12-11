@@ -434,10 +434,10 @@ public class ActivityInterval
 public class ActivityGames
 {
     /// <summary>
-    /// Activity per variant.
+    /// Activity per variant (dynamic keys like "bullet", "blitz", etc.).
     /// </summary>
     [JsonExtensionData]
-    public Dictionary<string, object>? Variants { get; init; }
+    public Dictionary<string, object>? Variants { get; set; }
 }
 
 /// <summary>
@@ -807,16 +807,16 @@ public class StreamerInfo
     public string? Description { get; init; }
 
     /// <summary>
-    /// Twitch channel info.
+    /// Twitch channel URL.
     /// </summary>
     [JsonPropertyName("twitch")]
-    public StreamChannel? Twitch { get; init; }
+    public string? Twitch { get; init; }
 
     /// <summary>
-    /// YouTube channel info.
+    /// YouTube channel URL.
     /// </summary>
     [JsonPropertyName("youTube")]
-    public StreamChannel? YouTube { get; init; }
+    public string? YouTube { get; init; }
 
     /// <summary>
     /// Stream image URL.
