@@ -274,6 +274,14 @@ namespace LichessSharp.Serialization;
 // FIDE API types
 [JsonSerializable(typeof(FidePlayer))]
 [JsonSerializable(typeof(List<FidePlayer>))]
+// Game Stream types
+[JsonSerializable(typeof(MoveStreamEvent))]
+[JsonSerializable(typeof(List<MoveStreamEvent>))]
+[JsonSerializable(typeof(GameStreamEvent))]
+[JsonSerializable(typeof(List<GameStreamEvent>))]
+[JsonSerializable(typeof(GameStreamClock))]
+[JsonSerializable(typeof(GameStreamPlayers))]
+[JsonSerializable(typeof(GameStreamPlayer))]
 internal partial class LichessJsonContext : JsonSerializerContext
 {
 }

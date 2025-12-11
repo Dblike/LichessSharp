@@ -6,7 +6,7 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Status | Count | APIs |
 |--------|-------|------|
-| **Implemented** | 21 APIs (151 endpoints) | Account, Users, Relations, Games, TV, Puzzles, Analysis, Opening Explorer, Tablebase, Challenges, Board, Bot, Teams, Arena Tournaments, Swiss Tournaments, Simuls, Studies, Broadcasts, Bulk Pairings, Messaging, FIDE |
+| **Implemented** | 21 APIs (156 endpoints) | Account, Users, Relations, Games, TV, Puzzles, Analysis, Opening Explorer, Tablebase, Challenges, Board, Bot, Teams, Arena Tournaments, Swiss Tournaments, Simuls, Studies, Broadcasts, Bulk Pairings, Messaging, FIDE |
 | **Planned** | 0 APIs | - |
 
 ## Legend
@@ -67,6 +67,11 @@ This document tracks the implementation status of each Lichess API endpoint.
 | Stream games by users | Implemented | `Games.StreamGamesByUsersAsync()` |
 | Get ongoing games | Implemented | `Games.GetOngoingGamesAsync()` |
 | Import one PGN game | Implemented | `Games.ImportPgnAsync()` |
+| Export imported games (PGN) | Implemented | `Games.GetImportedGamesPgnAsync()` |
+| Export bookmarked games | Implemented | `Games.StreamBookmarkedGamesAsync()` |
+| Stream game moves | Implemented | `Games.StreamGameMovesAsync()` |
+| Stream games by IDs | Implemented | `Games.StreamGamesByIdsAsync()` |
+| Add IDs to stream | Implemented | `Games.AddGameIdsToStreamAsync()` |
 
 ## TV API
 

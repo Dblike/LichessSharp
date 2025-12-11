@@ -758,6 +758,468 @@ public class GamesApiTests
 
     #endregion
 
+    #region GetImportedGamesPgnAsync Tests
+
+    [Fact]
+    public async Task GetImportedGamesPgnAsync_CallsCorrectEndpoint()
+    {
+        // Arrange
+        var expectedPgn = "[Event \"Imported Game\"]\n1. e4 e5 *";
+        _httpClientMock
+            .Setup(x => x.GetStringWithAcceptAsync("/api/games/export/imports", "application/x-chess-pgn", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedPgn);
+
+        // Act
+        var result = await _gamesApi.GetImportedGamesPgnAsync();
+
+        // Assert
+        result.Should().Be(expectedPgn);
+        _httpClientMock.Verify(x => x.GetStringWithAcceptAsync("/api/games/export/imports", "application/x-chess-pgn", It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetImportedGamesPgnAsync_PassesCancellationToken()
+    {
+        // Arrange
+        var cts = new CancellationTokenSource();
+        _httpClientMock
+            .Setup(x => x.GetStringWithAcceptAsync(It.IsAny<string>(), It.IsAny<string>(), cts.Token))
+            .ReturnsAsync("");
+
+        // Act
+        await _gamesApi.GetImportedGamesPgnAsync(cts.Token);
+
+        // Assert
+        _httpClientMock.Verify(x => x.GetStringWithAcceptAsync(It.IsAny<string>(), It.IsAny<string>(), cts.Token), Times.Once);
+    }
+
+    #endregion
+
+    #region StreamBookmarkedGamesAsync Tests
+
+    [Fact]
+    public async Task StreamBookmarkedGamesAsync_WithoutOptions_CallsCorrectEndpoint()
+    {
+        // Arrange
+        var games = new List<GameJson> { CreateTestGameJson("game1") };
+        _httpClientMock
+            .Setup(x => x.StreamNdjsonAsync<GameJson>("/api/games/export/bookmarks", It.IsAny<CancellationToken>()))
+            .Returns(ToAsyncEnumerable(games));
+
+        // Act
+        var results = new List<GameJson>();
+        await foreach (var game in _gamesApi.StreamBookmarkedGamesAsync())
+        {
+            results.Add(game);
+        }
+
+        // Assert
+        results.Should().HaveCount(1);
+        _httpClientMock.Verify(x => x.StreamNdjsonAsync<GameJson>("/api/games/export/bookmarks", It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task StreamBookmarkedGamesAsync_WithOptions_BuildsCorrectQueryString()
+    {
+        // Arrange
+        var since = new DateTimeOffset(2023, 1, 1, 0, 0, 0, TimeSpan.Zero);
+        var until = new DateTimeOffset(2023, 12, 31, 23, 59, 59, TimeSpan.Zero);
+        var options = new ExportBookmarksOptions
+        {
+            Max = 50,
+            Since = since,
+            Until = until,
+            Sort = "dateAsc",
+            LastFen = true
+        };
+        var games = new List<GameJson>();
+
+        _httpClientMock
+            .Setup(x => x.StreamNdjsonAsync<GameJson>(It.Is<string>(s =>
+                s.Contains("/api/games/export/bookmarks") &&
+                s.Contains("max=50") &&
+                s.Contains($"since={since.ToUnixTimeMilliseconds()}") &&
+                s.Contains($"until={until.ToUnixTimeMilliseconds()}") &&
+                s.Contains("sort=dateAsc") &&
+                s.Contains("lastFen=true")), It.IsAny<CancellationToken>()))
+            .Returns(ToAsyncEnumerable(games));
+
+        // Act
+        await foreach (var _ in _gamesApi.StreamBookmarkedGamesAsync(options))
+        {
+        }
+
+        // Assert
+        _httpClientMock.Verify(x => x.StreamNdjsonAsync<GameJson>(It.Is<string>(s =>
+            s.Contains("max=50") &&
+            s.Contains("sort=dateAsc")), It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task StreamBookmarkedGamesAsync_WithExportGameOptions_AppendsBaseOptions()
+    {
+        // Arrange
+        var options = new ExportBookmarksOptions
+        {
+            Moves = true,
+            Clocks = true,
+            Evals = true
+        };
+        var games = new List<GameJson>();
+
+        _httpClientMock
+            .Setup(x => x.StreamNdjsonAsync<GameJson>(It.Is<string>(s =>
+                s.Contains("moves=true") &&
+                s.Contains("clocks=true") &&
+                s.Contains("evals=true")), It.IsAny<CancellationToken>()))
+            .Returns(ToAsyncEnumerable(games));
+
+        // Act
+        await foreach (var _ in _gamesApi.StreamBookmarkedGamesAsync(options))
+        {
+        }
+
+        // Assert
+        _httpClientMock.Verify(x => x.StreamNdjsonAsync<GameJson>(It.Is<string>(s =>
+            s.Contains("moves=true")), It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    #endregion
+
+    #region StreamGameMovesAsync Tests
+
+    [Fact]
+    public async Task StreamGameMovesAsync_WithValidId_CallsCorrectEndpoint()
+    {
+        // Arrange
+        var gameId = "q7ZvsdUF";
+        var events = new List<MoveStreamEvent>
+        {
+            new() { Id = gameId, Fen = "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1" }
+        };
+        _httpClientMock
+            .Setup(x => x.StreamNdjsonAsync<MoveStreamEvent>($"/api/stream/game/{gameId}", It.IsAny<CancellationToken>()))
+            .Returns(ToAsyncEnumerable(events));
+
+        // Act
+        var results = new List<MoveStreamEvent>();
+        await foreach (var evt in _gamesApi.StreamGameMovesAsync(gameId))
+        {
+            results.Add(evt);
+        }
+
+        // Assert
+        results.Should().HaveCount(1);
+        results[0].Id.Should().Be(gameId);
+        _httpClientMock.Verify(x => x.StreamNdjsonAsync<MoveStreamEvent>($"/api/stream/game/{gameId}", It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task StreamGameMovesAsync_WithNullGameId_ThrowsArgumentNullException()
+    {
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+        {
+            await foreach (var _ in _gamesApi.StreamGameMovesAsync(null!))
+            {
+            }
+        });
+    }
+
+    [Fact]
+    public async Task StreamGameMovesAsync_WithEmptyGameId_ThrowsArgumentException()
+    {
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentException>(async () =>
+        {
+            await foreach (var _ in _gamesApi.StreamGameMovesAsync(""))
+            {
+            }
+        });
+    }
+
+    [Fact]
+    public async Task StreamGameMovesAsync_UrlEncodesGameId()
+    {
+        // Arrange
+        var gameId = "game id";
+        var events = new List<MoveStreamEvent>();
+        _httpClientMock
+            .Setup(x => x.StreamNdjsonAsync<MoveStreamEvent>(It.Is<string>(s => s.Contains("game%20id")), It.IsAny<CancellationToken>()))
+            .Returns(ToAsyncEnumerable(events));
+
+        // Act
+        await foreach (var _ in _gamesApi.StreamGameMovesAsync(gameId))
+        {
+        }
+
+        // Assert
+        _httpClientMock.Verify(x => x.StreamNdjsonAsync<MoveStreamEvent>(It.Is<string>(s => s.Contains("game%20id")), It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    #endregion
+
+    #region StreamGamesByIdsAsync Tests
+
+    [Fact]
+    public async Task StreamGamesByIdsAsync_WithValidIds_CallsCorrectEndpoint()
+    {
+        // Arrange
+        var streamId = "myStream";
+        var gameIds = new[] { "game1", "game2" };
+        var events = new List<GameStreamEvent>
+        {
+            new() { Id = "game1", StatusName = "started" },
+            new() { Id = "game2", StatusName = "started" }
+        };
+
+        _httpClientMock
+            .Setup(x => x.StreamNdjsonPostAsync<GameStreamEvent>(
+                $"/api/stream/games/{streamId}",
+                It.Is<HttpContent>(c => c != null),
+                It.IsAny<CancellationToken>()))
+            .Returns(ToAsyncEnumerable(events));
+
+        // Act
+        var results = new List<GameStreamEvent>();
+        await foreach (var evt in _gamesApi.StreamGamesByIdsAsync(streamId, gameIds))
+        {
+            results.Add(evt);
+        }
+
+        // Assert
+        results.Should().HaveCount(2);
+        _httpClientMock.Verify(x => x.StreamNdjsonPostAsync<GameStreamEvent>(
+            $"/api/stream/games/{streamId}",
+            It.IsAny<HttpContent>(),
+            It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task StreamGamesByIdsAsync_WithEmptyIds_YieldsNothing()
+    {
+        // Arrange
+        var streamId = "myStream";
+        var gameIds = Array.Empty<string>();
+
+        // Act
+        var results = new List<GameStreamEvent>();
+        await foreach (var evt in _gamesApi.StreamGamesByIdsAsync(streamId, gameIds))
+        {
+            results.Add(evt);
+        }
+
+        // Assert
+        results.Should().BeEmpty();
+        _httpClientMock.Verify(x => x.StreamNdjsonPostAsync<GameStreamEvent>(
+            It.IsAny<string>(),
+            It.IsAny<HttpContent>(),
+            It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task StreamGamesByIdsAsync_WithTooManyIds_ThrowsArgumentException()
+    {
+        // Arrange
+        var streamId = "myStream";
+        var gameIds = Enumerable.Range(1, 501).Select(i => $"game{i}").ToList();
+
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentException>(async () =>
+        {
+            await foreach (var _ in _gamesApi.StreamGamesByIdsAsync(streamId, gameIds))
+            {
+            }
+        });
+    }
+
+    [Fact]
+    public async Task StreamGamesByIdsAsync_WithNullStreamId_ThrowsArgumentNullException()
+    {
+        // Arrange
+        var gameIds = new[] { "game1" };
+
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+        {
+            await foreach (var _ in _gamesApi.StreamGamesByIdsAsync(null!, gameIds))
+            {
+            }
+        });
+    }
+
+    [Fact]
+    public async Task StreamGamesByIdsAsync_WithNullGameIds_ThrowsArgumentNullException()
+    {
+        // Arrange
+        var streamId = "myStream";
+
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+        {
+            await foreach (var _ in _gamesApi.StreamGamesByIdsAsync(streamId, null!))
+            {
+            }
+        });
+    }
+
+    [Fact]
+    public async Task StreamGamesByIdsAsync_UrlEncodesStreamId()
+    {
+        // Arrange
+        var streamId = "my stream";
+        var gameIds = new[] { "game1" };
+        var events = new List<GameStreamEvent>();
+
+        _httpClientMock
+            .Setup(x => x.StreamNdjsonPostAsync<GameStreamEvent>(
+                It.Is<string>(s => s.Contains("my%20stream")),
+                It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()))
+            .Returns(ToAsyncEnumerable(events));
+
+        // Act
+        await foreach (var _ in _gamesApi.StreamGamesByIdsAsync(streamId, gameIds))
+        {
+        }
+
+        // Assert
+        _httpClientMock.Verify(x => x.StreamNdjsonPostAsync<GameStreamEvent>(
+            It.Is<string>(s => s.Contains("my%20stream")),
+            It.IsAny<HttpContent>(),
+            It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    #endregion
+
+    #region AddGameIdsToStreamAsync Tests
+
+    [Fact]
+    public async Task AddGameIdsToStreamAsync_WithValidIds_CallsCorrectEndpoint()
+    {
+        // Arrange
+        var streamId = "myStream";
+        var gameIds = new[] { "game1", "game2" };
+
+        _httpClientMock
+            .Setup(x => x.PostAsync<OkResponse>(
+                $"/api/stream/games/{streamId}/add",
+                It.Is<HttpContent>(c => c != null),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new OkResponse { Ok = true });
+
+        // Act
+        await _gamesApi.AddGameIdsToStreamAsync(streamId, gameIds);
+
+        // Assert
+        _httpClientMock.Verify(x => x.PostAsync<OkResponse>(
+            $"/api/stream/games/{streamId}/add",
+            It.IsAny<HttpContent>(),
+            It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task AddGameIdsToStreamAsync_WithEmptyIds_ReturnsImmediately()
+    {
+        // Arrange
+        var streamId = "myStream";
+        var gameIds = Array.Empty<string>();
+
+        // Act
+        await _gamesApi.AddGameIdsToStreamAsync(streamId, gameIds);
+
+        // Assert
+        _httpClientMock.Verify(x => x.PostAsync<OkResponse>(
+            It.IsAny<string>(),
+            It.IsAny<HttpContent>(),
+            It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task AddGameIdsToStreamAsync_WithTooManyIds_ThrowsArgumentException()
+    {
+        // Arrange
+        var streamId = "myStream";
+        var gameIds = Enumerable.Range(1, 501).Select(i => $"game{i}").ToList();
+
+        // Act
+        var act = () => _gamesApi.AddGameIdsToStreamAsync(streamId, gameIds);
+
+        // Assert
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    [Fact]
+    public async Task AddGameIdsToStreamAsync_WithNullStreamId_ThrowsArgumentNullException()
+    {
+        // Arrange
+        var gameIds = new[] { "game1" };
+
+        // Act
+        var act = () => _gamesApi.AddGameIdsToStreamAsync(null!, gameIds);
+
+        // Assert
+        await act.Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [Fact]
+    public async Task AddGameIdsToStreamAsync_WithNullGameIds_ThrowsArgumentNullException()
+    {
+        // Arrange
+        var streamId = "myStream";
+
+        // Act
+        var act = () => _gamesApi.AddGameIdsToStreamAsync(streamId, null!);
+
+        // Assert
+        await act.Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [Fact]
+    public async Task AddGameIdsToStreamAsync_UrlEncodesStreamId()
+    {
+        // Arrange
+        var streamId = "my stream";
+        var gameIds = new[] { "game1" };
+
+        _httpClientMock
+            .Setup(x => x.PostAsync<OkResponse>(
+                It.Is<string>(s => s.Contains("my%20stream")),
+                It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new OkResponse { Ok = true });
+
+        // Act
+        await _gamesApi.AddGameIdsToStreamAsync(streamId, gameIds);
+
+        // Assert
+        _httpClientMock.Verify(x => x.PostAsync<OkResponse>(
+            It.Is<string>(s => s.Contains("my%20stream")),
+            It.IsAny<HttpContent>(),
+            It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task AddGameIdsToStreamAsync_PassesCancellationToken()
+    {
+        // Arrange
+        var cts = new CancellationTokenSource();
+        var streamId = "myStream";
+        var gameIds = new[] { "game1" };
+
+        _httpClientMock
+            .Setup(x => x.PostAsync<OkResponse>(It.IsAny<string>(), It.IsAny<HttpContent>(), cts.Token))
+            .ReturnsAsync(new OkResponse { Ok = true });
+
+        // Act
+        await _gamesApi.AddGameIdsToStreamAsync(streamId, gameIds, cts.Token);
+
+        // Assert
+        _httpClientMock.Verify(x => x.PostAsync<OkResponse>(It.IsAny<string>(), It.IsAny<HttpContent>(), cts.Token), Times.Once);
+    }
+
+    #endregion
+
     #region Helper Methods
 
     private static GameJson CreateTestGameJson(string id) => new()

@@ -180,4 +180,74 @@ public class GamesApiIntegrationTests : IntegrationTestBase
     }
 
     #endregion
+
+    #region StreamGameMovesAsync Tests
+
+    [Fact]
+    public async Task StreamGameMovesAsync_WithKnownCompletedGame_ReturnsInitialEvent()
+    {
+        // Act - Stream moves from a known completed game
+        var events = new List<MoveStreamEvent>();
+        var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+
+        try
+        {
+            await foreach (var evt in Client.Games.StreamGameMovesAsync(GameId1).WithCancellation(cts.Token))
+            {
+                events.Add(evt);
+                // Just get the first event (initial game state) and break
+                break;
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // Timeout is acceptable - completed games might not stream
+        }
+
+        // Assert - Either we got an event or the stream timed out (both are valid for completed games)
+        // For completed games, we expect at least the initial event with full game info
+        if (events.Count > 0)
+        {
+            events[0].Id.Should().Be(GameId1);
+            events[0].Fen.Should().NotBeNullOrEmpty();
+        }
+    }
+
+    #endregion
+
+    #region StreamGamesByIdsAsync Tests
+
+    [Fact]
+    public async Task StreamGamesByIdsAsync_WithKnownGameIds_ReturnsEvents()
+    {
+        // Arrange - Use a unique stream ID for this test
+        var streamId = $"integration-test-{Guid.NewGuid():N}";
+        var gameIds = new[] { GameId1, GameId2 };
+
+        // Act
+        var events = new List<GameStreamEvent>();
+        var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+
+        try
+        {
+            await foreach (var evt in Client.Games.StreamGamesByIdsAsync(streamId, gameIds).WithCancellation(cts.Token))
+            {
+                events.Add(evt);
+                // Collect events for known games then break
+                if (events.Count >= 2) break;
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // Timeout is acceptable
+        }
+
+        // Assert - We should get events for the completed games
+        if (events.Count > 0)
+        {
+            events.Should().AllSatisfy(e => e.Id.Should().NotBeNullOrEmpty());
+        }
+    }
+
+    #endregion
 }

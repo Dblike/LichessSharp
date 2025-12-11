@@ -205,6 +205,11 @@ public sealed class LichessClient : ILichessClient
         IAsyncEnumerable<Models.GameJson> IGamesApi.StreamGamesByUsersAsync(IEnumerable<string> userIds, bool withCurrentGames, CancellationToken cancellationToken) => throw NotImplemented();
         Task<IReadOnlyList<Models.OngoingGame>> IGamesApi.GetOngoingGamesAsync(int count, CancellationToken cancellationToken) => throw NotImplemented();
         Task<Models.ImportGameResponse> IGamesApi.ImportPgnAsync(string pgn, CancellationToken cancellationToken) => throw NotImplemented();
+        Task<string> IGamesApi.GetImportedGamesPgnAsync(CancellationToken cancellationToken) => throw NotImplemented();
+        IAsyncEnumerable<Models.GameJson> IGamesApi.StreamBookmarkedGamesAsync(ApiOptions.ExportBookmarksOptions? options, CancellationToken cancellationToken) => throw NotImplemented();
+        IAsyncEnumerable<Models.MoveStreamEvent> IGamesApi.StreamGameMovesAsync(string gameId, CancellationToken cancellationToken) => throw NotImplemented();
+        IAsyncEnumerable<Models.GameStreamEvent> IGamesApi.StreamGamesByIdsAsync(string streamId, IEnumerable<string> gameIds, CancellationToken cancellationToken) => throw NotImplemented();
+        Task IGamesApi.AddGameIdsToStreamAsync(string streamId, IEnumerable<string> gameIds, CancellationToken cancellationToken) => throw NotImplemented();
 
         // ITvApi
         Task<TvChannels> ITvApi.GetCurrentGamesAsync(CancellationToken cancellationToken) => throw NotImplemented();

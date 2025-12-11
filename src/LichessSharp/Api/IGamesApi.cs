@@ -77,4 +77,52 @@ public interface IGamesApi
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The imported game response containing the game ID and URL.</returns>
     Task<ImportGameResponse> ImportPgnAsync(string pgn, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Export all games you have imported, in PGN format.
+    /// Requires OAuth authentication.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>All imported games in PGN format.</returns>
+    Task<string> GetImportedGamesPgnAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Stream all games you have bookmarked, in NDJSON format.
+    /// Requires OAuth authentication.
+    /// Games are sorted by reverse chronological order (most recent first).
+    /// </summary>
+    /// <param name="options">Optional export options.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Stream of bookmarked games.</returns>
+    IAsyncEnumerable<GameJson> StreamBookmarkedGamesAsync(ExportBookmarksOptions? options = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Stream a single game's moves in real-time.
+    /// The first event contains full game info, subsequent events contain move updates.
+    /// No authentication required.
+    /// </summary>
+    /// <param name="gameId">The game ID.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Stream of game move events.</returns>
+    IAsyncEnumerable<MoveStreamEvent> StreamGameMovesAsync(string gameId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Create a stream to watch multiple games by their IDs.
+    /// The stream outputs existing games immediately, then emits events when games start or finish.
+    /// No authentication required.
+    /// </summary>
+    /// <param name="streamId">Your unique stream identifier (can be any string).</param>
+    /// <param name="gameIds">Initial game IDs to watch (up to 500).</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Stream of game status events.</returns>
+    IAsyncEnumerable<GameStreamEvent> StreamGamesByIdsAsync(string streamId, IEnumerable<string> gameIds, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Add game IDs to an existing stream created with StreamGamesByIdsAsync.
+    /// No authentication required.
+    /// </summary>
+    /// <param name="streamId">The stream identifier used when creating the stream.</param>
+    /// <param name="gameIds">Game IDs to add to the stream (up to 500).</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    Task AddGameIdsToStreamAsync(string streamId, IEnumerable<string> gameIds, CancellationToken cancellationToken = default);
 }

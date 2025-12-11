@@ -128,6 +128,102 @@ internal sealed class GamesApi(ILichessHttpClient httpClient) : IGamesApi
         return await _httpClient.PostAsync<ImportGameResponse>("/api/import", content, cancellationToken).ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
+    public async Task<string> GetImportedGamesPgnAsync(CancellationToken cancellationToken = default)
+    {
+        return await _httpClient.GetStringWithAcceptAsync(
+            "/api/games/export/imports",
+            "application/x-chess-pgn",
+            cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async IAsyncEnumerable<GameJson> StreamBookmarkedGamesAsync(
+        ExportBookmarksOptions? options = null,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        var endpoint = BuildExportBookmarksEndpoint(options);
+        await foreach (var game in _httpClient.StreamNdjsonAsync<GameJson>(endpoint, cancellationToken).ConfigureAwait(false))
+        {
+            yield return game;
+        }
+    }
+
+    /// <inheritdoc />
+    public async IAsyncEnumerable<MoveStreamEvent> StreamGameMovesAsync(
+        string gameId,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(gameId);
+
+        var endpoint = $"/api/stream/game/{Uri.EscapeDataString(gameId)}";
+        await foreach (var evt in _httpClient.StreamNdjsonAsync<MoveStreamEvent>(endpoint, cancellationToken).ConfigureAwait(false))
+        {
+            yield return evt;
+        }
+    }
+
+    /// <inheritdoc />
+    public async IAsyncEnumerable<GameStreamEvent> StreamGamesByIdsAsync(
+        string streamId,
+        IEnumerable<string> gameIds,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(streamId);
+        ArgumentNullException.ThrowIfNull(gameIds);
+
+        var idsList = gameIds.ToList();
+        if (idsList.Count == 0)
+        {
+            yield break;
+        }
+
+        if (idsList.Count > 500)
+        {
+            throw new ArgumentException("Cannot stream more than 500 games at once.", nameof(gameIds));
+        }
+
+        var endpoint = $"/api/stream/games/{Uri.EscapeDataString(streamId)}";
+        var body = string.Join(",", idsList);
+
+        await foreach (var evt in _httpClient.StreamNdjsonPostAsync<GameStreamEvent>(
+            endpoint,
+            new StringContent(body, Encoding.UTF8, "text/plain"),
+            cancellationToken).ConfigureAwait(false))
+        {
+            yield return evt;
+        }
+    }
+
+    /// <inheritdoc />
+    public async Task AddGameIdsToStreamAsync(
+        string streamId,
+        IEnumerable<string> gameIds,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(streamId);
+        ArgumentNullException.ThrowIfNull(gameIds);
+
+        var idsList = gameIds.ToList();
+        if (idsList.Count == 0)
+        {
+            return;
+        }
+
+        if (idsList.Count > 500)
+        {
+            throw new ArgumentException("Cannot add more than 500 games at once.", nameof(gameIds));
+        }
+
+        var endpoint = $"/api/stream/games/{Uri.EscapeDataString(streamId)}/add";
+        var body = string.Join(",", idsList);
+
+        await _httpClient.PostAsync<OkResponse>(
+            endpoint,
+            new StringContent(body, Encoding.UTF8, "text/plain"),
+            cancellationToken).ConfigureAwait(false);
+    }
+
     private static string BuildExportGameEndpoint(string gameId, ExportGameOptions? options)
     {
         var sb = new StringBuilder();
@@ -284,6 +380,57 @@ internal sealed class GamesApi(ILichessHttpClient httpClient) : IGamesApi
             sb.Append(name);
             sb.Append('=');
             sb.Append(value.Value ? "true" : "false");
+            hasQuery = true;
+        }
+    }
+
+    private static string BuildExportBookmarksEndpoint(ExportBookmarksOptions? options)
+    {
+        var sb = new StringBuilder("/api/games/export/bookmarks");
+        var hasQuery = false;
+        AppendExportGameOptions(sb, options, ref hasQuery);
+        AppendBookmarksOptions(sb, options, ref hasQuery);
+        return sb.ToString();
+    }
+
+    private static void AppendBookmarksOptions(StringBuilder sb, ExportBookmarksOptions? options, ref bool hasQuery)
+    {
+        if (options == null)
+        {
+            return;
+        }
+
+        if (options.Since.HasValue)
+        {
+            sb.Append(hasQuery ? '&' : '?');
+            sb.Append("since=");
+            sb.Append(options.Since.Value.ToUnixTimeMilliseconds());
+            hasQuery = true;
+        }
+
+        if (options.Until.HasValue)
+        {
+            sb.Append(hasQuery ? '&' : '?');
+            sb.Append("until=");
+            sb.Append(options.Until.Value.ToUnixTimeMilliseconds());
+            hasQuery = true;
+        }
+
+        if (options.Max.HasValue)
+        {
+            sb.Append(hasQuery ? '&' : '?');
+            sb.Append("max=");
+            sb.Append(options.Max.Value);
+            hasQuery = true;
+        }
+
+        AppendBoolParam(sb, "lastFen", options.LastFen, ref hasQuery);
+
+        if (!string.IsNullOrWhiteSpace(options.Sort))
+        {
+            sb.Append(hasQuery ? '&' : '?');
+            sb.Append("sort=");
+            sb.Append(Uri.EscapeDataString(options.Sort));
             hasQuery = true;
         }
     }
