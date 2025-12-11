@@ -135,6 +135,29 @@ public class OpeningExplorerApiIntegrationTests : IntegrationTestBase
 
     #endregion
 
+    #region GetMasterGamePgnAsync Tests
+
+    [Fact]
+    public async Task GetMasterGamePgnAsync_WithKnownGameId_ReturnsPgn()
+    {
+        // Arrange - Game ID from OpenAPI spec example
+        var gameId = "aAbqI4ey";
+
+        // Act
+        var pgn = await Client.OpeningExplorer.GetMasterGamePgnAsync(gameId);
+
+        // Assert
+        pgn.Should().NotBeNullOrWhiteSpace();
+        // PGN should contain standard headers
+        pgn.Should().Contain("[Event ");
+        pgn.Should().Contain("[White ");
+        pgn.Should().Contain("[Black ");
+        // PGN should contain moves
+        pgn.Should().Contain("1.");
+    }
+
+    #endregion
+
     #region GetPlayerAsync Tests
 
     [Fact]
