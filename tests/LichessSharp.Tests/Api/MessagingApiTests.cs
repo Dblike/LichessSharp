@@ -18,7 +18,6 @@ public class MessagingApiTests
         _messagingApi = new MessagingApi(_httpClientMock.Object);
     }
 
-    #region Constructor Tests
 
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
@@ -31,9 +30,7 @@ public class MessagingApiTests
             .WithParameterName("httpClient");
     }
 
-    #endregion
 
-    #region SendAsync Tests
 
     [Fact]
     public async Task SendAsync_CallsCorrectEndpoint()
@@ -237,5 +234,4 @@ public class MessagingApiTests
         _httpClientMock.Verify(x => x.PostAsync<MessageSentResponse>(It.IsAny<string>(), It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 }

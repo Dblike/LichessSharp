@@ -20,7 +20,6 @@ public class GamesApiTests
         _gamesApi = new GamesApi(_httpClientMock.Object);
     }
 
-    #region Constructor Tests
 
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
@@ -33,9 +32,7 @@ public class GamesApiTests
             .WithParameterName("httpClient");
     }
 
-    #endregion
 
-    #region ExportAsync Tests
 
     [Fact]
     public async Task GetAsync_WithGameId_CallsCorrectEndpoint()
@@ -120,9 +117,7 @@ public class GamesApiTests
         _httpClientMock.Verify(x => x.GetAsync<GameJson>(It.Is<string>(s => s.Contains("game%20id")), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region GetPgnAsync Tests
 
     [Fact]
     public async Task GetPgnAsync_WithGameId_CallsCorrectEndpoint()
@@ -152,9 +147,7 @@ public class GamesApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region GetCurrentGameByUserAsync Tests
 
     [Fact]
     public async Task GetCurrentGameAsync_WithUsername_CallsCorrectEndpoint()
@@ -201,9 +194,7 @@ public class GamesApiTests
         _httpClientMock.Verify(x => x.GetAsync<GameJson>(It.Is<string>(s => s.Contains("user%20name")), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region StreamUserGamesAsync Tests
 
     [Fact]
     public async Task StreamUserGamesAsync_WithUsername_CallsCorrectEndpoint()
@@ -278,9 +269,7 @@ public class GamesApiTests
         });
     }
 
-    #endregion
 
-    #region StreamByIdsAsync Tests
 
     [Fact]
     public async Task StreamByIdsAsync_WithGameIds_CallsCorrectEndpoint()
@@ -360,9 +349,7 @@ public class GamesApiTests
         });
     }
 
-    #endregion
 
-    #region StreamByUsersAsync Tests
 
     [Fact]
     public async Task StreamGamesByUsersAsync_WithUserIds_CallsCorrectEndpoint()
@@ -447,9 +434,7 @@ public class GamesApiTests
         });
     }
 
-    #endregion
 
-    #region GetOngoingGamesAsync Tests
 
     [Fact]
     public async Task GetOngoingGamesAsync_WithDefaultCount_CallsCorrectEndpoint()
@@ -532,9 +517,7 @@ public class GamesApiTests
         result.Should().BeEmpty();
     }
 
-    #endregion
 
-    #region ImportAsync Tests
 
     [Fact]
     public async Task ImportPgnAsync_WithPgn_CallsCorrectEndpoint()
@@ -576,9 +559,7 @@ public class GamesApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region CancellationToken Tests
 
     [Fact]
     public async Task GetAsync_PassesCancellationToken()
@@ -614,9 +595,7 @@ public class GamesApiTests
         _httpClientMock.Verify(x => x.GetAsync<OngoingGamesResponse>(It.IsAny<string>(), cts.Token), Times.Once);
     }
 
-    #endregion
 
-    #region ExportGameOptions Tests
 
     [Fact]
     public async Task GetAsync_WithAllOptions_AppendsAllQueryParameters()
@@ -661,9 +640,7 @@ public class GamesApiTests
             s.Contains("players=lichess.org")), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region ExportUserGamesOptions Tests
 
     [Fact]
     public async Task StreamUserGamesAsync_WithDateRange_AppendsTimestamps()
@@ -755,9 +732,7 @@ public class GamesApiTests
             s.Contains("sort=dateAsc")), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region ExportImportedGamesAsync Tests
 
     [Fact]
     public async Task GetImportedGamesPgnAsync_CallsCorrectEndpoint()
@@ -792,9 +767,7 @@ public class GamesApiTests
         _httpClientMock.Verify(x => x.GetStringWithAcceptAsync(It.IsAny<string>(), It.IsAny<string>(), cts.Token), Times.Once);
     }
 
-    #endregion
 
-    #region StreamBookmarkedGamesAsync Tests
 
     [Fact]
     public async Task StreamBookmarkedGamesAsync_WithoutOptions_CallsCorrectEndpoint()
@@ -883,9 +856,7 @@ public class GamesApiTests
             s.Contains("moves=true")), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region StreamGameMovesAsync Tests
 
     [Fact]
     public async Task StreamGameMovesAsync_WithValidId_CallsCorrectEndpoint()
@@ -956,9 +927,7 @@ public class GamesApiTests
         _httpClientMock.Verify(x => x.StreamNdjsonAsync<MoveStreamEvent>(It.Is<string>(s => s.Contains("game%20id")), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region StreamByIdsAsync Tests
 
     [Fact]
     public async Task StreamGamesByIdsAsync_WithValidIds_CallsCorrectEndpoint()
@@ -1089,9 +1058,7 @@ public class GamesApiTests
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region AddGameIdsToStreamAsync Tests
 
     [Fact]
     public async Task AddGameIdsToStreamAsync_WithValidIds_CallsCorrectEndpoint()
@@ -1217,9 +1184,7 @@ public class GamesApiTests
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>(It.IsAny<string>(), It.IsAny<HttpContent>(), cts.Token), Times.Once);
     }
 
-    #endregion
 
-    #region Helper Methods
 
     private static GameJson CreateTestGameJson(string id) => new()
     {
@@ -1251,5 +1216,4 @@ public class GamesApiTests
         await Task.CompletedTask;
     }
 
-    #endregion
 }

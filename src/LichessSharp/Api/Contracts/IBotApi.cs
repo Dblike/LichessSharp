@@ -124,7 +124,6 @@ public interface IBotApi
     Task<bool> ClaimDrawAsync(string gameId, CancellationToken cancellationToken = default);
 }
 
-#region Models
 
 /// <summary>
 /// Event from the bot account event stream.
@@ -822,4 +821,3 @@ public class BotPlayTime
     public long Tv { get; init; }
 }
 
-#endregion

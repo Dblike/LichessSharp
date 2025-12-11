@@ -17,7 +17,6 @@ public class GamesApiIntegrationTests : IntegrationTestBase
     private const string GameId2 = "TJxUmbWK";
     private const string ThibaultUsername = "thibault";
 
-    #region ExportAsync Tests
 
     [Fact]
     public async Task GetAsync_WithValidGameId_ReturnsGame()
@@ -50,9 +49,7 @@ public class GamesApiIntegrationTests : IntegrationTestBase
         game.Moves.Should().NotBeNullOrEmpty();
     }
 
-    #endregion
 
-    #region GetPgnAsync Tests
 
     [Fact]
     public async Task GetPgnAsync_WithValidGameId_ReturnsPgn()
@@ -84,9 +81,7 @@ public class GamesApiIntegrationTests : IntegrationTestBase
         pgn.Should().Contain("[Event");
     }
 
-    #endregion
 
-    #region StreamUserGamesAsync Tests
 
     [Fact]
     public async Task StreamUserGamesAsync_WithValidUsername_ReturnsGames()
@@ -134,9 +129,7 @@ public class GamesApiIntegrationTests : IntegrationTestBase
         games.Should().NotBeNull();
     }
 
-    #endregion
 
-    #region StreamByIdsAsync Tests
 
     [Fact]
     public async Task StreamByIdsAsync_WithValidGameIds_ReturnsGames()
@@ -179,9 +172,7 @@ public class GamesApiIntegrationTests : IntegrationTestBase
         games.First().Moves.Should().NotBeNullOrEmpty();
     }
 
-    #endregion
 
-    #region StreamGameMovesAsync Tests
 
     [Fact]
     public async Task StreamGameMovesAsync_WithKnownCompletedGame_ReturnsInitialEvent()
@@ -214,9 +205,7 @@ public class GamesApiIntegrationTests : IntegrationTestBase
         }
     }
 
-    #endregion
 
-    #region StreamByIdsAsync Tests
 
     [Fact]
     public async Task StreamGamesByIdsAsync_WithKnownGameIds_ReturnsEvents()
@@ -250,5 +239,4 @@ public class GamesApiIntegrationTests : IntegrationTestBase
         }
     }
 
-    #endregion
 }

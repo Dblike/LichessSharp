@@ -14,7 +14,6 @@ public class FideApiIntegrationTests : IntegrationTestBase
     private const int MagnusCarlsenFideId = 1503014;
     private const int FabianoCaruanaFideId = 2020009;
 
-    #region GetPlayerAsync Tests
 
     [Fact]
     public async Task GetPlayerAsync_WithMagnusCarlsen_ReturnsPlayer()
@@ -58,9 +57,7 @@ public class FideApiIntegrationTests : IntegrationTestBase
         player.Blitz.Should().NotBeNull();
     }
 
-    #endregion
 
-    #region SearchPlayersAsync Tests
 
     [Fact]
     public async Task SearchPlayersAsync_WithCarlsen_ReturnsPlayers()
@@ -97,5 +94,4 @@ public class FideApiIntegrationTests : IntegrationTestBase
         players.Should().Contain(p => p.Id == MagnusCarlsenFideId);
     }
 
-    #endregion
 }

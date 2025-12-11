@@ -23,7 +23,6 @@ namespace LichessSharp.Tests.Integration.Manual;
 [RequiresScope("engine:read", "engine:write")]
 public class ExternalEngineApiManualTests : AuthenticatedTestBase
 {
-    #region ListAsync Tests
 
     [Fact]
     public async Task ListAsync_WithValidToken_ReturnsEngineList()
@@ -52,9 +51,7 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
         }
     }
 
-    #endregion
 
-    #region CreateAsync Tests
 
     /// <summary>
     /// Test creating an external engine.
@@ -88,9 +85,7 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
         await Client.ExternalEngine.DeleteAsync(engine.Id);
     }
 
-    #endregion
 
-    #region ExportAsync Tests
 
     [Fact(Skip = "Requires existing engine ID - run manually only")]
     public async Task GetAsync_WithValidId_ReturnsEngine()
@@ -112,9 +107,7 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
         engine.Id.Should().Be(engineId);
     }
 
-    #endregion
 
-    #region UpdateAsync Tests
 
     [Fact(Skip = "Requires existing engine - run manually only")]
     public async Task UpdateAsync_WithValidData_UpdatesEngine()
@@ -157,9 +150,7 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
         await Client.ExternalEngine.UpdateAsync(engineId, revertRegistration);
     }
 
-    #endregion
 
-    #region DeleteAsync Tests
 
     [Fact(Skip = "Requires engine to delete - run manually only")]
     public async Task DeleteAsync_WithValidId_DeletesEngine()
@@ -184,9 +175,7 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
             await Client.ExternalEngine.GetAsync(engine.Id));
     }
 
-    #endregion
 
-    #region AnalyseAsync Tests
 
     [Fact(Skip = "Requires working engine - run manually only")]
     public async Task AnalyseAsync_WithValidRequest_ReturnsAnalysisLines()
@@ -227,9 +216,7 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
         lines.Should().NotBeNull();
     }
 
-    #endregion
 
-    #region Provider Tests
 
     [Fact(Skip = "Requires engine provider setup - run manually only")]
     public async Task AcquireWorkAsync_WithValidSecret_ReturnsWorkOrNull()
@@ -253,7 +240,6 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
         }
     }
 
-    #endregion
 }
 
 /// <summary>

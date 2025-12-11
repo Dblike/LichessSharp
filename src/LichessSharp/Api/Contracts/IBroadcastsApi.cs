@@ -8,8 +8,6 @@ namespace LichessSharp.Api.Contracts;
 /// </summary>
 public interface IBroadcastsApi
 {
-    #region Viewing Broadcasts
-
     /// <summary>
     /// Get ongoing official broadcasts sorted by tier.
     /// After that, returns finished broadcasts sorted by most recent sync time.
@@ -78,10 +76,6 @@ public interface IBroadcastsApi
     /// <returns>Async enumerable of your broadcast rounds.</returns>
     IAsyncEnumerable<BroadcastMyRound> StreamMyRoundsAsync(int? nb = null, CancellationToken cancellationToken = default);
 
-    #endregion
-
-    #region Creating and Managing Broadcasts
-
     /// <summary>
     /// Create a new broadcast tournament.
     /// Requires OAuth with study:write scope.
@@ -142,10 +136,6 @@ public interface IBroadcastsApi
     /// <returns>Information about the pushed games.</returns>
     Task<BroadcastPgnPushResult> PushPgnAsync(string broadcastRoundId, string pgn, CancellationToken cancellationToken = default);
 
-    #endregion
-
-    #region Export PGN
-
     /// <summary>
     /// Download all games of a single round of a broadcast tournament in PGN format.
     /// </summary>
@@ -171,10 +161,6 @@ public interface IBroadcastsApi
     /// <returns>Async enumerable of PGN strings.</returns>
     IAsyncEnumerable<string> StreamRoundPgnAsync(string broadcastRoundId, CancellationToken cancellationToken = default);
 
-    #endregion
-
-    #region Players
-
     /// <summary>
     /// Get the list of players of a broadcast tournament, if available.
     /// </summary>
@@ -191,11 +177,8 @@ public interface IBroadcastsApi
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The player details with their games.</returns>
     Task<BroadcastPlayerWithGames> GetPlayerAsync(string tournamentId, string playerId, CancellationToken cancellationToken = default);
-
-    #endregion
 }
 
-#region Options Classes
 
 /// <summary>
 /// Options for creating or updating a broadcast tournament.
@@ -309,9 +292,7 @@ public class BroadcastRoundOptions
     public int? SyncPeriod { get; set; }
 }
 
-#endregion
 
-#region Response Models
 
 /// <summary>
 /// A broadcast tournament.
@@ -1231,4 +1212,3 @@ public class BroadcastPlayerOpponent
     public string? Federation { get; init; }
 }
 
-#endregion

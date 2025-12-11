@@ -19,8 +19,6 @@ public class AnalysisApiTests
         _analysisApi = new AnalysisApi(_httpClientMock.Object);
     }
 
-    #region Constructor Tests
-
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -32,9 +30,7 @@ public class AnalysisApiTests
             .WithParameterName("httpClient");
     }
 
-    #endregion
 
-    #region GetCloudEvaluationAsync Tests
 
     [Fact]
     public async Task GetCloudEvaluationAsync_WithFen_CallsCorrectEndpoint()
@@ -180,9 +176,7 @@ public class AnalysisApiTests
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region Helper Methods
 
     private static CloudEvaluation CreateTestCloudEvaluation(string fen) => new()
     {
@@ -196,5 +190,4 @@ public class AnalysisApiTests
         }
     };
 
-    #endregion
 }

@@ -121,7 +121,6 @@ public interface ITeamsApi
     Task<bool> MessageAllMembersAsync(string teamId, string message, CancellationToken cancellationToken = default);
 }
 
-#region Models
 
 /// <summary>
 /// A Lichess team.
@@ -561,4 +560,3 @@ public class TeamPlayTime
     public int Tv { get; init; }
 }
 
-#endregion

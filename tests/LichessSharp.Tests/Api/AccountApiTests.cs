@@ -18,8 +18,6 @@ public class AccountApiTests
         _accountApi = new AccountApi(_httpClientMock.Object);
     }
 
-    #region Constructor Tests
-
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -31,9 +29,7 @@ public class AccountApiTests
             .WithParameterName("httpClient");
     }
 
-    #endregion
 
-    #region GetProfileAsync Tests
 
     [Fact]
     public async Task GetProfileAsync_CallsCorrectEndpoint()
@@ -71,9 +67,7 @@ public class AccountApiTests
         _httpClientMock.Verify(x => x.GetAsync<UserExtended>("/api/account", cts.Token), Times.Once);
     }
 
-    #endregion
 
-    #region GetEmailAsync Tests
 
     [Fact]
     public async Task GetEmailAsync_CallsCorrectEndpoint()
@@ -108,9 +102,7 @@ public class AccountApiTests
         result.Should().Be(string.Empty);
     }
 
-    #endregion
 
-    #region GetPreferencesAsync Tests
 
     [Fact]
     public async Task GetPreferencesAsync_CallsCorrectEndpoint()
@@ -135,9 +127,7 @@ public class AccountApiTests
         _httpClientMock.Verify(x => x.GetAsync<AccountPreferences>("/api/account/preferences", It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region GetKidModeAsync Tests
 
     [Fact]
     public async Task GetKidModeAsync_WhenEnabled_ReturnsTrue()
@@ -172,9 +162,7 @@ public class AccountApiTests
         result.Should().BeFalse();
     }
 
-    #endregion
 
-    #region SetKidModeAsync Tests
 
     [Fact]
     public async Task SetKidModeAsync_WhenEnabling_CallsCorrectEndpoint()
@@ -226,9 +214,7 @@ public class AccountApiTests
         result.Should().BeFalse();
     }
 
-    #endregion
 
-    #region Helper Methods
 
     private static UserExtended CreateTestUserExtended() => new()
     {
@@ -238,5 +224,4 @@ public class AccountApiTests
         Patron = true
     };
 
-    #endregion
 }

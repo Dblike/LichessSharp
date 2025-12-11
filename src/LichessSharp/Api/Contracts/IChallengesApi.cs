@@ -104,7 +104,6 @@ public interface IChallengesApi
     Task<bool> AddTimeAsync(string gameId, int seconds, CancellationToken cancellationToken = default);
 }
 
-#region Enums
 
 /// <summary>
 /// Challenge status.
@@ -256,9 +255,7 @@ public enum ChallengeRules
     NoEarlyDraw = 16
 }
 
-#endregion
 
-#region Models
 
 /// <summary>
 /// List of challenges.
@@ -638,9 +635,7 @@ public class ChallengeAiGameStatus
     public string? Name { get; init; }
 }
 
-#endregion
 
-#region Options
 
 /// <summary>
 /// Options for creating a challenge.
@@ -764,4 +759,3 @@ public class ChallengeAiOptions
     public string? Fen { get; set; }
 }
 
-#endregion

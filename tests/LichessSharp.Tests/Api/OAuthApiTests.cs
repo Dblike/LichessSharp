@@ -23,7 +23,6 @@ public class OAuthApiTests
         _api = new OAuthApi(_httpClientMock.Object);
     }
 
-    #region Constructor Tests
 
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
@@ -36,9 +35,7 @@ public class OAuthApiTests
             .WithParameterName("httpClient");
     }
 
-    #endregion
 
-    #region GetTokenAsync Tests
 
     [Fact]
     public async Task GetTokenAsync_WithValidRequest_CallsCorrectEndpoint()
@@ -222,9 +219,7 @@ public class OAuthApiTests
             cts.Token), Times.Once);
     }
 
-    #endregion
 
-    #region RevokeTokenAsync Tests
 
     [Fact]
     public async Task RevokeTokenAsync_CallsCorrectEndpoint()
@@ -262,9 +257,7 @@ public class OAuthApiTests
             cts.Token), Times.Once);
     }
 
-    #endregion
 
-    #region TestTokensAsync Tests
 
     [Fact]
     public async Task TestTokensAsync_WithValidTokens_CallsCorrectEndpoint()
@@ -464,5 +457,4 @@ public class OAuthApiTests
         result.Values.Should().AllSatisfy(info => info.Should().BeNull());
     }
 
-    #endregion
 }

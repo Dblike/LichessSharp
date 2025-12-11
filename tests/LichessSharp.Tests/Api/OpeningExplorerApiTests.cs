@@ -19,7 +19,6 @@ public class OpeningExplorerApiTests
         _explorerApi = new OpeningExplorerApi(_httpClientMock.Object, _baseAddress);
     }
 
-    #region Constructor Tests
 
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
@@ -43,9 +42,7 @@ public class OpeningExplorerApiTests
             .WithParameterName("explorerBaseAddress");
     }
 
-    #endregion
 
-    #region GetMastersAsync Tests
 
     [Fact]
     public async Task GetMastersAsync_WithFen_CallsCorrectEndpoint()
@@ -108,9 +105,7 @@ public class OpeningExplorerApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region GetLichessAsync Tests
 
     [Fact]
     public async Task GetLichessAsync_WithFen_CallsCorrectEndpoint()
@@ -171,9 +166,7 @@ public class OpeningExplorerApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region GetPlayerAsync Tests
 
     [Fact]
     public async Task GetPlayerAsync_WithFenAndPlayer_CallsCorrectEndpoint()
@@ -237,9 +230,7 @@ public class OpeningExplorerApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region GetMasterGamePgnAsync Tests
 
     [Fact]
     public async Task GetMasterGamePgnAsync_WithValidGameId_CallsCorrectEndpoint()
@@ -285,9 +276,7 @@ public class OpeningExplorerApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region URL Encoding Tests
 
     [Fact]
     public async Task GetMastersAsync_UrlEncodesFen()
@@ -308,9 +297,7 @@ public class OpeningExplorerApiTests
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region Helper Methods
 
     private static ExplorerResult CreateTestExplorerResult() => new()
     {
@@ -329,5 +316,4 @@ public class OpeningExplorerApiTests
         Opening = new ExplorerOpening { Eco = "B00", Name = "King's Pawn Opening" }
     };
 
-    #endregion
 }

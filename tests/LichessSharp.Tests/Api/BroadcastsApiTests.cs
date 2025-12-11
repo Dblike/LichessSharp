@@ -18,7 +18,6 @@ public class BroadcastsApiTests
         _broadcastsApi = new BroadcastsApi(_httpClientMock.Object);
     }
 
-    #region Constructor Tests
 
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
@@ -31,9 +30,7 @@ public class BroadcastsApiTests
             .WithParameterName("httpClient");
     }
 
-    #endregion
 
-    #region StreamOfficialBroadcastsAsync Tests
 
     [Fact]
     public async Task StreamOfficialBroadcastsAsync_CallsCorrectEndpoint()
@@ -95,9 +92,7 @@ public class BroadcastsApiTests
         _httpClientMock.Verify(x => x.StreamNdjsonAsync<BroadcastWithRounds>(It.Is<string>(s => s.Contains("html=true")), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region GetTopBroadcastsAsync Tests
 
     [Fact]
     public async Task GetTopBroadcastsAsync_CallsCorrectEndpoint()
@@ -133,9 +128,7 @@ public class BroadcastsApiTests
         _httpClientMock.Verify(x => x.GetAsync<BroadcastTopPage>("/api/broadcast/top?page=2", It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region StreamUserBroadcastsAsync Tests
 
     [Fact]
     public async Task StreamUserBroadcastsAsync_CallsCorrectEndpoint()
@@ -173,9 +166,7 @@ public class BroadcastsApiTests
         });
     }
 
-    #endregion
 
-    #region SearchBroadcastsAsync Tests
 
     [Fact]
     public async Task SearchBroadcastsAsync_CallsCorrectEndpoint()
@@ -220,9 +211,7 @@ public class BroadcastsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region GetTournamentAsync Tests
 
     [Fact]
     public async Task GetTournamentAsync_CallsCorrectEndpoint()
@@ -269,9 +258,7 @@ public class BroadcastsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region GetRoundAsync Tests
 
     [Fact]
     public async Task GetRoundAsync_CallsCorrectEndpoint()
@@ -322,9 +309,7 @@ public class BroadcastsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region StreamMyRoundsAsync Tests
 
     [Fact]
     public async Task StreamMyRoundsAsync_CallsCorrectEndpoint()
@@ -367,9 +352,7 @@ public class BroadcastsApiTests
         _httpClientMock.Verify(x => x.StreamNdjsonAsync<BroadcastMyRound>("/api/broadcast/my-rounds?nb=5", It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region CreateTournamentAsync Tests
 
     [Fact]
     public async Task CreateTournamentAsync_CallsCorrectEndpoint()
@@ -412,9 +395,7 @@ public class BroadcastsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region UpdateTournamentAsync Tests
 
     [Fact]
     public async Task UpdateTournamentAsync_CallsCorrectEndpoint()
@@ -447,9 +428,7 @@ public class BroadcastsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region CreateRoundAsync Tests
 
     [Fact]
     public async Task CreateRoundAsync_CallsCorrectEndpoint()
@@ -482,9 +461,7 @@ public class BroadcastsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region UpdateRoundAsync Tests
 
     [Fact]
     public async Task UpdateRoundAsync_CallsCorrectEndpoint()
@@ -517,9 +494,7 @@ public class BroadcastsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region ResetRoundAsync Tests
 
     [Fact]
     public async Task ResetRoundAsync_CallsCorrectEndpoint()
@@ -548,9 +523,7 @@ public class BroadcastsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region PushPgnAsync Tests
 
     [Fact]
     public async Task PushPgnAsync_CallsCorrectEndpoint()
@@ -591,9 +564,7 @@ public class BroadcastsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region ExportRoundPgnAsync Tests
 
     [Fact]
     public async Task ExportRoundPgnAsync_CallsCorrectEndpoint()
@@ -622,9 +593,7 @@ public class BroadcastsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region ExportAllRoundsPgnAsync Tests
 
     [Fact]
     public async Task ExportAllRoundsPgnAsync_CallsCorrectEndpoint()
@@ -653,9 +622,7 @@ public class BroadcastsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region GetPlayersAsync Tests
 
     [Fact]
     public async Task GetPlayersAsync_CallsCorrectEndpoint()
@@ -689,9 +656,7 @@ public class BroadcastsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region GetPlayerAsync Tests
 
     [Fact]
     public async Task GetPlayerAsync_CallsCorrectEndpoint()
@@ -738,9 +703,7 @@ public class BroadcastsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region StreamRoundPgnAsync Tests
 
     [Fact]
     public async Task StreamRoundPgnAsync_CallsCorrectEndpoint()
@@ -776,9 +739,7 @@ public class BroadcastsApiTests
         });
     }
 
-    #endregion
 
-    #region CancellationToken Tests
 
     [Fact]
     public async Task GetTopBroadcastsAsync_WithCancellationToken_PassesToken()
@@ -796,9 +757,7 @@ public class BroadcastsApiTests
         _httpClientMock.Verify(x => x.GetAsync<BroadcastTopPage>(It.IsAny<string>(), cts.Token), Times.Once);
     }
 
-    #endregion
 
-    #region Helper Methods
 
     private static BroadcastTour CreateTestTour(string id)
     {
@@ -882,5 +841,4 @@ public class BroadcastsApiTests
         };
     }
 
-    #endregion
 }

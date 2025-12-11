@@ -113,7 +113,6 @@ public interface ISwissTournamentsApi
     IAsyncEnumerable<SwissTournament> StreamTeamTournamentsAsync(string teamId, int? max = null, CancellationToken cancellationToken = default);
 }
 
-#region Enums
 
 /// <summary>
 /// Swiss tournament status values.
@@ -136,9 +135,7 @@ public enum SwissStatus
     Finished
 }
 
-#endregion
 
-#region Options
 
 /// <summary>
 /// Options for creating a Swiss tournament.
@@ -384,9 +381,7 @@ public class SwissGamesExportOptions
     public bool? Opening { get; init; }
 }
 
-#endregion
 
-#region Models
 
 /// <summary>
 /// Swiss tournament info.
@@ -676,4 +671,3 @@ public class SwissPlayerResult
     public bool? Excluded { get; init; }
 }
 
-#endregion

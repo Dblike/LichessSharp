@@ -15,7 +15,6 @@ namespace LichessSharp.Tests.Integration.Authenticated;
 [RequiresScope("study:read")]
 public class StudiesApiAuthenticatedTests : AuthenticatedTestBase
 {
-    #region StreamUserStudiesAsync Tests
 
     [Fact]
     public async Task StreamUserStudiesAsync_WithAuthenticatedUser_ReturnsStudies()
@@ -67,9 +66,7 @@ public class StudiesApiAuthenticatedTests : AuthenticatedTestBase
         studies.Should().NotBeNull();
     }
 
-    #endregion
 
-    #region ExportStudyPgnAsync Tests
 
     [Fact]
     public async Task ExportStudyPgnAsync_WithPublicStudy_ReturnsPgn()
@@ -131,9 +128,7 @@ public class StudiesApiAuthenticatedTests : AuthenticatedTestBase
         pgn.Should().NotBeNullOrWhiteSpace();
     }
 
-    #endregion
 
-    #region ExportChapterPgnAsync Tests
 
     [Fact]
     public async Task ExportChapterPgnAsync_WithValidStudyAndChapter_ReturnsPgn()
@@ -146,9 +141,7 @@ public class StudiesApiAuthenticatedTests : AuthenticatedTestBase
         // The unit tests cover the endpoint construction adequately
     }
 
-    #endregion
 
-    #region ExportUserStudiesPgnAsync Tests
 
     [Fact]
     public async Task ExportUserStudiesPgnAsync_WithAuthenticatedUser_ReturnsPgnOrEmpty()
@@ -183,7 +176,6 @@ public class StudiesApiAuthenticatedTests : AuthenticatedTestBase
         pgn.Should().NotBeNull();
     }
 
-    #endregion
 }
 
 /// <summary>

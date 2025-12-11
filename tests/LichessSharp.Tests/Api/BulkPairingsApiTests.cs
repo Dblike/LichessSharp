@@ -19,7 +19,6 @@ public class BulkPairingsApiTests
         _bulkPairingsApi = new BulkPairingsApi(_httpClientMock.Object);
     }
 
-    #region Constructor Tests
 
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
@@ -32,9 +31,7 @@ public class BulkPairingsApiTests
             .WithParameterName("httpClient");
     }
 
-    #endregion
 
-    #region GetAllAsync Tests
 
     [Fact]
     public async Task GetAllAsync_CallsCorrectEndpoint()
@@ -113,9 +110,7 @@ public class BulkPairingsApiTests
         _httpClientMock.Verify(x => x.GetAsync<BulkPairingListResponse>("/api/bulk-pairing", cts.Token), Times.Once);
     }
 
-    #endregion
 
-    #region ExportAsync Tests
 
     [Fact]
     public async Task GetAsync_CallsCorrectEndpoint()
@@ -181,9 +176,7 @@ public class BulkPairingsApiTests
         _httpClientMock.Verify(x => x.GetAsync<BulkPairing>("/api/bulk-pairing/test%2Fspecial", It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region CreateAsync Tests
 
     [Fact]
     public async Task CreateAsync_CallsCorrectEndpoint()
@@ -290,9 +283,7 @@ public class BulkPairingsApiTests
         formData.Should().Contain("rules=");
     }
 
-    #endregion
 
-    #region StartClocksAsync Tests
 
     [Fact]
     public async Task StartClocksAsync_CallsCorrectEndpoint()
@@ -330,9 +321,7 @@ public class BulkPairingsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region CancelAsync Tests
 
     [Fact]
     public async Task CancelAsync_CallsCorrectEndpoint()
@@ -370,9 +359,7 @@ public class BulkPairingsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region ExportGamesAsync Tests
 
     [Fact]
     public async Task ExportGamesPgnAsync_CallsCorrectEndpoint()
@@ -435,9 +422,7 @@ public class BulkPairingsApiTests
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region StreamGamesAsync Tests
 
     [Fact]
     public async Task StreamGamesAsync_CallsCorrectEndpoint()
@@ -519,9 +504,7 @@ public class BulkPairingsApiTests
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region Helper Methods
 
     private static BulkPairing CreateTestBulkPairing(string id)
     {
@@ -549,5 +532,4 @@ public class BulkPairingsApiTests
         };
     }
 
-    #endregion
 }

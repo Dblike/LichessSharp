@@ -19,7 +19,6 @@ public class SwissTournamentsApiTests
         _api = new SwissTournamentsApi(_httpClientMock.Object);
     }
 
-    #region Constructor Tests
 
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
@@ -30,9 +29,7 @@ public class SwissTournamentsApiTests
             .WithParameterName("httpClient");
     }
 
-    #endregion
 
-    #region ExportAsync Tests
 
     [Fact]
     public async Task GetAsync_CallsCorrectEndpoint()
@@ -84,9 +81,7 @@ public class SwissTournamentsApiTests
         _httpClientMock.Verify(x => x.GetAsync<SwissTournament>(It.Is<string>(s => s.Contains("swiss%20with%20spaces")), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region CreateAsync Tests
 
     [Fact]
     public async Task CreateAsync_CallsCorrectEndpoint()
@@ -128,9 +123,7 @@ public class SwissTournamentsApiTests
             await _api.CreateAsync("testteam", null!));
     }
 
-    #endregion
 
-    #region UpdateAsync Tests
 
     [Fact]
     public async Task UpdateAsync_CallsCorrectEndpoint()
@@ -165,9 +158,7 @@ public class SwissTournamentsApiTests
             await _api.UpdateAsync("testSwiss", null!));
     }
 
-    #endregion
 
-    #region ScheduleNextRoundAsync Tests
 
     [Fact]
     public async Task ScheduleNextRoundAsync_CallsCorrectEndpoint()
@@ -194,9 +185,7 @@ public class SwissTournamentsApiTests
             await _api.ScheduleNextRoundAsync(null!, 12345));
     }
 
-    #endregion
 
-    #region JoinAsync Tests
 
     [Fact]
     public async Task JoinAsync_WithNoPassword_CallsCorrectEndpoint()
@@ -239,9 +228,7 @@ public class SwissTournamentsApiTests
             await _api.JoinAsync(null!));
     }
 
-    #endregion
 
-    #region PauseOrWithdrawAsync Tests
 
     [Fact]
     public async Task WithdrawAsync_CallsCorrectEndpoint()
@@ -267,9 +254,7 @@ public class SwissTournamentsApiTests
             await _api.PauseOrWithdrawAsync(null!));
     }
 
-    #endregion
 
-    #region TerminateAsync Tests
 
     [Fact]
     public async Task TerminateAsync_CallsCorrectEndpoint()
@@ -295,9 +280,7 @@ public class SwissTournamentsApiTests
             await _api.TerminateAsync(null!));
     }
 
-    #endregion
 
-    #region ExportTrfAsync Tests
 
     [Fact]
     public async Task ExportTrfAsync_CallsCorrectEndpoint()
@@ -324,9 +307,7 @@ public class SwissTournamentsApiTests
             await _api.ExportTrfAsync(null!));
     }
 
-    #endregion
 
-    #region StreamGamesAsync Tests
 
     [Fact]
     public async Task StreamGamesAsync_CallsCorrectEndpoint()
@@ -377,9 +358,7 @@ public class SwissTournamentsApiTests
         });
     }
 
-    #endregion
 
-    #region StreamResultsAsync Tests
 
     [Fact]
     public async Task StreamResultsAsync_CallsCorrectEndpoint()
@@ -429,9 +408,7 @@ public class SwissTournamentsApiTests
         });
     }
 
-    #endregion
 
-    #region StreamTeamTournamentsAsync Tests
 
     [Fact]
     public async Task StreamTeamTournamentsAsync_CallsCorrectEndpoint()
@@ -481,9 +458,7 @@ public class SwissTournamentsApiTests
         });
     }
 
-    #endregion
 
-    #region Helper Methods
 
     private static SwissTournament CreateTestTournament(string id) => new()
     {
@@ -500,5 +475,4 @@ public class SwissTournamentsApiTests
         StartsAt = DateTimeOffset.UtcNow.ToString("O")
     };
 
-    #endregion
 }

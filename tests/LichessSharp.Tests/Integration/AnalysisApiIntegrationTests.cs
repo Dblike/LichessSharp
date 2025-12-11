@@ -19,7 +19,6 @@ public class AnalysisApiIntegrationTests : IntegrationTestBase
     // Italian Game position - common opening
     private const string ItalianGameFen = "r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3";
 
-    #region GetCloudEvaluationAsync Tests
 
     [Fact]
     public async Task GetCloudEvaluationAsync_WithStartingPosition_ReturnsEvaluation()
@@ -77,5 +76,4 @@ public class AnalysisApiIntegrationTests : IntegrationTestBase
         }
     }
 
-    #endregion
 }

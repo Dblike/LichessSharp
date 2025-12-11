@@ -18,7 +18,6 @@ public class RelationsApiTests
         _relationsApi = new RelationsApi(_httpClientMock.Object);
     }
 
-    #region Constructor Tests
 
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
@@ -31,9 +30,7 @@ public class RelationsApiTests
             .WithParameterName("httpClient");
     }
 
-    #endregion
 
-    #region FollowUserAsync Tests
 
     [Fact]
     public async Task FollowAsync_WithUsername_CallsCorrectEndpoint()
@@ -90,9 +87,7 @@ public class RelationsApiTests
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>(It.Is<string>(s => s.Contains("user%20name")), null, It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region UnfollowUserAsync Tests
 
     [Fact]
     public async Task UnfollowAsync_WithUsername_CallsCorrectEndpoint()
@@ -122,9 +117,7 @@ public class RelationsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region BlockUserAsync Tests
 
     [Fact]
     public async Task BlockAsync_WithUsername_CallsCorrectEndpoint()
@@ -154,9 +147,7 @@ public class RelationsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region UnblockUserAsync Tests
 
     [Fact]
     public async Task UnblockAsync_WithUsername_CallsCorrectEndpoint()
@@ -186,9 +177,7 @@ public class RelationsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region StreamFollowingUsersAsync Tests
 
     [Fact]
     public async Task StreamFollowingAsync_CallsCorrectEndpoint()
@@ -238,9 +227,7 @@ public class RelationsApiTests
         _httpClientMock.Verify(x => x.StreamNdjsonAsync<UserExtended>("/api/rel/following", cts.Token), Times.Once);
     }
 
-    #endregion
 
-    #region CancellationToken Tests
 
     [Fact]
     public async Task FollowAsync_PassesCancellationToken()
@@ -259,9 +246,7 @@ public class RelationsApiTests
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>(It.IsAny<string>(), null, cts.Token), Times.Once);
     }
 
-    #endregion
 
-    #region Helper Methods
 
     private static UserExtended CreateTestUserExtended(string id, string username) => new()
     {
@@ -279,5 +264,4 @@ public class RelationsApiTests
         await Task.CompletedTask;
     }
 
-    #endregion
 }

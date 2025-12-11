@@ -85,7 +85,6 @@ public interface IExternalEngineApi
     Task SubmitWorkAsync(string workId, IAsyncEnumerable<string> uciLines, CancellationToken cancellationToken = default);
 }
 
-#region Models
 
 /// <summary>
 /// A registered external engine.
@@ -444,4 +443,3 @@ internal class EngineWorkRequest
     public required string ProviderSecret { get; init; }
 }
 
-#endregion

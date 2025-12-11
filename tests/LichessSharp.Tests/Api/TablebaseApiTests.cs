@@ -19,7 +19,6 @@ public class TablebaseApiTests
         _tablebaseApi = new TablebaseApi(_httpClientMock.Object, _baseAddress);
     }
 
-    #region Constructor Tests
 
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
@@ -43,9 +42,7 @@ public class TablebaseApiTests
             .WithParameterName("tablebaseBaseAddress");
     }
 
-    #endregion
 
-    #region LookupAsync Tests
 
     [Fact]
     public async Task LookupAsync_WithFen_CallsCorrectEndpoint()
@@ -98,9 +95,7 @@ public class TablebaseApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region LookupAtomicAsync Tests
 
     [Fact]
     public async Task LookupAtomicAsync_WithFen_CallsCorrectEndpoint()
@@ -133,9 +128,7 @@ public class TablebaseApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region LookupAntichessAsync Tests
 
     [Fact]
     public async Task LookupAntichessAsync_WithFen_CallsCorrectEndpoint()
@@ -168,9 +161,7 @@ public class TablebaseApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region URL Encoding Tests
 
     [Fact]
     public async Task LookupAsync_UrlEncodesFen()
@@ -190,9 +181,7 @@ public class TablebaseApiTests
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region Result Mapping Tests
 
     [Fact]
     public async Task LookupAsync_ReturnsResultWithAllProperties()
@@ -222,9 +211,7 @@ public class TablebaseApiTests
         result.Moves![0].Zeroing.Should().BeTrue();
     }
 
-    #endregion
 
-    #region CancellationToken Tests
 
     [Fact]
     public async Task LookupAsync_PassesCancellationToken()
@@ -245,9 +232,7 @@ public class TablebaseApiTests
             cts.Token), Times.Once);
     }
 
-    #endregion
 
-    #region Helper Methods
 
     private static TablebaseResult CreateTestTablebaseResult() => new()
     {
@@ -285,5 +270,4 @@ public class TablebaseApiTests
         }
     };
 
-    #endregion
 }

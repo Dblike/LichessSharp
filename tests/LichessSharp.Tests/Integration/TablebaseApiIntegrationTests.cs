@@ -25,7 +25,6 @@ public class TablebaseApiIntegrationTests : IntegrationTestBase
     // KPK simple - White: Ke1, Pe2; Black: Ke8
     private const string SimpleKpkFen = "4k3/8/8/8/8/8/4P3/4K3 w - - 0 1";
 
-    #region LookupAsync Tests (Standard Chess)
 
     [Fact]
     public async Task LookupAsync_WithKqkEndgame_ReturnsWinningPosition()
@@ -103,9 +102,7 @@ public class TablebaseApiIntegrationTests : IntegrationTestBase
         });
     }
 
-    #endregion
 
-    #region LookupAtomicAsync Tests
 
     [Fact]
     public async Task LookupAtomicAsync_WithSimplePosition_ReturnsResult()
@@ -122,9 +119,7 @@ public class TablebaseApiIntegrationTests : IntegrationTestBase
         result.Category.Should().NotBeNullOrEmpty();
     }
 
-    #endregion
 
-    #region LookupAntichessAsync Tests
 
     [Fact]
     public async Task LookupAntichessAsync_WithSimplePosition_ReturnsResult()
@@ -141,5 +136,4 @@ public class TablebaseApiIntegrationTests : IntegrationTestBase
         result.Category.Should().NotBeNullOrEmpty();
     }
 
-    #endregion
 }

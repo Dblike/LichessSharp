@@ -146,7 +146,6 @@ public interface IArenaTournamentsApi
     IAsyncEnumerable<ArenaTournamentSummary> StreamTeamTournamentsAsync(string teamId, int? max = null, CancellationToken cancellationToken = default);
 }
 
-#region Enums
 
 /// <summary>
 /// Arena tournament status values.
@@ -190,9 +189,7 @@ public enum ArenaStatusFilter
     Finished
 }
 
-#endregion
 
-#region Options
 
 /// <summary>
 /// Options for creating an Arena tournament.
@@ -420,9 +417,7 @@ public class ArenaGamesExportOptions
     public bool? Opening { get; init; }
 }
 
-#endregion
 
-#region Models
 
 /// <summary>
 /// List of Arena tournaments grouped by status.
@@ -1455,4 +1450,3 @@ public class ArenaPlayedPlayer
     public int? Rank { get; init; }
 }
 
-#endregion

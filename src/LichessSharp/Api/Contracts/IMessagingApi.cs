@@ -18,7 +18,6 @@ public interface IMessagingApi
     Task<bool> SendAsync(string username, string text, CancellationToken cancellationToken = default);
 }
 
-#region Response Models
 
 /// <summary>
 /// Response from sending a private message.
@@ -32,4 +31,3 @@ public class MessageSentResponse
     public bool Ok { get; init; }
 }
 
-#endregion

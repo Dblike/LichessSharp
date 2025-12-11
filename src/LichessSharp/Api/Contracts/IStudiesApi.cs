@@ -95,7 +95,6 @@ public interface IStudiesApi
     Task<bool> DeleteChapterAsync(string studyId, string chapterId, CancellationToken cancellationToken = default);
 }
 
-#region Options Classes
 
 /// <summary>
 /// Options for exporting study PGN.
@@ -158,9 +157,7 @@ public class StudyImportOptions
     public string? Variant { get; set; }
 }
 
-#endregion
 
-#region Response Models
 
 /// <summary>
 /// Study metadata (name and dates).
@@ -252,4 +249,3 @@ public class StudyChapterPlayer
     public int? Rating { get; init; }
 }
 
-#endregion

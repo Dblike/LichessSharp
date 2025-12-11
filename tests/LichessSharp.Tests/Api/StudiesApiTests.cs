@@ -18,7 +18,6 @@ public class StudiesApiTests
         _studiesApi = new StudiesApi(_httpClientMock.Object);
     }
 
-    #region Constructor Tests
 
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
@@ -31,9 +30,7 @@ public class StudiesApiTests
             .WithParameterName("httpClient");
     }
 
-    #endregion
 
-    #region ExportChapterPgnAsync Tests
 
     [Fact]
     public async Task ExportChapterPgnAsync_CallsCorrectEndpoint()
@@ -98,9 +95,7 @@ public class StudiesApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region ExportStudyPgnAsync Tests
 
     [Fact]
     public async Task ExportStudyPgnAsync_CallsCorrectEndpoint()
@@ -162,9 +157,7 @@ public class StudiesApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region ExportUserStudiesPgnAsync Tests
 
     [Fact]
     public async Task ExportUserStudiesPgnAsync_CallsCorrectEndpoint()
@@ -194,9 +187,7 @@ public class StudiesApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region StreamUserStudiesAsync Tests
 
     [Fact]
     public async Task StreamUserStudiesAsync_CallsCorrectEndpoint()
@@ -238,9 +229,7 @@ public class StudiesApiTests
         });
     }
 
-    #endregion
 
-    #region ImportAsync Tests
 
     [Fact]
     public async Task ImportPgnAsync_CallsCorrectEndpoint()
@@ -319,9 +308,7 @@ public class StudiesApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region UpdateChapterTagsAsync Tests
 
     [Fact]
     public async Task UpdateChapterTagsAsync_CallsCorrectEndpoint()
@@ -372,9 +359,7 @@ public class StudiesApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region DeleteChapterAsync Tests
 
     [Fact]
     public async Task DeleteChapterAsync_CallsCorrectEndpoint()
@@ -414,9 +399,7 @@ public class StudiesApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region CancellationToken Tests
 
     [Fact]
     public async Task ExportChapterPgnAsync_WithCancellationToken_PassesToken()
@@ -450,5 +433,4 @@ public class StudiesApiTests
         _httpClientMock.Verify(x => x.PostAsync<StudyImportResult>(It.IsAny<string>(), It.IsAny<FormUrlEncodedContent>(), cts.Token), Times.Once);
     }
 
-    #endregion
 }

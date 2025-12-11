@@ -135,7 +135,6 @@ public interface IBoardApi
     Task<bool> BerserkAsync(string gameId, CancellationToken cancellationToken = default);
 }
 
-#region Enums
 
 /// <summary>
 /// Chat room type.
@@ -153,9 +152,7 @@ public enum ChatRoom
     Spectator
 }
 
-#endregion
 
-#region Account Events
 
 /// <summary>
 /// Event from the board account event stream.
@@ -391,9 +388,7 @@ public class BoardCompat
     public bool Board { get; init; }
 }
 
-#endregion
 
-#region Game Events
 
 /// <summary>
 /// Event from the board game stream.
@@ -617,9 +612,7 @@ public class OpponentGoneEvent : BoardGameEvent
     public int? ClaimWinInSeconds { get; init; }
 }
 
-#endregion
 
-#region Supporting Types
 
 /// <summary>
 /// Clock settings in board game events.
@@ -723,9 +716,7 @@ public class SeekResult
     public string? Id { get; init; }
 }
 
-#endregion
 
-#region Options
 
 /// <summary>
 /// Options for creating a seek.
@@ -776,4 +767,3 @@ public class SeekOptions
     public int? RatingMax { get; set; }
 }
 
-#endregion

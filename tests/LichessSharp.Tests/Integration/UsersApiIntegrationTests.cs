@@ -16,7 +16,6 @@ public class UsersApiIntegrationTests : IntegrationTestBase
     private const string Maia1Username = "maia1";
     private const string Maia5Username = "maia5";
 
-    #region ExportAsync Tests
 
     [Fact]
     public async Task GetAsync_WithValidUsername_ReturnsUserProfile()
@@ -41,9 +40,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         user.Id.Should().Be(ThibaultUsername);
     }
 
-    #endregion
 
-    #region GetManyAsync Tests
 
     [Fact]
     public async Task GetManyAsync_WithMultipleUsernames_ReturnsAllUsers()
@@ -60,9 +57,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         users.Should().Contain(u => u.Id == ThibaultUsername);
     }
 
-    #endregion
 
-    #region GetRealTimeStatusAsync Tests
 
     [Fact]
     public async Task GetStatusAsync_WithValidUsernames_ReturnsStatuses()
@@ -94,9 +89,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         statuses.Should().HaveCountGreaterThanOrEqualTo(1);
     }
 
-    #endregion
 
-    #region GetAllTop10Async Tests
 
     [Fact]
     public async Task GetAllTop10Async_ReturnsLeaderboards()
@@ -113,9 +106,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
                                                  k.Contains("rapid", StringComparison.OrdinalIgnoreCase));
     }
 
-    #endregion
 
-    #region GetLeaderboardAsync Tests
 
     [Fact]
     public async Task GetLeaderboardAsync_WithBulletPerf_ReturnsTopPlayers()
@@ -144,9 +135,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         players.Should().HaveCount(5);
     }
 
-    #endregion
 
-    #region GetRatingHistoryAsync Tests
 
     [Fact]
     public async Task GetRatingHistoryAsync_WithValidUsername_ReturnsHistory()
@@ -163,9 +152,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         });
     }
 
-    #endregion
 
-    #region GetPerformanceAsync Tests
 
     [Fact]
     public async Task GetPerformanceAsync_WithValidUsernameAndPerfType_ReturnsPerformance()
@@ -189,9 +176,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         performance.Stat.Should().NotBeNull();
     }
 
-    #endregion
 
-    #region GetActivityAsync Tests
 
     [Fact]
     public async Task GetActivityAsync_WithValidUsername_ReturnsActivity()
@@ -204,9 +189,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         // Activity might be empty if user hasn't been active recently
     }
 
-    #endregion
 
-    #region AutocompleteAsync Tests
 
     [Fact]
     public async Task AutocompleteAsync_WithValidTerm_ReturnsUsernames()
@@ -220,9 +203,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         usernames.Should().Contain(u => u.Contains("thibault", StringComparison.OrdinalIgnoreCase));
     }
 
-    #endregion
 
-    #region AutocompletePlayersAsync Tests
 
     [Fact]
     public async Task AutocompletePlayersAsync_WithValidTerm_ReturnsPlayers()
@@ -240,9 +221,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         });
     }
 
-    #endregion
 
-    #region GetCrosstableAsync Tests
 
     [Fact]
     public async Task GetCrosstableAsync_WithValidUsernames_ReturnsCrosstable()
@@ -266,9 +245,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         crosstable.Users.Should().NotBeNull();
     }
 
-    #endregion
 
-    #region GetLiveStreamersAsync Tests
 
     [Fact]
     public async Task GetLiveStreamersAsync_ReturnsStreamers()
@@ -281,5 +258,4 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         // Streamers list might be empty if no one is streaming
     }
 
-    #endregion
 }

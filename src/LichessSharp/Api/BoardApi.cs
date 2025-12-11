@@ -164,7 +164,6 @@ internal sealed class BoardApi(ILichessHttpClient httpClient) : IBoardApi
         }
     }
 
-    #region Helper Methods
 
     private static FormUrlEncodedContent BuildSeekContent(SeekOptions options)
     {
@@ -206,5 +205,4 @@ internal sealed class BoardApi(ILichessHttpClient httpClient) : IBoardApi
         _ => "random"
     };
 
-    #endregion
 }

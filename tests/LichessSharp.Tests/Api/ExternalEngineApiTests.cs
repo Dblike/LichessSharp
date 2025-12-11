@@ -22,7 +22,6 @@ public class ExternalEngineApiTests
         _api = new ExternalEngineApi(_httpClientMock.Object, _engineBaseAddress);
     }
 
-    #region Constructor Tests
 
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
@@ -46,9 +45,7 @@ public class ExternalEngineApiTests
             .WithParameterName("engineBaseAddress");
     }
 
-    #endregion
 
-    #region ListAsync Tests
 
     [Fact]
     public async Task ListAsync_CallsCorrectEndpoint()
@@ -73,9 +70,7 @@ public class ExternalEngineApiTests
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region CreateAsync Tests
 
     [Fact]
     public async Task CreateAsync_WithValidRegistration_CallsCorrectEndpoint()
@@ -187,9 +182,7 @@ public class ExternalEngineApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region ExportAsync Tests
 
     [Fact]
     public async Task GetAsync_WithValidId_CallsCorrectEndpoint()
@@ -233,9 +226,7 @@ public class ExternalEngineApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region UpdateAsync Tests
 
     [Fact]
     public async Task UpdateAsync_WithValidData_CallsCorrectEndpoint()
@@ -281,9 +272,7 @@ public class ExternalEngineApiTests
             .WithParameterName("registration");
     }
 
-    #endregion
 
-    #region DeleteAsync Tests
 
     [Fact]
     public async Task DeleteAsync_WithValidId_CallsCorrectEndpoint()
@@ -314,9 +303,7 @@ public class ExternalEngineApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region AnalyseAsync Tests
 
     [Fact]
     public async Task AnalyseAsync_WithNullEngineId_ThrowsArgumentException()
@@ -358,9 +345,7 @@ public class ExternalEngineApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region AcquireWorkAsync Tests
 
     [Fact]
     public async Task AcquireWorkAsync_WithNullProviderSecret_ThrowsArgumentException()
@@ -382,9 +367,7 @@ public class ExternalEngineApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region SubmitWorkAsync Tests
 
     [Fact]
     public async Task SubmitWorkAsync_WithNullWorkId_ThrowsArgumentException()
@@ -409,9 +392,7 @@ public class ExternalEngineApiTests
         await act.Should().ThrowAsync<ArgumentNullException>();
     }
 
-    #endregion
 
-    #region Helper Methods
 
     private static ExternalEngine CreateTestEngine(string id) => new()
     {
@@ -442,5 +423,4 @@ public class ExternalEngineApiTests
         }
     };
 
-    #endregion
 }

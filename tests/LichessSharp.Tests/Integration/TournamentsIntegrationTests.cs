@@ -22,7 +22,6 @@ public class TournamentsIntegrationTests : IDisposable
         GC.SuppressFinalize(this);
     }
 
-    #region Arena Tournaments API Tests
 
     [Fact]
     public async Task ArenaTournaments_GetCurrentAsync_ReturnsCurrentTournaments()
@@ -177,9 +176,7 @@ public class TournamentsIntegrationTests : IDisposable
             await _client.ArenaTournaments.JoinAsync(tournament.Id));
     }
 
-    #endregion
 
-    #region Swiss Tournaments API Tests
 
     [Fact]
     public async Task SwissTournaments_GetAsync_WithValidId_ReturnsTournament()
@@ -306,5 +303,4 @@ public class TournamentsIntegrationTests : IDisposable
             await _client.SwissTournaments.JoinAsync(tournaments[0].Id));
     }
 
-    #endregion
 }

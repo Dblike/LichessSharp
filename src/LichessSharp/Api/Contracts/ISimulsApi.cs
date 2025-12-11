@@ -18,7 +18,6 @@ public interface ISimulsApi
     Task<SimulList> GetCurrentAsync(CancellationToken cancellationToken = default);
 }
 
-#region Response Models
 
 /// <summary>
 /// Response containing simuls grouped by status.
@@ -225,4 +224,3 @@ public class SimulVariant
     public string? Name { get; init; }
 }
 
-#endregion

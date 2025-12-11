@@ -13,7 +13,6 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
 {
     private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
-    #region Viewing Broadcasts
 
     /// <inheritdoc />
     public async IAsyncEnumerable<BroadcastWithRounds> StreamOfficialBroadcastsAsync(int? nb = null, bool? html = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
@@ -129,9 +128,7 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
         }
     }
 
-    #endregion
 
-    #region Creating and Managing Broadcasts
 
     /// <inheritdoc />
     public async Task<BroadcastWithRounds> CreateTournamentAsync(BroadcastTournamentOptions options, CancellationToken cancellationToken = default)
@@ -199,9 +196,7 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
         return await _httpClient.PostPlainTextAsync<BroadcastPgnPushResult>(endpoint, pgn, cancellationToken).ConfigureAwait(false);
     }
 
-    #endregion
 
-    #region Export PGN
 
     /// <inheritdoc />
     public async Task<string> ExportRoundPgnAsync(string broadcastRoundId, CancellationToken cancellationToken = default)
@@ -237,9 +232,7 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
         yield return pgn;
     }
 
-    #endregion
 
-    #region Players
 
     /// <inheritdoc />
     public async Task<IReadOnlyList<BroadcastPlayerEntry>> GetPlayersAsync(string tournamentId, CancellationToken cancellationToken = default)
@@ -260,9 +253,7 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
         return await _httpClient.GetAsync<BroadcastPlayerWithGames>(endpoint, cancellationToken).ConfigureAwait(false);
     }
 
-    #endregion
 
-    #region Helper Methods
 
     private static List<KeyValuePair<string, string>> BuildTournamentParameters(BroadcastTournamentOptions options)
     {
@@ -374,5 +365,4 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
         return parameters;
     }
 
-    #endregion
 }

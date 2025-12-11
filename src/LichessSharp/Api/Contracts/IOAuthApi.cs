@@ -36,7 +36,6 @@ public interface IOAuthApi
         CancellationToken cancellationToken = default);
 }
 
-#region Models
 
 /// <summary>
 /// Request to obtain an access token via the OAuth2 PKCE flow.
@@ -131,4 +130,3 @@ public class OAuthError
     public string? ErrorDescription { get; init; }
 }
 
-#endregion

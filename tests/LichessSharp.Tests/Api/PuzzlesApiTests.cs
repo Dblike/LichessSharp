@@ -19,7 +19,6 @@ public class PuzzlesApiTests
         _puzzlesApi = new PuzzlesApi(_httpClientMock.Object);
     }
 
-    #region Constructor Tests
 
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
@@ -32,9 +31,7 @@ public class PuzzlesApiTests
             .WithParameterName("httpClient");
     }
 
-    #endregion
 
-    #region GetDailyAsync Tests
 
     [Fact]
     public async Task GetDailyAsync_CallsCorrectEndpoint()
@@ -72,9 +69,7 @@ public class PuzzlesApiTests
         _httpClientMock.Verify(x => x.GetAsync<PuzzleWithGame>("/api/puzzle/daily", cts.Token), Times.Once);
     }
 
-    #endregion
 
-    #region ExportAsync Tests
 
     [Fact]
     public async Task GetAsync_WithId_CallsCorrectEndpoint()
@@ -132,9 +127,7 @@ public class PuzzlesApiTests
         _httpClientMock.Verify(x => x.GetAsync<PuzzleWithGame>(It.Is<string>(s => s.Contains("puzzle%20id")), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region GetNextAsync Tests
 
     [Fact]
     public async Task GetNextAsync_WithNoParameters_CallsCorrectEndpoint()
@@ -221,9 +214,7 @@ public class PuzzlesApiTests
         _httpClientMock.Verify(x => x.GetAsync<PuzzleWithGame>(It.Is<string>(s => s.Contains("angle=mate%20in%202")), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region StreamActivityAsync Tests
 
     [Fact]
     public async Task StreamActivityAsync_WithNoParameters_CallsCorrectEndpoint()
@@ -315,9 +306,7 @@ public class PuzzlesApiTests
             s.Contains("before=")), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region GetDashboardAsync Tests
 
     [Fact]
     public async Task GetDashboardAsync_WithDefaultDays_CallsCorrectEndpoint()
@@ -354,9 +343,7 @@ public class PuzzlesApiTests
         _httpClientMock.Verify(x => x.GetAsync<PuzzleDashboard>("/api/puzzle/dashboard/7", It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region GetStormDashboardAsync Tests
 
     [Fact]
     public async Task GetStormDashboardAsync_WithDefaultDays_CallsCorrectEndpoint()
@@ -430,9 +417,7 @@ public class PuzzlesApiTests
         _httpClientMock.Verify(x => x.GetAsync<StormDashboard>(It.Is<string>(s => s.Contains("user%20name")), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region CreateRaceAsync Tests
 
     [Fact]
     public async Task CreateRaceAsync_CallsCorrectEndpoint()
@@ -470,9 +455,7 @@ public class PuzzlesApiTests
         _httpClientMock.Verify(x => x.PostAsync<PuzzleRace>("/api/racer", null, cts.Token), Times.Once);
     }
 
-    #endregion
 
-    #region GetBatchAsync Tests
 
     [Fact]
     public async Task GetBatchAsync_WithAngle_CallsCorrectEndpoint()
@@ -598,9 +581,7 @@ public class PuzzlesApiTests
         _httpClientMock.Verify(x => x.GetAsync<PuzzleBatch>(It.Is<string>(s => s.Contains("mate%20in%202")), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region SolveBatchAsync Tests
 
     [Fact]
     public async Task SolveBatchAsync_WithValidInput_CallsCorrectEndpoint()
@@ -677,9 +658,7 @@ public class PuzzlesApiTests
         await act.Should().ThrowAsync<ArgumentNullException>();
     }
 
-    #endregion
 
-    #region GetReplayAsync Tests
 
     [Fact]
     public async Task GetReplayAsync_WithValidInput_CallsCorrectEndpoint()
@@ -751,9 +730,7 @@ public class PuzzlesApiTests
         _httpClientMock.Verify(x => x.GetAsync<PuzzleReplay>(It.Is<string>(s => s.Contains("mate%20in%202")), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region GetRaceAsync Tests
 
     [Fact]
     public async Task GetRaceAsync_WithValidId_CallsCorrectEndpoint()
@@ -827,9 +804,7 @@ public class PuzzlesApiTests
         _httpClientMock.Verify(x => x.GetAsync<PuzzleRaceResults>("/api/racer/test", cts.Token), Times.Once);
     }
 
-    #endregion
 
-    #region Helper Methods
 
     private static PuzzleWithGame CreateTestPuzzleWithGame(string id) => new()
     {
@@ -956,5 +931,4 @@ public class PuzzlesApiTests
         await Task.CompletedTask;
     }
 
-    #endregion
 }

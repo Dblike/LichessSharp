@@ -14,7 +14,6 @@ namespace LichessSharp.Tests.Integration;
 [Trait("Category", "Integration")]
 public class BroadcastsApiIntegrationTests : IntegrationTestBase
 {
-    #region StreamOfficialBroadcastsAsync Tests
 
     [Fact]
     public async Task StreamOfficialBroadcastsAsync_ReturnsOfficialBroadcasts()
@@ -65,9 +64,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         }
     }
 
-    #endregion
 
-    #region GetTopBroadcastsAsync Tests
 
     [Fact]
     public async Task GetTopBroadcastsAsync_ReturnsTopBroadcasts()
@@ -117,9 +114,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         }
     }
 
-    #endregion
 
-    #region SearchBroadcastsAsync Tests
 
     [Fact]
     public async Task SearchBroadcastsAsync_WithQuery_ReturnsResults()
@@ -163,9 +158,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         // May be empty for rare search terms - that's valid
     }
 
-    #endregion
 
-    #region GetTournamentAsync Tests
 
     [Fact]
     public async Task GetTournamentAsync_WithKnownId_ReturnsTournament()
@@ -223,9 +216,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         }
     }
 
-    #endregion
 
-    #region GetRoundAsync Tests
 
     [Fact]
     public async Task GetRoundAsync_WithKnownRound_ReturnsRound()
@@ -298,9 +289,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         }
     }
 
-    #endregion
 
-    #region StreamUserBroadcastsAsync Tests
 
     [Fact]
     public async Task StreamUserBroadcastsAsync_WithLichessUser_ReturnsBroadcasts()
@@ -323,9 +312,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         broadcasts.Should().NotBeNull();
     }
 
-    #endregion
 
-    #region GetPlayersAsync Tests
 
     [Fact]
     public async Task GetPlayersAsync_WithKnownTournament_ReturnsPlayers()
@@ -370,9 +357,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         }
     }
 
-    #endregion
 
-    #region ExportRoundPgnAsync Tests
 
     [Fact]
     public async Task ExportRoundPgnAsync_WithKnownRound_ReturnsPgn()
@@ -402,9 +387,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         pgn.Should().Contain("[Event", "PGN should contain Event tag");
     }
 
-    #endregion
 
-    #region ExportAllRoundsPgnAsync Tests
 
     [Fact]
     public async Task ExportAllRoundsPgnAsync_WithKnownTournament_ReturnsPgn()
@@ -433,5 +416,4 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         pgn.Should().Contain("[Event", "PGN should contain Event tag");
     }
 
-    #endregion
 }

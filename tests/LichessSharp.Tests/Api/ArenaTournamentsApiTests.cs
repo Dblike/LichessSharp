@@ -19,8 +19,6 @@ public class ArenaTournamentsApiTests
         _api = new ArenaTournamentsApi(_httpClientMock.Object);
     }
 
-    #region Constructor Tests
-
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -30,9 +28,7 @@ public class ArenaTournamentsApiTests
             .WithParameterName("httpClient");
     }
 
-    #endregion
 
-    #region GetCurrentAsync Tests
 
     [Fact]
     public async Task GetCurrentAsync_CallsCorrectEndpoint()
@@ -58,9 +54,7 @@ public class ArenaTournamentsApiTests
         _httpClientMock.Verify(x => x.GetAsync<ArenaTournamentList>("/api/tournament", It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region ExportAsync Tests
 
     [Fact]
     public async Task GetAsync_WithDefaultPage_CallsCorrectEndpoint()
@@ -113,9 +107,7 @@ public class ArenaTournamentsApiTests
             await _api.GetAsync(""));
     }
 
-    #endregion
 
-    #region CreateAsync Tests
 
     [Fact]
     public async Task CreateAsync_CallsCorrectEndpoint()
@@ -147,9 +139,7 @@ public class ArenaTournamentsApiTests
             await _api.CreateAsync(null!));
     }
 
-    #endregion
 
-    #region UpdateAsync Tests
 
     [Fact]
     public async Task UpdateAsync_CallsCorrectEndpoint()
@@ -184,9 +174,7 @@ public class ArenaTournamentsApiTests
             await _api.UpdateAsync("testTour", null!));
     }
 
-    #endregion
 
-    #region JoinAsync Tests
 
     [Fact]
     public async Task JoinAsync_WithNoOptions_CallsCorrectEndpoint()
@@ -229,9 +217,7 @@ public class ArenaTournamentsApiTests
             await _api.JoinAsync(null!));
     }
 
-    #endregion
 
-    #region PauseOrWithdrawAsync Tests
 
     [Fact]
     public async Task WithdrawAsync_CallsCorrectEndpoint()
@@ -257,9 +243,7 @@ public class ArenaTournamentsApiTests
             await _api.PauseOrWithdrawAsync(null!));
     }
 
-    #endregion
 
-    #region TerminateAsync Tests
 
     [Fact]
     public async Task TerminateAsync_CallsCorrectEndpoint()
@@ -285,9 +269,7 @@ public class ArenaTournamentsApiTests
             await _api.TerminateAsync(null!));
     }
 
-    #endregion
 
-    #region UpdateTeamBattleAsync Tests
 
     [Fact]
     public async Task UpdateTeamBattleAsync_CallsCorrectEndpoint()
@@ -322,9 +304,7 @@ public class ArenaTournamentsApiTests
             await _api.UpdateTeamBattleAsync("testTour", null!));
     }
 
-    #endregion
 
-    #region StreamGamesAsync Tests
 
     [Fact]
     public async Task StreamGamesAsync_CallsCorrectEndpoint()
@@ -375,9 +355,7 @@ public class ArenaTournamentsApiTests
         });
     }
 
-    #endregion
 
-    #region StreamResultsAsync Tests
 
     [Fact]
     public async Task StreamResultsAsync_CallsCorrectEndpoint()
@@ -427,9 +405,7 @@ public class ArenaTournamentsApiTests
         });
     }
 
-    #endregion
 
-    #region GetTeamStandingAsync Tests
 
     [Fact]
     public async Task GetTeamStandingAsync_CallsCorrectEndpoint()
@@ -457,9 +433,7 @@ public class ArenaTournamentsApiTests
             await _api.GetTeamStandingAsync(null!));
     }
 
-    #endregion
 
-    #region StreamCreatedByAsync Tests
 
     [Fact]
     public async Task StreamCreatedByAsync_CallsCorrectEndpoint()
@@ -509,9 +483,7 @@ public class ArenaTournamentsApiTests
         });
     }
 
-    #endregion
 
-    #region StreamPlayedByAsync Tests
 
     [Fact]
     public async Task StreamPlayedByAsync_CallsCorrectEndpoint()
@@ -544,9 +516,7 @@ public class ArenaTournamentsApiTests
         });
     }
 
-    #endregion
 
-    #region StreamTeamTournamentsAsync Tests
 
     [Fact]
     public async Task StreamTeamTournamentsAsync_CallsCorrectEndpoint()
@@ -596,9 +566,7 @@ public class ArenaTournamentsApiTests
         });
     }
 
-    #endregion
 
-    #region Helper Methods
 
     private static ArenaTournamentSummary CreateTestTournamentSummary(string id) => new()
     {
@@ -626,5 +594,4 @@ public class ArenaTournamentsApiTests
         FinishesAt = DateTimeOffset.UtcNow.AddHours(1)
     };
 
-    #endregion
 }

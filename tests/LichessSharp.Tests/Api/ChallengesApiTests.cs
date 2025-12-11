@@ -19,7 +19,6 @@ public class ChallengesApiTests
         _challengesApi = new ChallengesApi(_httpClientMock.Object);
     }
 
-    #region Constructor Tests
 
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
@@ -32,9 +31,7 @@ public class ChallengesApiTests
             .WithParameterName("httpClient");
     }
 
-    #endregion
 
-    #region GetPendingAsync Tests
 
     [Fact]
     public async Task GetPendingAsync_CallsCorrectEndpoint()
@@ -59,9 +56,7 @@ public class ChallengesApiTests
         _httpClientMock.Verify(x => x.GetAsync<ChallengeList>("/api/challenge", It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region ShowAsync Tests
 
     [Fact]
     public async Task ShowAsync_CallsCorrectEndpoint()
@@ -98,9 +93,7 @@ public class ChallengesApiTests
             await _challengesApi.ShowAsync(""));
     }
 
-    #endregion
 
-    #region CreateAsync Tests
 
     [Fact]
     public async Task CreateAsync_WithUsername_CallsCorrectEndpoint()
@@ -145,9 +138,7 @@ public class ChallengesApiTests
         _httpClientMock.Verify(x => x.PostAsync<ChallengeJson>(It.Is<string>(s => s.Contains("user%20name")), It.IsAny<HttpContent?>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region AcceptAsync Tests
 
     [Fact]
     public async Task AcceptAsync_CallsCorrectEndpoint()
@@ -174,9 +165,7 @@ public class ChallengesApiTests
             await _challengesApi.AcceptAsync(null!));
     }
 
-    #endregion
 
-    #region DeclineAsync Tests
 
     [Fact]
     public async Task DeclineAsync_WithoutReason_CallsCorrectEndpoint()
@@ -220,9 +209,7 @@ public class ChallengesApiTests
             await _challengesApi.DeclineAsync(null!));
     }
 
-    #endregion
 
-    #region CancelAsync Tests
 
     [Fact]
     public async Task CancelAsync_WithoutOpponentToken_CallsCorrectEndpoint()
@@ -259,9 +246,7 @@ public class ChallengesApiTests
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>(It.Is<string>(s => s.Contains("opponentToken=token123")), null, It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region ChallengeAiAsync Tests
 
     [Fact]
     public async Task ChallengeAiAsync_CallsCorrectEndpoint()
@@ -312,9 +297,7 @@ public class ChallengesApiTests
             await _challengesApi.ChallengeAiAsync(options));
     }
 
-    #endregion
 
-    #region CreateOpenAsync Tests
 
     [Fact]
     public async Task CreateOpenAsync_CallsCorrectEndpoint()
@@ -334,9 +317,7 @@ public class ChallengesApiTests
         _httpClientMock.Verify(x => x.PostAsync<ChallengeOpenJson>("/api/challenge/open", It.IsAny<HttpContent?>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region StartClocksAsync Tests
 
     [Fact]
     public async Task StartClocksAsync_CallsCorrectEndpoint()
@@ -372,9 +353,7 @@ public class ChallengesApiTests
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>(It.Is<string>(s => s.Contains("token1=t1") && s.Contains("token2=t2")), null, It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region AddTimeAsync Tests
 
     [Fact]
     public async Task AddTimeAsync_CallsCorrectEndpoint()
@@ -410,9 +389,7 @@ public class ChallengesApiTests
             await _challengesApi.AddTimeAsync("game123", 61));
     }
 
-    #endregion
 
-    #region Helper Methods
 
     private static ChallengeJson CreateTestChallenge(string id) => new()
     {
@@ -422,5 +399,4 @@ public class ChallengesApiTests
         Rated = false
     };
 
-    #endregion
 }

@@ -18,7 +18,6 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
     // Known team that hosts Swiss tournaments
     private const string TestTeamId = "lichess-swiss";
 
-    #region ExportAsync Tests
 
     [Fact]
     public async Task GetAsync_WithValidId_ReturnsTournament()
@@ -71,9 +70,7 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
         result.NbRounds.Should().BeGreaterThan(0);
     }
 
-    #endregion
 
-    #region StreamTeamTournamentsAsync Tests
 
     [Fact]
     public async Task StreamTeamTournamentsAsync_WithKnownTeam_ReturnsTournaments()
@@ -107,9 +104,7 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
         }
     }
 
-    #endregion
 
-    #region StreamResultsAsync Tests
 
     [Fact]
     public async Task StreamResultsAsync_WithFinishedTournament_ReturnsResults()
@@ -184,9 +179,7 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
         }
     }
 
-    #endregion
 
-    #region StreamGamesAsync Tests
 
     [Fact]
     public async Task StreamGamesAsync_WithFinishedTournament_ReturnsGames()
@@ -223,9 +216,7 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
         });
     }
 
-    #endregion
 
-    #region ExportTrfAsync Tests
 
     [Fact]
     public async Task ExportTrfAsync_WithFinishedTournament_ReturnsTrf()
@@ -255,9 +246,7 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
         trf.Should().Contain("012", "TRF should contain tournament name line (012)");
     }
 
-    #endregion
 
-    #region Authentication Required Tests
 
     [Fact]
     public async Task CreateAsync_WithoutAuth_ThrowsException()
@@ -321,5 +310,4 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
             await Client.SwissTournaments.PauseOrWithdrawAsync(tournament.Id));
     }
 
-    #endregion
 }

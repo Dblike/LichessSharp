@@ -11,7 +11,6 @@ namespace LichessSharp.Tests.Integration;
 [Trait("Category", "Integration")]
 public class PuzzlesApiIntegrationTests : IntegrationTestBase
 {
-    #region GetDailyAsync Tests
 
     [Fact]
     public async Task GetDailyAsync_ReturnsDailyPuzzle()
@@ -28,9 +27,7 @@ public class PuzzlesApiIntegrationTests : IntegrationTestBase
         puzzle.Game.Should().NotBeNull();
     }
 
-    #endregion
 
-    #region ExportAsync Tests
 
     [Fact]
     public async Task GetAsync_WithDailyPuzzleId_ReturnsPuzzle()
@@ -51,9 +48,7 @@ public class PuzzlesApiIntegrationTests : IntegrationTestBase
         puzzle.Game.Should().NotBeNull();
     }
 
-    #endregion
 
-    #region GetStormDashboardAsync Tests
 
     [Fact]
     public async Task GetStormDashboardAsync_WithValidUsername_ReturnsDashboard()
@@ -87,9 +82,7 @@ public class PuzzlesApiIntegrationTests : IntegrationTestBase
         // Just verify the response structure is correct
     }
 
-    #endregion
 
-    #region Puzzle Data Validation Tests
 
     [Fact]
     public async Task GetDailyAsync_ReturnsValidPuzzleData()
@@ -118,9 +111,7 @@ public class PuzzlesApiIntegrationTests : IntegrationTestBase
         puzzle.Game!.Id.Should().NotBeNullOrEmpty();
     }
 
-    #endregion
 
-    #region GetRaceAsync Tests
 
     [Fact]
     public async Task GetRaceAsync_WithNonExistentRace_ThrowsNotFoundException()
@@ -134,5 +125,4 @@ public class PuzzlesApiIntegrationTests : IntegrationTestBase
             await Client.Puzzles.GetRaceAsync(raceId));
     }
 
-    #endregion
 }

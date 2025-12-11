@@ -151,7 +151,6 @@ internal sealed class ChallengesApi(ILichessHttpClient httpClient) : IChallenges
         return true;
     }
 
-    #region Helper Methods
 
     private static HttpContent? BuildChallengeCreateContent(ChallengeCreateOptions? options)
     {
@@ -333,5 +332,4 @@ internal sealed class ChallengesApi(ILichessHttpClient httpClient) : IChallenges
         return string.Join(",", rulesList);
     }
 
-    #endregion
 }

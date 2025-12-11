@@ -18,7 +18,6 @@ public class SimulsApiTests
         _simulsApi = new SimulsApi(_httpClientMock.Object);
     }
 
-    #region Constructor Tests
 
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
@@ -31,9 +30,7 @@ public class SimulsApiTests
             .WithParameterName("httpClient");
     }
 
-    #endregion
 
-    #region GetCurrentAsync Tests
 
     [Fact]
     public async Task GetCurrentAsync_CallsCorrectEndpoint()
@@ -249,9 +246,7 @@ public class SimulsApiTests
         result.Created[0].Variants[1].Key.Should().Be("chess960");
     }
 
-    #endregion
 
-    #region Helper Methods
 
     private static SimulList CreateTestSimulList()
     {
@@ -288,5 +283,4 @@ public class SimulsApiTests
         };
     }
 
-    #endregion
 }

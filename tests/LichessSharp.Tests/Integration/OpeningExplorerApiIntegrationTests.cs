@@ -20,7 +20,6 @@ public class OpeningExplorerApiIntegrationTests : IntegrationTestBase
     // Queen's Gambit position after 1.d4 d5 2.c4
     private const string QueensGambitFen = "rnbqkbnr/ppp1pppp/8/3p4/2PP4/8/PP2PPPP/RNBQKBNR b KQkq c3 0 2";
 
-    #region GetMastersAsync Tests
 
     [Fact]
     public async Task GetMastersAsync_WithStartingPosition_ReturnsOpeningData()
@@ -70,9 +69,7 @@ public class OpeningExplorerApiIntegrationTests : IntegrationTestBase
         }
     }
 
-    #endregion
 
-    #region GetLichessAsync Tests
 
     [Fact]
     public async Task GetLichessAsync_WithStartingPosition_ReturnsOpeningData()
@@ -132,9 +129,7 @@ public class OpeningExplorerApiIntegrationTests : IntegrationTestBase
         result.Should().NotBeNull();
     }
 
-    #endregion
 
-    #region GetMasterGamePgnAsync Tests
 
     [Fact]
     public async Task GetMasterGamePgnAsync_WithKnownGameId_ReturnsPgn()
@@ -155,9 +150,7 @@ public class OpeningExplorerApiIntegrationTests : IntegrationTestBase
         pgn.Should().Contain("1.");
     }
 
-    #endregion
 
-    #region GetPlayerAsync Tests
 
     [Fact]
     public async Task GetPlayerAsync_WithKnownPlayer_ReturnsOpeningData()
@@ -192,5 +185,4 @@ public class OpeningExplorerApiIntegrationTests : IntegrationTestBase
     //    result.Should().NotBeNull();
     //}
 
-    #endregion
 }

@@ -20,7 +20,6 @@ public class UsersApiTests
         _usersApi = new UsersApi(_httpClientMock.Object);
     }
 
-    #region Constructor Tests
 
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
@@ -33,9 +32,7 @@ public class UsersApiTests
             .WithParameterName("httpClient");
     }
 
-    #endregion
 
-    #region ExportAsync Tests
 
     [Fact]
     public async Task GetAsync_WithUsername_CallsCorrectEndpoint()
@@ -102,9 +99,7 @@ public class UsersApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region GetManyAsync Tests
 
     [Fact]
     public async Task GetManyAsync_WithUserIds_CallsCorrectEndpoint()
@@ -164,9 +159,7 @@ public class UsersApiTests
         await act.Should().ThrowAsync<ArgumentNullException>();
     }
 
-    #endregion
 
-    #region GetRealTimeStatusAsync Tests
 
     [Fact]
     public async Task GetStatusAsync_WithUserIds_CallsCorrectEndpoint()
@@ -243,9 +236,7 @@ public class UsersApiTests
             .WithMessage("*100*");
     }
 
-    #endregion
 
-    #region GetAllTop10Async Tests
 
     [Fact]
     public async Task GetAllTop10Async_CallsCorrectEndpoint()
@@ -269,9 +260,7 @@ public class UsersApiTests
         _httpClientMock.Verify(x => x.GetAsync<Dictionary<string, List<User>>>("/api/player", It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region GetLeaderboardAsync Tests
 
     [Fact]
     public async Task GetLeaderboardAsync_WithPerfType_CallsCorrectEndpoint()
@@ -335,9 +324,7 @@ public class UsersApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region GetRatingHistoryAsync Tests
 
     [Fact]
     public async Task GetRatingHistoryAsync_WithUsername_CallsCorrectEndpoint()
@@ -370,9 +357,7 @@ public class UsersApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region GetPerformanceAsync Tests
 
     [Fact]
     public async Task GetPerformanceAsync_WithValidParams_CallsCorrectEndpoint()
@@ -405,9 +390,7 @@ public class UsersApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region GetActivityAsync Tests
 
     [Fact]
     public async Task GetActivityAsync_WithValidUsername_CallsCorrectEndpoint()
@@ -433,9 +416,7 @@ public class UsersApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region AutocompleteAsync Tests
 
     [Fact]
     public async Task AutocompleteAsync_WithValidTerm_CallsCorrectEndpoint()
@@ -480,9 +461,7 @@ public class UsersApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region AutocompletePlayersAsync Tests
 
     [Fact]
     public async Task AutocompletePlayersAsync_WithValidTerm_CallsCorrectEndpoint()
@@ -503,9 +482,7 @@ public class UsersApiTests
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region GetCrosstableAsync Tests
 
     [Fact]
     public async Task GetCrosstableAsync_WithTwoUsers_CallsCorrectEndpoint()
@@ -553,9 +530,7 @@ public class UsersApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region GetLiveStreamersAsync Tests
 
     [Fact]
     public async Task GetLiveStreamersAsync_CallsCorrectEndpoint()
@@ -574,9 +549,7 @@ public class UsersApiTests
         _httpClientMock.Verify(x => x.GetAsync<List<Streamer>>("/api/streamer/live", It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region GetNoteAsync Tests
 
     [Fact]
     public async Task GetNoteAsync_WithValidUsername_CallsCorrectEndpoint()
@@ -602,9 +575,7 @@ public class UsersApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 
-    #region WriteNoteAsync Tests
 
     [Fact]
     public async Task WriteNoteAsync_WithValidParams_CallsCorrectEndpoint()
@@ -638,9 +609,7 @@ public class UsersApiTests
         await act.Should().ThrowAsync<ArgumentNullException>();
     }
 
-    #endregion
 
-    #region GetTimelineAsync Tests
 
     [Fact]
     public async Task GetTimelineAsync_WithoutParams_CallsBaseEndpoint()
@@ -692,9 +661,7 @@ public class UsersApiTests
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region Helper Methods
 
     private static User CreateTestUser(string username) => new()
     {
@@ -709,5 +676,4 @@ public class UsersApiTests
         CreatedAt = DateTimeOffset.UtcNow
     };
 
-    #endregion
 }

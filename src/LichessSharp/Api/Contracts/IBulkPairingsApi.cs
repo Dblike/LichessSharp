@@ -79,7 +79,6 @@ public interface IBulkPairingsApi
     IAsyncEnumerable<GameJson> StreamGamesAsync(string id, BulkPairingExportOptions? options = null, CancellationToken cancellationToken = default);
 }
 
-#region Options Classes
 
 /// <summary>
 /// Options for creating a bulk pairing.
@@ -193,9 +192,7 @@ public class BulkPairingExportOptions
     public bool? Opening { get; set; }
 }
 
-#endregion
 
-#region Response Models
 
 /// <summary>
 /// Response wrapper for the bulk pairings list endpoint.
@@ -312,4 +309,3 @@ public class BulkPairingClock
     public int Increment { get; init; }
 }
 
-#endregion

@@ -19,8 +19,6 @@ public class BoardApiTests
         _boardApi = new BoardApi(_httpClientMock.Object);
     }
 
-    #region Constructor Tests
-
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -32,9 +30,7 @@ public class BoardApiTests
             .WithParameterName("httpClient");
     }
 
-    #endregion
 
-    #region StreamEventsAsync Tests
 
     [Fact]
     public async Task StreamEventsAsync_CallsCorrectEndpoint()
@@ -63,9 +59,7 @@ public class BoardApiTests
         _httpClientMock.Verify(x => x.StreamNdjsonAsync<BoardAccountEvent>("/api/stream/event", It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region StreamGameAsync Tests
 
     [Fact]
     public async Task StreamGameAsync_CallsCorrectEndpoint()
@@ -103,9 +97,7 @@ public class BoardApiTests
         });
     }
 
-    #endregion
 
-    #region MakeMoveAsync Tests
 
     [Fact]
     public async Task MakeMoveAsync_CallsCorrectEndpoint()
@@ -159,9 +151,7 @@ public class BoardApiTests
             await _boardApi.MakeMoveAsync("game123", null!));
     }
 
-    #endregion
 
-    #region GetChatAsync Tests
 
     [Fact]
     public async Task GetChatAsync_CallsCorrectEndpoint()
@@ -185,9 +175,7 @@ public class BoardApiTests
         _httpClientMock.Verify(x => x.GetAsync<List<ChatMessage>>($"/api/board/game/{gameId}/chat", It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region WriteChatAsync Tests
 
     [Fact]
     public async Task WriteChatAsync_CallsCorrectEndpoint()
@@ -206,9 +194,7 @@ public class BoardApiTests
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/chat", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region AbortAsync Tests
 
     [Fact]
     public async Task AbortAsync_CallsCorrectEndpoint()
@@ -227,9 +213,7 @@ public class BoardApiTests
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/abort", null, It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region ResignAsync Tests
 
     [Fact]
     public async Task ResignAsync_CallsCorrectEndpoint()
@@ -248,9 +232,7 @@ public class BoardApiTests
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/resign", null, It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region HandleDrawAsync Tests
 
     [Fact]
     public async Task HandleDrawAsync_WithAcceptTrue_CallsCorrectEndpoint()
@@ -286,9 +268,7 @@ public class BoardApiTests
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/draw/no", null, It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region HandleTakebackAsync Tests
 
     [Fact]
     public async Task HandleTakebackAsync_WithAcceptTrue_CallsCorrectEndpoint()
@@ -307,9 +287,7 @@ public class BoardApiTests
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/takeback/yes", null, It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region ClaimVictoryAsync Tests
 
     [Fact]
     public async Task ClaimVictoryAsync_CallsCorrectEndpoint()
@@ -328,9 +306,7 @@ public class BoardApiTests
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/claim-victory", null, It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region ClaimDrawAsync Tests
 
     [Fact]
     public async Task ClaimDrawAsync_CallsCorrectEndpoint()
@@ -357,9 +333,7 @@ public class BoardApiTests
             await _boardApi.ClaimDrawAsync(null!));
     }
 
-    #endregion
 
-    #region BerserkAsync Tests
 
     [Fact]
     public async Task BerserkAsync_CallsCorrectEndpoint()
@@ -378,9 +352,7 @@ public class BoardApiTests
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/berserk", null, It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region SeekAsync Tests
 
     [Fact]
     public async Task SeekAsync_CallsCorrectEndpoint()
@@ -414,9 +386,7 @@ public class BoardApiTests
         });
     }
 
-    #endregion
 
-    #region Helper Methods
 
     private static async IAsyncEnumerable<T> ToAsyncEnumerable<T>(IEnumerable<T> items)
     {
@@ -427,5 +397,4 @@ public class BoardApiTests
         await Task.CompletedTask;
     }
 
-    #endregion
 }

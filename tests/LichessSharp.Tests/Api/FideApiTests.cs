@@ -18,7 +18,6 @@ public class FideApiTests
         _fideApi = new FideApi(_httpClientMock.Object);
     }
 
-    #region Constructor Tests
 
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
@@ -31,9 +30,7 @@ public class FideApiTests
             .WithParameterName("httpClient");
     }
 
-    #endregion
 
-    #region GetPlayerAsync Tests
 
     [Fact]
     public async Task GetPlayerAsync_WithValidId_CallsCorrectEndpoint()
@@ -134,9 +131,7 @@ public class FideApiTests
             cts.Token), Times.Once);
     }
 
-    #endregion
 
-    #region SearchPlayersAsync Tests
 
     [Fact]
     public async Task SearchPlayersAsync_WithValidQuery_CallsCorrectEndpoint()
@@ -267,9 +262,7 @@ public class FideApiTests
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region Helper Methods
 
     private static FidePlayer CreateTestFidePlayer(int id, string name) => new()
     {
@@ -283,5 +276,4 @@ public class FideApiTests
         Blitz = 2886
     };
 
-    #endregion
 }

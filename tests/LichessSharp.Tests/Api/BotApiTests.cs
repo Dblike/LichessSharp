@@ -19,7 +19,6 @@ public class BotApiTests
         _botApi = new BotApi(_httpClientMock.Object);
     }
 
-    #region Constructor Tests
 
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
@@ -32,9 +31,7 @@ public class BotApiTests
             .WithParameterName("httpClient");
     }
 
-    #endregion
 
-    #region UpgradeAccountAsync Tests
 
     [Fact]
     public async Task UpgradeAccountAsync_CallsCorrectEndpoint()
@@ -52,9 +49,7 @@ public class BotApiTests
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>("/api/bot/account/upgrade", null, It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region StreamEventsAsync Tests
 
     [Fact]
     public async Task StreamEventsAsync_CallsCorrectEndpoint()
@@ -83,9 +78,7 @@ public class BotApiTests
         _httpClientMock.Verify(x => x.StreamNdjsonAsync<BotAccountEvent>("/api/stream/event", It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region StreamGameAsync Tests
 
     [Fact]
     public async Task StreamGameAsync_CallsCorrectEndpoint()
@@ -123,9 +116,7 @@ public class BotApiTests
         });
     }
 
-    #endregion
 
-    #region MakeMoveAsync Tests
 
     [Fact]
     public async Task MakeMoveAsync_CallsCorrectEndpoint()
@@ -179,9 +170,7 @@ public class BotApiTests
             await _botApi.MakeMoveAsync("game123", null!));
     }
 
-    #endregion
 
-    #region GetChatAsync Tests
 
     [Fact]
     public async Task GetChatAsync_CallsCorrectEndpoint()
@@ -205,9 +194,7 @@ public class BotApiTests
         _httpClientMock.Verify(x => x.GetAsync<List<ChatMessage>>($"/api/bot/game/{gameId}/chat", It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region WriteChatAsync Tests
 
     [Fact]
     public async Task WriteChatAsync_CallsCorrectEndpoint()
@@ -226,9 +213,7 @@ public class BotApiTests
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/chat", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region AbortAsync Tests
 
     [Fact]
     public async Task AbortAsync_CallsCorrectEndpoint()
@@ -247,9 +232,7 @@ public class BotApiTests
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/abort", null, It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region ResignAsync Tests
 
     [Fact]
     public async Task ResignAsync_CallsCorrectEndpoint()
@@ -268,9 +251,7 @@ public class BotApiTests
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/resign", null, It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region HandleDrawAsync Tests
 
     [Fact]
     public async Task HandleDrawAsync_WithAcceptTrue_CallsCorrectEndpoint()
@@ -306,9 +287,7 @@ public class BotApiTests
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/draw/no", null, It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region HandleTakebackAsync Tests
 
     [Fact]
     public async Task HandleTakebackAsync_WithAcceptTrue_CallsCorrectEndpoint()
@@ -327,9 +306,7 @@ public class BotApiTests
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/takeback/yes", null, It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    #endregion
 
-    #region ClaimDrawAsync Tests
 
     [Fact]
     public async Task ClaimDrawAsync_CallsCorrectEndpoint()
@@ -356,9 +333,7 @@ public class BotApiTests
             await _botApi.ClaimDrawAsync(null!));
     }
 
-    #endregion
 
-    #region GetOnlineBotsAsync Tests
 
     [Fact]
     public async Task GetOnlineBotsAsync_CallsCorrectEndpoint()
@@ -421,9 +396,7 @@ public class BotApiTests
         });
     }
 
-    #endregion
 
-    #region Helper Methods
 
     private static async IAsyncEnumerable<T> ToAsyncEnumerable<T>(IEnumerable<T> items)
     {
@@ -434,5 +407,4 @@ public class BotApiTests
         await Task.CompletedTask;
     }
 
-    #endregion
 }

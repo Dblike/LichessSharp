@@ -33,7 +33,6 @@ namespace LichessSharp.Tests.Integration.Manual;
 [Trait("Category", "Manual")]
 public class OAuthApiManualTests : AuthenticatedTestBase
 {
-    #region TestTokensAsync Tests
 
     [Fact]
     public async Task TestTokensAsync_WithValidToken_ReturnsTokenInfo()
@@ -113,9 +112,7 @@ public class OAuthApiManualTests : AuthenticatedTestBase
         // Expires may be null for non-expiring tokens
     }
 
-    #endregion
 
-    #region RevokeTokenAsync Tests
 
     /// <summary>
     /// WARNING: This test will revoke your current token!
@@ -134,9 +131,7 @@ public class OAuthApiManualTests : AuthenticatedTestBase
             await Client.Account.GetProfileAsync());
     }
 
-    #endregion
 
-    #region GetTokenAsync Tests
 
     /// <summary>
     /// This test demonstrates the structure of GetTokenAsync but cannot be fully automated
@@ -173,7 +168,6 @@ public class OAuthApiManualTests : AuthenticatedTestBase
         token.TokenType.Should().Be("Bearer");
     }
 
-    #endregion
 }
 
 /// <summary>

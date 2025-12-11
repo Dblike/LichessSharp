@@ -19,7 +19,6 @@ public class TvApiTests
         _tvApi = new TvApi(_httpClientMock.Object);
     }
 
-    #region Constructor Tests
 
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
@@ -32,9 +31,7 @@ public class TvApiTests
             .WithParameterName("httpClient");
     }
 
-    #endregion
 
-    #region GetCurrentGamesAsync Tests
 
     [Fact]
     public async Task GetCurrentGamesAsync_CallsCorrectEndpoint()
@@ -91,9 +88,7 @@ public class TvApiTests
         result.Rapid.Should().NotBeNull();
     }
 
-    #endregion
 
-    #region StreamCurrentGameAsync Tests
 
     [Fact]
     public async Task StreamCurrentGameAsync_CallsCorrectEndpoint()
@@ -141,9 +136,7 @@ public class TvApiTests
         _httpClientMock.Verify(x => x.StreamNdjsonAsync<TvFeedEvent>("/api/tv/feed", cts.Token), Times.Once);
     }
 
-    #endregion
 
-    #region StreamChannelAsync Tests
 
     [Fact]
     public async Task StreamChannelAsync_WithChannel_CallsCorrectEndpoint()
@@ -230,9 +223,7 @@ public class TvApiTests
         _httpClientMock.Verify(x => x.StreamNdjsonAsync<TvFeedEvent>($"/api/tv/{channel}/feed", cts.Token), Times.Once);
     }
 
-    #endregion
 
-    #region StreamChannelGamesAsync Tests
 
     [Fact]
     public async Task StreamChannelGamesAsync_WithChannel_CallsCorrectEndpoint()
@@ -423,9 +414,7 @@ public class TvApiTests
         _httpClientMock.Verify(x => x.StreamNdjsonAsync<GameJson>($"/api/tv/{channel}", cts.Token), Times.Once);
     }
 
-    #endregion
 
-    #region Helper Methods
 
     private static TvChannels CreateTestTvChannels() => new()
     {
@@ -519,5 +508,4 @@ public class TvApiTests
         await Task.CompletedTask;
     }
 
-    #endregion
 }
