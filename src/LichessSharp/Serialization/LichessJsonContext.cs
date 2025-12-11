@@ -282,6 +282,21 @@ namespace LichessSharp.Serialization;
 [JsonSerializable(typeof(GameStreamClock))]
 [JsonSerializable(typeof(GameStreamPlayers))]
 [JsonSerializable(typeof(GameStreamPlayer))]
+// Puzzle Batch types
+[JsonSerializable(typeof(PuzzleGlicko))]
+[JsonSerializable(typeof(PuzzleBatch))]
+[JsonSerializable(typeof(PuzzleSolution))]
+[JsonSerializable(typeof(PuzzleRound))]
+[JsonSerializable(typeof(PuzzleBatchResult))]
+[JsonSerializable(typeof(PuzzleReplayInfo))]
+[JsonSerializable(typeof(PuzzleAngle))]
+[JsonSerializable(typeof(PuzzleReplay))]
+[JsonSerializable(typeof(PuzzleRacePlayer))]
+[JsonSerializable(typeof(PuzzleRaceResults))]
+[JsonSerializable(typeof(PuzzleBatchSolveRequest))]
+[JsonSerializable(typeof(List<PuzzleSolution>))]
+[JsonSerializable(typeof(List<PuzzleRound>))]
+[JsonSerializable(typeof(List<PuzzleRacePlayer>))]
 internal partial class LichessJsonContext : JsonSerializerContext
 {
 }

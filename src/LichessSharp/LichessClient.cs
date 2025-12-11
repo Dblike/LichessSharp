@@ -225,6 +225,10 @@ public sealed class LichessClient : ILichessClient
         Task<PuzzleDashboard> IPuzzlesApi.GetDashboardAsync(int days, CancellationToken cancellationToken) => throw NotImplemented();
         Task<StormDashboard> IPuzzlesApi.GetStormDashboardAsync(string username, int days, CancellationToken cancellationToken) => throw NotImplemented();
         Task<PuzzleRace> IPuzzlesApi.CreateRaceAsync(CancellationToken cancellationToken) => throw NotImplemented();
+        Task<Models.PuzzleBatch> IPuzzlesApi.GetBatchAsync(string angle, int? nb, string? difficulty, string? color, CancellationToken cancellationToken) => throw NotImplemented();
+        Task<Models.PuzzleBatchResult> IPuzzlesApi.SolveBatchAsync(string angle, IEnumerable<Models.PuzzleSolution> solutions, int? nb, CancellationToken cancellationToken) => throw NotImplemented();
+        Task<Models.PuzzleReplay> IPuzzlesApi.GetReplayAsync(int days, string theme, CancellationToken cancellationToken) => throw NotImplemented();
+        Task<Models.PuzzleRaceResults> IPuzzlesApi.GetRaceAsync(string raceId, CancellationToken cancellationToken) => throw NotImplemented();
 
         // ITeamsApi
         Task<Team> ITeamsApi.GetAsync(string teamId, CancellationToken cancellationToken) => throw NotImplemented();

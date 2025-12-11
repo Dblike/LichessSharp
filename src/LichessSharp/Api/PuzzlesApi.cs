@@ -1,7 +1,10 @@
+using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
 using LichessSharp.Http;
 using LichessSharp.Models;
+using LichessSharp.Serialization;
 
 namespace LichessSharp.Api;
 
@@ -68,6 +71,46 @@ internal sealed class PuzzlesApi(ILichessHttpClient httpClient) : IPuzzlesApi
         return await _httpClient.PostAsync<PuzzleRace>("/api/racer", null, cancellationToken).ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
+    public async Task<PuzzleBatch> GetBatchAsync(string angle, int? nb = null, string? difficulty = null, string? color = null, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(angle);
+
+        var endpoint = BuildBatchEndpoint(angle, nb, difficulty, color);
+        return await _httpClient.GetAsync<PuzzleBatch>(endpoint, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<PuzzleBatchResult> SolveBatchAsync(string angle, IEnumerable<PuzzleSolution> solutions, int? nb = null, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(angle);
+        ArgumentNullException.ThrowIfNull(solutions);
+
+        var endpoint = BuildSolveBatchEndpoint(angle, nb);
+        var request = new PuzzleBatchSolveRequest { Solutions = solutions };
+        var json = JsonSerializer.Serialize(request, LichessJsonContext.Default.PuzzleBatchSolveRequest);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        return await _httpClient.PostAsync<PuzzleBatchResult>(endpoint, content, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<PuzzleReplay> GetReplayAsync(int days, string theme, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(theme);
+
+        var endpoint = $"/api/puzzle/replay/{days}/{Uri.EscapeDataString(theme)}";
+        return await _httpClient.GetAsync<PuzzleReplay>(endpoint, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<PuzzleRaceResults> GetRaceAsync(string raceId, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(raceId);
+
+        return await _httpClient.GetAsync<PuzzleRaceResults>($"/api/racer/{Uri.EscapeDataString(raceId)}", cancellationToken).ConfigureAwait(false);
+    }
+
     private static string BuildNextPuzzleEndpoint(string? angle, string? difficulty)
     {
         var sb = new StringBuilder("/api/puzzle/next");
@@ -123,6 +166,53 @@ internal sealed class PuzzlesApi(ILichessHttpClient httpClient) : IPuzzlesApi
         {
             sb.Append("?days=");
             sb.Append(days);
+        }
+
+        return sb.ToString();
+    }
+
+    private static string BuildBatchEndpoint(string angle, int? nb, string? difficulty, string? color)
+    {
+        var sb = new StringBuilder("/api/puzzle/batch/");
+        sb.Append(Uri.EscapeDataString(angle));
+
+        var hasQuery = false;
+
+        if (nb.HasValue)
+        {
+            sb.Append('?');
+            sb.Append("nb=");
+            sb.Append(nb.Value);
+            hasQuery = true;
+        }
+
+        if (!string.IsNullOrWhiteSpace(difficulty))
+        {
+            sb.Append(hasQuery ? '&' : '?');
+            sb.Append("difficulty=");
+            sb.Append(Uri.EscapeDataString(difficulty));
+            hasQuery = true;
+        }
+
+        if (!string.IsNullOrWhiteSpace(color))
+        {
+            sb.Append(hasQuery ? '&' : '?');
+            sb.Append("color=");
+            sb.Append(Uri.EscapeDataString(color));
+        }
+
+        return sb.ToString();
+    }
+
+    private static string BuildSolveBatchEndpoint(string angle, int? nb)
+    {
+        var sb = new StringBuilder("/api/puzzle/batch/");
+        sb.Append(Uri.EscapeDataString(angle));
+
+        if (nb.HasValue && nb.Value > 0)
+        {
+            sb.Append("?nb=");
+            sb.Append(nb.Value);
         }
 
         return sb.ToString();

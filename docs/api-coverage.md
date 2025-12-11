@@ -6,7 +6,7 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Status | Count | APIs |
 |--------|-------|------|
-| **Implemented** | 21 APIs (156 endpoints) | Account, Users, Relations, Games, TV, Puzzles, Analysis, Opening Explorer, Tablebase, Challenges, Board, Bot, Teams, Arena Tournaments, Swiss Tournaments, Simuls, Studies, Broadcasts, Bulk Pairings, Messaging, FIDE |
+| **Implemented** | 21 APIs (160 endpoints) | Account, Users, Relations, Games, TV, Puzzles, Analysis, Opening Explorer, Tablebase, Challenges, Board, Bot, Teams, Arena Tournaments, Swiss Tournaments, Simuls, Studies, Broadcasts, Bulk Pairings, Messaging, FIDE |
 | **Planned** | 0 APIs | - |
 
 ## Legend
@@ -93,6 +93,10 @@ This document tracks the implementation status of each Lichess API endpoint.
 | Get puzzle dashboard | Implemented | `Puzzles.GetDashboardAsync()` |
 | Get storm dashboard | Implemented | `Puzzles.GetStormDashboardAsync()` |
 | Create puzzle race | Implemented | `Puzzles.CreateRaceAsync()` |
+| Get puzzles batch | Implemented | `Puzzles.GetBatchAsync()` |
+| Solve puzzles batch | Implemented | `Puzzles.SolveBatchAsync()` |
+| Get puzzles to replay | Implemented | `Puzzles.GetReplayAsync()` |
+| Get puzzle race results | Implemented | `Puzzles.GetRaceAsync()` |
 
 ## Teams API
 
