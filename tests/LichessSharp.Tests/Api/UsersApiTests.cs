@@ -40,7 +40,7 @@ public class UsersApiTests
             .ReturnsAsync(expectedUser);
 
         // Act
-        var result = await _usersApi.GetByUsernameAsync("DrNykterstein");
+        var result = await _usersApi.GetAsync("DrNykterstein");
 
         // Assert
         result.Should().BeEquivalentTo(expectedUser);
@@ -63,7 +63,7 @@ public class UsersApiTests
             .ReturnsAsync(expectedUser);
 
         // Act
-        await _usersApi.GetByUsernameAsync("thibault", options);
+        await _usersApi.GetAsync("thibault", options);
 
         // Assert
         _httpClientMock.Verify(x => x.GetAsync<UserExtended>(
@@ -79,7 +79,7 @@ public class UsersApiTests
     public async Task GetAsync_WithNullUsername_ThrowsArgumentException()
     {
         // Act
-        var act = () => _usersApi.GetByUsernameAsync(null!);
+        var act = () => _usersApi.GetAsync(null!);
 
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
@@ -89,7 +89,7 @@ public class UsersApiTests
     public async Task GetAsync_WithEmptyUsername_ThrowsArgumentException()
     {
         // Act
-        var act = () => _usersApi.GetByUsernameAsync("");
+        var act = () => _usersApi.GetAsync("");
 
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();

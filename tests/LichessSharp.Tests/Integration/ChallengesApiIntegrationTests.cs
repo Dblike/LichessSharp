@@ -1,4 +1,5 @@
 using FluentAssertions;
+using LichessSharp.Api.Contracts;
 using LichessSharp.Exceptions;
 using Xunit;
 

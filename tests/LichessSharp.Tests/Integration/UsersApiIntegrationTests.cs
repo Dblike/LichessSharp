@@ -19,7 +19,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
     public async Task GetAsync_WithValidUsername_ReturnsUserProfile()
     {
         // Act
-        var user = await Client.Users.GetByUsernameAsync(ThibaultUsername);
+        var user = await Client.Users.GetAsync(ThibaultUsername);
 
         // Assert
         user.Should().NotBeNull();
@@ -31,7 +31,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
     public async Task GetAsync_WithTrophiesOption_ReturnsTrophies()
     {
         // Act
-        var user = await Client.Users.GetByUsernameAsync(ThibaultUsername, new GetUserOptions { Trophies = true });
+        var user = await Client.Users.GetAsync(ThibaultUsername, new GetUserOptions { Trophies = true });
 
         // Assert
         user.Should().NotBeNull();
