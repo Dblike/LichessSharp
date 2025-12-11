@@ -28,7 +28,7 @@ public class FidePlayer
     /// <summary>
     /// Federation (3-letter country code).
     /// </summary>
-    [JsonPropertyName("fed")]
+    [JsonPropertyName("federation")]
     public string? Federation { get; init; }
 
     /// <summary>
