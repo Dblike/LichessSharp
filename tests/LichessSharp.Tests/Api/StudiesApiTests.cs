@@ -17,8 +17,6 @@ public class StudiesApiTests
         _httpClientMock = new Mock<ILichessHttpClient>();
         _studiesApi = new StudiesApi(_httpClientMock.Object);
     }
-
-
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -29,8 +27,6 @@ public class StudiesApiTests
         act.Should().Throw<ArgumentNullException>()
             .WithParameterName("httpClient");
     }
-
-
 
     [Fact]
     public async Task ExportChapterPgnAsync_CallsCorrectEndpoint()
@@ -95,8 +91,6 @@ public class StudiesApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-
-
     [Fact]
     public async Task ExportStudyPgnAsync_CallsCorrectEndpoint()
     {
@@ -157,8 +151,6 @@ public class StudiesApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-
-
     [Fact]
     public async Task ExportUserStudiesPgnAsync_CallsCorrectEndpoint()
     {
@@ -186,8 +178,6 @@ public class StudiesApiTests
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
     }
-
-
 
     [Fact]
     public async Task StreamUserStudiesAsync_CallsCorrectEndpoint()
@@ -228,8 +218,6 @@ public class StudiesApiTests
             }
         });
     }
-
-
 
     [Fact]
     public async Task ImportPgnAsync_CallsCorrectEndpoint()
@@ -308,8 +296,6 @@ public class StudiesApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-
-
     [Fact]
     public async Task UpdateChapterTagsAsync_CallsCorrectEndpoint()
     {
@@ -359,8 +345,6 @@ public class StudiesApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-
-
     [Fact]
     public async Task DeleteChapterAsync_CallsCorrectEndpoint()
     {
@@ -398,8 +382,6 @@ public class StudiesApiTests
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
     }
-
-
 
     [Fact]
     public async Task ExportChapterPgnAsync_WithCancellationToken_PassesToken()

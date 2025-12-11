@@ -145,8 +145,6 @@ public interface IArenaTournamentsApi
     /// <returns>Stream of team tournaments.</returns>
     IAsyncEnumerable<ArenaTournamentSummary> StreamTeamTournamentsAsync(string teamId, int? max = null, CancellationToken cancellationToken = default);
 }
-
-
 /// <summary>
 /// Arena tournament status values.
 /// </summary>
@@ -188,8 +186,6 @@ public enum ArenaStatusFilter
     /// </summary>
     Finished
 }
-
-
 
 /// <summary>
 /// Options for creating an Arena tournament.
@@ -416,8 +412,6 @@ public class ArenaGamesExportOptions
     /// </summary>
     public bool? Opening { get; init; }
 }
-
-
 
 /// <summary>
 /// List of Arena tournaments grouped by status.

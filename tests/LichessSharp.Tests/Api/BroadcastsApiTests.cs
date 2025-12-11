@@ -17,8 +17,6 @@ public class BroadcastsApiTests
         _httpClientMock = new Mock<ILichessHttpClient>();
         _broadcastsApi = new BroadcastsApi(_httpClientMock.Object);
     }
-
-
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -29,8 +27,6 @@ public class BroadcastsApiTests
         act.Should().Throw<ArgumentNullException>()
             .WithParameterName("httpClient");
     }
-
-
 
     [Fact]
     public async Task StreamOfficialBroadcastsAsync_CallsCorrectEndpoint()
@@ -92,8 +88,6 @@ public class BroadcastsApiTests
         _httpClientMock.Verify(x => x.StreamNdjsonAsync<BroadcastWithRounds>(It.Is<string>(s => s.Contains("html=true")), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-
-
     [Fact]
     public async Task GetTopBroadcastsAsync_CallsCorrectEndpoint()
     {
@@ -127,8 +121,6 @@ public class BroadcastsApiTests
         result.Should().NotBeNull();
         _httpClientMock.Verify(x => x.GetAsync<BroadcastTopPage>("/api/broadcast/top?page=2", It.IsAny<CancellationToken>()), Times.Once);
     }
-
-
 
     [Fact]
     public async Task StreamUserBroadcastsAsync_CallsCorrectEndpoint()
@@ -165,8 +157,6 @@ public class BroadcastsApiTests
             }
         });
     }
-
-
 
     [Fact]
     public async Task SearchBroadcastsAsync_CallsCorrectEndpoint()
@@ -210,8 +200,6 @@ public class BroadcastsApiTests
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
     }
-
-
 
     [Fact]
     public async Task GetTournamentAsync_CallsCorrectEndpoint()
@@ -257,8 +245,6 @@ public class BroadcastsApiTests
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
     }
-
-
 
     [Fact]
     public async Task GetRoundAsync_CallsCorrectEndpoint()
@@ -309,8 +295,6 @@ public class BroadcastsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-
-
     [Fact]
     public async Task StreamMyRoundsAsync_CallsCorrectEndpoint()
     {
@@ -351,8 +335,6 @@ public class BroadcastsApiTests
         // Assert
         _httpClientMock.Verify(x => x.StreamNdjsonAsync<BroadcastMyRound>("/api/broadcast/my-rounds?nb=5", It.IsAny<CancellationToken>()), Times.Once);
     }
-
-
 
     [Fact]
     public async Task CreateTournamentAsync_CallsCorrectEndpoint()
@@ -395,8 +377,6 @@ public class BroadcastsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-
-
     [Fact]
     public async Task UpdateTournamentAsync_CallsCorrectEndpoint()
     {
@@ -427,8 +407,6 @@ public class BroadcastsApiTests
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
     }
-
-
 
     [Fact]
     public async Task CreateRoundAsync_CallsCorrectEndpoint()
@@ -461,8 +439,6 @@ public class BroadcastsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-
-
     [Fact]
     public async Task UpdateRoundAsync_CallsCorrectEndpoint()
     {
@@ -494,8 +470,6 @@ public class BroadcastsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-
-
     [Fact]
     public async Task ResetRoundAsync_CallsCorrectEndpoint()
     {
@@ -522,8 +496,6 @@ public class BroadcastsApiTests
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
     }
-
-
 
     [Fact]
     public async Task PushPgnAsync_CallsCorrectEndpoint()
@@ -564,8 +536,6 @@ public class BroadcastsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-
-
     [Fact]
     public async Task ExportRoundPgnAsync_CallsCorrectEndpoint()
     {
@@ -593,8 +563,6 @@ public class BroadcastsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-
-
     [Fact]
     public async Task ExportAllRoundsPgnAsync_CallsCorrectEndpoint()
     {
@@ -621,8 +589,6 @@ public class BroadcastsApiTests
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
     }
-
-
 
     [Fact]
     public async Task GetPlayersAsync_CallsCorrectEndpoint()
@@ -655,8 +621,6 @@ public class BroadcastsApiTests
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
     }
-
-
 
     [Fact]
     public async Task GetPlayerAsync_CallsCorrectEndpoint()
@@ -703,8 +667,6 @@ public class BroadcastsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-
-
     [Fact]
     public async Task StreamRoundPgnAsync_CallsCorrectEndpoint()
     {
@@ -739,8 +701,6 @@ public class BroadcastsApiTests
         });
     }
 
-
-
     [Fact]
     public async Task GetTopBroadcastsAsync_WithCancellationToken_PassesToken()
     {
@@ -756,8 +716,6 @@ public class BroadcastsApiTests
         // Assert
         _httpClientMock.Verify(x => x.GetAsync<BroadcastTopPage>(It.IsAny<string>(), cts.Token), Times.Once);
     }
-
-
 
     private static BroadcastTour CreateTestTour(string id)
     {

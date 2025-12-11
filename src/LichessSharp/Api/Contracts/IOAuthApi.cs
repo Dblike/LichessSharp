@@ -35,8 +35,6 @@ public interface IOAuthApi
         IEnumerable<string> tokens,
         CancellationToken cancellationToken = default);
 }
-
-
 /// <summary>
 /// Request to obtain an access token via the OAuth2 PKCE flow.
 /// </summary>

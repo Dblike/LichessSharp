@@ -94,8 +94,6 @@ public interface IStudiesApi
     /// <returns>True if the chapter was deleted successfully.</returns>
     Task<bool> DeleteChapterAsync(string studyId, string chapterId, CancellationToken cancellationToken = default);
 }
-
-
 /// <summary>
 /// Options for exporting study PGN.
 /// </summary>
@@ -156,8 +154,6 @@ public class StudyImportOptions
     /// </summary>
     public string? Variant { get; set; }
 }
-
-
 
 /// <summary>
 /// Study metadata (name and dates).

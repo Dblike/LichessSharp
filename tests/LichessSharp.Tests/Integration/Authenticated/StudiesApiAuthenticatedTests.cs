@@ -66,8 +66,6 @@ public class StudiesApiAuthenticatedTests : AuthenticatedTestBase
         studies.Should().NotBeNull();
     }
 
-
-
     [Fact]
     public async Task ExportStudyPgnAsync_WithPublicStudy_ReturnsPgn()
     {
@@ -128,8 +126,6 @@ public class StudiesApiAuthenticatedTests : AuthenticatedTestBase
         pgn.Should().NotBeNullOrWhiteSpace();
     }
 
-
-
     [Fact]
     public async Task ExportChapterPgnAsync_WithValidStudyAndChapter_ReturnsPgn()
     {
@@ -140,8 +136,6 @@ public class StudiesApiAuthenticatedTests : AuthenticatedTestBase
         // Skip this test - chapter discovery requires additional API support
         // The unit tests cover the endpoint construction adequately
     }
-
-
 
     [Fact]
     public async Task ExportUserStudiesPgnAsync_WithAuthenticatedUser_ReturnsPgnOrEmpty()

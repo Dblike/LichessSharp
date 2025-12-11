@@ -22,8 +22,6 @@ public class OAuthApiTests
         _httpClientMock = new Mock<ILichessHttpClient>();
         _api = new OAuthApi(_httpClientMock.Object);
     }
-
-
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -34,8 +32,6 @@ public class OAuthApiTests
         act.Should().Throw<ArgumentNullException>()
             .WithParameterName("httpClient");
     }
-
-
 
     [Fact]
     public async Task GetTokenAsync_WithValidRequest_CallsCorrectEndpoint()
@@ -219,8 +215,6 @@ public class OAuthApiTests
             cts.Token), Times.Once);
     }
 
-
-
     [Fact]
     public async Task RevokeTokenAsync_CallsCorrectEndpoint()
     {
@@ -256,8 +250,6 @@ public class OAuthApiTests
             It.IsAny<string>(),
             cts.Token), Times.Once);
     }
-
-
 
     [Fact]
     public async Task TestTokensAsync_WithValidTokens_CallsCorrectEndpoint()

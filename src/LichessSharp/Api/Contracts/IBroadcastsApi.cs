@@ -178,8 +178,6 @@ public interface IBroadcastsApi
     /// <returns>The player details with their games.</returns>
     Task<BroadcastPlayerWithGames> GetPlayerAsync(string tournamentId, string playerId, CancellationToken cancellationToken = default);
 }
-
-
 /// <summary>
 /// Options for creating or updating a broadcast tournament.
 /// </summary>
@@ -291,8 +289,6 @@ public class BroadcastRoundOptions
     /// </summary>
     public int? SyncPeriod { get; set; }
 }
-
-
 
 /// <summary>
 /// A broadcast tournament.

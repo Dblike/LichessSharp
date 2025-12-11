@@ -18,8 +18,6 @@ public class OpeningExplorerApiTests
         _httpClientMock = new Mock<ILichessHttpClient>();
         _explorerApi = new OpeningExplorerApi(_httpClientMock.Object, _baseAddress);
     }
-
-
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -41,8 +39,6 @@ public class OpeningExplorerApiTests
         act.Should().Throw<ArgumentNullException>()
             .WithParameterName("explorerBaseAddress");
     }
-
-
 
     [Fact]
     public async Task GetMastersAsync_WithFen_CallsCorrectEndpoint()
@@ -105,8 +101,6 @@ public class OpeningExplorerApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-
-
     [Fact]
     public async Task GetLichessAsync_WithFen_CallsCorrectEndpoint()
     {
@@ -165,8 +159,6 @@ public class OpeningExplorerApiTests
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
     }
-
-
 
     [Fact]
     public async Task GetPlayerAsync_WithFenAndPlayer_CallsCorrectEndpoint()
@@ -230,8 +222,6 @@ public class OpeningExplorerApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-
-
     [Fact]
     public async Task GetMasterGamePgnAsync_WithValidGameId_CallsCorrectEndpoint()
     {
@@ -276,8 +266,6 @@ public class OpeningExplorerApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-
-
     [Fact]
     public async Task GetMastersAsync_UrlEncodesFen()
     {
@@ -296,8 +284,6 @@ public class OpeningExplorerApiTests
             It.Is<Uri>(u => u.AbsoluteUri.Contains("%2F")),
             It.IsAny<CancellationToken>()), Times.Once);
     }
-
-
 
     private static ExplorerResult CreateTestExplorerResult() => new()
     {

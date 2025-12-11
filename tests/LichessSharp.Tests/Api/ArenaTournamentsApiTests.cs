@@ -28,8 +28,6 @@ public class ArenaTournamentsApiTests
             .WithParameterName("httpClient");
     }
 
-
-
     [Fact]
     public async Task GetCurrentAsync_CallsCorrectEndpoint()
     {
@@ -53,8 +51,6 @@ public class ArenaTournamentsApiTests
         result.Started.Should().HaveCount(1);
         _httpClientMock.Verify(x => x.GetAsync<ArenaTournamentList>("/api/tournament", It.IsAny<CancellationToken>()), Times.Once);
     }
-
-
 
     [Fact]
     public async Task GetAsync_WithDefaultPage_CallsCorrectEndpoint()
@@ -107,8 +103,6 @@ public class ArenaTournamentsApiTests
             await _api.GetAsync(""));
     }
 
-
-
     [Fact]
     public async Task CreateAsync_CallsCorrectEndpoint()
     {
@@ -138,8 +132,6 @@ public class ArenaTournamentsApiTests
         await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             await _api.CreateAsync(null!));
     }
-
-
 
     [Fact]
     public async Task UpdateAsync_CallsCorrectEndpoint()
@@ -173,8 +165,6 @@ public class ArenaTournamentsApiTests
         await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             await _api.UpdateAsync("testTour", null!));
     }
-
-
 
     [Fact]
     public async Task JoinAsync_WithNoOptions_CallsCorrectEndpoint()
@@ -217,8 +207,6 @@ public class ArenaTournamentsApiTests
             await _api.JoinAsync(null!));
     }
 
-
-
     [Fact]
     public async Task WithdrawAsync_CallsCorrectEndpoint()
     {
@@ -243,8 +231,6 @@ public class ArenaTournamentsApiTests
             await _api.PauseOrWithdrawAsync(null!));
     }
 
-
-
     [Fact]
     public async Task TerminateAsync_CallsCorrectEndpoint()
     {
@@ -268,8 +254,6 @@ public class ArenaTournamentsApiTests
         await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             await _api.TerminateAsync(null!));
     }
-
-
 
     [Fact]
     public async Task UpdateTeamBattleAsync_CallsCorrectEndpoint()
@@ -303,8 +287,6 @@ public class ArenaTournamentsApiTests
         await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             await _api.UpdateTeamBattleAsync("testTour", null!));
     }
-
-
 
     [Fact]
     public async Task StreamGamesAsync_CallsCorrectEndpoint()
@@ -355,8 +337,6 @@ public class ArenaTournamentsApiTests
         });
     }
 
-
-
     [Fact]
     public async Task StreamResultsAsync_CallsCorrectEndpoint()
     {
@@ -405,8 +385,6 @@ public class ArenaTournamentsApiTests
         });
     }
 
-
-
     [Fact]
     public async Task GetTeamStandingAsync_CallsCorrectEndpoint()
     {
@@ -432,8 +410,6 @@ public class ArenaTournamentsApiTests
         await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             await _api.GetTeamStandingAsync(null!));
     }
-
-
 
     [Fact]
     public async Task StreamCreatedByAsync_CallsCorrectEndpoint()
@@ -483,8 +459,6 @@ public class ArenaTournamentsApiTests
         });
     }
 
-
-
     [Fact]
     public async Task StreamPlayedByAsync_CallsCorrectEndpoint()
     {
@@ -515,8 +489,6 @@ public class ArenaTournamentsApiTests
             await foreach (var _ in _api.StreamPlayedByAsync(null!)) { }
         });
     }
-
-
 
     [Fact]
     public async Task StreamTeamTournamentsAsync_CallsCorrectEndpoint()
@@ -565,8 +537,6 @@ public class ArenaTournamentsApiTests
             await foreach (var _ in _api.StreamTeamTournamentsAsync(null!)) { }
         });
     }
-
-
 
     private static ArenaTournamentSummary CreateTestTournamentSummary(string id) => new()
     {

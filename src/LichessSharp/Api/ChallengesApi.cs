@@ -150,8 +150,6 @@ internal sealed class ChallengesApi(ILichessHttpClient httpClient) : IChallenges
         await _httpClient.PostAsync<OkResponse>(endpoint, null, cancellationToken).ConfigureAwait(false);
         return true;
     }
-
-
     private static HttpContent? BuildChallengeCreateContent(ChallengeCreateOptions? options)
     {
         if (options == null)

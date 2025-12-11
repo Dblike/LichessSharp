@@ -13,8 +13,6 @@ public class FideApiIntegrationTests : IntegrationTestBase
     // Well-known FIDE player IDs
     private const int MagnusCarlsenFideId = 1503014;
     private const int FabianoCaruanaFideId = 2020009;
-
-
     [Fact]
     public async Task GetPlayerAsync_WithMagnusCarlsen_ReturnsPlayer()
     {
@@ -56,8 +54,6 @@ public class FideApiIntegrationTests : IntegrationTestBase
         player.Rapid.Should().NotBeNull();
         player.Blitz.Should().NotBeNull();
     }
-
-
 
     [Fact]
     public async Task SearchPlayersAsync_WithCarlsen_ReturnsPlayers()

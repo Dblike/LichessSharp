@@ -16,8 +16,6 @@ public class GamesApiIntegrationTests : IntegrationTestBase
     private const string GameId1 = "q7ZvsdUF";
     private const string GameId2 = "TJxUmbWK";
     private const string ThibaultUsername = "thibault";
-
-
     [Fact]
     public async Task GetAsync_WithValidGameId_ReturnsGame()
     {
@@ -49,8 +47,6 @@ public class GamesApiIntegrationTests : IntegrationTestBase
         game.Moves.Should().NotBeNullOrEmpty();
     }
 
-
-
     [Fact]
     public async Task GetPgnAsync_WithValidGameId_ReturnsPgn()
     {
@@ -80,8 +76,6 @@ public class GamesApiIntegrationTests : IntegrationTestBase
         pgn.Should().NotBeNullOrEmpty();
         pgn.Should().Contain("[Event");
     }
-
-
 
     [Fact]
     public async Task StreamUserGamesAsync_WithValidUsername_ReturnsGames()
@@ -129,8 +123,6 @@ public class GamesApiIntegrationTests : IntegrationTestBase
         games.Should().NotBeNull();
     }
 
-
-
     [Fact]
     public async Task StreamByIdsAsync_WithValidGameIds_ReturnsGames()
     {
@@ -172,8 +164,6 @@ public class GamesApiIntegrationTests : IntegrationTestBase
         games.First().Moves.Should().NotBeNullOrEmpty();
     }
 
-
-
     [Fact]
     public async Task StreamGameMovesAsync_WithKnownCompletedGame_ReturnsInitialEvent()
     {
@@ -204,8 +194,6 @@ public class GamesApiIntegrationTests : IntegrationTestBase
             events[0].Fen.Should().NotBeNullOrEmpty();
         }
     }
-
-
 
     [Fact]
     public async Task StreamGamesByIdsAsync_WithKnownGameIds_ReturnsEvents()

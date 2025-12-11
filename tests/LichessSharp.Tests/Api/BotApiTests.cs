@@ -18,8 +18,6 @@ public class BotApiTests
         _httpClientMock = new Mock<ILichessHttpClient>();
         _botApi = new BotApi(_httpClientMock.Object);
     }
-
-
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -30,8 +28,6 @@ public class BotApiTests
         act.Should().Throw<ArgumentNullException>()
             .WithParameterName("httpClient");
     }
-
-
 
     [Fact]
     public async Task UpgradeAccountAsync_CallsCorrectEndpoint()
@@ -48,8 +44,6 @@ public class BotApiTests
         result.Should().BeTrue();
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>("/api/bot/account/upgrade", null, It.IsAny<CancellationToken>()), Times.Once);
     }
-
-
 
     [Fact]
     public async Task StreamEventsAsync_CallsCorrectEndpoint()
@@ -77,8 +71,6 @@ public class BotApiTests
         results[1].Type.Should().Be("challenge");
         _httpClientMock.Verify(x => x.StreamNdjsonAsync<BotAccountEvent>("/api/stream/event", It.IsAny<CancellationToken>()), Times.Once);
     }
-
-
 
     [Fact]
     public async Task StreamGameAsync_CallsCorrectEndpoint()
@@ -115,8 +107,6 @@ public class BotApiTests
             await foreach (var _ in _botApi.StreamGameAsync(null!)) { }
         });
     }
-
-
 
     [Fact]
     public async Task MakeMoveAsync_CallsCorrectEndpoint()
@@ -170,8 +160,6 @@ public class BotApiTests
             await _botApi.MakeMoveAsync("game123", null!));
     }
 
-
-
     [Fact]
     public async Task GetChatAsync_CallsCorrectEndpoint()
     {
@@ -194,8 +182,6 @@ public class BotApiTests
         _httpClientMock.Verify(x => x.GetAsync<List<ChatMessage>>($"/api/bot/game/{gameId}/chat", It.IsAny<CancellationToken>()), Times.Once);
     }
 
-
-
     [Fact]
     public async Task WriteChatAsync_CallsCorrectEndpoint()
     {
@@ -212,8 +198,6 @@ public class BotApiTests
         result.Should().BeTrue();
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/chat", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()), Times.Once);
     }
-
-
 
     [Fact]
     public async Task AbortAsync_CallsCorrectEndpoint()
@@ -232,8 +216,6 @@ public class BotApiTests
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/abort", null, It.IsAny<CancellationToken>()), Times.Once);
     }
 
-
-
     [Fact]
     public async Task ResignAsync_CallsCorrectEndpoint()
     {
@@ -250,8 +232,6 @@ public class BotApiTests
         result.Should().BeTrue();
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/resign", null, It.IsAny<CancellationToken>()), Times.Once);
     }
-
-
 
     [Fact]
     public async Task HandleDrawAsync_WithAcceptTrue_CallsCorrectEndpoint()
@@ -287,8 +267,6 @@ public class BotApiTests
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/draw/no", null, It.IsAny<CancellationToken>()), Times.Once);
     }
 
-
-
     [Fact]
     public async Task HandleTakebackAsync_WithAcceptTrue_CallsCorrectEndpoint()
     {
@@ -305,8 +283,6 @@ public class BotApiTests
         result.Should().BeTrue();
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/takeback/yes", null, It.IsAny<CancellationToken>()), Times.Once);
     }
-
-
 
     [Fact]
     public async Task ClaimDrawAsync_CallsCorrectEndpoint()
@@ -332,8 +308,6 @@ public class BotApiTests
         await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             await _botApi.ClaimDrawAsync(null!));
     }
-
-
 
     [Fact]
     public async Task GetOnlineBotsAsync_CallsCorrectEndpoint()
@@ -395,8 +369,6 @@ public class BotApiTests
             await foreach (var _ in _botApi.GetOnlineBotsAsync(count: 301)) { }
         });
     }
-
-
 
     private static async IAsyncEnumerable<T> ToAsyncEnumerable<T>(IEnumerable<T> items)
     {

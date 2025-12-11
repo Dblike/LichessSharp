@@ -84,8 +84,6 @@ public interface IExternalEngineApi
     /// <param name="cancellationToken">Cancellation token.</param>
     Task SubmitWorkAsync(string workId, IAsyncEnumerable<string> uciLines, CancellationToken cancellationToken = default);
 }
-
-
 /// <summary>
 /// A registered external engine.
 /// </summary>

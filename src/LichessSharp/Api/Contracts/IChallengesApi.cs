@@ -103,8 +103,6 @@ public interface IChallengesApi
     /// <returns>True if successful.</returns>
     Task<bool> AddTimeAsync(string gameId, int seconds, CancellationToken cancellationToken = default);
 }
-
-
 /// <summary>
 /// Challenge status.
 /// </summary>
@@ -254,8 +252,6 @@ public enum ChallengeRules
     /// </summary>
     NoEarlyDraw = 16
 }
-
-
 
 /// <summary>
 /// List of challenges.
@@ -634,8 +630,6 @@ public class ChallengeAiGameStatus
     [JsonPropertyName("name")]
     public string? Name { get; init; }
 }
-
-
 
 /// <summary>
 /// Options for creating a challenge.

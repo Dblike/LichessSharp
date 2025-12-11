@@ -64,8 +64,6 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         }
     }
 
-
-
     [Fact]
     public async Task GetTopBroadcastsAsync_ReturnsTopBroadcasts()
     {
@@ -114,8 +112,6 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         }
     }
 
-
-
     [Fact]
     public async Task SearchBroadcastsAsync_WithQuery_ReturnsResults()
     {
@@ -157,8 +153,6 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         result.CurrentPageResults.Should().NotBeNull();
         // May be empty for rare search terms - that's valid
     }
-
-
 
     [Fact]
     public async Task GetTournamentAsync_WithKnownId_ReturnsTournament()
@@ -215,8 +209,6 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
             firstRound.Name.Should().NotBeNullOrWhiteSpace();
         }
     }
-
-
 
     [Fact]
     public async Task GetRoundAsync_WithKnownRound_ReturnsRound()
@@ -289,8 +281,6 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         }
     }
 
-
-
     [Fact]
     public async Task StreamUserBroadcastsAsync_WithLichessUser_ReturnsBroadcasts()
     {
@@ -311,8 +301,6 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         // lichess user may or may not have broadcasts, but the call should succeed
         broadcasts.Should().NotBeNull();
     }
-
-
 
     [Fact]
     public async Task GetPlayersAsync_WithKnownTournament_ReturnsPlayers()
@@ -357,8 +345,6 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         }
     }
 
-
-
     [Fact]
     public async Task ExportRoundPgnAsync_WithKnownRound_ReturnsPgn()
     {
@@ -386,8 +372,6 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         pgn.Should().NotBeNullOrWhiteSpace("Finished rounds should have PGN");
         pgn.Should().Contain("[Event", "PGN should contain Event tag");
     }
-
-
 
     [Fact]
     public async Task ExportAllRoundsPgnAsync_WithKnownTournament_ReturnsPgn()

@@ -18,8 +18,6 @@ public class PuzzlesApiTests
         _httpClientMock = new Mock<ILichessHttpClient>();
         _puzzlesApi = new PuzzlesApi(_httpClientMock.Object);
     }
-
-
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -30,8 +28,6 @@ public class PuzzlesApiTests
         act.Should().Throw<ArgumentNullException>()
             .WithParameterName("httpClient");
     }
-
-
 
     [Fact]
     public async Task GetDailyAsync_CallsCorrectEndpoint()
@@ -68,8 +64,6 @@ public class PuzzlesApiTests
         // Assert
         _httpClientMock.Verify(x => x.GetAsync<PuzzleWithGame>("/api/puzzle/daily", cts.Token), Times.Once);
     }
-
-
 
     [Fact]
     public async Task GetAsync_WithId_CallsCorrectEndpoint()
@@ -126,8 +120,6 @@ public class PuzzlesApiTests
         // Assert
         _httpClientMock.Verify(x => x.GetAsync<PuzzleWithGame>(It.Is<string>(s => s.Contains("puzzle%20id")), It.IsAny<CancellationToken>()), Times.Once);
     }
-
-
 
     [Fact]
     public async Task GetNextAsync_WithNoParameters_CallsCorrectEndpoint()
@@ -213,8 +205,6 @@ public class PuzzlesApiTests
         // Assert
         _httpClientMock.Verify(x => x.GetAsync<PuzzleWithGame>(It.Is<string>(s => s.Contains("angle=mate%20in%202")), It.IsAny<CancellationToken>()), Times.Once);
     }
-
-
 
     [Fact]
     public async Task StreamActivityAsync_WithNoParameters_CallsCorrectEndpoint()
@@ -306,8 +296,6 @@ public class PuzzlesApiTests
             s.Contains("before=")), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-
-
     [Fact]
     public async Task GetDashboardAsync_WithDefaultDays_CallsCorrectEndpoint()
     {
@@ -342,8 +330,6 @@ public class PuzzlesApiTests
         result.Should().NotBeNull();
         _httpClientMock.Verify(x => x.GetAsync<PuzzleDashboard>("/api/puzzle/dashboard/7", It.IsAny<CancellationToken>()), Times.Once);
     }
-
-
 
     [Fact]
     public async Task GetStormDashboardAsync_WithDefaultDays_CallsCorrectEndpoint()
@@ -417,8 +403,6 @@ public class PuzzlesApiTests
         _httpClientMock.Verify(x => x.GetAsync<StormDashboard>(It.Is<string>(s => s.Contains("user%20name")), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-
-
     [Fact]
     public async Task CreateRaceAsync_CallsCorrectEndpoint()
     {
@@ -454,8 +438,6 @@ public class PuzzlesApiTests
         // Assert
         _httpClientMock.Verify(x => x.PostAsync<PuzzleRace>("/api/racer", null, cts.Token), Times.Once);
     }
-
-
 
     [Fact]
     public async Task GetBatchAsync_WithAngle_CallsCorrectEndpoint()
@@ -581,8 +563,6 @@ public class PuzzlesApiTests
         _httpClientMock.Verify(x => x.GetAsync<PuzzleBatch>(It.Is<string>(s => s.Contains("mate%20in%202")), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-
-
     [Fact]
     public async Task SolveBatchAsync_WithValidInput_CallsCorrectEndpoint()
     {
@@ -658,8 +638,6 @@ public class PuzzlesApiTests
         await act.Should().ThrowAsync<ArgumentNullException>();
     }
 
-
-
     [Fact]
     public async Task GetReplayAsync_WithValidInput_CallsCorrectEndpoint()
     {
@@ -729,8 +707,6 @@ public class PuzzlesApiTests
         // Assert
         _httpClientMock.Verify(x => x.GetAsync<PuzzleReplay>(It.Is<string>(s => s.Contains("mate%20in%202")), It.IsAny<CancellationToken>()), Times.Once);
     }
-
-
 
     [Fact]
     public async Task GetRaceAsync_WithValidId_CallsCorrectEndpoint()
@@ -803,8 +779,6 @@ public class PuzzlesApiTests
         // Assert
         _httpClientMock.Verify(x => x.GetAsync<PuzzleRaceResults>("/api/racer/test", cts.Token), Times.Once);
     }
-
-
 
     private static PuzzleWithGame CreateTestPuzzleWithGame(string id) => new()
     {

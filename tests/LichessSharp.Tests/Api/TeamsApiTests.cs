@@ -18,8 +18,6 @@ public class TeamsApiTests
         _httpClientMock = new Mock<ILichessHttpClient>();
         _teamsApi = new TeamsApi(_httpClientMock.Object);
     }
-
-
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -30,8 +28,6 @@ public class TeamsApiTests
         act.Should().Throw<ArgumentNullException>()
             .WithParameterName("httpClient");
     }
-
-
 
     [Fact]
     public async Task GetAsync_CallsCorrectEndpoint()
@@ -85,8 +81,6 @@ public class TeamsApiTests
         _httpClientMock.Verify(x => x.GetAsync<Team>(It.Is<string>(s => s.Contains("team%20with%20spaces")), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-
-
     [Fact]
     public async Task GetPopularAsync_WithDefaultPage_CallsCorrectEndpoint()
     {
@@ -129,8 +123,6 @@ public class TeamsApiTests
             await _teamsApi.GetPopularAsync(page: 0));
     }
 
-
-
     [Fact]
     public async Task GetUserTeamsAsync_CallsCorrectEndpoint()
     {
@@ -156,8 +148,6 @@ public class TeamsApiTests
         await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             await _teamsApi.GetUserTeamsAsync(null!));
     }
-
-
 
     [Fact]
     public async Task SearchAsync_CallsCorrectEndpoint()
@@ -226,8 +216,6 @@ public class TeamsApiTests
         _httpClientMock.Verify(x => x.GetAsync<TeamPaginator>(It.Is<string>(s => s.Contains("chess%20club")), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-
-
     [Fact]
     public async Task StreamMembersAsync_CallsCorrectEndpoint()
     {
@@ -281,8 +269,6 @@ public class TeamsApiTests
         });
     }
 
-
-
     [Fact]
     public async Task JoinAsync_CallsCorrectEndpoint()
     {
@@ -325,8 +311,6 @@ public class TeamsApiTests
             await _teamsApi.JoinAsync(null!));
     }
 
-
-
     [Fact]
     public async Task LeaveAsync_CallsCorrectEndpoint()
     {
@@ -351,8 +335,6 @@ public class TeamsApiTests
         await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             await _teamsApi.LeaveAsync(null!));
     }
-
-
 
     [Fact]
     public async Task GetJoinRequestsAsync_CallsCorrectEndpoint()
@@ -389,8 +371,6 @@ public class TeamsApiTests
         _httpClientMock.Verify(x => x.GetAsync<List<TeamRequestWithUser>>($"/api/team/{teamId}/requests?declined=true", It.IsAny<CancellationToken>()), Times.Once);
     }
 
-
-
     [Fact]
     public async Task AcceptJoinRequestAsync_CallsCorrectEndpoint()
     {
@@ -425,8 +405,6 @@ public class TeamsApiTests
             await _teamsApi.AcceptJoinRequestAsync("team", null!));
     }
 
-
-
     [Fact]
     public async Task DeclineJoinRequestAsync_CallsCorrectEndpoint()
     {
@@ -444,8 +422,6 @@ public class TeamsApiTests
         result.Should().BeTrue();
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/team/{teamId}/request/{userId}/decline", null, It.IsAny<CancellationToken>()), Times.Once);
     }
-
-
 
     [Fact]
     public async Task KickMemberAsync_CallsCorrectEndpoint()
@@ -481,8 +457,6 @@ public class TeamsApiTests
             await _teamsApi.KickMemberAsync("team", null!));
     }
 
-
-
     [Fact]
     public async Task MessageAllMembersAsync_CallsCorrectEndpoint()
     {
@@ -516,8 +490,6 @@ public class TeamsApiTests
         await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             await _teamsApi.MessageAllMembersAsync("team", null!));
     }
-
-
 
     private static Team CreateTestTeam(string id) => new()
     {

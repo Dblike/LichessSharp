@@ -17,8 +17,6 @@ public class RelationsApiTests
         _httpClientMock = new Mock<ILichessHttpClient>();
         _relationsApi = new RelationsApi(_httpClientMock.Object);
     }
-
-
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -29,8 +27,6 @@ public class RelationsApiTests
         act.Should().Throw<ArgumentNullException>()
             .WithParameterName("httpClient");
     }
-
-
 
     [Fact]
     public async Task FollowAsync_WithUsername_CallsCorrectEndpoint()
@@ -87,8 +83,6 @@ public class RelationsApiTests
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>(It.Is<string>(s => s.Contains("user%20name")), null, It.IsAny<CancellationToken>()), Times.Once);
     }
 
-
-
     [Fact]
     public async Task UnfollowAsync_WithUsername_CallsCorrectEndpoint()
     {
@@ -116,8 +110,6 @@ public class RelationsApiTests
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
     }
-
-
 
     [Fact]
     public async Task BlockAsync_WithUsername_CallsCorrectEndpoint()
@@ -147,8 +139,6 @@ public class RelationsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-
-
     [Fact]
     public async Task UnblockAsync_WithUsername_CallsCorrectEndpoint()
     {
@@ -176,8 +166,6 @@ public class RelationsApiTests
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
     }
-
-
 
     [Fact]
     public async Task StreamFollowingAsync_CallsCorrectEndpoint()
@@ -227,8 +215,6 @@ public class RelationsApiTests
         _httpClientMock.Verify(x => x.StreamNdjsonAsync<UserExtended>("/api/rel/following", cts.Token), Times.Once);
     }
 
-
-
     [Fact]
     public async Task FollowAsync_PassesCancellationToken()
     {
@@ -245,8 +231,6 @@ public class RelationsApiTests
         // Assert
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>(It.IsAny<string>(), null, cts.Token), Times.Once);
     }
-
-
 
     private static UserExtended CreateTestUserExtended(string id, string username) => new()
     {

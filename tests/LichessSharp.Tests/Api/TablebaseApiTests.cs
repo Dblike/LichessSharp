@@ -18,8 +18,6 @@ public class TablebaseApiTests
         _httpClientMock = new Mock<ILichessHttpClient>();
         _tablebaseApi = new TablebaseApi(_httpClientMock.Object, _baseAddress);
     }
-
-
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -41,8 +39,6 @@ public class TablebaseApiTests
         act.Should().Throw<ArgumentNullException>()
             .WithParameterName("tablebaseBaseAddress");
     }
-
-
 
     [Fact]
     public async Task LookupAsync_WithFen_CallsCorrectEndpoint()
@@ -95,8 +91,6 @@ public class TablebaseApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-
-
     [Fact]
     public async Task LookupAtomicAsync_WithFen_CallsCorrectEndpoint()
     {
@@ -127,8 +121,6 @@ public class TablebaseApiTests
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
     }
-
-
 
     [Fact]
     public async Task LookupAntichessAsync_WithFen_CallsCorrectEndpoint()
@@ -161,8 +153,6 @@ public class TablebaseApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-
-
     [Fact]
     public async Task LookupAsync_UrlEncodesFen()
     {
@@ -180,8 +170,6 @@ public class TablebaseApiTests
             It.Is<Uri>(u => u.AbsoluteUri.Contains("%2F")),
             It.IsAny<CancellationToken>()), Times.Once);
     }
-
-
 
     [Fact]
     public async Task LookupAsync_ReturnsResultWithAllProperties()
@@ -211,8 +199,6 @@ public class TablebaseApiTests
         result.Moves![0].Zeroing.Should().BeTrue();
     }
 
-
-
     [Fact]
     public async Task LookupAsync_PassesCancellationToken()
     {
@@ -231,8 +217,6 @@ public class TablebaseApiTests
             It.IsAny<Uri>(),
             cts.Token), Times.Once);
     }
-
-
 
     private static TablebaseResult CreateTestTablebaseResult() => new()
     {

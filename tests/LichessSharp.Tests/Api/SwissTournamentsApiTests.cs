@@ -18,8 +18,6 @@ public class SwissTournamentsApiTests
         _httpClientMock = new Mock<ILichessHttpClient>();
         _api = new SwissTournamentsApi(_httpClientMock.Object);
     }
-
-
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -28,8 +26,6 @@ public class SwissTournamentsApiTests
         act.Should().Throw<ArgumentNullException>()
             .WithParameterName("httpClient");
     }
-
-
 
     [Fact]
     public async Task GetAsync_CallsCorrectEndpoint()
@@ -81,8 +77,6 @@ public class SwissTournamentsApiTests
         _httpClientMock.Verify(x => x.GetAsync<SwissTournament>(It.Is<string>(s => s.Contains("swiss%20with%20spaces")), It.IsAny<CancellationToken>()), Times.Once);
     }
 
-
-
     [Fact]
     public async Task CreateAsync_CallsCorrectEndpoint()
     {
@@ -123,8 +117,6 @@ public class SwissTournamentsApiTests
             await _api.CreateAsync("testteam", null!));
     }
 
-
-
     [Fact]
     public async Task UpdateAsync_CallsCorrectEndpoint()
     {
@@ -158,8 +150,6 @@ public class SwissTournamentsApiTests
             await _api.UpdateAsync("testSwiss", null!));
     }
 
-
-
     [Fact]
     public async Task ScheduleNextRoundAsync_CallsCorrectEndpoint()
     {
@@ -184,8 +174,6 @@ public class SwissTournamentsApiTests
         await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             await _api.ScheduleNextRoundAsync(null!, 12345));
     }
-
-
 
     [Fact]
     public async Task JoinAsync_WithNoPassword_CallsCorrectEndpoint()
@@ -228,8 +216,6 @@ public class SwissTournamentsApiTests
             await _api.JoinAsync(null!));
     }
 
-
-
     [Fact]
     public async Task WithdrawAsync_CallsCorrectEndpoint()
     {
@@ -253,8 +239,6 @@ public class SwissTournamentsApiTests
         await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             await _api.PauseOrWithdrawAsync(null!));
     }
-
-
 
     [Fact]
     public async Task TerminateAsync_CallsCorrectEndpoint()
@@ -280,8 +264,6 @@ public class SwissTournamentsApiTests
             await _api.TerminateAsync(null!));
     }
 
-
-
     [Fact]
     public async Task ExportTrfAsync_CallsCorrectEndpoint()
     {
@@ -306,8 +288,6 @@ public class SwissTournamentsApiTests
         await Assert.ThrowsAsync<ArgumentNullException>(async () =>
             await _api.ExportTrfAsync(null!));
     }
-
-
 
     [Fact]
     public async Task StreamGamesAsync_CallsCorrectEndpoint()
@@ -358,8 +338,6 @@ public class SwissTournamentsApiTests
         });
     }
 
-
-
     [Fact]
     public async Task StreamResultsAsync_CallsCorrectEndpoint()
     {
@@ -408,8 +386,6 @@ public class SwissTournamentsApiTests
         });
     }
 
-
-
     [Fact]
     public async Task StreamTeamTournamentsAsync_CallsCorrectEndpoint()
     {
@@ -457,8 +433,6 @@ public class SwissTournamentsApiTests
             await foreach (var _ in _api.StreamTeamTournamentsAsync(null!)) { }
         });
     }
-
-
 
     private static SwissTournament CreateTestTournament(string id) => new()
     {

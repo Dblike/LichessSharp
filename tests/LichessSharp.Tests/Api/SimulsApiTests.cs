@@ -17,8 +17,6 @@ public class SimulsApiTests
         _httpClientMock = new Mock<ILichessHttpClient>();
         _simulsApi = new SimulsApi(_httpClientMock.Object);
     }
-
-
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -29,8 +27,6 @@ public class SimulsApiTests
         act.Should().Throw<ArgumentNullException>()
             .WithParameterName("httpClient");
     }
-
-
 
     [Fact]
     public async Task GetCurrentAsync_CallsCorrectEndpoint()
@@ -245,8 +241,6 @@ public class SimulsApiTests
         result.Created[0].Variants[0].Key.Should().Be("standard");
         result.Created[0].Variants[1].Key.Should().Be("chess960");
     }
-
-
 
     private static SimulList CreateTestSimulList()
     {

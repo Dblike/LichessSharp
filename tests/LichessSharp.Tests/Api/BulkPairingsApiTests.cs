@@ -18,8 +18,6 @@ public class BulkPairingsApiTests
         _httpClientMock = new Mock<ILichessHttpClient>();
         _bulkPairingsApi = new BulkPairingsApi(_httpClientMock.Object);
     }
-
-
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -30,8 +28,6 @@ public class BulkPairingsApiTests
         act.Should().Throw<ArgumentNullException>()
             .WithParameterName("httpClient");
     }
-
-
 
     [Fact]
     public async Task GetAllAsync_CallsCorrectEndpoint()
@@ -110,8 +106,6 @@ public class BulkPairingsApiTests
         _httpClientMock.Verify(x => x.GetAsync<BulkPairingListResponse>("/api/bulk-pairing", cts.Token), Times.Once);
     }
 
-
-
     [Fact]
     public async Task GetAsync_CallsCorrectEndpoint()
     {
@@ -175,8 +169,6 @@ public class BulkPairingsApiTests
         // Assert
         _httpClientMock.Verify(x => x.GetAsync<BulkPairing>("/api/bulk-pairing/test%2Fspecial", It.IsAny<CancellationToken>()), Times.Once);
     }
-
-
 
     [Fact]
     public async Task CreateAsync_CallsCorrectEndpoint()
@@ -283,8 +275,6 @@ public class BulkPairingsApiTests
         formData.Should().Contain("rules=");
     }
 
-
-
     [Fact]
     public async Task StartClocksAsync_CallsCorrectEndpoint()
     {
@@ -321,8 +311,6 @@ public class BulkPairingsApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-
-
     [Fact]
     public async Task CancelAsync_CallsCorrectEndpoint()
     {
@@ -358,8 +346,6 @@ public class BulkPairingsApiTests
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
     }
-
-
 
     [Fact]
     public async Task ExportGamesPgnAsync_CallsCorrectEndpoint()
@@ -421,8 +407,6 @@ public class BulkPairingsApiTests
             "application/x-chess-pgn",
             It.IsAny<CancellationToken>()), Times.Once);
     }
-
-
 
     [Fact]
     public async Task StreamGamesAsync_CallsCorrectEndpoint()
@@ -503,8 +487,6 @@ public class BulkPairingsApiTests
             It.Is<string>(s => s.Contains("moves=false") && s.Contains("opening=true")),
             It.IsAny<CancellationToken>()), Times.Once);
     }
-
-
 
     private static BulkPairing CreateTestBulkPairing(string id)
     {

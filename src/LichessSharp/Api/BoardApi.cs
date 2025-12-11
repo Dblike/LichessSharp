@@ -163,8 +163,6 @@ internal sealed class BoardApi(ILichessHttpClient httpClient) : IBoardApi
             yield return result;
         }
     }
-
-
     private static FormUrlEncodedContent BuildSeekContent(SeekOptions options)
     {
         var parameters = new List<KeyValuePair<string, string>>

@@ -19,8 +19,6 @@ public class UsersApiTests
         _httpClientMock = new Mock<ILichessHttpClient>();
         _usersApi = new UsersApi(_httpClientMock.Object);
     }
-
-
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -31,8 +29,6 @@ public class UsersApiTests
         act.Should().Throw<ArgumentNullException>()
             .WithParameterName("httpClient");
     }
-
-
 
     [Fact]
     public async Task GetAsync_WithUsername_CallsCorrectEndpoint()
@@ -99,8 +95,6 @@ public class UsersApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-
-
     [Fact]
     public async Task GetManyAsync_WithUserIds_CallsCorrectEndpoint()
     {
@@ -158,8 +152,6 @@ public class UsersApiTests
         // Assert
         await act.Should().ThrowAsync<ArgumentNullException>();
     }
-
-
 
     [Fact]
     public async Task GetStatusAsync_WithUserIds_CallsCorrectEndpoint()
@@ -236,8 +228,6 @@ public class UsersApiTests
             .WithMessage("*100*");
     }
 
-
-
     [Fact]
     public async Task GetAllTop10Async_CallsCorrectEndpoint()
     {
@@ -259,8 +249,6 @@ public class UsersApiTests
         result.Should().ContainKey("blitz");
         _httpClientMock.Verify(x => x.GetAsync<Dictionary<string, List<User>>>("/api/player", It.IsAny<CancellationToken>()), Times.Once);
     }
-
-
 
     [Fact]
     public async Task GetLeaderboardAsync_WithPerfType_CallsCorrectEndpoint()
@@ -324,8 +312,6 @@ public class UsersApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-
-
     [Fact]
     public async Task GetRatingHistoryAsync_WithUsername_CallsCorrectEndpoint()
     {
@@ -356,8 +342,6 @@ public class UsersApiTests
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
     }
-
-
 
     [Fact]
     public async Task GetPerformanceAsync_WithValidParams_CallsCorrectEndpoint()
@@ -390,8 +374,6 @@ public class UsersApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-
-
     [Fact]
     public async Task GetActivityAsync_WithValidUsername_CallsCorrectEndpoint()
     {
@@ -415,8 +397,6 @@ public class UsersApiTests
         var act = () => _usersApi.GetActivityAsync(null!);
         await act.Should().ThrowAsync<ArgumentException>();
     }
-
-
 
     [Fact]
     public async Task AutocompleteAsync_WithValidTerm_CallsCorrectEndpoint()
@@ -461,8 +441,6 @@ public class UsersApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-
-
     [Fact]
     public async Task AutocompletePlayersAsync_WithValidTerm_CallsCorrectEndpoint()
     {
@@ -481,8 +459,6 @@ public class UsersApiTests
             It.Is<string>(s => s.Contains("/api/player/autocomplete") && s.Contains("object=true")),
             It.IsAny<CancellationToken>()), Times.Once);
     }
-
-
 
     [Fact]
     public async Task GetCrosstableAsync_WithTwoUsers_CallsCorrectEndpoint()
@@ -530,8 +506,6 @@ public class UsersApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-
-
     [Fact]
     public async Task GetLiveStreamersAsync_CallsCorrectEndpoint()
     {
@@ -548,8 +522,6 @@ public class UsersApiTests
         result.Should().HaveCount(1);
         _httpClientMock.Verify(x => x.GetAsync<List<Streamer>>("/api/streamer/live", It.IsAny<CancellationToken>()), Times.Once);
     }
-
-
 
     [Fact]
     public async Task GetNoteAsync_WithValidUsername_CallsCorrectEndpoint()
@@ -574,8 +546,6 @@ public class UsersApiTests
         var act = () => _usersApi.GetNoteAsync(null!);
         await act.Should().ThrowAsync<ArgumentException>();
     }
-
-
 
     [Fact]
     public async Task WriteNoteAsync_WithValidParams_CallsCorrectEndpoint()
@@ -608,8 +578,6 @@ public class UsersApiTests
         var act = () => _usersApi.WriteNoteAsync("thibault", null!);
         await act.Should().ThrowAsync<ArgumentNullException>();
     }
-
-
 
     [Fact]
     public async Task GetTimelineAsync_WithoutParams_CallsBaseEndpoint()
@@ -660,8 +628,6 @@ public class UsersApiTests
             It.Is<string>(s => s.Contains("since=")),
             It.IsAny<CancellationToken>()), Times.Once);
     }
-
-
 
     private static User CreateTestUser(string username) => new()
     {

@@ -15,8 +15,6 @@ public class UsersApiIntegrationTests : IntegrationTestBase
     private const string ThibaultUsername = "thibault";
     private const string Maia1Username = "maia1";
     private const string Maia5Username = "maia5";
-
-
     [Fact]
     public async Task GetAsync_WithValidUsername_ReturnsUserProfile()
     {
@@ -40,8 +38,6 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         user.Id.Should().Be(ThibaultUsername);
     }
 
-
-
     [Fact]
     public async Task GetManyAsync_WithMultipleUsernames_ReturnsAllUsers()
     {
@@ -56,8 +52,6 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         users.Should().HaveCountGreaterThanOrEqualTo(1);
         users.Should().Contain(u => u.Id == ThibaultUsername);
     }
-
-
 
     [Fact]
     public async Task GetStatusAsync_WithValidUsernames_ReturnsStatuses()
@@ -89,8 +83,6 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         statuses.Should().HaveCountGreaterThanOrEqualTo(1);
     }
 
-
-
     [Fact]
     public async Task GetAllTop10Async_ReturnsLeaderboards()
     {
@@ -105,8 +97,6 @@ public class UsersApiIntegrationTests : IntegrationTestBase
                                                  k.Contains("blitz", StringComparison.OrdinalIgnoreCase) ||
                                                  k.Contains("rapid", StringComparison.OrdinalIgnoreCase));
     }
-
-
 
     [Fact]
     public async Task GetLeaderboardAsync_WithBulletPerf_ReturnsTopPlayers()
@@ -135,8 +125,6 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         players.Should().HaveCount(5);
     }
 
-
-
     [Fact]
     public async Task GetRatingHistoryAsync_WithValidUsername_ReturnsHistory()
     {
@@ -151,8 +139,6 @@ public class UsersApiIntegrationTests : IntegrationTestBase
             h.Name.Should().NotBeNullOrEmpty();
         });
     }
-
-
 
     [Fact]
     public async Task GetPerformanceAsync_WithValidUsernameAndPerfType_ReturnsPerformance()
@@ -176,8 +162,6 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         performance.Stat.Should().NotBeNull();
     }
 
-
-
     [Fact]
     public async Task GetActivityAsync_WithValidUsername_ReturnsActivity()
     {
@@ -188,8 +172,6 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         activity.Should().NotBeNull();
         // Activity might be empty if user hasn't been active recently
     }
-
-
 
     [Fact]
     public async Task AutocompleteAsync_WithValidTerm_ReturnsUsernames()
@@ -202,8 +184,6 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         usernames.Should().NotBeEmpty();
         usernames.Should().Contain(u => u.Contains("thibault", StringComparison.OrdinalIgnoreCase));
     }
-
-
 
     [Fact]
     public async Task AutocompletePlayersAsync_WithValidTerm_ReturnsPlayers()
@@ -220,8 +200,6 @@ public class UsersApiIntegrationTests : IntegrationTestBase
             p.Name.Should().NotBeNullOrEmpty();
         });
     }
-
-
 
     [Fact]
     public async Task GetCrosstableAsync_WithValidUsernames_ReturnsCrosstable()
@@ -244,8 +222,6 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         crosstable.Should().NotBeNull();
         crosstable.Users.Should().NotBeNull();
     }
-
-
 
     [Fact]
     public async Task GetLiveStreamersAsync_ReturnsStreamers()

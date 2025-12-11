@@ -120,8 +120,6 @@ public interface ITeamsApi
     /// <returns>True if the message was sent.</returns>
     Task<bool> MessageAllMembersAsync(string teamId, string message, CancellationToken cancellationToken = default);
 }
-
-
 /// <summary>
 /// A Lichess team.
 /// </summary>

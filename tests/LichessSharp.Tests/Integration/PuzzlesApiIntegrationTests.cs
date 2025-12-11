@@ -27,8 +27,6 @@ public class PuzzlesApiIntegrationTests : IntegrationTestBase
         puzzle.Game.Should().NotBeNull();
     }
 
-
-
     [Fact]
     public async Task GetAsync_WithDailyPuzzleId_ReturnsPuzzle()
     {
@@ -47,8 +45,6 @@ public class PuzzlesApiIntegrationTests : IntegrationTestBase
         puzzle.Puzzle.Solution.Should().NotBeNullOrEmpty();
         puzzle.Game.Should().NotBeNull();
     }
-
-
 
     [Fact]
     public async Task GetStormDashboardAsync_WithValidUsername_ReturnsDashboard()
@@ -82,8 +78,6 @@ public class PuzzlesApiIntegrationTests : IntegrationTestBase
         // Just verify the response structure is correct
     }
 
-
-
     [Fact]
     public async Task GetDailyAsync_ReturnsValidPuzzleData()
     {
@@ -110,8 +104,6 @@ public class PuzzlesApiIntegrationTests : IntegrationTestBase
         puzzle.Game.Should().NotBeNull();
         puzzle.Game!.Id.Should().NotBeNullOrEmpty();
     }
-
-
 
     [Fact]
     public async Task GetRaceAsync_WithNonExistentRace_ThrowsNotFoundException()

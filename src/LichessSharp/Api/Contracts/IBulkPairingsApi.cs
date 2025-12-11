@@ -78,8 +78,6 @@ public interface IBulkPairingsApi
     /// <returns>Async enumerable of games.</returns>
     IAsyncEnumerable<GameJson> StreamGamesAsync(string id, BulkPairingExportOptions? options = null, CancellationToken cancellationToken = default);
 }
-
-
 /// <summary>
 /// Options for creating a bulk pairing.
 /// </summary>
@@ -191,8 +189,6 @@ public class BulkPairingExportOptions
     /// </summary>
     public bool? Opening { get; set; }
 }
-
-
 
 /// <summary>
 /// Response wrapper for the bulk pairings list endpoint.

@@ -17,8 +17,6 @@ public class MessagingApiTests
         _httpClientMock = new Mock<ILichessHttpClient>();
         _messagingApi = new MessagingApi(_httpClientMock.Object);
     }
-
-
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -29,8 +27,6 @@ public class MessagingApiTests
         act.Should().Throw<ArgumentNullException>()
             .WithParameterName("httpClient");
     }
-
-
 
     [Fact]
     public async Task SendAsync_CallsCorrectEndpoint()

@@ -112,8 +112,6 @@ public class OAuthApiManualTests : AuthenticatedTestBase
         // Expires may be null for non-expiring tokens
     }
 
-
-
     /// <summary>
     /// WARNING: This test will revoke your current token!
     /// Only run if you want to test token revocation.
@@ -130,8 +128,6 @@ public class OAuthApiManualTests : AuthenticatedTestBase
         await Assert.ThrowsAnyAsync<Exception>(async () =>
             await Client.Account.GetProfileAsync());
     }
-
-
 
     /// <summary>
     /// This test demonstrates the structure of GetTokenAsync but cannot be fully automated

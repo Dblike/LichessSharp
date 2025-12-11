@@ -123,8 +123,6 @@ public interface IBotApi
     /// <returns>True if successful.</returns>
     Task<bool> ClaimDrawAsync(string gameId, CancellationToken cancellationToken = default);
 }
-
-
 /// <summary>
 /// Event from the bot account event stream.
 /// </summary>

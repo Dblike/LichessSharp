@@ -21,8 +21,6 @@ public class TournamentsIntegrationTests : IDisposable
         _client.Dispose();
         GC.SuppressFinalize(this);
     }
-
-
     [Fact]
     public async Task ArenaTournaments_GetCurrentAsync_ReturnsCurrentTournaments()
     {
@@ -175,8 +173,6 @@ public class TournamentsIntegrationTests : IDisposable
         await Assert.ThrowsAnyAsync<Exception>(async () =>
             await _client.ArenaTournaments.JoinAsync(tournament.Id));
     }
-
-
 
     [Fact]
     public async Task SwissTournaments_GetAsync_WithValidId_ReturnsTournament()

@@ -18,8 +18,6 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
 {
     // Known team that hosts tournaments
     private const string TestTeamId = "lichess-swiss";
-
-
     [Fact]
     public async Task GetCurrentAsync_ReturnsCurrentTournaments()
     {
@@ -62,8 +60,6 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
             tournament.Status.Should().BeGreaterThan(0);
         }
     }
-
-
 
     [Fact]
     public async Task GetAsync_WithValidId_ReturnsTournament()
@@ -110,8 +106,6 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
         result.Variant.Should().NotBeNull();
         result.Variant!.Key.Should().NotBeNullOrWhiteSpace();
     }
-
-
 
     [Fact]
     public async Task StreamResultsAsync_WithFinishedTournament_ReturnsResults()
@@ -196,8 +190,6 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
         results.Should().NotBeEmpty();
     }
 
-
-
     [Fact]
     public async Task StreamGamesAsync_WithFinishedTournament_ReturnsGames()
     {
@@ -226,8 +218,6 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
         });
     }
 
-
-
     [Fact]
     public async Task GetTeamStandingAsync_WithTeamBattle_ReturnsStanding()
     {
@@ -252,8 +242,6 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
         standing.Should().NotBeNull();
         standing.Teams.Should().NotBeNull();
     }
-
-
 
     [Fact]
     public async Task StreamCreatedByAsync_WithLichessUser_ReturnsTournaments()
@@ -309,8 +297,6 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
         tournaments.Should().NotBeNull();
     }
 
-
-
     [Fact]
     public async Task StreamPlayedByAsync_WithKnownUser_ReturnsTournaments()
     {
@@ -340,8 +326,6 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
         }
     }
 
-
-
     [Fact]
     public async Task StreamTeamTournamentsAsync_WithKnownTeam_ReturnsTournaments()
     {
@@ -366,8 +350,6 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
             tournament.Id.Should().NotBeNullOrEmpty();
         }
     }
-
-
 
     [Fact]
     public async Task CreateAsync_WithoutAuth_ThrowsException()

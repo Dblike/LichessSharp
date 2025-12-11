@@ -134,8 +134,6 @@ public interface IBoardApi
     /// <returns>True if successful.</returns>
     Task<bool> BerserkAsync(string gameId, CancellationToken cancellationToken = default);
 }
-
-
 /// <summary>
 /// Chat room type.
 /// </summary>
@@ -151,8 +149,6 @@ public enum ChatRoom
     /// </summary>
     Spectator
 }
-
-
 
 /// <summary>
 /// Event from the board account event stream.
@@ -388,8 +384,6 @@ public class BoardCompat
     public bool Board { get; init; }
 }
 
-
-
 /// <summary>
 /// Event from the board game stream.
 /// </summary>
@@ -612,8 +606,6 @@ public class OpponentGoneEvent : BoardGameEvent
     public int? ClaimWinInSeconds { get; init; }
 }
 
-
-
 /// <summary>
 /// Clock settings in board game events.
 /// </summary>
@@ -715,8 +707,6 @@ public class SeekResult
     [JsonPropertyName("id")]
     public string? Id { get; init; }
 }
-
-
 
 /// <summary>
 /// Options for creating a seek.

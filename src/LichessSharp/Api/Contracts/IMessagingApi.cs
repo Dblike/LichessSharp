@@ -17,8 +17,6 @@ public interface IMessagingApi
     /// <returns>True if the message was sent successfully.</returns>
     Task<bool> SendAsync(string username, string text, CancellationToken cancellationToken = default);
 }
-
-
 /// <summary>
 /// Response from sending a private message.
 /// </summary>

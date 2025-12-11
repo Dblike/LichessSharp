@@ -17,8 +17,6 @@ public class FideApiTests
         _httpClientMock = new Mock<ILichessHttpClient>();
         _fideApi = new FideApi(_httpClientMock.Object);
     }
-
-
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -29,8 +27,6 @@ public class FideApiTests
         act.Should().Throw<ArgumentNullException>()
             .WithParameterName("httpClient");
     }
-
-
 
     [Fact]
     public async Task GetPlayerAsync_WithValidId_CallsCorrectEndpoint()
@@ -130,8 +126,6 @@ public class FideApiTests
             It.IsAny<string>(),
             cts.Token), Times.Once);
     }
-
-
 
     [Fact]
     public async Task SearchPlayersAsync_WithValidQuery_CallsCorrectEndpoint()
@@ -261,8 +255,6 @@ public class FideApiTests
                 s.Contains("%26")),     // & encoded
             It.IsAny<CancellationToken>()), Times.Once);
     }
-
-
 
     private static FidePlayer CreateTestFidePlayer(int id, string name) => new()
     {

@@ -51,8 +51,6 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
         }
     }
 
-
-
     /// <summary>
     /// Test creating an external engine.
     /// WARNING: This will create a real engine registration on your account.
@@ -85,8 +83,6 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
         await Client.ExternalEngine.DeleteAsync(engine.Id);
     }
 
-
-
     [Fact(Skip = "Requires existing engine ID - run manually only")]
     public async Task GetAsync_WithValidId_ReturnsEngine()
     {
@@ -106,8 +102,6 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
         engine.Should().NotBeNull();
         engine.Id.Should().Be(engineId);
     }
-
-
 
     [Fact(Skip = "Requires existing engine - run manually only")]
     public async Task UpdateAsync_WithValidData_UpdatesEngine()
@@ -150,8 +144,6 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
         await Client.ExternalEngine.UpdateAsync(engineId, revertRegistration);
     }
 
-
-
     [Fact(Skip = "Requires engine to delete - run manually only")]
     public async Task DeleteAsync_WithValidId_DeletesEngine()
     {
@@ -174,8 +166,6 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
         await Assert.ThrowsAnyAsync<Exception>(async () =>
             await Client.ExternalEngine.GetAsync(engine.Id));
     }
-
-
 
     [Fact(Skip = "Requires working engine - run manually only")]
     public async Task AnalyseAsync_WithValidRequest_ReturnsAnalysisLines()
@@ -215,8 +205,6 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
         // Analysis may timeout or return empty if no engine provider is running
         lines.Should().NotBeNull();
     }
-
-
 
     [Fact(Skip = "Requires engine provider setup - run manually only")]
     public async Task AcquireWorkAsync_WithValidSecret_ReturnsWorkOrNull()

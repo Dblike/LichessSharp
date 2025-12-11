@@ -30,8 +30,6 @@ public class AnalysisApiTests
             .WithParameterName("httpClient");
     }
 
-
-
     [Fact]
     public async Task GetCloudEvaluationAsync_WithFen_CallsCorrectEndpoint()
     {
@@ -175,8 +173,6 @@ public class AnalysisApiTests
                 !s.Contains(" ")),   // No raw spaces
             It.IsAny<CancellationToken>()), Times.Once);
     }
-
-
 
     private static CloudEvaluation CreateTestCloudEvaluation(string fen) => new()
     {
