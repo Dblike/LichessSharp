@@ -1,12 +1,8 @@
 # LichessSharp
-
 A fully-featured .NET client library for the [Lichess API](https://lichess.org/api).
-
 [![NuGet](https://img.shields.io/nuget/v/LichessSharp.svg)](https://www.nuget.org/packages/LichessSharp/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-
 ## Features
-
 - **15 API areas fully implemented** with 109+ endpoints (Account, Users, Relations, Games, TV, Puzzles, Analysis, Opening Explorer, Tablebase, Challenges, Board, Bot, Teams, Arena Tournaments, Swiss Tournaments)
 - Async-first design with `CancellationToken` support on all methods
 - Streaming support via `IAsyncEnumerable<T>` for real-time NDJSON data
@@ -14,72 +10,54 @@ A fully-featured .NET client library for the [Lichess API](https://lichess.org/a
 - Built-in rate limiting and automatic retry logic for transient network failures
 - AOT-compatible with `System.Text.Json` source generators
 - Targets **.NET 10.0**
-
 ## Installation
-
 ```bash
 dotnet add package LichessSharp
 ```
-
 ## Quick Start
-
 ```csharp
 using LichessSharp;
-
 // Create a client (unauthenticated for public API)
 using var client = new LichessClient();
-
 // Or with an access token for authenticated endpoints
 using var authenticatedClient = new LichessClient("your-access-token");
-
 // Access different API areas
 var profile = await client.Account.GetProfileAsync();
 var user = await client.Users.GetAsync("DrNykterstein");
 var game = await client.Games.GetAsync("q7ZvsdUF");
 var puzzle = await client.Puzzles.GetDailyAsync();
 ```
-
 ## Configuration
-
 ```csharp
 var options = new LichessClientOptions
 {
     AccessToken = "your-token",
     DefaultTimeout = TimeSpan.FromSeconds(30),
-
     // Automatic rate limit retry
     AutoRetryOnRateLimit = true,
     MaxRateLimitRetries = 3,
-
     // Automatic retry on transient network failures (DNS, connection errors)
     EnableTransientRetry = true,
     MaxTransientRetries = 3,
     TransientRetryBaseDelay = TimeSpan.FromSeconds(1)
 };
-
 using var client = new LichessClient(new HttpClient(), options);
 ```
-
 ## Streaming
-
 Many Lichess endpoints stream data in real-time using newline-delimited JSON (ndjson). LichessSharp handles this natively with `IAsyncEnumerable`:
-
 ```csharp
 // Stream user games
 await foreach (var game in client.Games.StreamUserGamesAsync("DrNykterstein"))
 {
     Console.WriteLine($"Game: {game.Id}");
 }
-
 // Stream TV feed (real-time positions and moves)
 await foreach (var evt in client.Tv.StreamCurrentGameAsync())
 {
     Console.WriteLine($"Type: {evt.Type}, FEN: {evt.Data?.Fen}");
 }
 ```
-
 ## API Coverage
-
 | API | Status | Description |
 |-----|--------|-------------|
 | Account | ✅ Implemented | Profile, email, preferences, kid mode |
@@ -102,17 +80,11 @@ await foreach (var evt in client.Tv.StreamCurrentGameAsync())
 | Studies | 🔜 Planned | Lichess studies |
 | Messaging | 🔜 Planned | Private messages |
 | Broadcasts | 🔜 Planned | Event broadcasts |
-
 See [docs/api-coverage.md](docs/api-coverage.md) for detailed endpoint-level coverage.
-
 ## Authentication
-
 Most read operations work without authentication. For write operations or accessing private data, you need a [personal access token](https://lichess.org/account/oauth/token).
-
 ## Error Handling
-
 LichessSharp provides typed exceptions for different error scenarios:
-
 ```csharp
 try
 {
@@ -131,16 +103,10 @@ catch (LichessAuthorizationException ex)
     Console.WriteLine($"Missing scope: {ex.RequiredScope}");
 }
 ```
-
 ## Contributing
-
 Contributions are welcome! Please read the [CLAUDE.md](CLAUDE.md) file for development guidelines.
-
 ## License
-
 MIT License - see [LICENSE](LICENSE) for details.
-
 ## Links
-
 - [Lichess API Documentation](https://lichess.org/api)
 - [Lichess](https://lichess.org)

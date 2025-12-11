@@ -51,6 +51,7 @@ Then you must:
 - Identify architectural constraints and patterns (naming, async, error handling, modeling)  
 - Check how the corresponding endpoint is implemented in other language clients when relevant  
 - **Identify which parts of the public API and documentation (/docs, README, samples) are affected**
+- Lichess Open API spec is in the file lichess-openapi.json
 
 ---
 

@@ -377,7 +377,6 @@ public async Task<Timeline> GetTimelineAsync(int? nb = null, DateTime? since = n
 ```csharp
 // Tests/Api/UsersApiTests.cs - Add these test methods
 
-#region GetPerformanceAsync Tests
 
 [Fact]
 public async Task GetPerformanceAsync_WithValidParams_CallsCorrectEndpoint()
@@ -410,9 +409,7 @@ public async Task GetPerformanceAsync_WithNullPerfType_ThrowsArgumentException()
     await act.Should().ThrowAsync<ArgumentException>();
 }
 
-#endregion
 
-#region GetActivityAsync Tests
 
 [Fact]
 public async Task GetActivityAsync_WithValidUsername_CallsCorrectEndpoint()
@@ -430,9 +427,7 @@ public async Task GetActivityAsync_WithValidUsername_CallsCorrectEndpoint()
     result.Should().HaveCount(1);
 }
 
-#endregion
 
-#region AutocompleteAsync Tests
 
 [Fact]
 public async Task AutocompleteAsync_WithTerm_CallsCorrectEndpoint()
@@ -469,9 +464,7 @@ public async Task AutocompleteAsync_WithObjectAndFriend_BuildsCorrectQueryString
         It.IsAny<CancellationToken>()), Times.Once);
 }
 
-#endregion
 
-#region GetCrosstableAsync Tests
 
 [Fact]
 public async Task GetCrosstableAsync_WithTwoUsers_CallsCorrectEndpoint()
@@ -506,9 +499,7 @@ public async Task GetCrosstableAsync_WithMatchup_AddsQueryParam()
         It.IsAny<CancellationToken>()), Times.Once);
 }
 
-#endregion
 
-#region GetLiveStreamersAsync Tests
 
 [Fact]
 public async Task GetLiveStreamersAsync_ReturnsStreamers()
@@ -526,9 +517,7 @@ public async Task GetLiveStreamersAsync_ReturnsStreamers()
     result.Should().HaveCount(1);
 }
 
-#endregion
 
-#region GetNoteAsync Tests
 
 [Fact]
 public async Task GetNoteAsync_WithValidUsername_CallsCorrectEndpoint()
@@ -545,9 +534,7 @@ public async Task GetNoteAsync_WithValidUsername_CallsCorrectEndpoint()
     result.Should().Be("Test note");
 }
 
-#endregion
 
-#region WriteNoteAsync Tests
 
 [Fact]
 public async Task WriteNoteAsync_WithValidParams_CallsCorrectEndpoint()
@@ -567,9 +554,7 @@ public async Task WriteNoteAsync_WithValidParams_CallsCorrectEndpoint()
     result.Should().BeTrue();
 }
 
-#endregion
 
-#region GetTimelineAsync Tests
 
 [Fact]
 public async Task GetTimelineAsync_WithoutParams_CallsBaseEndpoint()
@@ -603,7 +588,6 @@ public async Task GetTimelineAsync_WithParams_BuildsCorrectQueryString()
         It.IsAny<CancellationToken>()), Times.Once);
 }
 
-#endregion
 ```
 
 ### Integration Tests
@@ -611,7 +595,6 @@ public async Task GetTimelineAsync_WithParams_BuildsCorrectQueryString()
 ```csharp
 // Tests/Integration/UsersApiIntegrationTests.cs - Add these tests
 
-#region GetPerformanceAsync Tests
 
 [Fact]
 public async Task GetPerformanceAsync_WithValidParams_ReturnsPerformance()
@@ -623,9 +606,7 @@ public async Task GetPerformanceAsync_WithValidParams_ReturnsPerformance()
     perf.Should().NotBeNull();
 }
 
-#endregion
 
-#region GetActivityAsync Tests
 
 [Fact]
 public async Task GetActivityAsync_WithValidUsername_ReturnsActivity()
@@ -638,9 +619,7 @@ public async Task GetActivityAsync_WithValidUsername_ReturnsActivity()
     // Activity list may be empty for inactive users
 }
 
-#endregion
 
-#region AutocompleteAsync Tests
 
 [Fact]
 public async Task AutocompleteAsync_WithValidTerm_ReturnsSuggestions()
@@ -653,9 +632,7 @@ public async Task AutocompleteAsync_WithValidTerm_ReturnsSuggestions()
     suggestions.Should().NotBeEmpty();
 }
 
-#endregion
 
-#region GetCrosstableAsync Tests
 
 [Fact]
 public async Task GetCrosstableAsync_WithTwoUsers_ReturnsCrosstable()
@@ -677,9 +654,7 @@ public async Task GetCrosstableAsync_WithMatchup_ReturnsMatchupData()
     crosstable.Should().NotBeNull();
 }
 
-#endregion
 
-#region GetLiveStreamersAsync Tests
 
 [Fact]
 public async Task GetLiveStreamersAsync_ReturnsStreamers()
@@ -692,7 +667,6 @@ public async Task GetLiveStreamersAsync_ReturnsStreamers()
     // List may be empty if no one is streaming
 }
 
-#endregion
 ```
 
 ### Authenticated Integration Tests
@@ -920,7 +894,6 @@ public class FideApiTests
         _fideApi = new FideApi(_httpClientMock.Object);
     }
 
-    #region Constructor Tests
 
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
@@ -929,9 +902,7 @@ public class FideApiTests
         act.Should().Throw<ArgumentNullException>().WithParameterName("httpClient");
     }
 
-    #endregion
 
-    #region GetPlayerAsync Tests
 
     [Fact]
     public async Task GetPlayerAsync_WithValidId_CallsCorrectEndpoint()
@@ -964,9 +935,7 @@ public class FideApiTests
         await act.Should().ThrowAsync<ArgumentOutOfRangeException>();
     }
 
-    #endregion
 
-    #region SearchPlayersAsync Tests
 
     [Fact]
     public async Task SearchPlayersAsync_WithValidQuery_CallsCorrectEndpoint()
@@ -1020,7 +989,6 @@ public class FideApiTests
         await act.Should().ThrowAsync<ArgumentException>();
     }
 
-    #endregion
 }
 ```
 
@@ -1037,7 +1005,6 @@ public class FideApiIntegrationTests : IntegrationTestBase
     private const int MagnusCarlsenFideId = 1503014;
     private const int HikaruNakamuraFideId = 2016192;
 
-    #region GetPlayerAsync Tests
 
     [Fact]
     public async Task GetPlayerAsync_WithMagnusCarlsen_ReturnsCorrectPlayer()
@@ -1066,9 +1033,7 @@ public class FideApiIntegrationTests : IntegrationTestBase
         player.Title.Should().Be("GM");
     }
 
-    #endregion
 
-    #region SearchPlayersAsync Tests
 
     [Fact]
     public async Task SearchPlayersAsync_WithCarlsen_ReturnsResults()
@@ -1105,7 +1070,6 @@ public class FideApiIntegrationTests : IntegrationTestBase
         players.Should().BeEmpty();
     }
 
-    #endregion
 }
 ```
 
@@ -1660,38 +1624,38 @@ public interface IExternalEngineApi
 - [ ] Add integration tests
 - [ ] Update `docs/api-coverage.md`
 
-### Phase 7: Opening Explorer Extensions
-- [ ] Add `GetMasterGamePgnAsync` to `IOpeningExplorerApi.cs`
-- [ ] Implement in `OpeningExplorerApi.cs`
-- [ ] Add unit tests
-- [ ] Add integration tests
-- [ ] Update `docs/api-coverage.md`
+### Phase 7: Opening Explorer Extensions ✅ COMPLETED
+- [x] Add `GetMasterGamePgnAsync` to `IOpeningExplorerApi.cs`
+- [x] Implement in `OpeningExplorerApi.cs`
+- [x] Add unit tests
+- [x] Add integration tests
+- [x] Update `docs/api-coverage.md`
 
-### Phase 8: Arena Tournaments Extensions
-- [ ] Add `StreamTeamArenasAsync` to `IArenaTournamentsApi.cs`
-- [ ] Implement in `ArenaTournamentsApi.cs`
-- [ ] Add unit tests
-- [ ] Add integration tests
-- [ ] Update `docs/api-coverage.md`
+### Phase 8: Arena Tournaments Extensions ✅ COMPLETED
+- [x] Add `StreamTeamTournamentsAsync` to `IArenaTournamentsApi.cs`
+- [x] Implement in `ArenaTournamentsApi.cs`
+- [x] Add unit tests
+- [x] Add integration tests
+- [x] Update `docs/api-coverage.md`
 
-### Phase 9: OAuth API
-- [ ] Create `IOAuthApi.cs` interface
-- [ ] Create models (`OAuthToken`, `OAuthTokenRequest`, `OAuthTokenInfo`)
-- [ ] Create `OAuthApi.cs` implementation
-- [ ] Add to client
-- [ ] Add unit tests
-- [ ] Add integration tests
-- [ ] Update `docs/api-coverage.md`
+### Phase 9: OAuth API ✅ COMPLETED
+- [x] Create `IOAuthApi.cs` interface
+- [x] Create models (`OAuthToken`, `OAuthTokenRequest`, `OAuthTokenInfo`)
+- [x] Create `OAuthApi.cs` implementation
+- [x] Add to client
+- [x] Add unit tests (17 tests)
+- [ ] Add integration tests (OAuth flow requires real authorization)
+- [x] Update `docs/api-coverage.md`
 
-### Phase 10: External Engine API
-- [ ] Create `IExternalEngineApi.cs` interface
-- [ ] Create models (`ExternalEngine`, `ExternalEngineRegistration`)
-- [ ] Create `ExternalEngineApi.cs` implementation
-- [ ] Add to client (with separate engine.lichess.ovh configuration)
-- [ ] Add unit tests
-- [ ] Add integration tests (manual/authenticated)
-- [ ] Update `docs/api-coverage.md`
-- [ ] Add warning about alpha status in documentation
+### Phase 10: External Engine API ✅ COMPLETED
+- [x] Create `IExternalEngineApi.cs` interface
+- [x] Create models (`ExternalEngine`, `ExternalEngineRegistration`, `EngineWork`, `EngineAnalysisLine`, etc.)
+- [x] Create `ExternalEngineApi.cs` implementation
+- [x] Add to client (with separate engine.lichess.ovh configuration via `EngineBaseAddress`)
+- [x] Add unit tests (26 tests)
+- [ ] Add integration tests (manual/authenticated - requires engine:read/write scopes)
+- [x] Update `docs/api-coverage.md`
+- [x] Add warning about alpha status in documentation
 
 ---
 
