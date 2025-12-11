@@ -255,6 +255,7 @@ public sealed class LichessClient : ILichessClient
         Task<bool> IBoardApi.HandleDrawAsync(string gameId, bool accept, CancellationToken cancellationToken) => throw NotImplemented();
         Task<bool> IBoardApi.HandleTakebackAsync(string gameId, bool accept, CancellationToken cancellationToken) => throw NotImplemented();
         Task<bool> IBoardApi.ClaimVictoryAsync(string gameId, CancellationToken cancellationToken) => throw NotImplemented();
+        Task<bool> IBoardApi.ClaimDrawAsync(string gameId, CancellationToken cancellationToken) => throw NotImplemented();
         Task<bool> IBoardApi.BerserkAsync(string gameId, CancellationToken cancellationToken) => throw NotImplemented();
         IAsyncEnumerable<SeekResult> IBoardApi.SeekAsync(SeekOptions options, CancellationToken cancellationToken) => throw NotImplemented();
 
@@ -269,6 +270,7 @@ public sealed class LichessClient : ILichessClient
         Task<bool> IBotApi.ResignAsync(string gameId, CancellationToken cancellationToken) => throw NotImplemented();
         Task<bool> IBotApi.HandleDrawAsync(string gameId, bool accept, CancellationToken cancellationToken) => throw NotImplemented();
         Task<bool> IBotApi.HandleTakebackAsync(string gameId, bool accept, CancellationToken cancellationToken) => throw NotImplemented();
+        Task<bool> IBotApi.ClaimDrawAsync(string gameId, CancellationToken cancellationToken) => throw NotImplemented();
         IAsyncEnumerable<BotUser> IBotApi.GetOnlineBotsAsync(int? count, CancellationToken cancellationToken) => throw NotImplemented();
 
         // IChallengesApi
@@ -341,6 +343,8 @@ public sealed class LichessClient : ILichessClient
         Task<string> IBroadcastsApi.ExportRoundPgnAsync(string broadcastRoundId, CancellationToken cancellationToken) => throw NotImplemented();
         Task<string> IBroadcastsApi.ExportAllRoundsPgnAsync(string broadcastTournamentId, CancellationToken cancellationToken) => throw NotImplemented();
         IAsyncEnumerable<string> IBroadcastsApi.StreamRoundPgnAsync(string broadcastRoundId, CancellationToken cancellationToken) => throw NotImplemented();
+        Task<IReadOnlyList<BroadcastPlayerEntry>> IBroadcastsApi.GetPlayersAsync(string tournamentId, CancellationToken cancellationToken) => throw NotImplemented();
+        Task<BroadcastPlayerWithGames> IBroadcastsApi.GetPlayerAsync(string tournamentId, string playerId, CancellationToken cancellationToken) => throw NotImplemented();
 
         // IAnalysisApi
         Task<CloudEvaluation?> IAnalysisApi.GetCloudEvaluationAsync(string fen, int? multiPv, string? variant, CancellationToken cancellationToken) => throw NotImplemented();
@@ -349,6 +353,7 @@ public sealed class LichessClient : ILichessClient
         Task<ExplorerResult> IOpeningExplorerApi.GetMastersAsync(string fen, ExplorerOptions? options, CancellationToken cancellationToken) => throw NotImplemented();
         Task<ExplorerResult> IOpeningExplorerApi.GetLichessAsync(string fen, ExplorerOptions? options, CancellationToken cancellationToken) => throw NotImplemented();
         Task<ExplorerResult> IOpeningExplorerApi.GetPlayerAsync(string fen, string player, ExplorerOptions? options, CancellationToken cancellationToken) => throw NotImplemented();
+        Task<string> IOpeningExplorerApi.GetMasterGamePgnAsync(string gameId, CancellationToken cancellationToken) => throw NotImplemented();
 
         // ITablebaseApi
         Task<TablebaseResult> ITablebaseApi.LookupAsync(string fen, CancellationToken cancellationToken) => throw NotImplemented();

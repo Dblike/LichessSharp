@@ -108,6 +108,15 @@ public interface IBoardApi
     Task<bool> ClaimVictoryAsync(string gameId, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Claim a draw by the 50-move rule, or by threefold repetition.
+    /// Requires OAuth scope: board:play
+    /// </summary>
+    /// <param name="gameId">The game ID.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>True if successful.</returns>
+    Task<bool> ClaimDrawAsync(string gameId, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Go berserk on a tournament game (halve your clock for +1 point).
     /// Requires OAuth scope: board:play
     /// </summary>

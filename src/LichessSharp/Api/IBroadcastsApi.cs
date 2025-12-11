@@ -172,6 +172,27 @@ public interface IBroadcastsApi
     IAsyncEnumerable<string> StreamRoundPgnAsync(string broadcastRoundId, CancellationToken cancellationToken = default);
 
     #endregion
+
+    #region Players
+
+    /// <summary>
+    /// Get the list of players of a broadcast tournament, if available.
+    /// </summary>
+    /// <param name="tournamentId">The broadcast tournament ID.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>List of players in the broadcast tournament.</returns>
+    Task<IReadOnlyList<BroadcastPlayerEntry>> GetPlayersAsync(string tournamentId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get the details of a specific player and their games from a broadcast tournament.
+    /// </summary>
+    /// <param name="tournamentId">The broadcast tournament ID.</param>
+    /// <param name="playerId">The unique player ID within the broadcast. Usually their fideId or name.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The player details with their games.</returns>
+    Task<BroadcastPlayerWithGames> GetPlayerAsync(string tournamentId, string playerId, CancellationToken cancellationToken = default);
+
+    #endregion
 }
 
 #region Options Classes
@@ -962,6 +983,252 @@ public class BroadcastPgnPushGame
     /// </summary>
     [JsonPropertyName("error")]
     public string? Error { get; init; }
+}
+
+/// <summary>
+/// A player entry in a broadcast tournament leaderboard.
+/// </summary>
+public class BroadcastPlayerEntry
+{
+    /// <summary>
+    /// Player name.
+    /// </summary>
+    [JsonPropertyName("name")]
+    public required string Name { get; init; }
+
+    /// <summary>
+    /// Chess title (GM, IM, FM, etc.).
+    /// </summary>
+    [JsonPropertyName("title")]
+    public string? Title { get; init; }
+
+    /// <summary>
+    /// Player rating.
+    /// </summary>
+    [JsonPropertyName("rating")]
+    public int? Rating { get; init; }
+
+    /// <summary>
+    /// FIDE ID.
+    /// </summary>
+    [JsonPropertyName("fideId")]
+    public int? FideId { get; init; }
+
+    /// <summary>
+    /// Federation code (ISO 3166-1 alpha-3).
+    /// </summary>
+    [JsonPropertyName("fed")]
+    public string? Federation { get; init; }
+
+    /// <summary>
+    /// Team name.
+    /// </summary>
+    [JsonPropertyName("team")]
+    public string? Team { get; init; }
+
+    /// <summary>
+    /// Player's score in the tournament.
+    /// </summary>
+    [JsonPropertyName("score")]
+    public double? Score { get; init; }
+
+    /// <summary>
+    /// Number of games played.
+    /// </summary>
+    [JsonPropertyName("played")]
+    public int? Played { get; init; }
+
+    /// <summary>
+    /// Rating difference from the tournament.
+    /// </summary>
+    [JsonPropertyName("ratingDiff")]
+    public int? RatingDiff { get; init; }
+
+    /// <summary>
+    /// Performance rating.
+    /// </summary>
+    [JsonPropertyName("performance")]
+    public int? Performance { get; init; }
+
+    /// <summary>
+    /// Tiebreak values.
+    /// </summary>
+    [JsonPropertyName("tiebreaks")]
+    public IReadOnlyList<BroadcastPlayerTiebreak>? Tiebreaks { get; init; }
+
+    /// <summary>
+    /// Player's rank in the tournament.
+    /// </summary>
+    [JsonPropertyName("rank")]
+    public int? Rank { get; init; }
+}
+
+/// <summary>
+/// Tiebreak value for a player.
+/// </summary>
+public class BroadcastPlayerTiebreak
+{
+    /// <summary>
+    /// Tiebreak code.
+    /// </summary>
+    [JsonPropertyName("extendedCode")]
+    public string? ExtendedCode { get; init; }
+
+    /// <summary>
+    /// Description of the tiebreak.
+    /// </summary>
+    [JsonPropertyName("description")]
+    public string? Description { get; init; }
+
+    /// <summary>
+    /// Tiebreak points.
+    /// </summary>
+    [JsonPropertyName("points")]
+    public double? Points { get; init; }
+}
+
+/// <summary>
+/// A player entry with FIDE details and games.
+/// </summary>
+public class BroadcastPlayerWithGames : BroadcastPlayerEntry
+{
+    /// <summary>
+    /// FIDE details for the player.
+    /// </summary>
+    [JsonPropertyName("fide")]
+    public BroadcastPlayerFide? Fide { get; init; }
+
+    /// <summary>
+    /// Games played by this player in the broadcast.
+    /// </summary>
+    [JsonPropertyName("games")]
+    public IReadOnlyList<BroadcastPlayerGame>? Games { get; init; }
+}
+
+/// <summary>
+/// FIDE details for a broadcast player.
+/// </summary>
+public class BroadcastPlayerFide
+{
+    /// <summary>
+    /// Year of birth.
+    /// </summary>
+    [JsonPropertyName("year")]
+    public int? Year { get; init; }
+
+    /// <summary>
+    /// FIDE ratings by time control.
+    /// </summary>
+    [JsonPropertyName("ratings")]
+    public BroadcastPlayerFideRatings? Ratings { get; init; }
+}
+
+/// <summary>
+/// FIDE ratings by time control.
+/// </summary>
+public class BroadcastPlayerFideRatings
+{
+    /// <summary>
+    /// Standard (classical) rating.
+    /// </summary>
+    [JsonPropertyName("standard")]
+    public int? Standard { get; init; }
+
+    /// <summary>
+    /// Rapid rating.
+    /// </summary>
+    [JsonPropertyName("rapid")]
+    public int? Rapid { get; init; }
+
+    /// <summary>
+    /// Blitz rating.
+    /// </summary>
+    [JsonPropertyName("blitz")]
+    public int? Blitz { get; init; }
+}
+
+/// <summary>
+/// A game played by a player in a broadcast.
+/// </summary>
+public class BroadcastPlayerGame
+{
+    /// <summary>
+    /// Round ID.
+    /// </summary>
+    [JsonPropertyName("round")]
+    public string? Round { get; init; }
+
+    /// <summary>
+    /// Game/chapter ID.
+    /// </summary>
+    [JsonPropertyName("id")]
+    public required string Id { get; init; }
+
+    /// <summary>
+    /// Opponent information.
+    /// </summary>
+    [JsonPropertyName("opponent")]
+    public BroadcastPlayerOpponent? Opponent { get; init; }
+
+    /// <summary>
+    /// Color the player had in this game.
+    /// </summary>
+    [JsonPropertyName("color")]
+    public string? Color { get; init; }
+
+    /// <summary>
+    /// Points earned ("1", "1/2", "0").
+    /// </summary>
+    [JsonPropertyName("points")]
+    public string? Points { get; init; }
+
+    /// <summary>
+    /// Custom points (for special scoring systems).
+    /// </summary>
+    [JsonPropertyName("customPoints")]
+    public string? CustomPoints { get; init; }
+
+    /// <summary>
+    /// Rating change from this game.
+    /// </summary>
+    [JsonPropertyName("ratingDiff")]
+    public int? RatingDiff { get; init; }
+}
+
+/// <summary>
+/// Opponent information in a broadcast player game.
+/// </summary>
+public class BroadcastPlayerOpponent
+{
+    /// <summary>
+    /// Opponent name.
+    /// </summary>
+    [JsonPropertyName("name")]
+    public required string Name { get; init; }
+
+    /// <summary>
+    /// Chess title (GM, IM, FM, etc.).
+    /// </summary>
+    [JsonPropertyName("title")]
+    public string? Title { get; init; }
+
+    /// <summary>
+    /// Opponent rating.
+    /// </summary>
+    [JsonPropertyName("rating")]
+    public int? Rating { get; init; }
+
+    /// <summary>
+    /// FIDE ID.
+    /// </summary>
+    [JsonPropertyName("fideId")]
+    public int? FideId { get; init; }
+
+    /// <summary>
+    /// Federation code (ISO 3166-1 alpha-3).
+    /// </summary>
+    [JsonPropertyName("fed")]
+    public string? Federation { get; init; }
 }
 
 #endregion

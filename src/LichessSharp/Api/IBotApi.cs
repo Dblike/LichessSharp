@@ -107,6 +107,15 @@ public interface IBotApi
     Task<bool> HandleTakebackAsync(string gameId, bool accept, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Claim a draw by the 50-move rule, or by threefold repetition.
+    /// Requires OAuth scope: bot:play
+    /// </summary>
+    /// <param name="gameId">The game ID.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>True if successful.</returns>
+    Task<bool> ClaimDrawAsync(string gameId, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Get online bots.
     /// </summary>
     /// <param name="count">Maximum number of bots to fetch (default: 50, max: 300).</param>

@@ -30,6 +30,14 @@ public interface IOpeningExplorerApi
     /// Get opening explorer data for a player.
     /// </summary>
     Task<ExplorerResult> GetPlayerAsync(string fen, string player, ExplorerOptions? options = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get a specific game from the masters database as PGN.
+    /// </summary>
+    /// <param name="gameId">The game ID from the masters database.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>PGN string of the game.</returns>
+    Task<string> GetMasterGamePgnAsync(string gameId, CancellationToken cancellationToken = default);
 }
 
 /// <summary>

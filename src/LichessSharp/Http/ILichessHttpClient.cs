@@ -68,6 +68,11 @@ internal interface ILichessHttpClient
     Task<T> GetAbsoluteNdjsonLastAsync<T>(Uri absoluteUrl, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Sends a GET request to a fully qualified URL with a custom Accept header and returns the raw response content as a string.
+    /// </summary>
+    Task<string> GetAbsoluteStringAsync(Uri absoluteUrl, string acceptHeader, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Streams newline-delimited JSON from the specified endpoint.
     /// </summary>
     IAsyncEnumerable<T> StreamNdjsonAsync<T>(string endpoint, CancellationToken cancellationToken = default);

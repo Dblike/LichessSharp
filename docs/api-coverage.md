@@ -6,7 +6,7 @@ This document tracks the implementation status of each Lichess API endpoint.
 
 | Status | Count | APIs |
 |--------|-------|------|
-| **Implemented** | 21 APIs (160 endpoints) | Account, Users, Relations, Games, TV, Puzzles, Analysis, Opening Explorer, Tablebase, Challenges, Board, Bot, Teams, Arena Tournaments, Swiss Tournaments, Simuls, Studies, Broadcasts, Bulk Pairings, Messaging, FIDE |
+| **Implemented** | 21 APIs (165 endpoints) | Account, Users, Relations, Games, TV, Puzzles, Analysis, Opening Explorer, Tablebase, Challenges, Board, Bot, Teams, Arena Tournaments, Swiss Tournaments, Simuls, Studies, Broadcasts, Bulk Pairings, Messaging, FIDE |
 | **Planned** | 0 APIs | - |
 
 ## Legend
@@ -129,6 +129,7 @@ This document tracks the implementation status of each Lichess API endpoint.
 | Handle draw | Implemented | `Board.HandleDrawAsync()` |
 | Handle takeback | Implemented | `Board.HandleTakebackAsync()` |
 | Claim victory | Implemented | `Board.ClaimVictoryAsync()` |
+| Claim draw | Implemented | `Board.ClaimDrawAsync()` |
 | Berserk a game | Implemented | `Board.BerserkAsync()` |
 | Create a seek | Implemented | `Board.SeekAsync()` |
 
@@ -146,6 +147,7 @@ This document tracks the implementation status of each Lichess API endpoint.
 | Resign game | Implemented | `Bot.ResignAsync()` |
 | Handle draw | Implemented | `Bot.HandleDrawAsync()` |
 | Handle takeback | Implemented | `Bot.HandleTakebackAsync()` |
+| Claim draw | Implemented | `Bot.ClaimDrawAsync()` |
 | Get online bots | Implemented | `Bot.GetOnlineBotsAsync()` |
 
 ## Challenges API
@@ -176,6 +178,7 @@ This document tracks the implementation status of each Lichess API endpoint.
 | Masters database | Implemented | `OpeningExplorer.GetMastersAsync()` |
 | Lichess database | Implemented | `OpeningExplorer.GetLichessAsync()` |
 | Player database | Implemented | `OpeningExplorer.GetPlayerAsync()` |
+| Get master game PGN | Implemented | `OpeningExplorer.GetMasterGamePgnAsync()` |
 
 ## Tablebase API
 
@@ -283,6 +286,8 @@ This document tracks the implementation status of each Lichess API endpoint.
 | Export round PGN | Implemented | `Broadcasts.ExportRoundPgnAsync()` |
 | Export all rounds PGN | Implemented | `Broadcasts.ExportAllRoundsPgnAsync()` |
 | Stream round PGN | Implemented | `Broadcasts.StreamRoundPgnAsync()` |
+| Get players | Implemented | `Broadcasts.GetPlayersAsync()` |
+| Get player | Implemented | `Broadcasts.GetPlayerAsync()` |
 
 ---
 

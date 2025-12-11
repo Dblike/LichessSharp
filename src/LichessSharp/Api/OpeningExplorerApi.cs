@@ -51,6 +51,15 @@ internal sealed class OpeningExplorerApi(ILichessHttpClient httpClient, Uri expl
         return await _httpClient.GetAbsoluteNdjsonLastAsync<ExplorerResult>(url, cancellationToken).ConfigureAwait(false);
     }
 
+    /// <inheritdoc />
+    public async Task<string> GetMasterGamePgnAsync(string gameId, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(gameId);
+
+        var url = new Uri($"{_baseAddress.ToString().TrimEnd('/')}/masters/pgn/{Uri.EscapeDataString(gameId)}");
+        return await _httpClient.GetAbsoluteStringAsync(url, "application/x-chess-pgn", cancellationToken).ConfigureAwait(false);
+    }
+
     private Uri BuildMastersUrl(string fen, ExplorerOptions? options)
     {
         var sb = new StringBuilder();

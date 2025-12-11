@@ -237,6 +237,29 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
 
     #endregion
 
+    #region Players
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<BroadcastPlayerEntry>> GetPlayersAsync(string tournamentId, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(tournamentId);
+
+        var endpoint = $"/broadcast/{Uri.EscapeDataString(tournamentId)}/players";
+        return await _httpClient.GetAsync<List<BroadcastPlayerEntry>>(endpoint, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<BroadcastPlayerWithGames> GetPlayerAsync(string tournamentId, string playerId, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(tournamentId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(playerId);
+
+        var endpoint = $"/broadcast/{Uri.EscapeDataString(tournamentId)}/players/{Uri.EscapeDataString(playerId)}";
+        return await _httpClient.GetAsync<BroadcastPlayerWithGames>(endpoint, cancellationToken).ConfigureAwait(false);
+    }
+
+    #endregion
+
     #region Helper Methods
 
     private static List<KeyValuePair<string, string>> BuildTournamentParameters(BroadcastTournamentOptions options)

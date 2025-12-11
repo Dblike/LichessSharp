@@ -328,6 +328,35 @@ public class BotApiTests
 
     #endregion
 
+    #region ClaimDrawAsync Tests
+
+    [Fact]
+    public async Task ClaimDrawAsync_CallsCorrectEndpoint()
+    {
+        // Arrange
+        var gameId = "game123";
+        _httpClientMock
+            .Setup(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/claim-draw", null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new OkResponse { Ok = true });
+
+        // Act
+        var result = await _botApi.ClaimDrawAsync(gameId);
+
+        // Assert
+        result.Should().BeTrue();
+        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/claim-draw", null, It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task ClaimDrawAsync_WithNullGameId_ThrowsArgumentException()
+    {
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await _botApi.ClaimDrawAsync(null!));
+    }
+
+    #endregion
+
     #region GetOnlineBotsAsync Tests
 
     [Fact]

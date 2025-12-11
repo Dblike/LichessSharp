@@ -654,6 +654,91 @@ public class BroadcastsApiTests
 
     #endregion
 
+    #region GetPlayersAsync Tests
+
+    [Fact]
+    public async Task GetPlayersAsync_CallsCorrectEndpoint()
+    {
+        // Arrange
+        var tournamentId = "tour123";
+        var players = new List<BroadcastPlayerEntry>
+        {
+            new() { Name = "Player 1", Rating = 2700 },
+            new() { Name = "Player 2", Rating = 2650 }
+        };
+        _httpClientMock
+            .Setup(x => x.GetAsync<List<BroadcastPlayerEntry>>($"/broadcast/{tournamentId}/players", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(players);
+
+        // Act
+        var result = await _broadcastsApi.GetPlayersAsync(tournamentId);
+
+        // Assert
+        result.Should().HaveCount(2);
+        _httpClientMock.Verify(x => x.GetAsync<List<BroadcastPlayerEntry>>($"/broadcast/{tournamentId}/players", It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetPlayersAsync_WithNullTournamentId_ThrowsArgumentException()
+    {
+        // Act
+        var act = () => _broadcastsApi.GetPlayersAsync(null!);
+
+        // Assert
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    #endregion
+
+    #region GetPlayerAsync Tests
+
+    [Fact]
+    public async Task GetPlayerAsync_CallsCorrectEndpoint()
+    {
+        // Arrange
+        var tournamentId = "tour123";
+        var playerId = "12345";
+        var player = new BroadcastPlayerWithGames
+        {
+            Name = "Test Player",
+            Rating = 2700,
+            Games = new List<BroadcastPlayerGame>()
+        };
+        _httpClientMock
+            .Setup(x => x.GetAsync<BroadcastPlayerWithGames>($"/broadcast/{tournamentId}/players/{playerId}", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(player);
+
+        // Act
+        var result = await _broadcastsApi.GetPlayerAsync(tournamentId, playerId);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Name.Should().Be("Test Player");
+        _httpClientMock.Verify(x => x.GetAsync<BroadcastPlayerWithGames>($"/broadcast/{tournamentId}/players/{playerId}", It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetPlayerAsync_WithNullTournamentId_ThrowsArgumentException()
+    {
+        // Act
+        var act = () => _broadcastsApi.GetPlayerAsync(null!, "player1");
+
+        // Assert
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    [Fact]
+    public async Task GetPlayerAsync_WithNullPlayerId_ThrowsArgumentException()
+    {
+        // Act
+        var act = () => _broadcastsApi.GetPlayerAsync("tour123", null!);
+
+        // Assert
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    #endregion
+
     #region StreamRoundPgnAsync Tests
 
     [Fact]

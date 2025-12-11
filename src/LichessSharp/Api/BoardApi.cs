@@ -132,6 +132,16 @@ internal sealed class BoardApi(ILichessHttpClient httpClient) : IBoardApi
     }
 
     /// <inheritdoc />
+    public async Task<bool> ClaimDrawAsync(string gameId, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(gameId);
+
+        var endpoint = $"/api/board/game/{Uri.EscapeDataString(gameId)}/claim-draw";
+        await _httpClient.PostAsync<OkResponse>(endpoint, null, cancellationToken).ConfigureAwait(false);
+        return true;
+    }
+
+    /// <inheritdoc />
     public async Task<bool> BerserkAsync(string gameId, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(gameId);

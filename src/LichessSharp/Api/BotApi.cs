@@ -129,6 +129,16 @@ internal sealed class BotApi(ILichessHttpClient httpClient) : IBotApi
     }
 
     /// <inheritdoc />
+    public async Task<bool> ClaimDrawAsync(string gameId, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(gameId);
+
+        var endpoint = $"/api/bot/game/{Uri.EscapeDataString(gameId)}/claim-draw";
+        await _httpClient.PostAsync<OkResponse>(endpoint, null, cancellationToken).ConfigureAwait(false);
+        return true;
+    }
+
+    /// <inheritdoc />
     public async IAsyncEnumerable<BotUser> GetOnlineBotsAsync(int? count = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         if (count is < 1 or > 300)

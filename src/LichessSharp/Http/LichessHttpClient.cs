@@ -150,6 +150,17 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         return lastItem;
     }
 
+    public async Task<string> GetAbsoluteStringAsync(Uri absoluteUrl, string acceptHeader, CancellationToken cancellationToken = default)
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Get, absoluteUrl);
+        request.Headers.Accept.Clear();
+        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptHeader));
+
+        var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        await EnsureSuccessStatusCodeAsync(response, cancellationToken).ConfigureAwait(false);
+        return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     public async IAsyncEnumerable<T> StreamNdjsonAsync<T>(string endpoint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         await foreach (var item in StreamNdjsonCoreAsync<T>(HttpMethod.Get, endpoint, null, cancellationToken).ConfigureAwait(false))

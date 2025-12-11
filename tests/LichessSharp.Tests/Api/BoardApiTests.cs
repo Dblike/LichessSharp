@@ -329,6 +329,35 @@ public class BoardApiTests
 
     #endregion
 
+    #region ClaimDrawAsync Tests
+
+    [Fact]
+    public async Task ClaimDrawAsync_CallsCorrectEndpoint()
+    {
+        // Arrange
+        var gameId = "game123";
+        _httpClientMock
+            .Setup(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/claim-draw", null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new OkResponse { Ok = true });
+
+        // Act
+        var result = await _boardApi.ClaimDrawAsync(gameId);
+
+        // Assert
+        result.Should().BeTrue();
+        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/claim-draw", null, It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task ClaimDrawAsync_WithNullGameId_ThrowsArgumentException()
+    {
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await _boardApi.ClaimDrawAsync(null!));
+    }
+
+    #endregion
+
     #region BerserkAsync Tests
 
     [Fact]
