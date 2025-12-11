@@ -1,5 +1,6 @@
 using FluentAssertions;
 using LichessSharp.Api;
+using LichessSharp.Api.Contracts;
 using LichessSharp.Exceptions;
 using LichessSharp.Http;
 using Moq;

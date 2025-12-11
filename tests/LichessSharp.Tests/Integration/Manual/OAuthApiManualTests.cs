@@ -1,5 +1,4 @@
 using FluentAssertions;
-using LichessSharp.Api;
 using Xunit;
 
 namespace LichessSharp.Tests.Integration.Manual;

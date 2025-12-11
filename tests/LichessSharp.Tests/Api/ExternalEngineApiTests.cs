@@ -1,6 +1,7 @@
 using FluentAssertions;
 
 using LichessSharp.Api;
+using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
 
 using Moq;
@@ -188,7 +189,7 @@ public class ExternalEngineApiTests
 
     #endregion
 
-    #region GetAsync Tests
+    #region ExportAsync Tests
 
     [Fact]
     public async Task GetAsync_WithValidId_CallsCorrectEndpoint()

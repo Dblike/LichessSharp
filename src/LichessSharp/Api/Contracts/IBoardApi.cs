@@ -1,7 +1,6 @@
-using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
-namespace LichessSharp.Api;
+namespace LichessSharp.Api.Contracts;
 
 /// <summary>
 /// Board API - Play on Lichess with physical boards and third-party clients.
@@ -18,6 +17,16 @@ public interface IBoardApi
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Stream of account events.</returns>
     IAsyncEnumerable<BoardAccountEvent> StreamEventsAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Create a public seek to find a random opponent.
+    /// Stream the game start event when a game is found.
+    /// Requires OAuth scope: board:play
+    /// </summary>
+    /// <param name="options">Seek options.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Stream that yields the game ID when matched.</returns>
+    IAsyncEnumerable<SeekResult> SeekAsync(SeekOptions options, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Stream the full state of a game being played.
@@ -41,15 +50,6 @@ public interface IBoardApi
     Task<bool> MakeMoveAsync(string gameId, string move, bool? offeringDraw = null, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Get the chat messages of a game.
-    /// Requires OAuth scope: board:play
-    /// </summary>
-    /// <param name="gameId">The game ID.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>List of chat messages.</returns>
-    Task<IReadOnlyList<ChatMessage>> GetChatAsync(string gameId, CancellationToken cancellationToken = default);
-
-    /// <summary>
     /// Write a message in the game chat.
     /// Requires OAuth scope: board:play
     /// </summary>
@@ -59,6 +59,15 @@ public interface IBoardApi
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>True if successful.</returns>
     Task<bool> WriteChatAsync(string gameId, ChatRoom room, string text, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get the chat messages of a game.
+    /// Requires OAuth scope: board:play
+    /// </summary>
+    /// <param name="gameId">The game ID.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>List of chat messages.</returns>
+    Task<IReadOnlyList<ChatMessage>> GetChatAsync(string gameId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Abort a game.
@@ -124,16 +133,6 @@ public interface IBoardApi
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>True if successful.</returns>
     Task<bool> BerserkAsync(string gameId, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Create a public seek to find a random opponent.
-    /// Stream the game start event when a game is found.
-    /// Requires OAuth scope: board:play
-    /// </summary>
-    /// <param name="options">Seek options.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>Stream that yields the game ID when matched.</returns>
-    IAsyncEnumerable<SeekResult> SeekAsync(SeekOptions options, CancellationToken cancellationToken = default);
 }
 
 #region Enums

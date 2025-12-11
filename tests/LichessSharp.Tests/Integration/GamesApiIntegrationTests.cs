@@ -17,13 +17,13 @@ public class GamesApiIntegrationTests : IntegrationTestBase
     private const string GameId2 = "TJxUmbWK";
     private const string ThibaultUsername = "thibault";
 
-    #region GetAsync Tests
+    #region ExportAsync Tests
 
     [Fact]
     public async Task GetAsync_WithValidGameId_ReturnsGame()
     {
         // Act
-        var game = await Client.Games.GetAsync(GameId1);
+        var game = await Client.Games.ExportAsync(GameId1);
 
         // Assert
         game.Should().NotBeNull();
@@ -42,7 +42,7 @@ public class GamesApiIntegrationTests : IntegrationTestBase
         };
 
         // Act
-        var game = await Client.Games.GetAsync(GameId1, options);
+        var game = await Client.Games.ExportAsync(GameId1, options);
 
         // Assert
         game.Should().NotBeNull();
@@ -216,7 +216,7 @@ public class GamesApiIntegrationTests : IntegrationTestBase
 
     #endregion
 
-    #region StreamGamesByIdsAsync Tests
+    #region StreamByIdsAsync Tests
 
     [Fact]
     public async Task StreamGamesByIdsAsync_WithKnownGameIds_ReturnsEvents()
@@ -231,7 +231,7 @@ public class GamesApiIntegrationTests : IntegrationTestBase
 
         try
         {
-            await foreach (var evt in Client.Games.StreamGamesByIdsAsync(streamId, gameIds).WithCancellation(cts.Token))
+            await foreach (var evt in Client.Games.StreamByIdsAsync(streamId, gameIds).WithCancellation(cts.Token))
             {
                 events.Add(evt);
                 // Collect events for known games then break

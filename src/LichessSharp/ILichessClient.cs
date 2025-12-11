@@ -1,4 +1,4 @@
-using LichessSharp.Api;
+using LichessSharp.Api.Contracts;
 
 namespace LichessSharp;
 

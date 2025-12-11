@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 
+using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
 using LichessSharp.Models;
 
@@ -241,7 +242,7 @@ internal sealed class ArenaTournamentsApi(ILichessHttpClient httpClient) : IAren
     }
 
     /// <inheritdoc />
-    public async Task<bool> WithdrawAsync(string id, CancellationToken cancellationToken = default)
+    public async Task<bool> PauseOrWithdrawAsync(string id, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
@@ -289,15 +290,6 @@ internal sealed class ArenaTournamentsApi(ILichessHttpClient httpClient) : IAren
         var sb = new StringBuilder($"/api/tournament/{Uri.EscapeDataString(id)}/games");
         var hasQuery = false;
 
-        void AppendParam(string name, string value)
-        {
-            sb.Append(hasQuery ? '&' : '?');
-            sb.Append(name);
-            sb.Append('=');
-            sb.Append(value);
-            hasQuery = true;
-        }
-
         if (options != null)
         {
             if (!string.IsNullOrEmpty(options.Player))
@@ -339,6 +331,17 @@ internal sealed class ArenaTournamentsApi(ILichessHttpClient httpClient) : IAren
         await foreach (var game in _httpClient.StreamNdjsonAsync<GameJson>(sb.ToString(), cancellationToken).ConfigureAwait(false))
         {
             yield return game;
+        }
+
+        yield break;
+
+        void AppendParam(string name, string value)
+        {
+            sb.Append(hasQuery ? '&' : '?');
+            sb.Append(name);
+            sb.Append('=');
+            sb.Append(value);
+            hasQuery = true;
         }
     }
 

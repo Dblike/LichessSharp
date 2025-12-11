@@ -1,5 +1,7 @@
 using System.Runtime.CompilerServices;
 using System.Text;
+
+using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
 using LichessSharp.Models;
 
@@ -170,10 +172,9 @@ internal sealed class TeamsApi(ILichessHttpClient httpClient) : ITeamsApi
         ArgumentException.ThrowIfNullOrWhiteSpace(message);
 
         var endpoint = $"/team/{Uri.EscapeDataString(teamId)}/pm-all";
-        var content = new FormUrlEncodedContent(new[]
-        {
+        var content = new FormUrlEncodedContent([
             new KeyValuePair<string, string>("message", message)
-        });
+        ]);
 
         await _httpClient.PostAsync<OkResponse>(endpoint, content, cancellationToken).ConfigureAwait(false);
         return true;

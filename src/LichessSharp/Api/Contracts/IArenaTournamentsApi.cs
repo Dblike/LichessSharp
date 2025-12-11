@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 using LichessSharp.Models;
 using LichessSharp.Serialization.Converters;
 
-namespace LichessSharp.Api;
+namespace LichessSharp.Api.Contracts;
 
 /// <summary>
 /// Arena Tournaments API - Access Arena tournaments played on Lichess.
@@ -20,6 +20,14 @@ public interface IArenaTournamentsApi
     Task<ArenaTournamentList> GetCurrentAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Create a new Arena tournament.
+    /// </summary>
+    /// <param name="options">Tournament creation options.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The created tournament.</returns>
+    Task<ArenaTournament> CreateAsync(ArenaCreateOptions options, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Get info about an Arena tournament.
     /// </summary>
     /// <param name="id">The tournament ID.</param>
@@ -27,14 +35,6 @@ public interface IArenaTournamentsApi
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The tournament info.</returns>
     Task<ArenaTournament> GetAsync(string id, int page = 1, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Create a new Arena tournament.
-    /// </summary>
-    /// <param name="options">Tournament creation options.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>The created tournament.</returns>
-    Task<ArenaTournament> CreateAsync(ArenaCreateOptions options, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Update an existing Arena tournament.
@@ -65,7 +65,7 @@ public interface IArenaTournamentsApi
     /// <param name="id">The tournament ID.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>True if successfully withdrawn.</returns>
-    Task<bool> WithdrawAsync(string id, CancellationToken cancellationToken = default);
+    Task<bool> PauseOrWithdrawAsync(string id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Terminate an Arena tournament.
@@ -590,7 +590,7 @@ public class ArenaTournamentSummary
 }
 
 /// <summary>
-/// Full Arena tournament info (returned from GetAsync).
+/// Full Arena tournament info (returned from ExportAsync).
 /// </summary>
 public class ArenaTournament : ArenaTournamentSummary
 {

@@ -1,5 +1,4 @@
 using FluentAssertions;
-using LichessSharp.Api;
 using LichessSharp.Exceptions;
 using Xunit;
 
@@ -106,7 +105,7 @@ public class BulkPairingsApiAuthenticatedTests : AuthenticatedTestBase
         const string nonexistentId = "nonexistent_bulk_pairing_id_12345";
 
         // Act
-        var act = async () => await Client.BulkPairings.ExportGamesPgnAsync(nonexistentId);
+        var act = async () => await Client.BulkPairings.ExportGamesAsync(nonexistentId);
 
         // Assert
         await act.Should().ThrowAsync<LichessException>();

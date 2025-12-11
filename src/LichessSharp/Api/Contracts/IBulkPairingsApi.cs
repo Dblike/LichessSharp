@@ -1,7 +1,8 @@
 using System.Text.Json.Serialization;
+
 using LichessSharp.Models;
 
-namespace LichessSharp.Api;
+namespace LichessSharp.Api.Contracts;
 
 /// <summary>
 /// Bulk Pairings API - Create many games for other players.
@@ -16,15 +17,6 @@ public interface IBulkPairingsApi
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>List of bulk pairings.</returns>
     Task<IReadOnlyList<BulkPairing>> GetAllAsync(CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Get a single bulk pairing by its ID.
-    /// Requires OAuth with challenge:bulk scope.
-    /// </summary>
-    /// <param name="id">The ID of the bulk pairing.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>The bulk pairing.</returns>
-    Task<BulkPairing> GetAsync(string id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Schedule many games at once, up to 24h in advance.
@@ -48,6 +40,15 @@ public interface IBulkPairingsApi
     Task<bool> StartClocksAsync(string id, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Get a single bulk pairing by its ID.
+    /// Requires OAuth with challenge:bulk scope.
+    /// </summary>
+    /// <param name="id">The ID of the bulk pairing.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The bulk pairing.</returns>
+    Task<BulkPairing> GetAsync(string id, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Cancel and delete a bulk pairing that is scheduled in the future.
     /// If the games have already been created, then this does nothing.
     /// Requires OAuth with challenge:bulk scope.
@@ -65,7 +66,7 @@ public interface IBulkPairingsApi
     /// <param name="options">Export options.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>PGN content as a string.</returns>
-    Task<string> ExportGamesPgnAsync(string id, BulkPairingExportOptions? options = null, CancellationToken cancellationToken = default);
+    Task<string> ExportGamesAsync(string id, BulkPairingExportOptions? options = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Stream games of a bulk pairing in NDJSON format.

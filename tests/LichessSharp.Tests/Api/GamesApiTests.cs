@@ -1,4 +1,3 @@
-using System.Net.Http;
 using FluentAssertions;
 using LichessSharp.Api;
 using LichessSharp.Api.Options;
@@ -36,7 +35,7 @@ public class GamesApiTests
 
     #endregion
 
-    #region GetAsync Tests
+    #region ExportAsync Tests
 
     [Fact]
     public async Task GetAsync_WithGameId_CallsCorrectEndpoint()
@@ -49,7 +48,7 @@ public class GamesApiTests
             .ReturnsAsync(expectedGame);
 
         // Act
-        var result = await _gamesApi.GetAsync(gameId);
+        var result = await _gamesApi.ExportAsync(gameId);
 
         // Assert
         result.Should().NotBeNull();
@@ -78,7 +77,7 @@ public class GamesApiTests
             .ReturnsAsync(expectedGame);
 
         // Act
-        var result = await _gamesApi.GetAsync(gameId, options);
+        var result = await _gamesApi.ExportAsync(gameId, options);
 
         // Assert
         result.Should().NotBeNull();
@@ -88,7 +87,7 @@ public class GamesApiTests
     public async Task GetAsync_WithNullGameId_ThrowsArgumentException()
     {
         // Act
-        var act = () => _gamesApi.GetAsync(null!);
+        var act = () => _gamesApi.ExportAsync(null!);
 
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
@@ -98,7 +97,7 @@ public class GamesApiTests
     public async Task GetAsync_WithEmptyGameId_ThrowsArgumentException()
     {
         // Act
-        var act = () => _gamesApi.GetAsync("");
+        var act = () => _gamesApi.ExportAsync("");
 
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
@@ -115,7 +114,7 @@ public class GamesApiTests
             .ReturnsAsync(expectedGame);
 
         // Act
-        await _gamesApi.GetAsync(gameId);
+        await _gamesApi.ExportAsync(gameId);
 
         // Assert
         _httpClientMock.Verify(x => x.GetAsync<GameJson>(It.Is<string>(s => s.Contains("game%20id")), It.IsAny<CancellationToken>()), Times.Once);
@@ -155,7 +154,7 @@ public class GamesApiTests
 
     #endregion
 
-    #region GetCurrentGameAsync Tests
+    #region GetCurrentGameByUserAsync Tests
 
     [Fact]
     public async Task GetCurrentGameAsync_WithUsername_CallsCorrectEndpoint()
@@ -168,7 +167,7 @@ public class GamesApiTests
             .ReturnsAsync(expectedGame);
 
         // Act
-        var result = await _gamesApi.GetCurrentGameAsync(username);
+        var result = await _gamesApi.GetCurrentGameByUserAsync(username);
 
         // Assert
         result.Should().NotBeNull();
@@ -179,7 +178,7 @@ public class GamesApiTests
     public async Task GetCurrentGameAsync_WithNullUsername_ThrowsArgumentException()
     {
         // Act
-        var act = () => _gamesApi.GetCurrentGameAsync(null!);
+        var act = () => _gamesApi.GetCurrentGameByUserAsync(null!);
 
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
@@ -196,7 +195,7 @@ public class GamesApiTests
             .ReturnsAsync(expectedGame);
 
         // Act
-        await _gamesApi.GetCurrentGameAsync(username);
+        await _gamesApi.GetCurrentGameByUserAsync(username);
 
         // Assert
         _httpClientMock.Verify(x => x.GetAsync<GameJson>(It.Is<string>(s => s.Contains("user%20name")), It.IsAny<CancellationToken>()), Times.Once);
@@ -363,7 +362,7 @@ public class GamesApiTests
 
     #endregion
 
-    #region StreamGamesByUsersAsync Tests
+    #region StreamByUsersAsync Tests
 
     [Fact]
     public async Task StreamGamesByUsersAsync_WithUserIds_CallsCorrectEndpoint()
@@ -381,7 +380,7 @@ public class GamesApiTests
 
         // Act
         var results = new List<GameJson>();
-        await foreach (var game in _gamesApi.StreamGamesByUsersAsync(userIds))
+        await foreach (var game in _gamesApi.StreamByUsersAsync(userIds))
         {
             results.Add(game);
         }
@@ -405,7 +404,7 @@ public class GamesApiTests
             .Returns(ToAsyncEnumerable(games));
 
         // Act
-        await foreach (var _ in _gamesApi.StreamGamesByUsersAsync(userIds, withCurrentGames: true))
+        await foreach (var _ in _gamesApi.StreamByUsersAsync(userIds, withCurrentGames: true))
         {
         }
 
@@ -424,7 +423,7 @@ public class GamesApiTests
 
         // Act
         var results = new List<GameJson>();
-        await foreach (var game in _gamesApi.StreamGamesByUsersAsync(userIds))
+        await foreach (var game in _gamesApi.StreamByUsersAsync(userIds))
         {
             results.Add(game);
         }
@@ -442,7 +441,7 @@ public class GamesApiTests
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentException>(async () =>
         {
-            await foreach (var _ in _gamesApi.StreamGamesByUsersAsync(userIds))
+            await foreach (var _ in _gamesApi.StreamByUsersAsync(userIds))
             {
             }
         });
@@ -535,7 +534,7 @@ public class GamesApiTests
 
     #endregion
 
-    #region ImportPgnAsync Tests
+    #region ImportAsync Tests
 
     [Fact]
     public async Task ImportPgnAsync_WithPgn_CallsCorrectEndpoint()
@@ -549,7 +548,7 @@ public class GamesApiTests
             .ReturnsAsync(expectedResponse);
 
         // Act
-        var result = await _gamesApi.ImportPgnAsync(pgn);
+        var result = await _gamesApi.ImportAsync(pgn);
 
         // Assert
         result.Should().NotBeNull();
@@ -561,7 +560,7 @@ public class GamesApiTests
     public async Task ImportPgnAsync_WithNullPgn_ThrowsArgumentException()
     {
         // Act
-        var act = () => _gamesApi.ImportPgnAsync(null!);
+        var act = () => _gamesApi.ImportAsync(null!);
 
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
@@ -571,7 +570,7 @@ public class GamesApiTests
     public async Task ImportPgnAsync_WithEmptyPgn_ThrowsArgumentException()
     {
         // Act
-        var act = () => _gamesApi.ImportPgnAsync("");
+        var act = () => _gamesApi.ImportAsync("");
 
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
@@ -592,7 +591,7 @@ public class GamesApiTests
             .ReturnsAsync(expectedGame);
 
         // Act
-        await _gamesApi.GetAsync("game1", cancellationToken: cts.Token);
+        await _gamesApi.ExportAsync("game1", cancellationToken: cts.Token);
 
         // Assert
         _httpClientMock.Verify(x => x.GetAsync<GameJson>(It.IsAny<string>(), cts.Token), Times.Once);
@@ -654,7 +653,7 @@ public class GamesApiTests
             .ReturnsAsync(expectedGame);
 
         // Act
-        await _gamesApi.GetAsync(gameId, options);
+        await _gamesApi.ExportAsync(gameId, options);
 
         // Assert
         _httpClientMock.Verify(x => x.GetAsync<GameJson>(It.Is<string>(s =>
@@ -758,7 +757,7 @@ public class GamesApiTests
 
     #endregion
 
-    #region GetImportedGamesPgnAsync Tests
+    #region ExportImportedGamesAsync Tests
 
     [Fact]
     public async Task GetImportedGamesPgnAsync_CallsCorrectEndpoint()
@@ -770,7 +769,7 @@ public class GamesApiTests
             .ReturnsAsync(expectedPgn);
 
         // Act
-        var result = await _gamesApi.GetImportedGamesPgnAsync();
+        var result = await _gamesApi.ExportImportedGamesAsync();
 
         // Assert
         result.Should().Be(expectedPgn);
@@ -787,7 +786,7 @@ public class GamesApiTests
             .ReturnsAsync("");
 
         // Act
-        await _gamesApi.GetImportedGamesPgnAsync(cts.Token);
+        await _gamesApi.ExportImportedGamesAsync(cts.Token);
 
         // Assert
         _httpClientMock.Verify(x => x.GetStringWithAcceptAsync(It.IsAny<string>(), It.IsAny<string>(), cts.Token), Times.Once);
@@ -959,7 +958,7 @@ public class GamesApiTests
 
     #endregion
 
-    #region StreamGamesByIdsAsync Tests
+    #region StreamByIdsAsync Tests
 
     [Fact]
     public async Task StreamGamesByIdsAsync_WithValidIds_CallsCorrectEndpoint()
@@ -982,7 +981,7 @@ public class GamesApiTests
 
         // Act
         var results = new List<GameStreamEvent>();
-        await foreach (var evt in _gamesApi.StreamGamesByIdsAsync(streamId, gameIds))
+        await foreach (var evt in _gamesApi.StreamByIdsAsync(streamId, gameIds))
         {
             results.Add(evt);
         }
@@ -1004,7 +1003,7 @@ public class GamesApiTests
 
         // Act
         var results = new List<GameStreamEvent>();
-        await foreach (var evt in _gamesApi.StreamGamesByIdsAsync(streamId, gameIds))
+        await foreach (var evt in _gamesApi.StreamByIdsAsync(streamId, gameIds))
         {
             results.Add(evt);
         }
@@ -1027,7 +1026,7 @@ public class GamesApiTests
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentException>(async () =>
         {
-            await foreach (var _ in _gamesApi.StreamGamesByIdsAsync(streamId, gameIds))
+            await foreach (var _ in _gamesApi.StreamByIdsAsync(streamId, gameIds))
             {
             }
         });
@@ -1042,7 +1041,7 @@ public class GamesApiTests
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentNullException>(async () =>
         {
-            await foreach (var _ in _gamesApi.StreamGamesByIdsAsync(null!, gameIds))
+            await foreach (var _ in _gamesApi.StreamByIdsAsync(null!, gameIds))
             {
             }
         });
@@ -1057,7 +1056,7 @@ public class GamesApiTests
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentNullException>(async () =>
         {
-            await foreach (var _ in _gamesApi.StreamGamesByIdsAsync(streamId, null!))
+            await foreach (var _ in _gamesApi.StreamByIdsAsync(streamId, null!))
             {
             }
         });
@@ -1079,7 +1078,7 @@ public class GamesApiTests
             .Returns(ToAsyncEnumerable(events));
 
         // Act
-        await foreach (var _ in _gamesApi.StreamGamesByIdsAsync(streamId, gameIds))
+        await foreach (var _ in _gamesApi.StreamByIdsAsync(streamId, gameIds))
         {
         }
 

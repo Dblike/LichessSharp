@@ -1,7 +1,9 @@
 using FluentAssertions;
-using LichessSharp.Api;
+
+using LichessSharp.Api.Contracts;
 using LichessSharp.Exceptions;
 using LichessSharp.Models;
+
 using Xunit;
 
 namespace LichessSharp.Tests.Integration;
@@ -64,7 +66,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
 
     #endregion
 
-    #region GetAsync Tests
+    #region ExportAsync Tests
 
     [Fact]
     public async Task GetAsync_WithValidId_ReturnsTournament()
@@ -431,7 +433,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
 
         // Act & Assert
         await Assert.ThrowsAnyAsync<Exception>(async () =>
-            await Client.ArenaTournaments.WithdrawAsync(tournament.Id));
+            await Client.ArenaTournaments.PauseOrWithdrawAsync(tournament.Id));
     }
 
     [Fact]

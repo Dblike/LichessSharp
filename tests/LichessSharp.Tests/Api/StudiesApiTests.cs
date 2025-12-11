@@ -1,6 +1,6 @@
-using System.Net.Http;
 using FluentAssertions;
 using LichessSharp.Api;
+using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
 using Moq;
 using Xunit;
@@ -240,7 +240,7 @@ public class StudiesApiTests
 
     #endregion
 
-    #region ImportPgnAsync Tests
+    #region ImportAsync Tests
 
     [Fact]
     public async Task ImportPgnAsync_CallsCorrectEndpoint()

@@ -1,5 +1,7 @@
 using FluentAssertions;
-using LichessSharp.Api;
+
+using LichessSharp.Api.Contracts;
+
 using Xunit;
 
 namespace LichessSharp.Tests.Integration.Manual;
@@ -88,7 +90,7 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
 
     #endregion
 
-    #region GetAsync Tests
+    #region ExportAsync Tests
 
     [Fact(Skip = "Requires existing engine ID - run manually only")]
     public async Task GetAsync_WithValidId_ReturnsEngine()

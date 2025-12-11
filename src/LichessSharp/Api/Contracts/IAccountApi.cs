@@ -1,6 +1,6 @@
 using LichessSharp.Models;
 
-namespace LichessSharp.Api;
+namespace LichessSharp.Api.Contracts;
 
 /// <summary>
 /// Account API - Read and write account information and preferences.
@@ -46,4 +46,14 @@ public interface IAccountApi
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Whether the operation succeeded.</returns>
     Task<bool> SetKidModeAsync(bool enabled, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get the timeline of the authenticated user.
+    /// Requires OAuth.
+    /// </summary>
+    /// <param name="nb">Maximum number of entries to return (default 15, max 30).</param>
+    /// <param name="since">Only return entries after this timestamp.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The user's timeline.</returns>
+    Task<Timeline> GetTimelineAsync(int? nb = null, DateTimeOffset? since = null, CancellationToken cancellationToken = default);
 }

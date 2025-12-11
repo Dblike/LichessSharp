@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace LichessSharp.Api;
+namespace LichessSharp.Api.Contracts;
 
 /// <summary>
 /// Challenges API - Send and receive challenges to play.
@@ -17,15 +17,6 @@ public interface IChallengesApi
     Task<ChallengeList> GetPendingAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Show details of a single challenge.
-    /// Requires OAuth scope: challenge:read
-    /// </summary>
-    /// <param name="challengeId">The challenge ID.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>The challenge details.</returns>
-    Task<ChallengeJson> ShowAsync(string challengeId, CancellationToken cancellationToken = default);
-
-    /// <summary>
     /// Challenge another player to a game.
     /// Requires OAuth scope: challenge:write, bot:play, or board:play
     /// </summary>
@@ -34,6 +25,15 @@ public interface IChallengesApi
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The created challenge.</returns>
     Task<ChallengeJson> CreateAsync(string username, ChallengeCreateOptions? options = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Show details of a single challenge.
+    /// Requires OAuth scope: challenge:read
+    /// </summary>
+    /// <param name="challengeId">The challenge ID.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The challenge details.</returns>
+    Task<ChallengeJson> ShowAsync(string challengeId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Accept an incoming challenge.

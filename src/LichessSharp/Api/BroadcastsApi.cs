@@ -1,5 +1,7 @@
 using System.Runtime.CompilerServices;
 using System.Text;
+
+using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
 
 namespace LichessSharp.Api;

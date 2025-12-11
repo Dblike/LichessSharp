@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace LichessSharp.Api;
+namespace LichessSharp.Api.Contracts;
 
 /// <summary>
 /// Bot API - Play on Lichess as a bot with engine assistance.
@@ -9,6 +9,15 @@ namespace LichessSharp.Api;
 /// </summary>
 public interface IBotApi
 {
+    /// <summary>
+    /// Stream incoming events for your bot account (game starts, challenges, etc.).
+    /// This is the main event loop for Bot API clients.
+    /// Requires OAuth scope: bot:play
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Stream of account events.</returns>
+    IAsyncEnumerable<BotAccountEvent> StreamEventsAsync(CancellationToken cancellationToken = default);
+
     /// <summary>
     /// Upgrade a regular Lichess account to a Bot account.
     /// WARNING: This action is irreversible! The account must have played no games.
@@ -19,13 +28,12 @@ public interface IBotApi
     Task<bool> UpgradeAccountAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Stream incoming events for your bot account (game starts, challenges, etc.).
-    /// This is the main event loop for Bot API clients.
-    /// Requires OAuth scope: bot:play
+    /// Get online bots.
     /// </summary>
+    /// <param name="count">Maximum number of bots to fetch (default: 50, max: 300).</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>Stream of account events.</returns>
-    IAsyncEnumerable<BotAccountEvent> StreamEventsAsync(CancellationToken cancellationToken = default);
+    /// <returns>Stream of online bot information.</returns>
+    IAsyncEnumerable<BotUser> GetOnlineBotsAsync(int? count = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Stream the full state of a game being played.
@@ -49,15 +57,6 @@ public interface IBotApi
     Task<bool> MakeMoveAsync(string gameId, string move, bool? offeringDraw = null, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Get the chat messages of a game.
-    /// Requires OAuth scope: bot:play
-    /// </summary>
-    /// <param name="gameId">The game ID.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>List of chat messages.</returns>
-    Task<IReadOnlyList<ChatMessage>> GetChatAsync(string gameId, CancellationToken cancellationToken = default);
-
-    /// <summary>
     /// Write a message in the game chat.
     /// Requires OAuth scope: bot:play
     /// </summary>
@@ -67,6 +66,15 @@ public interface IBotApi
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>True if successful.</returns>
     Task<bool> WriteChatAsync(string gameId, ChatRoom room, string text, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get the chat messages of a game.
+    /// Requires OAuth scope: bot:play
+    /// </summary>
+    /// <param name="gameId">The game ID.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>List of chat messages.</returns>
+    Task<IReadOnlyList<ChatMessage>> GetChatAsync(string gameId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Abort a game.
@@ -114,14 +122,6 @@ public interface IBotApi
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>True if successful.</returns>
     Task<bool> ClaimDrawAsync(string gameId, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Get online bots.
-    /// </summary>
-    /// <param name="count">Maximum number of bots to fetch (default: 50, max: 300).</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>Stream of online bot information.</returns>
-    IAsyncEnumerable<BotUser> GetOnlineBotsAsync(int? count = null, CancellationToken cancellationToken = default);
 }
 
 #region Models

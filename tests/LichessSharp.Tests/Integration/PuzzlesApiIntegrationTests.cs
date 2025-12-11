@@ -30,7 +30,7 @@ public class PuzzlesApiIntegrationTests : IntegrationTestBase
 
     #endregion
 
-    #region GetAsync Tests
+    #region ExportAsync Tests
 
     [Fact]
     public async Task GetAsync_WithDailyPuzzleId_ReturnsPuzzle()

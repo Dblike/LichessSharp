@@ -1,4 +1,4 @@
-namespace LichessSharp.Api;
+namespace LichessSharp.Api.Contracts;
 
 /// <summary>
 /// Analysis API - Access Lichess cloud evaluations database.

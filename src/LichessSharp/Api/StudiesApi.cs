@@ -1,5 +1,7 @@
 using System.Runtime.CompilerServices;
 using System.Text;
+
+using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
 
 namespace LichessSharp.Api;
@@ -124,6 +126,15 @@ internal sealed class StudiesApi(ILichessHttpClient httpClient) : IStudiesApi
         var sb = new StringBuilder(baseEndpoint);
         var hasParams = false;
 
+        AppendParam("clocks", options.Clocks);
+        AppendParam("comments", options.Comments);
+        AppendParam("variations", options.Variations);
+        AppendParam("opening", options.Opening);
+        AppendParam("source", options.Source);
+        AppendParam("orientation", options.Orientation);
+
+        return sb.ToString();
+
         void AppendParam(string name, bool? value)
         {
             if (value.HasValue)
@@ -135,14 +146,5 @@ internal sealed class StudiesApi(ILichessHttpClient httpClient) : IStudiesApi
                 hasParams = true;
             }
         }
-
-        AppendParam("clocks", options.Clocks);
-        AppendParam("comments", options.Comments);
-        AppendParam("variations", options.Variations);
-        AppendParam("opening", options.Opening);
-        AppendParam("source", options.Source);
-        AppendParam("orientation", options.Orientation);
-
-        return sb.ToString();
     }
 }

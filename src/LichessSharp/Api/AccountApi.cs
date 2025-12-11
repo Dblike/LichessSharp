@@ -1,3 +1,6 @@
+using System.Text;
+
+using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
 using LichessSharp.Models;
 
@@ -42,5 +45,25 @@ internal sealed class AccountApi(ILichessHttpClient httpClient) : IAccountApi
         var endpoint = $"/api/account/kid?v={enabled.ToString().ToLowerInvariant()}";
         var response = await _httpClient.PostAsync<OkResponse>(endpoint, null, cancellationToken).ConfigureAwait(false);
         return response.Ok;
+    }
+
+    /// <inheritdoc />
+    public async Task<Timeline> GetTimelineAsync(int? nb = null, DateTimeOffset? since = null, CancellationToken cancellationToken = default)
+    {
+        var sb = new StringBuilder("/api/timeline");
+        var hasQuery = false;
+
+        if (nb.HasValue)
+        {
+            sb.Append(hasQuery ? '&' : '?').Append($"nb={nb.Value}");
+            hasQuery = true;
+        }
+        if (since.HasValue)
+        {
+            var timestamp = since.Value.ToUnixTimeMilliseconds();
+            sb.Append(hasQuery ? '&' : '?').Append($"since={timestamp}");
+        }
+
+        return await _httpClient.GetAsync<Timeline>(sb.ToString(), cancellationToken).ConfigureAwait(false);
     }
 }

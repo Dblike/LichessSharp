@@ -1,9 +1,10 @@
 using System.Text.Json.Serialization;
+
 using LichessSharp.Api.Options;
 using LichessSharp.Models;
 using LichessSharp.Serialization.Converters;
 
-namespace LichessSharp.Api;
+namespace LichessSharp.Api.Contracts;
 
 /// <summary>
 /// Users API - Access registered users on Lichess.
@@ -11,30 +12,13 @@ namespace LichessSharp.Api;
 public interface IUsersApi
 {
     /// <summary>
-    /// Get the public profile of a user.
-    /// </summary>
-    /// <param name="username">The username.</param>
-    /// <param name="options">Optional request options.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>The user's public profile.</returns>
-    Task<UserExtended> GetAsync(string username, GetUserOptions? options = null, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Get multiple users by their IDs.
-    /// </summary>
-    /// <param name="userIds">The user IDs (up to 300).</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>The users' public profiles.</returns>
-    Task<IReadOnlyList<User>> GetManyAsync(IEnumerable<string> userIds, CancellationToken cancellationToken = default);
-
-    /// <summary>
     /// Get real-time status of users.
     /// </summary>
     /// <param name="userIds">The user IDs (up to 100).</param>
     /// <param name="options">Optional request options.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The users' real-time statuses.</returns>
-    Task<IReadOnlyList<UserStatus>> GetStatusAsync(IEnumerable<string> userIds, GetUserStatusOptions? options = null, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<UserStatus>> GetRealTimeStatusAsync(IEnumerable<string> userIds, GetUserStatusOptions? options = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Get the top 10 players for each speed and variant.
@@ -51,6 +35,15 @@ public interface IUsersApi
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The leaderboard.</returns>
     Task<IReadOnlyList<User>> GetLeaderboardAsync(string perfType, int count = 100, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get the public profile of a user.
+    /// </summary>
+    /// <param name="username">The username.</param>
+    /// <param name="options">Optional request options.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The user's public profile.</returns>
+    Task<UserExtended> GetAsync(string username, GetUserOptions? options = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Get rating history of a user.
@@ -78,6 +71,31 @@ public interface IUsersApi
     Task<IReadOnlyList<UserActivity>> GetActivityAsync(string username, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Get multiple users by their IDs.
+    /// </summary>
+    /// <param name="userIds">The user IDs (up to 300).</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The users' public profiles.</returns>
+    Task<IReadOnlyList<User>> GetManyAsync(IEnumerable<string> userIds, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get currently live streamers on Lichess.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>List of live streamers.</returns>
+    Task<IReadOnlyList<Streamer>> GetLiveStreamersAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get the crosstable (head-to-head) statistics between two users.
+    /// </summary>
+    /// <param name="user1">First username.</param>
+    /// <param name="user2">Second username.</param>
+    /// <param name="matchup">Include current match data if users are playing.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The crosstable statistics.</returns>
+    Task<Crosstable> GetCrosstableAsync(string user1, string user2, bool matchup = false, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Autocomplete usernames.
     /// </summary>
     /// <param name="term">Search term (at least 3 characters).</param>
@@ -97,32 +115,6 @@ public interface IUsersApi
     Task<IReadOnlyList<AutocompletePlayer>> AutocompletePlayersAsync(string term, string? friend = null, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Get the crosstable (head-to-head) statistics between two users.
-    /// </summary>
-    /// <param name="user1">First username.</param>
-    /// <param name="user2">Second username.</param>
-    /// <param name="matchup">Include current match data if users are playing.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>The crosstable statistics.</returns>
-    Task<Crosstable> GetCrosstableAsync(string user1, string user2, bool matchup = false, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Get currently live streamers on Lichess.
-    /// </summary>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>List of live streamers.</returns>
-    Task<IReadOnlyList<Streamer>> GetLiveStreamersAsync(CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Read a note you have written about another user.
-    /// Requires OAuth with follow:read scope.
-    /// </summary>
-    /// <param name="username">The username to read the note for.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>The note text, or null if no note exists.</returns>
-    Task<string?> GetNoteAsync(string username, CancellationToken cancellationToken = default);
-
-    /// <summary>
     /// Write or update a note about another user.
     /// Requires OAuth with follow:write scope.
     /// </summary>
@@ -133,14 +125,13 @@ public interface IUsersApi
     Task<bool> WriteNoteAsync(string username, string text, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Get the timeline of the authenticated user.
-    /// Requires OAuth.
+    /// Read a note you have written about another user.
+    /// Requires OAuth with follow:read scope.
     /// </summary>
-    /// <param name="nb">Maximum number of entries to return (default 15, max 30).</param>
-    /// <param name="since">Only return entries after this timestamp.</param>
+    /// <param name="username">The username to read the note for.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>The user's timeline.</returns>
-    Task<Timeline> GetTimelineAsync(int? nb = null, DateTimeOffset? since = null, CancellationToken cancellationToken = default);
+    /// <returns>The note text, or null if no note exists.</returns>
+    Task<string?> GetNoteAsync(string username, CancellationToken cancellationToken = default);
 }
 
 /// <summary>

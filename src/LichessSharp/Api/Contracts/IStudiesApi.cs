@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace LichessSharp.Api;
+namespace LichessSharp.Api.Contracts;
 
 /// <summary>
 /// Studies API - Access Lichess studies.

@@ -1,5 +1,6 @@
-using System.Runtime.CompilerServices;
 using System.Text;
+
+using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
 using LichessSharp.Models;
 
@@ -59,7 +60,7 @@ internal sealed class ChallengesApi(ILichessHttpClient httpClient) : IChallenges
         if (reason.HasValue)
         {
             var reasonStr = GetDeclineReasonString(reason.Value);
-            content = new FormUrlEncodedContent(new[] { new KeyValuePair<string, string>("reason", reasonStr) });
+            content = new FormUrlEncodedContent([new KeyValuePair<string, string>("reason", reasonStr)]);
         }
 
         await _httpClient.PostAsync<OkResponse>(endpoint, content, cancellationToken).ConfigureAwait(false);

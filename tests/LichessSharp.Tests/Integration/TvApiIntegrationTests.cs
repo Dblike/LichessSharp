@@ -1,7 +1,9 @@
 using FluentAssertions;
-using LichessSharp.Api;
+
+using LichessSharp.Api.Contracts;
 using LichessSharp.Models;
 using LichessSharp.Models.Enums;
+
 using Xunit;
 
 namespace LichessSharp.Tests.Integration;

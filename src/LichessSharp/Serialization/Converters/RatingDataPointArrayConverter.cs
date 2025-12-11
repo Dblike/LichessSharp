@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using LichessSharp.Api;
+
+using LichessSharp.Api.Contracts;
 
 namespace LichessSharp.Serialization.Converters;
 

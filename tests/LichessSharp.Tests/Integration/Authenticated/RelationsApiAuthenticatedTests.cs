@@ -20,7 +20,7 @@ public class RelationsApiAuthenticatedTests : AuthenticatedTestBase
     {
         // Act
         var following = new List<Models.User>();
-        await foreach (var user in Client.Relations.StreamFollowingAsync())
+        await foreach (var user in Client.Relations.StreamFollowingUsersAsync())
         {
             following.Add(user);
             // Limit to first 10 for test performance
@@ -51,13 +51,13 @@ public class RelationsApiAuthenticatedTests : AuthenticatedTestBase
         try
         {
             // Act - Follow the user
-            var followResult = await Client.Relations.FollowAsync(targetUser);
+            var followResult = await Client.Relations.FollowUserAsync(targetUser);
 
             // Assert
             followResult.Should().BeTrue();
 
             // Act - Unfollow to restore state
-            var unfollowResult = await Client.Relations.UnfollowAsync(targetUser);
+            var unfollowResult = await Client.Relations.UnfollowUserAsync(targetUser);
 
             // Assert
             unfollowResult.Should().BeTrue();
@@ -65,7 +65,7 @@ public class RelationsApiAuthenticatedTests : AuthenticatedTestBase
         catch (LichessException ex) when (ex.Message.Contains("already"))
         {
             // If already following, just unfollow
-            var unfollowResult = await Client.Relations.UnfollowAsync(targetUser);
+            var unfollowResult = await Client.Relations.UnfollowUserAsync(targetUser);
             unfollowResult.Should().BeTrue();
         }
     }

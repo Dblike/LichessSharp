@@ -1,6 +1,6 @@
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using LichessSharp.Api;
+using LichessSharp.Api.Contracts;
 using LichessSharp.Models;
 
 namespace LichessSharp.Serialization;

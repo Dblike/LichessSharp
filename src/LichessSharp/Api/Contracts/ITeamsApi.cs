@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace LichessSharp.Api;
+namespace LichessSharp.Api.Contracts;
 
 /// <summary>
 /// Teams API - Access and manage Lichess teams and their members.
@@ -559,42 +559,6 @@ public class TeamPlayTime
     /// </summary>
     [JsonPropertyName("tv")]
     public int Tv { get; init; }
-}
-
-#endregion
-
-#region Deprecated Types (for backward compatibility)
-
-/// <summary>
-/// Team search result (deprecated, use TeamPaginator instead).
-/// </summary>
-[Obsolete("Use TeamPaginator instead")]
-public class TeamSearchResult
-{
-    /// <summary>
-    /// Current page.
-    /// </summary>
-    public int CurrentPage { get; init; }
-
-    /// <summary>
-    /// Maximum pages.
-    /// </summary>
-    public int MaxPerPage { get; init; }
-
-    /// <summary>
-    /// Teams found.
-    /// </summary>
-    public IReadOnlyList<Team>? CurrentPageResults { get; init; }
-
-    /// <summary>
-    /// Total number of results.
-    /// </summary>
-    public int NbResults { get; init; }
-
-    /// <summary>
-    /// Number of pages.
-    /// </summary>
-    public int NbPages { get; init; }
 }
 
 #endregion

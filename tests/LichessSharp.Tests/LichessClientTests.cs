@@ -1,8 +1,6 @@
 using FluentAssertions;
 using Xunit;
 
-using LichessSharp;
-
 namespace LichessSharp.Tests;
 
 public class LichessClientTests

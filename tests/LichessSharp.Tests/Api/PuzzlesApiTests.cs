@@ -1,5 +1,6 @@
 using FluentAssertions;
 using LichessSharp.Api;
+using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
 using LichessSharp.Models;
 using Moq;
@@ -73,7 +74,7 @@ public class PuzzlesApiTests
 
     #endregion
 
-    #region GetAsync Tests
+    #region ExportAsync Tests
 
     [Fact]
     public async Task GetAsync_WithId_CallsCorrectEndpoint()
@@ -841,8 +842,8 @@ public class PuzzlesApiTests
             Id = id,
             Rating = 1500,
             Plays = 1000,
-            Solution = new[] { "e2e4", "e7e5" },
-            Themes = new[] { "middlegame", "fork" }
+            Solution = ["e2e4", "e7e5"],
+            Themes = ["middlegame", "fork"]
         }
     };
 

@@ -192,6 +192,6 @@ public sealed class RequiresScopeAttribute : Attribute
     /// <param name="scopes">The required OAuth scopes.</param>
     public RequiresScopeAttribute(params string[] scopes)
     {
-        Scopes = scopes ?? Array.Empty<string>();
+        Scopes = scopes ?? [];
     }
 }

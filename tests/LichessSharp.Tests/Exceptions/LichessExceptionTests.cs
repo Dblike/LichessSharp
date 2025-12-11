@@ -79,7 +79,7 @@ public class LichessExceptionTests
         // Arrange
         var errors = new Dictionary<string, string[]>
         {
-            { "username", new[] { "Username is required" } }
+            { "username", ["Username is required"] }
         };
 
         // Act

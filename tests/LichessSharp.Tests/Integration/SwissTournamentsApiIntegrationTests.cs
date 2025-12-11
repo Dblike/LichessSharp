@@ -1,7 +1,8 @@
 using FluentAssertions;
-using LichessSharp.Api;
-using LichessSharp.Exceptions;
+
+using LichessSharp.Api.Contracts;
 using LichessSharp.Models;
+
 using Xunit;
 
 namespace LichessSharp.Tests.Integration;
@@ -17,7 +18,7 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
     // Known team that hosts Swiss tournaments
     private const string TestTeamId = "lichess-swiss";
 
-    #region GetAsync Tests
+    #region ExportAsync Tests
 
     [Fact]
     public async Task GetAsync_WithValidId_ReturnsTournament()
@@ -317,7 +318,7 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
 
         // Act & Assert
         await Assert.ThrowsAnyAsync<Exception>(async () =>
-            await Client.SwissTournaments.WithdrawAsync(tournament.Id));
+            await Client.SwissTournaments.PauseOrWithdrawAsync(tournament.Id));
     }
 
     #endregion

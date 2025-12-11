@@ -1,5 +1,7 @@
 using System.Runtime.CompilerServices;
 using System.Text;
+
+using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
 using LichessSharp.Models;
 
@@ -17,7 +19,7 @@ internal sealed class BulkPairingsApi(ILichessHttpClient httpClient) : IBulkPair
     {
         // Lichess returns {"bulks": [...]} wrapper object
         var response = await _httpClient.GetAsync<BulkPairingListResponse>("/api/bulk-pairing", cancellationToken).ConfigureAwait(false);
-        return response.Bulks ?? (IReadOnlyList<BulkPairing>)Array.Empty<BulkPairing>();
+        return response.Bulks ?? [];
     }
 
     /// <inheritdoc />
@@ -115,7 +117,7 @@ internal sealed class BulkPairingsApi(ILichessHttpClient httpClient) : IBulkPair
     }
 
     /// <inheritdoc />
-    public async Task<string> ExportGamesPgnAsync(string id, BulkPairingExportOptions? options = null, CancellationToken cancellationToken = default)
+    public async Task<string> ExportGamesAsync(string id, BulkPairingExportOptions? options = null, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
@@ -146,6 +148,14 @@ internal sealed class BulkPairingsApi(ILichessHttpClient httpClient) : IBulkPair
         var sb = new StringBuilder(baseEndpoint);
         var hasParams = false;
 
+        AppendParam("moves", options.Moves);
+        AppendParam("pgnInJson", options.PgnInJson);
+        AppendParam("tags", options.Tags);
+        AppendParam("clocks", options.Clocks);
+        AppendParam("opening", options.Opening);
+
+        return sb.ToString();
+
         void AppendParam(string name, bool? value)
         {
             if (value.HasValue)
@@ -157,13 +167,5 @@ internal sealed class BulkPairingsApi(ILichessHttpClient httpClient) : IBulkPair
                 hasParams = true;
             }
         }
-
-        AppendParam("moves", options.Moves);
-        AppendParam("pgnInJson", options.PgnInJson);
-        AppendParam("tags", options.Tags);
-        AppendParam("clocks", options.Clocks);
-        AppendParam("opening", options.Opening);
-
-        return sb.ToString();
     }
 }

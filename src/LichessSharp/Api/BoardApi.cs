@@ -1,5 +1,7 @@
 using System.Runtime.CompilerServices;
 using System.Text;
+
+using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
 using LichessSharp.Models;
 
@@ -71,11 +73,10 @@ internal sealed class BoardApi(ILichessHttpClient httpClient) : IBoardApi
         ArgumentException.ThrowIfNullOrWhiteSpace(text);
 
         var endpoint = $"/api/board/game/{Uri.EscapeDataString(gameId)}/chat";
-        var content = new FormUrlEncodedContent(new[]
-        {
+        var content = new FormUrlEncodedContent([
             new KeyValuePair<string, string>("room", room == ChatRoom.Spectator ? "spectator" : "player"),
             new KeyValuePair<string, string>("text", text)
-        });
+        ]);
 
         await _httpClient.PostAsync<OkResponse>(endpoint, content, cancellationToken).ConfigureAwait(false);
         return true;

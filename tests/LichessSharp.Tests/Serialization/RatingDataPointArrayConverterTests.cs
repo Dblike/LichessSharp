@@ -1,7 +1,10 @@
 using System.Text.Json;
+
 using FluentAssertions;
-using LichessSharp.Api;
+
+using LichessSharp.Api.Contracts;
 using LichessSharp.Serialization.Converters;
+
 using Xunit;
 
 namespace LichessSharp.Tests.Serialization;

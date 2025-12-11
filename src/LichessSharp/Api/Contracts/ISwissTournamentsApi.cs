@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 using LichessSharp.Models;
 
-namespace LichessSharp.Api;
+namespace LichessSharp.Api.Contracts;
 
 /// <summary>
 /// Swiss Tournaments API - Access Swiss tournaments played on Lichess.
@@ -10,14 +10,6 @@ namespace LichessSharp.Api;
 /// </summary>
 public interface ISwissTournamentsApi
 {
-    /// <summary>
-    /// Get info about a Swiss tournament.
-    /// </summary>
-    /// <param name="id">The tournament ID.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>The tournament info.</returns>
-    Task<SwissTournament> GetAsync(string id, CancellationToken cancellationToken = default);
-
     /// <summary>
     /// Create a new Swiss tournament for your team.
     /// You can create up to 12 tournaments per day.
@@ -27,6 +19,14 @@ public interface ISwissTournamentsApi
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The created tournament.</returns>
     Task<SwissTournament> CreateAsync(string teamId, SwissCreateOptions options, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get info about a Swiss tournament.
+    /// </summary>
+    /// <param name="id">The tournament ID.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The tournament info.</returns>
+    Task<SwissTournament> GetAsync(string id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Update an existing Swiss tournament.
@@ -64,7 +64,7 @@ public interface ISwissTournamentsApi
     /// <param name="id">The tournament ID.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>True if successfully withdrawn.</returns>
-    Task<bool> WithdrawAsync(string id, CancellationToken cancellationToken = default);
+    Task<bool> PauseOrWithdrawAsync(string id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Terminate a Swiss tournament.

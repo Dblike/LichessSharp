@@ -1,7 +1,8 @@
 using System.Text.Json.Serialization;
+
 using LichessSharp.Models;
 
-namespace LichessSharp.Api;
+namespace LichessSharp.Api.Contracts;
 
 /// <summary>
 /// TV API - Access Lichess TV channels and games.

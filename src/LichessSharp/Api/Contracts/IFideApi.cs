@@ -1,6 +1,6 @@
 using LichessSharp.Models;
 
-namespace LichessSharp.Api;
+namespace LichessSharp.Api.Contracts;
 
 /// <summary>
 /// FIDE API - Access FIDE player data from Lichess.

@@ -1,9 +1,10 @@
 using System.Text.Json.Serialization;
+
 using LichessSharp.Models;
 
 // Required for PuzzleBatch, PuzzleBatchResult, PuzzleSolution, PuzzleReplay, PuzzleRaceResults
 
-namespace LichessSharp.Api;
+namespace LichessSharp.Api.Contracts;
 
 /// <summary>
 /// Puzzles API - Access Lichess puzzle history and dashboard.
@@ -35,6 +36,29 @@ public interface IPuzzlesApi
     Task<PuzzleWithGame> GetNextAsync(string? angle = null, string? difficulty = null, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Get a batch of puzzles to solve offline.
+    /// Requires OAuth with puzzle:read scope.
+    /// </summary>
+    /// <param name="angle">The theme or opening to filter puzzles. Use "mix" for random puzzles.</param>
+    /// <param name="nb">Number of puzzles (1-50, default varies).</param>
+    /// <param name="difficulty">Difficulty relative to user rating: "easiest", "easier", "normal", "harder", "hardest".</param>
+    /// <param name="color">Color to play: "white" or "black" (only works when nb=1).</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>A batch of puzzles with Glicko rating info.</returns>
+    Task<PuzzleBatch> GetBatchAsync(string angle, int? nb = null, string? difficulty = null, string? color = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Submit solutions for a batch of puzzles.
+    /// Requires OAuth with puzzle:write scope.
+    /// </summary>
+    /// <param name="angle">The theme or opening of the solved puzzles.</param>
+    /// <param name="solutions">The puzzle solutions to submit.</param>
+    /// <param name="nb">When greater than 0, include a new batch of puzzles in the response.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Results of solving and optionally new puzzles.</returns>
+    Task<PuzzleBatchResult> SolveBatchAsync(string angle, IEnumerable<PuzzleSolution> solutions, int? nb = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Stream puzzle activity for the authenticated user.
     /// </summary>
     /// <param name="max">Maximum number of entries.</param>
@@ -42,6 +66,16 @@ public interface IPuzzlesApi
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Stream of puzzle activity.</returns>
     IAsyncEnumerable<PuzzleActivity> StreamActivityAsync(int? max = null, DateTimeOffset? before = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Get puzzles to replay (review incorrect puzzles).
+    /// Requires OAuth with puzzle:read scope.
+    /// </summary>
+    /// <param name="days">Number of days to look back (e.g., 30).</param>
+    /// <param name="theme">The theme or opening to filter puzzles.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Information about puzzles to replay.</returns>
+    Task<PuzzleReplay> GetReplayAsync(int days, string theme, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Get the puzzle dashboard for the authenticated user.
@@ -66,39 +100,6 @@ public interface IPuzzlesApi
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The created puzzle race.</returns>
     Task<PuzzleRace> CreateRaceAsync(CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Get a batch of puzzles to solve offline.
-    /// Requires OAuth with puzzle:read scope.
-    /// </summary>
-    /// <param name="angle">The theme or opening to filter puzzles. Use "mix" for random puzzles.</param>
-    /// <param name="nb">Number of puzzles (1-50, default varies).</param>
-    /// <param name="difficulty">Difficulty relative to user rating: "easiest", "easier", "normal", "harder", "hardest".</param>
-    /// <param name="color">Color to play: "white" or "black" (only works when nb=1).</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>A batch of puzzles with Glicko rating info.</returns>
-    Task<PuzzleBatch> GetBatchAsync(string angle, int? nb = null, string? difficulty = null, string? color = null, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Submit solutions for a batch of puzzles.
-    /// Requires OAuth with puzzle:write scope.
-    /// </summary>
-    /// <param name="angle">The theme or opening of the solved puzzles.</param>
-    /// <param name="solutions">The puzzle solutions to submit.</param>
-    /// <param name="nb">When greater than 0, include a new batch of puzzles in the response.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>Results of solving and optionally new puzzles.</returns>
-    Task<PuzzleBatchResult> SolveBatchAsync(string angle, IEnumerable<PuzzleSolution> solutions, int? nb = null, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Get puzzles to replay (review incorrect puzzles).
-    /// Requires OAuth with puzzle:read scope.
-    /// </summary>
-    /// <param name="days">Number of days to look back (e.g., 30).</param>
-    /// <param name="theme">The theme or opening to filter puzzles.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>Information about puzzles to replay.</returns>
-    Task<PuzzleReplay> GetReplayAsync(int days, string theme, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Get information about a puzzle race.

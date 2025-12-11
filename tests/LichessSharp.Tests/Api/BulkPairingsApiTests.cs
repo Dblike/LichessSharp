@@ -1,5 +1,6 @@
 using FluentAssertions;
 using LichessSharp.Api;
+using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
 using LichessSharp.Models;
 using Moq;
@@ -114,7 +115,7 @@ public class BulkPairingsApiTests
 
     #endregion
 
-    #region GetAsync Tests
+    #region ExportAsync Tests
 
     [Fact]
     public async Task GetAsync_CallsCorrectEndpoint()
@@ -371,7 +372,7 @@ public class BulkPairingsApiTests
 
     #endregion
 
-    #region ExportGamesPgnAsync Tests
+    #region ExportGamesAsync Tests
 
     [Fact]
     public async Task ExportGamesPgnAsync_CallsCorrectEndpoint()
@@ -383,7 +384,7 @@ public class BulkPairingsApiTests
             .ReturnsAsync(expectedPgn);
 
         // Act
-        var result = await _bulkPairingsApi.ExportGamesPgnAsync("test123");
+        var result = await _bulkPairingsApi.ExportGamesAsync("test123");
 
         // Assert
         result.Should().Be(expectedPgn);
@@ -394,7 +395,7 @@ public class BulkPairingsApiTests
     public async Task ExportGamesPgnAsync_WithNullId_ThrowsArgumentException()
     {
         // Act
-        var act = async () => await _bulkPairingsApi.ExportGamesPgnAsync(null!);
+        var act = async () => await _bulkPairingsApi.ExportGamesAsync(null!);
 
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
@@ -420,7 +421,7 @@ public class BulkPairingsApiTests
             .ReturnsAsync("");
 
         // Act
-        await _bulkPairingsApi.ExportGamesPgnAsync("test123", options);
+        await _bulkPairingsApi.ExportGamesAsync("test123", options);
 
         // Assert
         _httpClientMock.Verify(x => x.GetStringWithAcceptAsync(

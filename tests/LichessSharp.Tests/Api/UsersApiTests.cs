@@ -1,7 +1,6 @@
-using System.Net;
-using System.Text.Json;
 using FluentAssertions;
 using LichessSharp.Api;
+using LichessSharp.Api.Contracts;
 using LichessSharp.Api.Options;
 using LichessSharp.Http;
 using LichessSharp.Models;
@@ -36,7 +35,7 @@ public class UsersApiTests
 
     #endregion
 
-    #region GetAsync Tests
+    #region ExportAsync Tests
 
     [Fact]
     public async Task GetAsync_WithUsername_CallsCorrectEndpoint()
@@ -48,7 +47,7 @@ public class UsersApiTests
             .ReturnsAsync(expectedUser);
 
         // Act
-        var result = await _usersApi.GetAsync("DrNykterstein");
+        var result = await _usersApi.GetByUsernameAsync("DrNykterstein");
 
         // Assert
         result.Should().BeEquivalentTo(expectedUser);
@@ -71,7 +70,7 @@ public class UsersApiTests
             .ReturnsAsync(expectedUser);
 
         // Act
-        await _usersApi.GetAsync("thibault", options);
+        await _usersApi.GetByUsernameAsync("thibault", options);
 
         // Assert
         _httpClientMock.Verify(x => x.GetAsync<UserExtended>(
@@ -87,7 +86,7 @@ public class UsersApiTests
     public async Task GetAsync_WithNullUsername_ThrowsArgumentException()
     {
         // Act
-        var act = () => _usersApi.GetAsync(null!);
+        var act = () => _usersApi.GetByUsernameAsync(null!);
 
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
@@ -97,7 +96,7 @@ public class UsersApiTests
     public async Task GetAsync_WithEmptyUsername_ThrowsArgumentException()
     {
         // Act
-        var act = () => _usersApi.GetAsync("");
+        var act = () => _usersApi.GetByUsernameAsync("");
 
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
@@ -134,7 +133,7 @@ public class UsersApiTests
     public async Task GetManyAsync_WithEmptyList_ReturnsEmptyList()
     {
         // Act
-        var result = await _usersApi.GetManyAsync(Array.Empty<string>());
+        var result = await _usersApi.GetManyAsync([]);
 
         // Assert
         result.Should().BeEmpty();
@@ -167,7 +166,7 @@ public class UsersApiTests
 
     #endregion
 
-    #region GetStatusAsync Tests
+    #region GetRealTimeStatusAsync Tests
 
     [Fact]
     public async Task GetStatusAsync_WithUserIds_CallsCorrectEndpoint()
@@ -184,7 +183,7 @@ public class UsersApiTests
             .ReturnsAsync(expectedStatuses);
 
         // Act
-        var result = await _usersApi.GetStatusAsync(userIds);
+        var result = await _usersApi.GetRealTimeStatusAsync(userIds);
 
         // Assert
         result.Should().HaveCount(2);
@@ -206,10 +205,10 @@ public class UsersApiTests
         };
         _httpClientMock
             .Setup(x => x.GetAsync<List<UserStatus>>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<UserStatus>());
+            .ReturnsAsync([]);
 
         // Act
-        await _usersApi.GetStatusAsync(userIds, options);
+        await _usersApi.GetRealTimeStatusAsync(userIds, options);
 
         // Assert
         _httpClientMock.Verify(x => x.GetAsync<List<UserStatus>>(
@@ -224,7 +223,7 @@ public class UsersApiTests
     public async Task GetStatusAsync_WithEmptyList_ReturnsEmptyList()
     {
         // Act
-        var result = await _usersApi.GetStatusAsync(Array.Empty<string>());
+        var result = await _usersApi.GetRealTimeStatusAsync([]);
 
         // Assert
         result.Should().BeEmpty();
@@ -237,7 +236,7 @@ public class UsersApiTests
         var userIds = Enumerable.Range(1, 101).Select(i => $"user{i}");
 
         // Act
-        var act = () => _usersApi.GetStatusAsync(userIds);
+        var act = () => _usersApi.GetRealTimeStatusAsync(userIds);
 
         // Assert
         await act.Should().ThrowAsync<ArgumentException>()
@@ -254,8 +253,8 @@ public class UsersApiTests
         // Arrange
         var expected = new Dictionary<string, List<User>>
         {
-            ["bullet"] = new() { CreateTestUser("player1") },
-            ["blitz"] = new() { CreateTestUser("player2") }
+            ["bullet"] = [CreateTestUser("player1")],
+            ["blitz"] = [CreateTestUser("player2")]
         };
         _httpClientMock
             .Setup(x => x.GetAsync<Dictionary<string, List<User>>>("/api/player", It.IsAny<CancellationToken>()))
@@ -297,7 +296,7 @@ public class UsersApiTests
         // Arrange
         _httpClientMock
             .Setup(x => x.GetAsync<LeaderboardResponse>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new LeaderboardResponse { Users = new List<User>() });
+            .ReturnsAsync(new LeaderboardResponse { Users = [] });
 
         // Act
         await _usersApi.GetLeaderboardAsync("blitz", 50);
@@ -463,7 +462,7 @@ public class UsersApiTests
         // Arrange
         _httpClientMock
             .Setup(x => x.GetAsync<List<string>>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<string>());
+            .ReturnsAsync([]);
 
         // Act
         await _usersApi.AutocompleteAsync("thib", friend: "thibault");

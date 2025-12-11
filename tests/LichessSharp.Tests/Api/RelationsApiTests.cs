@@ -33,7 +33,7 @@ public class RelationsApiTests
 
     #endregion
 
-    #region FollowAsync Tests
+    #region FollowUserAsync Tests
 
     [Fact]
     public async Task FollowAsync_WithUsername_CallsCorrectEndpoint()
@@ -46,7 +46,7 @@ public class RelationsApiTests
             .ReturnsAsync(expectedResponse);
 
         // Act
-        var result = await _relationsApi.FollowAsync(username);
+        var result = await _relationsApi.FollowUserAsync(username);
 
         // Assert
         result.Should().BeTrue();
@@ -57,7 +57,7 @@ public class RelationsApiTests
     public async Task FollowAsync_WithNullUsername_ThrowsArgumentException()
     {
         // Act
-        var act = () => _relationsApi.FollowAsync(null!);
+        var act = () => _relationsApi.FollowUserAsync(null!);
 
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
@@ -67,7 +67,7 @@ public class RelationsApiTests
     public async Task FollowAsync_WithEmptyUsername_ThrowsArgumentException()
     {
         // Act
-        var act = () => _relationsApi.FollowAsync("");
+        var act = () => _relationsApi.FollowUserAsync("");
 
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
@@ -84,7 +84,7 @@ public class RelationsApiTests
             .ReturnsAsync(expectedResponse);
 
         // Act
-        await _relationsApi.FollowAsync(username);
+        await _relationsApi.FollowUserAsync(username);
 
         // Assert
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>(It.Is<string>(s => s.Contains("user%20name")), null, It.IsAny<CancellationToken>()), Times.Once);
@@ -92,7 +92,7 @@ public class RelationsApiTests
 
     #endregion
 
-    #region UnfollowAsync Tests
+    #region UnfollowUserAsync Tests
 
     [Fact]
     public async Task UnfollowAsync_WithUsername_CallsCorrectEndpoint()
@@ -105,7 +105,7 @@ public class RelationsApiTests
             .ReturnsAsync(expectedResponse);
 
         // Act
-        var result = await _relationsApi.UnfollowAsync(username);
+        var result = await _relationsApi.UnfollowUserAsync(username);
 
         // Assert
         result.Should().BeTrue();
@@ -116,7 +116,7 @@ public class RelationsApiTests
     public async Task UnfollowAsync_WithNullUsername_ThrowsArgumentException()
     {
         // Act
-        var act = () => _relationsApi.UnfollowAsync(null!);
+        var act = () => _relationsApi.UnfollowUserAsync(null!);
 
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
@@ -124,7 +124,7 @@ public class RelationsApiTests
 
     #endregion
 
-    #region BlockAsync Tests
+    #region BlockUserAsync Tests
 
     [Fact]
     public async Task BlockAsync_WithUsername_CallsCorrectEndpoint()
@@ -137,7 +137,7 @@ public class RelationsApiTests
             .ReturnsAsync(expectedResponse);
 
         // Act
-        var result = await _relationsApi.BlockAsync(username);
+        var result = await _relationsApi.BlockUserAsync(username);
 
         // Assert
         result.Should().BeTrue();
@@ -148,7 +148,7 @@ public class RelationsApiTests
     public async Task BlockAsync_WithNullUsername_ThrowsArgumentException()
     {
         // Act
-        var act = () => _relationsApi.BlockAsync(null!);
+        var act = () => _relationsApi.BlockUserAsync(null!);
 
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
@@ -156,7 +156,7 @@ public class RelationsApiTests
 
     #endregion
 
-    #region UnblockAsync Tests
+    #region UnblockUserAsync Tests
 
     [Fact]
     public async Task UnblockAsync_WithUsername_CallsCorrectEndpoint()
@@ -169,7 +169,7 @@ public class RelationsApiTests
             .ReturnsAsync(expectedResponse);
 
         // Act
-        var result = await _relationsApi.UnblockAsync(username);
+        var result = await _relationsApi.UnblockUserAsync(username);
 
         // Assert
         result.Should().BeTrue();
@@ -180,7 +180,7 @@ public class RelationsApiTests
     public async Task UnblockAsync_WithNullUsername_ThrowsArgumentException()
     {
         // Act
-        var act = () => _relationsApi.UnblockAsync(null!);
+        var act = () => _relationsApi.UnblockUserAsync(null!);
 
         // Assert
         await act.Should().ThrowAsync<ArgumentException>();
@@ -188,7 +188,7 @@ public class RelationsApiTests
 
     #endregion
 
-    #region StreamFollowingAsync Tests
+    #region StreamFollowingUsersAsync Tests
 
     [Fact]
     public async Task StreamFollowingAsync_CallsCorrectEndpoint()
@@ -206,7 +206,7 @@ public class RelationsApiTests
 
         // Act
         var results = new List<UserExtended>();
-        await foreach (var user in _relationsApi.StreamFollowingAsync())
+        await foreach (var user in _relationsApi.StreamFollowingUsersAsync())
         {
             results.Add(user);
         }
@@ -230,7 +230,7 @@ public class RelationsApiTests
             .Returns(ToAsyncEnumerable(users));
 
         // Act
-        await foreach (var _ in _relationsApi.StreamFollowingAsync(cts.Token))
+        await foreach (var _ in _relationsApi.StreamFollowingUsersAsync(cts.Token))
         {
         }
 
@@ -253,7 +253,7 @@ public class RelationsApiTests
             .ReturnsAsync(expectedResponse);
 
         // Act
-        await _relationsApi.FollowAsync("user", cts.Token);
+        await _relationsApi.FollowUserAsync("user", cts.Token);
 
         // Assert
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>(It.IsAny<string>(), null, cts.Token), Times.Once);

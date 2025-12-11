@@ -1,4 +1,6 @@
 using System.Text;
+
+using LichessSharp.Api.Contracts;
 using LichessSharp.Api.Options;
 using LichessSharp.Http;
 using LichessSharp.Models;
@@ -13,7 +15,7 @@ internal sealed class UsersApi(ILichessHttpClient httpClient) : IUsersApi
     private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
     /// <inheritdoc />
-    public async Task<UserExtended> GetAsync(string username, GetUserOptions? options = null, CancellationToken cancellationToken = default)
+    public async Task<UserExtended> GetByUsernameAsync(string username, GetUserOptions? options = null, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
 
@@ -29,7 +31,7 @@ internal sealed class UsersApi(ILichessHttpClient httpClient) : IUsersApi
         var ids = userIds.ToList();
         if (ids.Count == 0)
         {
-            return Array.Empty<User>();
+            return [];
         }
 
         if (ids.Count > 300)
@@ -43,14 +45,14 @@ internal sealed class UsersApi(ILichessHttpClient httpClient) : IUsersApi
     }
 
     /// <inheritdoc />
-    public async Task<IReadOnlyList<UserStatus>> GetStatusAsync(IEnumerable<string> userIds, GetUserStatusOptions? options = null, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<UserStatus>> GetRealTimeStatusAsync(IEnumerable<string> userIds, GetUserStatusOptions? options = null, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(userIds);
 
         var ids = userIds.ToList();
         if (ids.Count == 0)
         {
-            return Array.Empty<UserStatus>();
+            return [];
         }
 
         if (ids.Count > 100)
@@ -190,26 +192,6 @@ internal sealed class UsersApi(ILichessHttpClient httpClient) : IUsersApi
         var formData = new Dictionary<string, string> { ["text"] = text };
         var response = await _httpClient.PostFormAsync<OkResponse>(endpoint, formData, cancellationToken).ConfigureAwait(false);
         return response?.Ok == true;
-    }
-
-    /// <inheritdoc />
-    public async Task<Timeline> GetTimelineAsync(int? nb = null, DateTimeOffset? since = null, CancellationToken cancellationToken = default)
-    {
-        var sb = new StringBuilder("/api/timeline");
-        var hasQuery = false;
-
-        if (nb.HasValue)
-        {
-            sb.Append(hasQuery ? '&' : '?').Append($"nb={nb.Value}");
-            hasQuery = true;
-        }
-        if (since.HasValue)
-        {
-            var timestamp = since.Value.ToUnixTimeMilliseconds();
-            sb.Append(hasQuery ? '&' : '?').Append($"since={timestamp}");
-        }
-
-        return await _httpClient.GetAsync<Timeline>(sb.ToString(), cancellationToken).ConfigureAwait(false);
     }
 
     private static string BuildGetUserEndpoint(string username, GetUserOptions? options)

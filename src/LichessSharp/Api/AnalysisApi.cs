@@ -1,4 +1,6 @@
 using System.Text;
+
+using LichessSharp.Api.Contracts;
 using LichessSharp.Exceptions;
 using LichessSharp.Http;
 

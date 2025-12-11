@@ -1,5 +1,7 @@
 using System.Runtime.CompilerServices;
 using System.Text;
+
+using LichessSharp.Api.Contracts;
 using LichessSharp.Api.Options;
 using LichessSharp.Http;
 using LichessSharp.Models;
@@ -14,7 +16,7 @@ internal sealed class GamesApi(ILichessHttpClient httpClient) : IGamesApi
     private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
     /// <inheritdoc />
-    public async Task<GameJson> GetAsync(string gameId, ExportGameOptions? options = null, CancellationToken cancellationToken = default)
+    public async Task<GameJson> ExportAsync(string gameId, ExportGameOptions? options = null, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(gameId);
 
@@ -32,7 +34,7 @@ internal sealed class GamesApi(ILichessHttpClient httpClient) : IGamesApi
     }
 
     /// <inheritdoc />
-    public async Task<GameJson> GetCurrentGameAsync(string username, ExportGameOptions? options = null, CancellationToken cancellationToken = default)
+    public async Task<GameJson> GetCurrentGameByUserAsync(string username, ExportGameOptions? options = null, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
 
@@ -78,7 +80,7 @@ internal sealed class GamesApi(ILichessHttpClient httpClient) : IGamesApi
     }
 
     /// <inheritdoc />
-    public async IAsyncEnumerable<GameJson> StreamGamesByUsersAsync(IEnumerable<string> userIds, bool withCurrentGames = false, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<GameJson> StreamByUsersAsync(IEnumerable<string> userIds, bool withCurrentGames = false, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(userIds);
 
@@ -112,11 +114,11 @@ internal sealed class GamesApi(ILichessHttpClient httpClient) : IGamesApi
 
         var endpoint = $"/api/account/playing?nb={count}";
         var response = await _httpClient.GetAsync<OngoingGamesResponse>(endpoint, cancellationToken).ConfigureAwait(false);
-        return response.NowPlaying ?? Array.Empty<OngoingGame>();
+        return response.NowPlaying ?? [];
     }
 
     /// <inheritdoc />
-    public async Task<ImportGameResponse> ImportPgnAsync(string pgn, CancellationToken cancellationToken = default)
+    public async Task<ImportGameResponse> ImportAsync(string pgn, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(pgn);
 
@@ -129,7 +131,7 @@ internal sealed class GamesApi(ILichessHttpClient httpClient) : IGamesApi
     }
 
     /// <inheritdoc />
-    public async Task<string> GetImportedGamesPgnAsync(CancellationToken cancellationToken = default)
+    public async Task<string> ExportImportedGamesAsync(CancellationToken cancellationToken = default)
     {
         return await _httpClient.GetStringWithAcceptAsync(
             "/api/games/export/imports",
@@ -164,7 +166,7 @@ internal sealed class GamesApi(ILichessHttpClient httpClient) : IGamesApi
     }
 
     /// <inheritdoc />
-    public async IAsyncEnumerable<GameStreamEvent> StreamGamesByIdsAsync(
+    public async IAsyncEnumerable<GameStreamEvent> StreamByIdsAsync(
         string streamId,
         IEnumerable<string> gameIds,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)

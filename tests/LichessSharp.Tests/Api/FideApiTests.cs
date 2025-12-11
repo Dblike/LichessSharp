@@ -200,7 +200,7 @@ public class FideApiTests
         var query = "Ding Liren";
         _httpClientMock
             .Setup(x => x.GetAsync<List<FidePlayer>>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<FidePlayer>());
+            .ReturnsAsync([]);
 
         // Act
         await _fideApi.SearchPlayersAsync(query);
@@ -218,7 +218,7 @@ public class FideApiTests
         var query = "NonExistentPlayer12345";
         _httpClientMock
             .Setup(x => x.GetAsync<List<FidePlayer>>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<FidePlayer>());
+            .ReturnsAsync([]);
 
         // Act
         var result = await _fideApi.SearchPlayersAsync(query);
@@ -236,7 +236,7 @@ public class FideApiTests
         var cts = new CancellationTokenSource();
         _httpClientMock
             .Setup(x => x.GetAsync<List<FidePlayer>>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<FidePlayer>());
+            .ReturnsAsync([]);
 
         // Act
         await _fideApi.SearchPlayersAsync(query, cts.Token);
@@ -254,7 +254,7 @@ public class FideApiTests
         var query = "Müller & Sons";
         _httpClientMock
             .Setup(x => x.GetAsync<List<FidePlayer>>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<FidePlayer>());
+            .ReturnsAsync([]);
 
         // Act
         await _fideApi.SearchPlayersAsync(query);

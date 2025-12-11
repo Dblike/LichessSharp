@@ -1,5 +1,6 @@
 using FluentAssertions;
 using LichessSharp.Api;
+using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
 using LichessSharp.Models;
 using Moq;
@@ -59,7 +60,7 @@ public class ArenaTournamentsApiTests
 
     #endregion
 
-    #region GetAsync Tests
+    #region ExportAsync Tests
 
     [Fact]
     public async Task GetAsync_WithDefaultPage_CallsCorrectEndpoint()
@@ -230,7 +231,7 @@ public class ArenaTournamentsApiTests
 
     #endregion
 
-    #region WithdrawAsync Tests
+    #region PauseOrWithdrawAsync Tests
 
     [Fact]
     public async Task WithdrawAsync_CallsCorrectEndpoint()
@@ -242,7 +243,7 @@ public class ArenaTournamentsApiTests
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
-        var result = await _api.WithdrawAsync(id);
+        var result = await _api.PauseOrWithdrawAsync(id);
 
         // Assert
         result.Should().BeTrue();
@@ -253,7 +254,7 @@ public class ArenaTournamentsApiTests
     public async Task WithdrawAsync_WithNullId_ThrowsArgumentException()
     {
         await Assert.ThrowsAsync<ArgumentNullException>(async () =>
-            await _api.WithdrawAsync(null!));
+            await _api.PauseOrWithdrawAsync(null!));
     }
 
     #endregion

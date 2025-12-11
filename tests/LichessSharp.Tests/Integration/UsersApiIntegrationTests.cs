@@ -16,13 +16,13 @@ public class UsersApiIntegrationTests : IntegrationTestBase
     private const string Maia1Username = "maia1";
     private const string Maia5Username = "maia5";
 
-    #region GetAsync Tests
+    #region ExportAsync Tests
 
     [Fact]
     public async Task GetAsync_WithValidUsername_ReturnsUserProfile()
     {
         // Act
-        var user = await Client.Users.GetAsync(ThibaultUsername);
+        var user = await Client.Users.GetByUsernameAsync(ThibaultUsername);
 
         // Assert
         user.Should().NotBeNull();
@@ -34,7 +34,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
     public async Task GetAsync_WithTrophiesOption_ReturnsTrophies()
     {
         // Act
-        var user = await Client.Users.GetAsync(ThibaultUsername, new GetUserOptions { Trophies = true });
+        var user = await Client.Users.GetByUsernameAsync(ThibaultUsername, new GetUserOptions { Trophies = true });
 
         // Assert
         user.Should().NotBeNull();
@@ -62,7 +62,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
 
     #endregion
 
-    #region GetStatusAsync Tests
+    #region GetRealTimeStatusAsync Tests
 
     [Fact]
     public async Task GetStatusAsync_WithValidUsernames_ReturnsStatuses()
@@ -71,7 +71,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         var userIds = new[] { ThibaultUsername, Maia1Username };
 
         // Act
-        var statuses = await Client.Users.GetStatusAsync(userIds);
+        var statuses = await Client.Users.GetRealTimeStatusAsync(userIds);
 
         // Assert
         statuses.Should().NotBeNull();
@@ -87,7 +87,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         var options = new GetUserStatusOptions { WithSignal = true };
 
         // Act
-        var statuses = await Client.Users.GetStatusAsync(userIds, options);
+        var statuses = await Client.Users.GetRealTimeStatusAsync(userIds, options);
 
         // Assert
         statuses.Should().NotBeNull();

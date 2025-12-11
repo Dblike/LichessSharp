@@ -1,5 +1,6 @@
 using FluentAssertions;
 using LichessSharp.Api;
+using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
 using LichessSharp.Models;
 using Moq;
@@ -33,7 +34,7 @@ public class TeamsApiTests
 
     #endregion
 
-    #region GetAsync Tests
+    #region ExportAsync Tests
 
     [Fact]
     public async Task GetAsync_CallsCorrectEndpoint()
@@ -558,7 +559,7 @@ public class TeamsApiTests
     {
         CurrentPage = 1,
         MaxPerPage = 15,
-        CurrentPageResults = new List<Team> { CreateTestTeam("team1"), CreateTestTeam("team2") },
+        CurrentPageResults = [CreateTestTeam("team1"), CreateTestTeam("team2")],
         NbResults = 100,
         NbPages = 7
     };
