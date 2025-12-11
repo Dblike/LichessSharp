@@ -204,6 +204,56 @@ public class AccountApiTests
         result.Should().BeFalse();
     }
 
+    [Fact]
+    public async Task GetTimelineAsync_WithoutParams_CallsBaseEndpoint()
+    {
+        // Arrange
+        _httpClientMock
+            .Setup(x => x.GetAsync<Timeline>("/api/timeline", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Timeline());
+
+        // Act
+        await _accountApi.GetTimelineAsync();
+
+        // Assert
+        _httpClientMock.Verify(x => x.GetAsync<Timeline>("/api/timeline", It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetTimelineAsync_WithNb_IncludesQueryParam()
+    {
+        // Arrange
+        _httpClientMock
+            .Setup(x => x.GetAsync<Timeline>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Timeline());
+
+        // Act
+        await _accountApi.GetTimelineAsync(nb: 15);
+
+        // Assert
+        _httpClientMock.Verify(x => x.GetAsync<Timeline>(
+            It.Is<string>(s => s.Contains("nb=15")),
+            It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetTimelineAsync_WithSince_IncludesTimestamp()
+    {
+        // Arrange
+        _httpClientMock
+            .Setup(x => x.GetAsync<Timeline>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Timeline());
+        var since = new DateTimeOffset(2024, 1, 1, 0, 0, 0, TimeSpan.Zero);
+
+        // Act
+        await _accountApi.GetTimelineAsync(since: since);
+
+        // Assert
+        _httpClientMock.Verify(x => x.GetAsync<Timeline>(
+            It.Is<string>(s => s.Contains("since=")),
+            It.IsAny<CancellationToken>()), Times.Once);
+    }
+
     private static UserExtended CreateTestUserExtended() => new()
     {
         Id = "testuser",
