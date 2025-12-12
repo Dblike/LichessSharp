@@ -20,7 +20,17 @@ public abstract class IntegrationTestBase : IDisposable
     /// </summary>
     protected const int DefaultBaseDelayMs = 1000;
 
-    protected LichessClient Client { get; } = new();
+    /// <summary>
+    ///     Creates the LichessClient with a longer timeout suitable for integration tests.
+    ///     The timeout is increased to 2 minutes to accommodate rate limit retry delays
+    ///     (Lichess API can request up to 60 second waits).
+    /// </summary>
+    protected LichessClient Client { get; } = new(
+        new HttpClient(),
+        new LichessClientOptions
+        {
+            DefaultTimeout = TimeSpan.FromMinutes(2)
+        });
 
     public void Dispose()
     {

@@ -18,7 +18,6 @@ namespace LichessSharp.Tests.Integration.Authenticated;
 [LongRunningTest]
 [Trait("Category", "Integration")]
 [Trait("Category", "Authenticated")]
-[Trait("Category", "LongRunning")]
 public class BulkPairingsApiAuthenticatedTests : AuthenticatedTestBase
 {
     [RequiresAuthentication]
