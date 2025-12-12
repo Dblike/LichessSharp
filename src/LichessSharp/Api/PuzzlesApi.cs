@@ -4,7 +4,7 @@ using System.Text.Json;
 
 using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
-using LichessSharp.Models;
+using LichessSharp.Models.Puzzles;
 using LichessSharp.Serialization;
 
 namespace LichessSharp.Api;

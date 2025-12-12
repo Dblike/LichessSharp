@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-using LichessSharp.Models;
+using LichessSharp.Models.Puzzles;
 
 // Required for PuzzleBatch, PuzzleBatchResult, PuzzleSolution, PuzzleReplay, PuzzleRaceResults
 

@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
+using LichessSharp.Models.Common;
 
-namespace LichessSharp.Models;
+namespace LichessSharp.Models.Puzzles;
 
 /// <summary>
 /// A Lichess puzzle.
@@ -83,31 +84,13 @@ public class PuzzleGame
     /// Performance type of the game.
     /// </summary>
     [JsonPropertyName("perf")]
-    public PuzzlePerf? Perf { get; init; }
+    public PerformanceType? Perf { get; init; }
 
     /// <summary>
     /// The players in the puzzle game.
     /// </summary>
     [JsonPropertyName("players")]
     public PuzzlePlayer[]? Players { get; init; }
-}
-
-/// <summary>
-/// Performance type for a puzzle game.
-/// </summary>
-public class PuzzlePerf
-{
-    /// <summary>
-    /// The performance key.
-    /// </summary>
-    [JsonPropertyName("key")]
-    public string? Key { get; init; }
-
-    /// <summary>
-    /// The performance name.
-    /// </summary>
-    [JsonPropertyName("name")]
-    public string? Name { get; init; }
 }
 
 /// <summary>

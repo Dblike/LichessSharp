@@ -2,7 +2,7 @@ using FluentAssertions;
 using LichessSharp.Api;
 using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
-using LichessSharp.Models;
+using LichessSharp.Models.Common;
 using Moq;
 using Xunit;
 

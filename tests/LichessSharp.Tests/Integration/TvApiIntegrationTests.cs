@@ -1,8 +1,8 @@
 using FluentAssertions;
 
 using LichessSharp.Api.Contracts;
-using LichessSharp.Models;
 using LichessSharp.Models.Enums;
+using LichessSharp.Models.Games;
 
 using Xunit;
 

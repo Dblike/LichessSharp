@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace LichessSharp.Models;
+namespace LichessSharp.Models.Common;
 
 /// <summary>
 /// Standard OK response from Lichess API.
@@ -48,4 +48,16 @@ public class KidModeResponse
     /// </summary>
     [JsonPropertyName("kid")]
     public bool Kid { get; init; }
+}
+
+/// <summary>
+/// User note response from Lichess API.
+/// </summary>
+public class NoteResponse
+{
+    /// <summary>
+    /// The note text.
+    /// </summary>
+    [JsonPropertyName("text")]
+    public string? Text { get; init; }
 }

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace LichessSharp.Models;
+namespace LichessSharp.Models.Account;
 
 /// <summary>
 /// Account preferences response wrapper.
@@ -35,13 +35,13 @@ public class UserPreferences
     /// Whether the background is transparent.
     /// </summary>
     [JsonPropertyName("transp")]
-    public bool? Transp { get; init; }
+    public bool? TransparentBackground { get; init; }
 
     /// <summary>
     /// Background image URL.
     /// </summary>
     [JsonPropertyName("bgImg")]
-    public string? BgImg { get; init; }
+    public string? BackgroundImageUrl { get; init; }
 
     /// <summary>
     /// Whether the board is 3D.
@@ -230,7 +230,7 @@ public class UserPreferences
     public int? MoveEvent { get; init; }
 
     /// <summary>
-    /// Rookie piece setting.
+    /// Rook castling setting.
     /// </summary>
     [JsonPropertyName("rookCastle")]
     public int? RookCastle { get; init; }

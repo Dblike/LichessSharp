@@ -1,6 +1,6 @@
 using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
-using LichessSharp.Models;
+using LichessSharp.Models.Fide;
 
 namespace LichessSharp.Api;
 

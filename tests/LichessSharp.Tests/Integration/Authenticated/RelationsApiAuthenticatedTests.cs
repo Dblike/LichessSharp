@@ -1,5 +1,6 @@
 using FluentAssertions;
 using LichessSharp.Exceptions;
+using LichessSharp.Models.Users;
 using Xunit;
 
 namespace LichessSharp.Tests.Integration.Authenticated;
@@ -19,7 +20,7 @@ public class RelationsApiAuthenticatedTests : AuthenticatedTestBase
     public async Task StreamFollowingAsync_WithValidToken_ReturnsFollowedUsers()
     {
         // Act
-        var following = new List<Models.User>();
+        var following = new List<UserExtended>();
         await foreach (var user in Client.Relations.StreamFollowingUsersAsync())
         {
             following.Add(user);

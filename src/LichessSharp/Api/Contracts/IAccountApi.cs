@@ -1,4 +1,5 @@
-using LichessSharp.Models;
+using LichessSharp.Models.Account;
+using LichessSharp.Models.Users;
 
 namespace LichessSharp.Api.Contracts;
 

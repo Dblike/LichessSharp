@@ -1,5 +1,5 @@
 using LichessSharp.Api.Options;
-using LichessSharp.Models;
+using LichessSharp.Models.Games;
 
 namespace LichessSharp.Api.Contracts;
 

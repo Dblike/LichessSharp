@@ -2,11 +2,15 @@ using System.Text.Json.Serialization;
 using LichessSharp.Models.Enums;
 using LichessSharp.Serialization.Converters;
 
-namespace LichessSharp.Models;
+namespace LichessSharp.Models.Users;
 
 /// <summary>
 /// Basic user information.
 /// </summary>
+/// <remarks>
+/// Note: The Lichess API uses "username" for full User objects and "name" for LightUser objects.
+/// This class uses "username" to match the full User schema.
+/// </remarks>
 public class User
 {
     /// <summary>

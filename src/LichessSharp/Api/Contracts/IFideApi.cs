@@ -1,4 +1,4 @@
-using LichessSharp.Models;
+using LichessSharp.Models.Fide;
 
 namespace LichessSharp.Api.Contracts;
 

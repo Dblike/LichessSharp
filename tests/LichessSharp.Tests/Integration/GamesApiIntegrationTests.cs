@@ -1,6 +1,6 @@
 using FluentAssertions;
 using LichessSharp.Api.Options;
-using LichessSharp.Models;
+using LichessSharp.Models.Games;
 using Xunit;
 
 namespace LichessSharp.Tests.Integration;

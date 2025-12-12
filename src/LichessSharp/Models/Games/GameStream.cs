@@ -1,7 +1,8 @@
 using System.Text.Json.Serialization;
+using LichessSharp.Models.Common;
 using LichessSharp.Models.Enums;
 
-namespace LichessSharp.Models;
+namespace LichessSharp.Models.Games;
 
 /// <summary>
 /// Event from streaming a single game's moves via /api/stream/game/{id}.
@@ -176,7 +177,7 @@ public class GameStreamEvent
     /// Clock information.
     /// </summary>
     [JsonPropertyName("clock")]
-    public GameStreamClock? Clock { get; init; }
+    public Clock? Clock { get; init; }
 
     /// <summary>
     /// Player information.
@@ -189,30 +190,6 @@ public class GameStreamEvent
     /// </summary>
     [JsonPropertyName("winner")]
     public string? Winner { get; init; }
-}
-
-/// <summary>
-/// Clock information for a streamed game.
-/// </summary>
-public class GameStreamClock
-{
-    /// <summary>
-    /// Initial time in seconds.
-    /// </summary>
-    [JsonPropertyName("initial")]
-    public int? Initial { get; init; }
-
-    /// <summary>
-    /// Increment in seconds.
-    /// </summary>
-    [JsonPropertyName("increment")]
-    public int? Increment { get; init; }
-
-    /// <summary>
-    /// Total time for the game in seconds.
-    /// </summary>
-    [JsonPropertyName("totalTime")]
-    public int? TotalTime { get; init; }
 }
 
 /// <summary>

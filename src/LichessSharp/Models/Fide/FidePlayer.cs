@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace LichessSharp.Models;
+namespace LichessSharp.Models.Fide;
 
 /// <summary>
 /// A FIDE chess player.

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-using LichessSharp.Models;
+using LichessSharp.Models.Games;
 
 namespace LichessSharp.Api.Contracts;
 

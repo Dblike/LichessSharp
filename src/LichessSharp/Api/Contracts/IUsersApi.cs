@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 
 using LichessSharp.Api.Options;
-using LichessSharp.Models;
+using LichessSharp.Models.Users;
 using LichessSharp.Serialization.Converters;
 
 namespace LichessSharp.Api.Contracts;

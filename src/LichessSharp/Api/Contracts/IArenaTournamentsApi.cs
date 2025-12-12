@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-using LichessSharp.Models;
+using LichessSharp.Models.Games;
 using LichessSharp.Serialization.Converters;
 
 namespace LichessSharp.Api.Contracts;

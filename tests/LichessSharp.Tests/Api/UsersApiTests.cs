@@ -3,7 +3,8 @@ using LichessSharp.Api;
 using LichessSharp.Api.Contracts;
 using LichessSharp.Api.Options;
 using LichessSharp.Http;
-using LichessSharp.Models;
+using LichessSharp.Models.Common;
+using LichessSharp.Models.Users;
 using Moq;
 using Xunit;
 

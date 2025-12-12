@@ -1,7 +1,7 @@
 using FluentAssertions;
 using LichessSharp.Api;
 using LichessSharp.Http;
-using LichessSharp.Models;
+using LichessSharp.Models.Fide;
 using Moq;
 using Xunit;
 

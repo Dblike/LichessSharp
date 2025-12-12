@@ -2,7 +2,9 @@ using System.Text;
 
 using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
-using LichessSharp.Models;
+using LichessSharp.Models.Account;
+using LichessSharp.Models.Common;
+using LichessSharp.Models.Users;
 
 namespace LichessSharp.Api;
 
