@@ -12,31 +12,6 @@ public sealed class LichessClientOptions
     public string? AccessToken { get; set; }
 
     /// <summary>
-    /// The base address for the Lichess API.
-    /// Defaults to https://lichess.org
-    /// </summary>
-    public Uri BaseAddress { get; set; } = new("https://lichess.org");
-
-    /// <summary>
-    /// The base address for the Opening Explorer API.
-    /// Defaults to https://explorer.lichess.ovh
-    /// </summary>
-    public Uri ExplorerBaseAddress { get; set; } = new("https://explorer.lichess.ovh");
-
-    /// <summary>
-    /// The base address for the Tablebase API.
-    /// Defaults to https://tablebase.lichess.ovh
-    /// </summary>
-    public Uri TablebaseBaseAddress { get; set; } = new("https://tablebase.lichess.ovh");
-
-    /// <summary>
-    /// The base address for the External Engine API (analysis endpoints only).
-    /// Defaults to https://engine.lichess.ovh
-    /// Note: CRUD operations use the main BaseAddress.
-    /// </summary>
-    public Uri EngineBaseAddress { get; set; } = new("https://engine.lichess.ovh");
-
-    /// <summary>
     /// The default timeout for HTTP requests.
     /// Defaults to 30 seconds.
     /// </summary>

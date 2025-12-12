@@ -35,7 +35,7 @@ internal sealed class LichessHttpClient : ILichessHttpClient
 
     private void ConfigureHttpClient()
     {
-        _httpClient.BaseAddress = _options.BaseAddress;
+        _httpClient.BaseAddress = LichessApiUrls.BaseAddress;
         _httpClient.Timeout = _options.DefaultTimeout;
         _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 

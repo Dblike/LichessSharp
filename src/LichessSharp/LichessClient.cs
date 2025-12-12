@@ -12,7 +12,6 @@ namespace LichessSharp;
 public sealed class LichessClient : ILichessClient
 {
     private readonly LichessHttpClient _httpClient;
-    private readonly LichessClientOptions _options;
     private bool _disposed;
 
     /// <summary>
@@ -28,8 +27,6 @@ public sealed class LichessClient : ILichessClient
     {
         ArgumentNullException.ThrowIfNull(httpClient);
         ArgumentNullException.ThrowIfNull(options);
-
-        _options = options;
 
         var httpLogger = logger != null
             ? new LoggerFactory().CreateLogger<LichessHttpClient>()
@@ -143,11 +140,11 @@ public sealed class LichessClient : ILichessClient
         Messaging = new MessagingApi(_httpClient);
         Broadcasts = new BroadcastsApi(_httpClient);
         Analysis = new AnalysisApi(_httpClient);
-        OpeningExplorer = new OpeningExplorerApi(_httpClient, _options.ExplorerBaseAddress);
-        Tablebase = new TablebaseApi(_httpClient, _options.TablebaseBaseAddress);
+        OpeningExplorer = new OpeningExplorerApi(_httpClient, LichessApiUrls.ExplorerBaseAddress);
+        Tablebase = new TablebaseApi(_httpClient, LichessApiUrls.TablebaseBaseAddress);
         Fide = new FideApi(_httpClient);
         OAuth = new OAuthApi(_httpClient);
-        ExternalEngine = new ExternalEngineApi(_httpClient, _options.EngineBaseAddress);
+        ExternalEngine = new ExternalEngineApi(_httpClient, LichessApiUrls.EngineBaseAddress);
     }
 
     /// <inheritdoc />

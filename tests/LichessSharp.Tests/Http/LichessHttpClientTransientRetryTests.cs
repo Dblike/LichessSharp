@@ -29,7 +29,7 @@ public class LichessHttpClientTransientRetryTests
 
         var httpClient = new HttpClient(handlerMock.Object)
         {
-            BaseAddress = options.BaseAddress
+            BaseAddress = LichessApiUrls.BaseAddress
         };
 
         return new LichessHttpClient(
