@@ -14,7 +14,6 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <!-- AOT compatibility analysis - disabled for scaffold, will be enabled incrementally -->
-    <!-- TODO: Enable AOT when HTTP client methods accept JsonTypeInfo<T> -->
     <IsAotCompatible>false</IsAotCompatible>
     <EnableTrimAnalyzer>false</EnableTrimAnalyzer>
 

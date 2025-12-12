@@ -7,6 +7,7 @@ namespace LichessSharp.Tests.Integration;
 /// Integration tests for the FIDE API.
 /// These tests use real FIDE player IDs from well-known players.
 /// </summary>
+[IntegrationTest]
 [Trait("Category", "Integration")]
 public class FideApiIntegrationTests : IntegrationTestBase
 {

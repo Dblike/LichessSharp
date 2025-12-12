@@ -31,6 +31,8 @@ namespace LichessSharp.Tests.Integration.Manual;
 /// 2. Set the LICHESS_TEST_TOKEN environment variable
 /// 3. Run: dotnet test --filter "Category=Manual"
 /// </summary>
+[IntegrationTest]
+[Trait("Category", "Integration")]
 [Trait("Category", "Manual")]
 public class OAuthApiManualTests : AuthenticatedTestBase
 {

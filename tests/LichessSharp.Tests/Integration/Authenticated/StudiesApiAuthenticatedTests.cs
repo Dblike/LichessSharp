@@ -10,7 +10,9 @@ namespace LichessSharp.Tests.Integration.Authenticated;
 /// Authenticated integration tests for the Studies API.
 /// Requires LICHESS_TEST_TOKEN environment variable with study:read scope.
 /// </summary>
+[IntegrationTest]
 [AuthenticatedTest]
+[Trait("Category", "Integration")]
 [Trait("Category", "Authenticated")]
 [RequiresScope("study:read")]
 public class StudiesApiAuthenticatedTests : AuthenticatedTestBase

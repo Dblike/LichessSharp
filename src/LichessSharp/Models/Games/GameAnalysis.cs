@@ -29,7 +29,7 @@ public class PlayerAnalysis
     /// Average centipawn loss.
     /// </summary>
     [JsonPropertyName("acpl")]
-    public int Acpl { get; init; }
+    public int AvgCentipawnLoss { get; init; }
 
     /// <summary>
     /// Accuracy percentage.
@@ -82,6 +82,7 @@ public class Judgment
     /// <summary>
     /// Judgment name (Inaccuracy, Mistake, Blunder).
     /// </summary>
+    /// TODO: Introduce Judgment Enum
     [JsonPropertyName("name")]
     public string? Name { get; init; }
 

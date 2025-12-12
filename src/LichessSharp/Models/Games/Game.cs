@@ -37,6 +37,7 @@ public class Game
     /// <summary>
     /// The performance type (game mode).
     /// </summary>
+    /// TODO: Check if this is any different from Variant/Speed
     [JsonPropertyName("perf")]
     public string? Perf { get; init; }
 
@@ -182,19 +183,26 @@ public class GamePlayer
 }
 
 /// <summary>
-/// Variant information.
+/// Variant information object containing key and display name.
+/// Maps to the Variant schema in the Lichess API.
 /// </summary>
 public class VariantInfo
 {
     /// <summary>
-    /// Variant key.
+    /// Variant key (e.g., standard, chess960, crazyhouse).
     /// </summary>
     [JsonPropertyName("key")]
-    public string? Key { get; init; }
+    public Variant Key { get; init; }
 
     /// <summary>
-    /// Variant name.
+    /// Human-readable variant name.
     /// </summary>
     [JsonPropertyName("name")]
     public string? Name { get; init; }
+
+    /// <summary>
+    /// Short name for the variant.
+    /// </summary>
+    [JsonPropertyName("short")]
+    public string? Short { get; init; }
 }

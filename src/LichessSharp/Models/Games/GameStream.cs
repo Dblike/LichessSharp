@@ -26,11 +26,12 @@ public class MoveStreamEvent
     /// Game speed (first event only).
     /// </summary>
     [JsonPropertyName("speed")]
-    public string? Speed { get; init; }
+    public Speed? Speed { get; init; }
 
     /// <summary>
     /// Performance type (first event only).
     /// </summary>
+    /// TODO: Check if this is any different from Variant/Speed
     [JsonPropertyName("perf")]
     public string? Perf { get; init; }
 
@@ -73,6 +74,7 @@ public class MoveStreamEvent
     /// <summary>
     /// Game source (first event only).
     /// </summary>
+    /// TODO: Can this be an enum?
     [JsonPropertyName("source")]
     public string? Source { get; init; }
 
@@ -141,17 +143,18 @@ public class GameStreamEvent
     /// Variant key.
     /// </summary>
     [JsonPropertyName("variant")]
-    public string? Variant { get; init; }
+    public Variant? Variant { get; init; }
 
     /// <summary>
     /// Game speed.
     /// </summary>
     [JsonPropertyName("speed")]
-    public string? Speed { get; init; }
+    public Speed? Speed { get; init; }
 
     /// <summary>
     /// Performance type.
     /// </summary>
+    /// TODO: Check if this is any different from Variant/Speed
     [JsonPropertyName("perf")]
     public string? Perf { get; init; }
 

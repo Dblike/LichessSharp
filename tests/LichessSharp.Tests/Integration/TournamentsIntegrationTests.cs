@@ -11,6 +11,7 @@ namespace LichessSharp.Tests.Integration;
 /// Integration tests for Arena and Swiss Tournaments APIs.
 /// These tests require network access to Lichess.
 /// </summary>
+[IntegrationTest]
 [Trait("Category", "Integration")]
 public class TournamentsIntegrationTests : IDisposable
 {

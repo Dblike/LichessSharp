@@ -7,6 +7,7 @@ namespace LichessSharp.Tests.Integration;
 /// Integration tests for the Analysis API.
 /// These tests use FEN positions from the OpenAPI spec examples.
 /// </summary>
+[IntegrationTest]
 [Trait("Category", "Integration")]
 public class AnalysisApiIntegrationTests : IntegrationTestBase
 {

@@ -8,6 +8,7 @@ namespace LichessSharp.Tests.Integration;
 /// Integration tests for the Puzzles API.
 /// These tests verify that the API client works correctly against the live Lichess API.
 /// </summary>
+[IntegrationTest]
 [Trait("Category", "Integration")]
 public class PuzzlesApiIntegrationTests : IntegrationTestBase
 {

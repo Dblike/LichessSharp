@@ -9,6 +9,7 @@ namespace LichessSharp.Tests.Integration;
 /// Integration tests for the Games API.
 /// These tests use real game IDs from the OpenAPI spec examples.
 /// </summary>
+[IntegrationTest]
 [Trait("Category", "Integration")]
 public class GamesApiIntegrationTests : IntegrationTestBase
 {

@@ -9,6 +9,7 @@ namespace LichessSharp.Tests.Integration;
 /// These tests use FEN positions and play sequences from the OpenAPI spec examples.
 /// Endpoint: explorer.lichess.ovh
 /// </summary>
+[IntegrationTest]
 [Trait("Category", "Integration")]
 public class OpeningExplorerApiIntegrationTests : IntegrationTestBase
 {

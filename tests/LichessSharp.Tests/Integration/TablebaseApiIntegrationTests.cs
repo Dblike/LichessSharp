@@ -8,6 +8,7 @@ namespace LichessSharp.Tests.Integration;
 /// These tests use FEN positions from the OpenAPI spec examples.
 /// Endpoint: tablebase.lichess.ovh
 /// </summary>
+[IntegrationTest]
 [Trait("Category", "Integration")]
 public class TablebaseApiIntegrationTests : IntegrationTestBase
 {

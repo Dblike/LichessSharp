@@ -22,6 +22,7 @@ public class FidePlayer
     /// <summary>
     /// Player's title (GM, IM, FM, WGM, etc.).
     /// </summary>
+    /// TODO: Use Title Enum
     [JsonPropertyName("title")]
     public string? Title { get; init; }
 
