@@ -95,7 +95,7 @@ After approval:
 Always:
 
 - Build the solution for **all target frameworks (.NET 8 and .NET 10)**  
-- Run all tests  
+- Run all unit tests (skip integration tests--these are too long running)  
 - Ensure no API compatibility warnings are introduced (if API analyzer is configured)  
 - Verify async/streaming flows handle cancellation tokens correctly  
 - Verify authentication flows do not leak secrets in logs or exceptions  
