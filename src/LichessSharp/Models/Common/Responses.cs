@@ -5,6 +5,7 @@ namespace LichessSharp.Models.Common;
 /// <summary>
 ///     Standard OK response from Lichess API.
 /// </summary>
+[ResponseOnly]
 public class OkResponse
 {
     /// <summary>
@@ -17,6 +18,7 @@ public class OkResponse
 /// <summary>
 ///     Error response from Lichess API.
 /// </summary>
+[ResponseOnly]
 public class ErrorResponse
 {
     /// <summary>
@@ -29,6 +31,7 @@ public class ErrorResponse
 /// <summary>
 ///     Email response from Lichess API.
 /// </summary>
+[ResponseOnly]
 public class EmailResponse
 {
     /// <summary>
@@ -41,6 +44,7 @@ public class EmailResponse
 /// <summary>
 ///     Kid mode status response from Lichess API.
 /// </summary>
+[ResponseOnly]
 public class KidModeResponse
 {
     /// <summary>
@@ -53,6 +57,7 @@ public class KidModeResponse
 /// <summary>
 ///     User note response from Lichess API.
 /// </summary>
+[ResponseOnly]
 public class NoteResponse
 {
     /// <summary>

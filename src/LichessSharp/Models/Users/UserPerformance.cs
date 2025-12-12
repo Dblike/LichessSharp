@@ -8,6 +8,7 @@ namespace LichessSharp.Models.Users;
 /// <summary>
 ///     Performance statistics for a specific variant, including detailed stats.
 /// </summary>
+[ResponseOnly]
 public class UserPerformance
 {
     /// <summary>
@@ -52,6 +53,7 @@ public class UserPerformance
 /// <summary>
 ///     Detailed performance statistics.
 /// </summary>
+[ResponseOnly]
 public class PerformanceStatistics
 {
     /// <summary>
@@ -100,6 +102,7 @@ public class PerformanceStatistics
 /// <summary>
 ///     Rating at a specific time.
 /// </summary>
+[ResponseOnly]
 public class RatingAtTime
 {
     /// <summary>
@@ -125,6 +128,7 @@ public class RatingAtTime
 /// <summary>
 ///     Results against opponents.
 /// </summary>
+[ResponseOnly]
 public class ResultsVsOpponents
 {
     /// <summary>
@@ -137,6 +141,7 @@ public class ResultsVsOpponents
 /// <summary>
 ///     Result against a specific opponent.
 /// </summary>
+[ResponseOnly]
 public class OpponentResult
 {
     /// <summary>
@@ -168,6 +173,7 @@ public class OpponentResult
 /// <summary>
 ///     Performance game count.
 /// </summary>
+[ResponseOnly]
 public class PerformanceCount
 {
     /// <summary>
@@ -228,6 +234,7 @@ public class PerformanceCount
 /// <summary>
 ///     Result streak statistics.
 /// </summary>
+[ResponseOnly]
 public class ResultStreak
 {
     /// <summary>
@@ -246,6 +253,7 @@ public class ResultStreak
 /// <summary>
 ///     Streak information.
 /// </summary>
+[ResponseOnly]
 public class StreakInfo
 {
     /// <summary>
@@ -264,6 +272,7 @@ public class StreakInfo
 /// <summary>
 ///     Streak value.
 /// </summary>
+[ResponseOnly]
 public class StreakValue
 {
     /// <summary>
@@ -276,6 +285,7 @@ public class StreakValue
 /// <summary>
 ///     Play streak statistics.
 /// </summary>
+[ResponseOnly]
 public class PlayStreak
 {
     /// <summary>

@@ -5,6 +5,7 @@ namespace LichessSharp.Models.Account;
 /// <summary>
 ///     Account preferences response wrapper.
 /// </summary>
+[ResponseOnly]
 public class AccountPreferences
 {
     /// <summary>
@@ -23,6 +24,7 @@ public class AccountPreferences
 /// <summary>
 ///     User preferences.
 /// </summary>
+[ResponseOnly]
 public class UserPreferences
 {
     /// <summary>

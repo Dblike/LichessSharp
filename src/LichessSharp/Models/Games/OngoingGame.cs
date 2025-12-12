@@ -1,11 +1,13 @@
 using System.Text.Json.Serialization;
 using LichessSharp.Models.Enums;
+using LichessSharp.Serialization.Converters;
 
 namespace LichessSharp.Models.Games;
 
 /// <summary>
 ///     Response from the ongoing games endpoint.
 /// </summary>
+[ResponseOnly]
 public class OngoingGamesResponse
 {
     /// <summary>
@@ -18,6 +20,7 @@ public class OngoingGamesResponse
 /// <summary>
 ///     An ongoing game.
 /// </summary>
+[ResponseOnly]
 public class OngoingGame
 {
     /// <summary>
@@ -64,10 +67,11 @@ public class OngoingGame
     public GameStatus Status { get; init; }
 
     /// <summary>
-    ///     Variant information.
+    ///     Variant.
     /// </summary>
     [JsonPropertyName("variant")]
-    public VariantInfo? Variant { get; init; }
+    [JsonConverter(typeof(NullableVariantObjectConverter))]
+    public Variant? Variant { get; init; }
 
     /// <summary>
     ///     Speed category.
@@ -109,6 +113,7 @@ public class OngoingGame
 /// <summary>
 ///     Opponent in an ongoing game.
 /// </summary>
+[ResponseOnly]
 public class OngoingGameOpponent
 {
     /// <summary>

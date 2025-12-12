@@ -5,6 +5,7 @@ namespace LichessSharp.Models.Puzzles;
 /// <summary>
 ///     Information about puzzles to replay.
 /// </summary>
+[ResponseOnly]
 public class PuzzleReplayInfo
 {
     /// <summary>
@@ -35,6 +36,7 @@ public class PuzzleReplayInfo
 /// <summary>
 ///     Information about a puzzle angle (theme or opening).
 /// </summary>
+[ResponseOnly]
 public class PuzzleAngle
 {
     /// <summary>
@@ -59,6 +61,7 @@ public class PuzzleAngle
 /// <summary>
 ///     Response for puzzle replay endpoint.
 /// </summary>
+[ResponseOnly]
 public class PuzzleReplay
 {
     /// <summary>
@@ -77,6 +80,7 @@ public class PuzzleReplay
 /// <summary>
 ///     A player in a puzzle race.
 /// </summary>
+[ResponseOnly]
 public class PuzzleRacePlayer
 {
     /// <summary>
@@ -107,6 +111,7 @@ public class PuzzleRacePlayer
 /// <summary>
 ///     Results of a puzzle race.
 /// </summary>
+[ResponseOnly]
 public class PuzzleRaceResults
 {
     /// <summary>

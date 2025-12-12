@@ -12,6 +12,7 @@ namespace LichessSharp.Models.Common;
 ///     Note: The Lichess API uses "name" for LightUser and "username" for full User objects.
 ///     This class uses "name" to match the LightUser schema exactly.
 /// </remarks>
+[ResponseOnly]
 public class LightUser
 {
     /// <summary>

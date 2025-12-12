@@ -5,6 +5,7 @@ namespace LichessSharp.Models.Games;
 /// <summary>
 ///     Player analysis statistics.
 /// </summary>
+[ResponseOnly]
 public class PlayerAnalysis
 {
     /// <summary>
@@ -41,6 +42,7 @@ public class PlayerAnalysis
 /// <summary>
 ///     Analysis evaluation for a position.
 /// </summary>
+[ResponseOnly]
 public class Analysis
 {
     /// <summary>
@@ -77,6 +79,7 @@ public class Analysis
 /// <summary>
 ///     Move quality judgment.
 /// </summary>
+[ResponseOnly]
 public class Judgment
 {
     /// <summary>

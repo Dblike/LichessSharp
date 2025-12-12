@@ -11,6 +11,7 @@ namespace LichessSharp.Models.Users;
 ///     Note: The Lichess API uses "username" for full User objects and "name" for LightUser objects.
 ///     This class uses "username" to match the full User schema.
 /// </remarks>
+[ResponseOnly]
 public class User
 {
     /// <summary>
@@ -47,6 +48,7 @@ public class User
 /// <summary>
 ///     Extended user information including profile and statistics.
 /// </summary>
+[ResponseOnly]
 public class UserExtended : User
 {
     /// <summary>
@@ -127,6 +129,7 @@ public class UserExtended : User
 /// <summary>
 ///     User profile information.
 /// </summary>
+[ResponseOnly]
 public class UserProfile
 {
     /// <summary>
@@ -175,6 +178,7 @@ public class UserProfile
 /// <summary>
 ///     Performance statistics for a game mode.
 /// </summary>
+[ResponseOnly]
 public class PerfStats
 {
     /// <summary>
@@ -211,6 +215,7 @@ public class PerfStats
 /// <summary>
 ///     Play time statistics.
 /// </summary>
+[ResponseOnly]
 public class PlayTime
 {
     /// <summary>
@@ -229,6 +234,7 @@ public class PlayTime
 /// <summary>
 ///     Game count statistics.
 /// </summary>
+[ResponseOnly]
 public class GameCount
 {
     /// <summary>
@@ -271,6 +277,7 @@ public class GameCount
 /// <summary>
 ///     Real-time user status.
 /// </summary>
+[ResponseOnly]
 public class UserStatus
 {
     /// <summary>

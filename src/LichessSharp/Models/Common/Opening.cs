@@ -5,6 +5,7 @@ namespace LichessSharp.Models.Common;
 /// <summary>
 ///     Opening information for a chess game.
 /// </summary>
+[ResponseOnly]
 public class Opening
 {
     /// <summary>

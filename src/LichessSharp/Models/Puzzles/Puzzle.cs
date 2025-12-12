@@ -7,6 +7,7 @@ namespace LichessSharp.Models.Puzzles;
 /// <summary>
 ///     A Lichess puzzle.
 /// </summary>
+[ResponseOnly]
 public class Puzzle
 {
     /// <summary>
@@ -49,6 +50,7 @@ public class Puzzle
 /// <summary>
 ///     A puzzle with its associated game.
 /// </summary>
+[ResponseOnly]
 public class PuzzleWithGame
 {
     /// <summary>
@@ -67,6 +69,7 @@ public class PuzzleWithGame
 /// <summary>
 ///     The game a puzzle is derived from.
 /// </summary>
+[ResponseOnly]
 [JsonConverter(typeof(PuzzleGameConverter))]
 public class PuzzleGame
 {
@@ -101,6 +104,7 @@ public class PuzzleGame
 /// <summary>
 ///     A player in a puzzle game.
 /// </summary>
+[ResponseOnly]
 public class PuzzlePlayer
 {
     /// <summary>

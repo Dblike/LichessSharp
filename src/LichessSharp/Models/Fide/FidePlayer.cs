@@ -5,6 +5,7 @@ namespace LichessSharp.Models.Fide;
 /// <summary>
 ///     A FIDE chess player.
 /// </summary>
+[ResponseOnly]
 public class FidePlayer
 {
     /// <summary>

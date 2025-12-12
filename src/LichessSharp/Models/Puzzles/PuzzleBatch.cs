@@ -5,6 +5,7 @@ namespace LichessSharp.Models.Puzzles;
 /// <summary>
 ///     Glicko rating information for puzzles.
 /// </summary>
+[ResponseOnly]
 public class PuzzleGlicko
 {
     /// <summary>
@@ -29,6 +30,7 @@ public class PuzzleGlicko
 /// <summary>
 ///     A batch of puzzles retrieved for offline solving.
 /// </summary>
+[ResponseOnly]
 public class PuzzleBatch
 {
     /// <summary>
@@ -47,6 +49,7 @@ public class PuzzleBatch
 /// <summary>
 ///     A solution submitted for a puzzle in a batch.
 /// </summary>
+[RequestOnly]
 public class PuzzleSolution
 {
     /// <summary>
@@ -71,6 +74,7 @@ public class PuzzleSolution
 /// <summary>
 ///     A round result from solving a puzzle.
 /// </summary>
+[ResponseOnly]
 public class PuzzleRound
 {
     /// <summary>
@@ -95,6 +99,7 @@ public class PuzzleRound
 /// <summary>
 ///     Result from solving a batch of puzzles.
 /// </summary>
+[ResponseOnly]
 public class PuzzleBatchResult
 {
     /// <summary>
@@ -119,6 +124,7 @@ public class PuzzleBatchResult
 /// <summary>
 ///     Request body for solving a batch of puzzles.
 /// </summary>
+[RequestOnly]
 internal class PuzzleBatchSolveRequest
 {
     /// <summary>

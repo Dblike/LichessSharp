@@ -5,6 +5,7 @@ namespace LichessSharp.Models.Users;
 /// <summary>
 ///     Player autocomplete result (object mode).
 /// </summary>
+[ResponseOnly]
 public class AutocompletePlayer
 {
     /// <summary>
@@ -41,6 +42,7 @@ public class AutocompletePlayer
 /// <summary>
 ///     Response wrapper for autocomplete with object mode.
 /// </summary>
+[ResponseOnly]
 public class AutocompleteResponse
 {
     /// <summary>

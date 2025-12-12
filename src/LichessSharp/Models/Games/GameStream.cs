@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using LichessSharp.Models.Common;
 using LichessSharp.Models.Enums;
+using LichessSharp.Serialization.Converters;
 
 namespace LichessSharp.Models.Games;
 
@@ -8,6 +9,7 @@ namespace LichessSharp.Models.Games;
 ///     Event from streaming a single game's moves via /api/stream/game/{id}.
 ///     The first event contains full game info, subsequent events contain move updates.
 /// </summary>
+[ResponseOnly]
 public class MoveStreamEvent
 {
     /// <summary>
@@ -17,10 +19,11 @@ public class MoveStreamEvent
     public string? Id { get; init; }
 
     /// <summary>
-    ///     Variant information (first event only).
+    ///     Variant (first event only).
     /// </summary>
     [JsonPropertyName("variant")]
-    public VariantInfo? Variant { get; init; }
+    [JsonConverter(typeof(NullableVariantObjectConverter))]
+    public Variant? Variant { get; init; }
 
     /// <summary>
     ///     Game speed (first event only).
@@ -118,6 +121,7 @@ public class MoveStreamEvent
 ///     Event from streaming multiple games via /api/stream/games/{streamId}.
 ///     Events are emitted when watched games start or finish.
 /// </summary>
+[ResponseOnly]
 public class GameStreamEvent
 {
     /// <summary>
@@ -184,6 +188,7 @@ public class GameStreamEvent
 /// <summary>
 ///     Player information for a streamed game.
 /// </summary>
+[ResponseOnly]
 public class GameStreamPlayers
 {
     /// <summary>
@@ -202,6 +207,7 @@ public class GameStreamPlayers
 /// <summary>
 ///     Player information for a streamed game.
 /// </summary>
+[ResponseOnly]
 public class GameStreamPlayer
 {
     /// <summary>

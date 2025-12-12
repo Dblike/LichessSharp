@@ -5,6 +5,7 @@ namespace LichessSharp.Models.Users;
 /// <summary>
 ///     A live streamer on Lichess.
 /// </summary>
+[ResponseOnly]
 public class Streamer
 {
     /// <summary>
@@ -53,6 +54,7 @@ public class Streamer
 /// <summary>
 ///     Stream information.
 /// </summary>
+[ResponseOnly]
 public class StreamInfo
 {
     /// <summary>
@@ -77,6 +79,7 @@ public class StreamInfo
 /// <summary>
 ///     Streamer-specific information.
 /// </summary>
+[ResponseOnly]
 public class StreamerInfo
 {
     /// <summary>
@@ -119,6 +122,7 @@ public class StreamerInfo
 /// <summary>
 ///     Stream channel information.
 /// </summary>
+[ResponseOnly]
 public class StreamChannel
 {
     /// <summary>

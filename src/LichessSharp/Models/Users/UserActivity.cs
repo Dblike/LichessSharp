@@ -6,6 +6,7 @@ namespace LichessSharp.Models.Users;
 /// <summary>
 ///     User activity entry.
 /// </summary>
+[ResponseOnly]
 public class UserActivity
 {
     /// <summary>
@@ -84,6 +85,7 @@ public class UserActivity
 /// <summary>
 ///     Activity interval.
 /// </summary>
+[ResponseOnly]
 public class ActivityInterval
 {
     /// <summary>
@@ -104,6 +106,7 @@ public class ActivityInterval
 /// <summary>
 ///     Games activity by variant.
 /// </summary>
+[ResponseOnly]
 public class ActivityGames
 {
     /// <summary>
@@ -116,6 +119,7 @@ public class ActivityGames
 /// <summary>
 ///     Puzzles activity.
 /// </summary>
+[ResponseOnly]
 public class ActivityPuzzles
 {
     /// <summary>
@@ -128,6 +132,7 @@ public class ActivityPuzzles
 /// <summary>
 ///     Activity score.
 /// </summary>
+[ResponseOnly]
 public class ActivityScore
 {
     /// <summary>
@@ -158,6 +163,7 @@ public class ActivityScore
 /// <summary>
 ///     Rating progress.
 /// </summary>
+[ResponseOnly]
 public class ActivityRatingProgress
 {
     /// <summary>
@@ -176,6 +182,7 @@ public class ActivityRatingProgress
 /// <summary>
 ///     Tournaments activity.
 /// </summary>
+[ResponseOnly]
 public class ActivityTournaments
 {
     /// <summary>
@@ -188,6 +195,7 @@ public class ActivityTournaments
 /// <summary>
 ///     Practice activity.
 /// </summary>
+[ResponseOnly]
 public class ActivityPractice
 {
     /// <summary>
@@ -206,6 +214,7 @@ public class ActivityPractice
 /// <summary>
 ///     Correspondence activity.
 /// </summary>
+[ResponseOnly]
 public class ActivityCorrespondence
 {
     /// <summary>
@@ -224,6 +233,7 @@ public class ActivityCorrespondence
 /// <summary>
 ///     Correspondence game info.
 /// </summary>
+[ResponseOnly]
 public class ActivityCorrespondenceGame
 {
     /// <summary>
@@ -236,6 +246,7 @@ public class ActivityCorrespondenceGame
 /// <summary>
 ///     Correspondence ends activity.
 /// </summary>
+[ResponseOnly]
 public class ActivityCorrespondenceEnds
 {
     /// <summary>
@@ -254,6 +265,7 @@ public class ActivityCorrespondenceEnds
 /// <summary>
 ///     Follows activity.
 /// </summary>
+[ResponseOnly]
 public class ActivityFollows
 {
     /// <summary>
@@ -272,6 +284,7 @@ public class ActivityFollows
 /// <summary>
 ///     Follow list.
 /// </summary>
+[ResponseOnly]
 public class ActivityFollowList
 {
     /// <summary>
@@ -284,6 +297,7 @@ public class ActivityFollowList
 /// <summary>
 ///     Study activity.
 /// </summary>
+[ResponseOnly]
 public class ActivityStudy
 {
     /// <summary>
@@ -302,6 +316,7 @@ public class ActivityStudy
 /// <summary>
 ///     Team activity.
 /// </summary>
+[ResponseOnly]
 public class ActivityTeam
 {
     /// <summary>
@@ -320,6 +335,7 @@ public class ActivityTeam
 /// <summary>
 ///     Post activity.
 /// </summary>
+[ResponseOnly]
 public class ActivityPost
 {
     /// <summary>

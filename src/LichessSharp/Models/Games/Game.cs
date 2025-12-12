@@ -8,6 +8,7 @@ namespace LichessSharp.Models.Games;
 /// <summary>
 ///     Basic game information.
 /// </summary>
+[ResponseOnly]
 public class Game
 {
     /// <summary>
@@ -88,6 +89,7 @@ public class Game
 /// <summary>
 ///     Full game information in JSON format.
 /// </summary>
+[ResponseOnly]
 public class GameJson : Game
 {
     /// <summary>
@@ -112,6 +114,7 @@ public class GameJson : Game
 /// <summary>
 ///     Game players container.
 /// </summary>
+[ResponseOnly]
 public class GamePlayers
 {
     /// <summary>
@@ -130,6 +133,7 @@ public class GamePlayers
 /// <summary>
 ///     A player in a game.
 /// </summary>
+[ResponseOnly]
 public class GamePlayer
 {
     /// <summary>
@@ -173,29 +177,4 @@ public class GamePlayer
     /// </summary>
     [JsonPropertyName("analysis")]
     public PlayerAnalysis? Analysis { get; init; }
-}
-
-/// <summary>
-///     Variant information object containing key and display name.
-///     Maps to the Variant schema in the Lichess API.
-/// </summary>
-public class VariantInfo
-{
-    /// <summary>
-    ///     Variant key (e.g., standard, chess960, crazyhouse).
-    /// </summary>
-    [JsonPropertyName("key")]
-    public Variant Key { get; init; }
-
-    /// <summary>
-    ///     Human-readable variant name.
-    /// </summary>
-    [JsonPropertyName("name")]
-    public string? Name { get; init; }
-
-    /// <summary>
-    ///     Short name for the variant.
-    /// </summary>
-    [JsonPropertyName("short")]
-    public string? Short { get; init; }
 }

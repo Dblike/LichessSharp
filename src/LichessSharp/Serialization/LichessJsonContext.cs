@@ -97,7 +97,6 @@ namespace LichessSharp.Serialization;
 [JsonSerializable(typeof(GameJson))]
 [JsonSerializable(typeof(GamePlayers))]
 [JsonSerializable(typeof(GamePlayer))]
-[JsonSerializable(typeof(VariantInfo))]
 [JsonSerializable(typeof(List<Game>))]
 // Ongoing Game types
 [JsonSerializable(typeof(OngoingGamesResponse))]

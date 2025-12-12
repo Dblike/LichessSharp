@@ -5,6 +5,7 @@ namespace LichessSharp.Models.Users;
 /// <summary>
 ///     Crosstable (head-to-head) statistics between two users.
 /// </summary>
+[ResponseOnly]
 public class Crosstable
 {
     /// <summary>
@@ -30,6 +31,7 @@ public class Crosstable
 /// <summary>
 ///     Current matchup information.
 /// </summary>
+[ResponseOnly]
 public class CrosstableMatchup
 {
     /// <summary>

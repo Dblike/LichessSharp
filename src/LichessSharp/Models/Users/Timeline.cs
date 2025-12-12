@@ -7,6 +7,7 @@ namespace LichessSharp.Models.Users;
 /// <summary>
 ///     User timeline.
 /// </summary>
+[ResponseOnly]
 public class Timeline
 {
     /// <summary>
@@ -25,6 +26,7 @@ public class Timeline
 /// <summary>
 ///     A timeline entry.
 /// </summary>
+[ResponseOnly]
 public class TimelineEntry
 {
     /// <summary>
@@ -50,6 +52,7 @@ public class TimelineEntry
 /// <summary>
 ///     Timeline entry data.
 /// </summary>
+[ResponseOnly]
 public class TimelineData
 {
     /// <summary>

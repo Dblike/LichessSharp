@@ -5,6 +5,7 @@ namespace LichessSharp.Models.Common;
 /// <summary>
 ///     Clock settings for a game.
 /// </summary>
+[ResponseOnly]
 public class Clock
 {
     /// <summary>

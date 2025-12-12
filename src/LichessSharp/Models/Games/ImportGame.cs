@@ -5,6 +5,7 @@ namespace LichessSharp.Models.Games;
 /// <summary>
 ///     Response from the import game endpoint.
 /// </summary>
+[ResponseOnly]
 public class ImportGameResponse
 {
     /// <summary>
