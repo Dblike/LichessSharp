@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
-using LichessSharp.Models.Common;
+using LichessSharp.Models.Enums;
+using LichessSharp.Serialization.Converters;
 
 namespace LichessSharp.Models.Puzzles;
 
@@ -66,30 +67,34 @@ public class PuzzleWithGame
 /// <summary>
 ///     The game a puzzle is derived from.
 /// </summary>
+[JsonConverter(typeof(PuzzleGameConverter))]
 public class PuzzleGame
 {
     /// <summary>
     ///     The game's unique identifier.
     /// </summary>
-    [JsonPropertyName("id")]
     public required string Id { get; init; }
 
     /// <summary>
     ///     The game in PGN format.
     /// </summary>
-    [JsonPropertyName("pgn")]
     public string? Pgn { get; init; }
 
     /// <summary>
-    ///     Performance type of the game.
+    ///     The speed (time control) if this is a standard chess game.
+    ///     Parsed from the perf field in the API response.
     /// </summary>
-    [JsonPropertyName("perf")]
-    public PerformanceType? Perf { get; init; }
+    public Speed? Speed { get; init; }
+
+    /// <summary>
+    ///     The variant if this is a variant chess game.
+    ///     Parsed from the perf field in the API response.
+    /// </summary>
+    public Variant? Variant { get; init; }
 
     /// <summary>
     ///     The players in the puzzle game.
     /// </summary>
-    [JsonPropertyName("players")]
     public PuzzlePlayer[]? Players { get; init; }
 }
 

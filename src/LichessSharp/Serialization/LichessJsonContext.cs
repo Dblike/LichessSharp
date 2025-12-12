@@ -3,6 +3,7 @@ using LichessSharp.Api;
 using LichessSharp.Api.Contracts;
 using LichessSharp.Models.Account;
 using LichessSharp.Models.Common;
+using LichessSharp.Models.Enums;
 using LichessSharp.Models.Fide;
 using LichessSharp.Models.Games;
 using LichessSharp.Models.Puzzles;
@@ -22,7 +23,6 @@ namespace LichessSharp.Serialization;
 [JsonSerializable(typeof(LightUser))]
 [JsonSerializable(typeof(Clock))]
 [JsonSerializable(typeof(Opening))]
-[JsonSerializable(typeof(PerformanceType))]
 [JsonSerializable(typeof(OkResponse))]
 [JsonSerializable(typeof(ErrorResponse))]
 [JsonSerializable(typeof(EmailResponse))]

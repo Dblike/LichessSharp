@@ -4,6 +4,7 @@ using LichessSharp.Api.Options;
 using LichessSharp.Http;
 using LichessSharp.Models.Common;
 using LichessSharp.Models.Users;
+using LichessSharp.Serialization.Converters;
 
 namespace LichessSharp.Api;
 
@@ -101,7 +102,13 @@ internal sealed class UsersApi(ILichessHttpClient httpClient) : IUsersApi
         ArgumentException.ThrowIfNullOrWhiteSpace(perfType);
 
         var endpoint = $"/api/user/{Uri.EscapeDataString(username)}/perf/{Uri.EscapeDataString(perfType)}";
-        return await _httpClient.GetAsync<UserPerformance>(endpoint, cancellationToken).ConfigureAwait(false);
+        var result = await _httpClient.GetAsync<UserPerformance>(endpoint, cancellationToken).ConfigureAwait(false);
+
+        // Populate Speed/Variant based on the perfType parameter
+        result.Speed = PerfFieldParser.TryParseSpeed(perfType);
+        result.Variant = PerfFieldParser.TryParseVariant(perfType);
+
+        return result;
     }
 
     /// <inheritdoc />

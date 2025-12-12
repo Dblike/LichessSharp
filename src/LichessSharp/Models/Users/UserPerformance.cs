@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using LichessSharp.Models.Common;
+using LichessSharp.Models.Enums;
 using LichessSharp.Serialization.Converters;
 
 namespace LichessSharp.Models.Users;
@@ -32,6 +33,20 @@ public class UserPerformance
     /// </summary>
     [JsonPropertyName("stat")]
     public PerformanceStatistics? Stat { get; init; }
+
+    /// <summary>
+    ///     The speed category for this performance data (if standard chess).
+    ///     Populated based on the perfType parameter used in the API request.
+    /// </summary>
+    [JsonIgnore]
+    public Speed? Speed { get; set; }
+
+    /// <summary>
+    ///     The variant for this performance data (if a chess variant).
+    ///     Populated based on the perfType parameter used in the API request.
+    /// </summary>
+    [JsonIgnore]
+    public Variant? Variant { get; set; }
 }
 
 /// <summary>
@@ -39,12 +54,6 @@ public class UserPerformance
 /// </summary>
 public class PerformanceStatistics
 {
-    /// <summary>
-    ///     The performance type key.
-    /// </summary>
-    [JsonPropertyName("perfType")]
-    public PerformanceType? PerfType { get; init; }
-
     /// <summary>
     ///     Highest rating achieved.
     /// </summary>
