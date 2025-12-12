@@ -4,7 +4,7 @@ using LichessSharp.Http;
 namespace LichessSharp.Api;
 
 /// <summary>
-/// Implementation of the Simuls API.
+///     Implementation of the Simuls API.
 /// </summary>
 internal sealed class SimulsApi(ILichessHttpClient httpClient) : ISimulsApi
 {

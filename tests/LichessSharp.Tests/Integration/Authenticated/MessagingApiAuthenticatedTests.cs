@@ -5,12 +5,12 @@ using Xunit;
 namespace LichessSharp.Tests.Integration.Authenticated;
 
 /// <summary>
-/// Authenticated integration tests for the Messaging API.
-/// Requires a token with msg:write scope.
+///     Authenticated integration tests for the Messaging API.
+///     Requires a token with msg:write scope.
 /// </summary>
 /// <remarks>
-/// Note: These tests are intentionally conservative to avoid spamming real users.
-/// Most tests verify error handling rather than actually sending messages.
+///     Note: These tests are intentionally conservative to avoid spamming real users.
+///     Most tests verify error handling rather than actually sending messages.
 /// </remarks>
 [AuthenticatedTest]
 [IntegrationTest]

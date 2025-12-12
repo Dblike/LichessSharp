@@ -4,8 +4,8 @@ using Xunit;
 namespace LichessSharp.Tests.Integration;
 
 /// <summary>
-/// Integration tests for the Analysis API.
-/// These tests use FEN positions from the OpenAPI spec examples.
+///     Integration tests for the Analysis API.
+///     These tests use FEN positions from the OpenAPI spec examples.
 /// </summary>
 [IntegrationTest]
 [Trait("Category", "Integration")]
@@ -19,6 +19,7 @@ public class AnalysisApiIntegrationTests : IntegrationTestBase
 
     // Italian Game position - common opening
     private const string ItalianGameFen = "r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3";
+
     [Fact]
     public async Task GetCloudEvaluationAsync_WithStartingPosition_ReturnsEvaluation()
     {
@@ -50,15 +51,13 @@ public class AnalysisApiIntegrationTests : IntegrationTestBase
     public async Task GetCloudEvaluationAsync_WithMultiPv_ReturnsMultipleVariations()
     {
         // Act
-        var evaluation = await Client.Analysis.GetCloudEvaluationAsync(StartingPositionFen, multiPv: 3);
+        var evaluation = await Client.Analysis.GetCloudEvaluationAsync(StartingPositionFen, 3);
 
         // Assert
         evaluation.Should().NotBeNull();
         if (evaluation != null && evaluation.Pvs != null)
-        {
             // May have up to 3 variations depending on what's cached
             evaluation.Pvs.Should().HaveCountGreaterThanOrEqualTo(1);
-        }
     }
 
     [Fact]
@@ -74,5 +73,4 @@ public class AnalysisApiIntegrationTests : IntegrationTestBase
             evaluation.Depth.Should().BeGreaterThan(0);
         }
     }
-
 }

@@ -3,8 +3,8 @@ using LichessSharp.Api;
 using LichessSharp.Api.Options;
 using LichessSharp.Http;
 using LichessSharp.Models.Common;
-using LichessSharp.Models.Games;
 using LichessSharp.Models.Enums;
+using LichessSharp.Models.Games;
 using Moq;
 using Xunit;
 
@@ -12,14 +12,15 @@ namespace LichessSharp.Tests.Api;
 
 public class GamesApiTests
 {
-    private readonly Mock<ILichessHttpClient> _httpClientMock;
     private readonly GamesApi _gamesApi;
+    private readonly Mock<ILichessHttpClient> _httpClientMock;
 
     public GamesApiTests()
     {
         _httpClientMock = new Mock<ILichessHttpClient>();
         _gamesApi = new GamesApi(_httpClientMock.Object);
     }
+
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -47,7 +48,8 @@ public class GamesApiTests
         // Assert
         result.Should().NotBeNull();
         result.Id.Should().Be(gameId);
-        _httpClientMock.Verify(x => x.GetAsync<GameJson>($"/game/export/{gameId}", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(x => x.GetAsync<GameJson>($"/game/export/{gameId}", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -104,14 +106,17 @@ public class GamesApiTests
         var gameId = "game id";
         var expectedGame = CreateTestGameJson(gameId);
         _httpClientMock
-            .Setup(x => x.GetAsync<GameJson>(It.Is<string>(s => s.Contains("game%20id")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<GameJson>(It.Is<string>(s => s.Contains("game%20id")),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedGame);
 
         // Act
         await _gamesApi.ExportAsync(gameId);
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<GameJson>(It.Is<string>(s => s.Contains("game%20id")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<GameJson>(It.Is<string>(s => s.Contains("game%20id")), It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -121,7 +126,8 @@ public class GamesApiTests
         var gameId = "q7ZvsdUF";
         var expectedPgn = "[Event \"Rated Blitz game\"]\n1. e4 e5 2. Nf3 *";
         _httpClientMock
-            .Setup(x => x.GetStringWithAcceptAsync($"/game/export/{gameId}", "application/x-chess-pgn", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetStringWithAcceptAsync($"/game/export/{gameId}", "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedPgn);
 
         // Act
@@ -129,7 +135,9 @@ public class GamesApiTests
 
         // Assert
         result.Should().Be(expectedPgn);
-        _httpClientMock.Verify(x => x.GetStringWithAcceptAsync($"/game/export/{gameId}", "application/x-chess-pgn", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetStringWithAcceptAsync($"/game/export/{gameId}", "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -157,7 +165,8 @@ public class GamesApiTests
 
         // Assert
         result.Should().NotBeNull();
-        _httpClientMock.Verify(x => x.GetAsync<GameJson>($"/api/user/{username}/current-game", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<GameJson>($"/api/user/{username}/current-game", It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -177,14 +186,17 @@ public class GamesApiTests
         var username = "user name";
         var expectedGame = CreateTestGameJson("abc123");
         _httpClientMock
-            .Setup(x => x.GetAsync<GameJson>(It.Is<string>(s => s.Contains("user%20name")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<GameJson>(It.Is<string>(s => s.Contains("user%20name")),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedGame);
 
         // Act
         await _gamesApi.GetCurrentGameByUserAsync(username);
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<GameJson>(It.Is<string>(s => s.Contains("user%20name")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<GameJson>(It.Is<string>(s => s.Contains("user%20name")), It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -204,10 +216,7 @@ public class GamesApiTests
 
         // Act
         var results = new List<GameJson>();
-        await foreach (var game in _gamesApi.StreamUserGamesAsync(username))
-        {
-            results.Add(game);
-        }
+        await foreach (var game in _gamesApi.StreamUserGamesAsync(username)) results.Add(game);
 
         // Assert
         results.Should().HaveCount(2);
@@ -281,10 +290,7 @@ public class GamesApiTests
 
         // Act
         var results = new List<GameJson>();
-        await foreach (var game in _gamesApi.StreamByIdsAsync(gameIds))
-        {
-            results.Add(game);
-        }
+        await foreach (var game in _gamesApi.StreamByIdsAsync(gameIds)) results.Add(game);
 
         // Assert
         results.Should().HaveCount(3);
@@ -298,10 +304,7 @@ public class GamesApiTests
 
         // Act
         var results = new List<GameJson>();
-        await foreach (var game in _gamesApi.StreamByIdsAsync(gameIds))
-        {
-            results.Add(game);
-        }
+        await foreach (var game in _gamesApi.StreamByIdsAsync(gameIds)) results.Add(game);
 
         // Assert
         results.Should().BeEmpty();
@@ -354,10 +357,7 @@ public class GamesApiTests
 
         // Act
         var results = new List<GameJson>();
-        await foreach (var game in _gamesApi.StreamByUsersAsync(userIds))
-        {
-            results.Add(game);
-        }
+        await foreach (var game in _gamesApi.StreamByUsersAsync(userIds)) results.Add(game);
 
         // Assert
         results.Should().HaveCount(1);
@@ -378,7 +378,7 @@ public class GamesApiTests
             .Returns(ToAsyncEnumerable(games));
 
         // Act
-        await foreach (var _ in _gamesApi.StreamByUsersAsync(userIds, withCurrentGames: true))
+        await foreach (var _ in _gamesApi.StreamByUsersAsync(userIds, true))
         {
         }
 
@@ -397,10 +397,7 @@ public class GamesApiTests
 
         // Act
         var results = new List<GameJson>();
-        await foreach (var game in _gamesApi.StreamByUsersAsync(userIds))
-        {
-            results.Add(game);
-        }
+        await foreach (var game in _gamesApi.StreamByUsersAsync(userIds)) results.Add(game);
 
         // Assert
         results.Should().BeEmpty();
@@ -460,7 +457,9 @@ public class GamesApiTests
         await _gamesApi.GetOngoingGamesAsync(25);
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<OngoingGamesResponse>("/api/account/playing?nb=25", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<OngoingGamesResponse>("/api/account/playing?nb=25", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -510,7 +509,8 @@ public class GamesApiTests
         var expectedResponse = new ImportGameResponse { Id = "newgame123", Url = "https://lichess.org/newgame123" };
 
         _httpClientMock
-            .Setup(x => x.PostAsync<ImportGameResponse>("/api/import", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<ImportGameResponse>("/api/import", It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResponse);
 
         // Act
@@ -715,7 +715,8 @@ public class GamesApiTests
         // Arrange
         var expectedPgn = "[Event \"Imported Game\"]\n1. e4 e5 *";
         _httpClientMock
-            .Setup(x => x.GetStringWithAcceptAsync("/api/games/export/imports", "application/x-chess-pgn", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetStringWithAcceptAsync("/api/games/export/imports", "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedPgn);
 
         // Act
@@ -723,7 +724,9 @@ public class GamesApiTests
 
         // Assert
         result.Should().Be(expectedPgn);
-        _httpClientMock.Verify(x => x.GetStringWithAcceptAsync("/api/games/export/imports", "application/x-chess-pgn", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetStringWithAcceptAsync("/api/games/export/imports", "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -739,7 +742,8 @@ public class GamesApiTests
         await _gamesApi.ExportImportedGamesAsync(cts.Token);
 
         // Assert
-        _httpClientMock.Verify(x => x.GetStringWithAcceptAsync(It.IsAny<string>(), It.IsAny<string>(), cts.Token), Times.Once);
+        _httpClientMock.Verify(x => x.GetStringWithAcceptAsync(It.IsAny<string>(), It.IsAny<string>(), cts.Token),
+            Times.Once);
     }
 
     [Fact]
@@ -753,14 +757,13 @@ public class GamesApiTests
 
         // Act
         var results = new List<GameJson>();
-        await foreach (var game in _gamesApi.StreamBookmarkedGamesAsync())
-        {
-            results.Add(game);
-        }
+        await foreach (var game in _gamesApi.StreamBookmarkedGamesAsync()) results.Add(game);
 
         // Assert
         results.Should().HaveCount(1);
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<GameJson>("/api/games/export/bookmarks", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<GameJson>("/api/games/export/bookmarks", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -839,20 +842,20 @@ public class GamesApiTests
             new() { Id = gameId, Fen = "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1" }
         };
         _httpClientMock
-            .Setup(x => x.StreamNdjsonAsync<MoveStreamEvent>($"/api/stream/game/{gameId}", It.IsAny<CancellationToken>()))
+            .Setup(x => x.StreamNdjsonAsync<MoveStreamEvent>($"/api/stream/game/{gameId}",
+                It.IsAny<CancellationToken>()))
             .Returns(ToAsyncEnumerable(events));
 
         // Act
         var results = new List<MoveStreamEvent>();
-        await foreach (var evt in _gamesApi.StreamGameMovesAsync(gameId))
-        {
-            results.Add(evt);
-        }
+        await foreach (var evt in _gamesApi.StreamGameMovesAsync(gameId)) results.Add(evt);
 
         // Assert
         results.Should().HaveCount(1);
         results[0].Id.Should().Be(gameId);
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<MoveStreamEvent>($"/api/stream/game/{gameId}", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<MoveStreamEvent>($"/api/stream/game/{gameId}", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -886,7 +889,8 @@ public class GamesApiTests
         var gameId = "game id";
         var events = new List<MoveStreamEvent>();
         _httpClientMock
-            .Setup(x => x.StreamNdjsonAsync<MoveStreamEvent>(It.Is<string>(s => s.Contains("game%20id")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.StreamNdjsonAsync<MoveStreamEvent>(It.Is<string>(s => s.Contains("game%20id")),
+                It.IsAny<CancellationToken>()))
             .Returns(ToAsyncEnumerable(events));
 
         // Act
@@ -895,7 +899,9 @@ public class GamesApiTests
         }
 
         // Assert
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<MoveStreamEvent>(It.Is<string>(s => s.Contains("game%20id")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<MoveStreamEvent>(It.Is<string>(s => s.Contains("game%20id")),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -919,10 +925,7 @@ public class GamesApiTests
 
         // Act
         var results = new List<GameStreamEvent>();
-        await foreach (var evt in _gamesApi.StreamByIdsAsync(streamId, gameIds))
-        {
-            results.Add(evt);
-        }
+        await foreach (var evt in _gamesApi.StreamByIdsAsync(streamId, gameIds)) results.Add(evt);
 
         // Assert
         results.Should().HaveCount(2);
@@ -941,10 +944,7 @@ public class GamesApiTests
 
         // Act
         var results = new List<GameStreamEvent>();
-        await foreach (var evt in _gamesApi.StreamByIdsAsync(streamId, gameIds))
-        {
-            results.Add(evt);
-        }
+        await foreach (var evt in _gamesApi.StreamByIdsAsync(streamId, gameIds)) results.Add(evt);
 
         // Assert
         results.Should().BeEmpty();
@@ -1148,37 +1148,40 @@ public class GamesApiTests
         await _gamesApi.AddGameIdsToStreamAsync(streamId, gameIds, cts.Token);
 
         // Assert
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>(It.IsAny<string>(), It.IsAny<HttpContent>(), cts.Token), Times.Once);
+        _httpClientMock.Verify(x => x.PostAsync<OkResponse>(It.IsAny<string>(), It.IsAny<HttpContent>(), cts.Token),
+            Times.Once);
     }
 
-    private static GameJson CreateTestGameJson(string id) => new()
+    private static GameJson CreateTestGameJson(string id)
     {
-        Id = id,
-        Rated = true,
-        Variant = Variant.Standard,
-        Speed = Speed.Blitz,
-        Perf = "blitz",
-        Status = GameStatus.Started,
-        CreatedAt = DateTimeOffset.UtcNow
-    };
+        return new GameJson
+        {
+            Id = id,
+            Rated = true,
+            Variant = Variant.Standard,
+            Speed = Speed.Blitz,
+            Perf = "blitz",
+            Status = GameStatus.Started,
+            CreatedAt = DateTimeOffset.UtcNow
+        };
+    }
 
-    private static OngoingGame CreateTestOngoingGame(string gameId) => new()
+    private static OngoingGame CreateTestOngoingGame(string gameId)
     {
-        FullId = $"{gameId}abcd",
-        GameId = gameId,
-        Fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-        Color = Color.White,
-        IsMyTurn = true,
-        Opponent = new OngoingGameOpponent { Id = "opponent", Username = "Opponent" }
-    };
+        return new OngoingGame
+        {
+            FullId = $"{gameId}abcd",
+            GameId = gameId,
+            Fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+            Color = Color.White,
+            IsMyTurn = true,
+            Opponent = new OngoingGameOpponent { Id = "opponent", Username = "Opponent" }
+        };
+    }
 
     private static async IAsyncEnumerable<T> ToAsyncEnumerable<T>(IEnumerable<T> items)
     {
-        foreach (var item in items)
-        {
-            yield return item;
-        }
+        foreach (var item in items) yield return item;
         await Task.CompletedTask;
     }
-
 }

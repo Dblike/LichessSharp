@@ -3,8 +3,8 @@ using LichessSharp.Samples.Helpers;
 namespace LichessSharp.Samples.Scenarios;
 
 /// <summary>
-/// Sample 02: User Profiles
-/// Demonstrates how to fetch and explore user data from Lichess.
+///     Sample 02: User Profiles
+///     Demonstrates how to fetch and explore user data from Lichess.
 /// </summary>
 public static class UserProfiles
 {
@@ -48,10 +48,7 @@ public static class UserProfiles
         var users = await client.Users.GetManyAsync(usernames);
 
         Console.WriteLine($"Found {users.Count} users:");
-        foreach (var user in users)
-        {
-            Console.WriteLine($"  - {user.Username} (ID: {user.Id})");
-        }
+        foreach (var user in users) Console.WriteLine($"  - {user.Username} (ID: {user.Id})");
 
         // =====================================================================
         // Check Real-Time User Status
@@ -64,7 +61,7 @@ public static class UserProfiles
         foreach (var status in statuses)
         {
             var statusText = status.Online == true
-                ? (status.Playing == true ? "Playing" : "Online")
+                ? status.Playing == true ? "Playing" : "Online"
                 : "Offline";
             Console.WriteLine($"  - {status.Name}: {statusText}");
         }
@@ -80,19 +77,13 @@ public static class UserProfiles
         if (allTop10.TryGetValue("bullet", out var bulletTop))
         {
             Console.WriteLine("  Bullet top 3:");
-            foreach (var player in bulletTop.Take(3))
-            {
-                Console.WriteLine($"    - {player.Username}");
-            }
+            foreach (var player in bulletTop.Take(3)) Console.WriteLine($"    - {player.Username}");
         }
 
         // Get specific leaderboard
-        var blitzLeaders = await client.Users.GetLeaderboardAsync("blitz", count: 5);
+        var blitzLeaders = await client.Users.GetLeaderboardAsync("blitz", 5);
         Console.WriteLine("  Blitz top 5:");
-        foreach (var player in blitzLeaders)
-        {
-            Console.WriteLine($"    - {player.Username}");
-        }
+        foreach (var player in blitzLeaders) Console.WriteLine($"    - {player.Username}");
 
         // =====================================================================
         // Get Rating History
@@ -102,9 +93,7 @@ public static class UserProfiles
         var ratingHistory = await client.Users.GetRatingHistoryAsync("DrNykterstein");
         Console.WriteLine($"Rating history categories: {ratingHistory.Count}");
         foreach (var category in ratingHistory.Take(3))
-        {
             Console.WriteLine($"  - {category.Name}: {category.Points?.Count ?? 0} data points");
-        }
 
         // =====================================================================
         // Username Autocomplete
@@ -118,10 +107,7 @@ public static class UserProfiles
         // Object autocomplete with more details
         var playerSuggestions = await client.Users.AutocompletePlayersAsync("Hikaru");
         Console.WriteLine("Player autocomplete for 'Hikaru':");
-        foreach (var player in playerSuggestions.Take(3))
-        {
-            Console.WriteLine($"  - {player.Name} ({player.Id})");
-        }
+        foreach (var player in playerSuggestions.Take(3)) Console.WriteLine($"  - {player.Name} ({player.Id})");
 
         // =====================================================================
         // Get Live Streamers
@@ -133,9 +119,7 @@ public static class UserProfiles
         {
             Console.WriteLine($"Currently streaming ({streamers.Count} total):");
             foreach (var streamer in streamers.Take(5))
-            {
                 Console.WriteLine($"  - {streamer.Name}: {streamer.Stream?.Status ?? "Live"}");
-            }
         }
         else
         {
@@ -153,12 +137,8 @@ public static class UserProfiles
             Console.WriteLine("DrNykterstein vs Hikaru:");
             SampleRunner.PrintKeyValue("Total games", crosstable.NbGames);
             if (crosstable.Users != null)
-            {
                 foreach (var (username, score) in crosstable.Users)
-                {
                     Console.WriteLine($"  {username}: {score} points");
-                }
-            }
         }
 
         SampleRunner.PrintSuccess("User Profiles sample completed!");

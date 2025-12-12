@@ -1,5 +1,4 @@
 using System.Text;
-
 using LichessSharp.Api.Contracts;
 using LichessSharp.Exceptions;
 using LichessSharp.Http;
@@ -7,7 +6,7 @@ using LichessSharp.Http;
 namespace LichessSharp.Api;
 
 /// <summary>
-/// Implementation of the Analysis API.
+///     Implementation of the Analysis API.
 /// </summary>
 internal sealed class AnalysisApi(ILichessHttpClient httpClient) : IAnalysisApi
 {

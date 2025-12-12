@@ -10,14 +10,15 @@ namespace LichessSharp.Tests.Api;
 
 public class BulkPairingsApiTests
 {
-    private readonly Mock<ILichessHttpClient> _httpClientMock;
     private readonly BulkPairingsApi _bulkPairingsApi;
+    private readonly Mock<ILichessHttpClient> _httpClientMock;
 
     public BulkPairingsApiTests()
     {
         _httpClientMock = new Mock<ILichessHttpClient>();
         _bulkPairingsApi = new BulkPairingsApi(_httpClientMock.Object);
     }
+
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -48,7 +49,8 @@ public class BulkPairingsApiTests
         result.Should().NotBeNull();
         result.Should().HaveCount(1);
         result[0].Id.Should().Be("test1");
-        _httpClientMock.Verify(x => x.GetAsync<BulkPairingListResponse>("/api/bulk-pairing", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<BulkPairingListResponse>("/api/bulk-pairing", It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -121,7 +123,8 @@ public class BulkPairingsApiTests
         // Assert
         result.Should().NotBeNull();
         result.Id.Should().Be("test123");
-        _httpClientMock.Verify(x => x.GetAsync<BulkPairing>("/api/bulk-pairing/test123", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(x => x.GetAsync<BulkPairing>("/api/bulk-pairing/test123", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -167,7 +170,9 @@ public class BulkPairingsApiTests
         await _bulkPairingsApi.GetAsync("test/special");
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<BulkPairing>("/api/bulk-pairing/test%2Fspecial", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<BulkPairing>("/api/bulk-pairing/test%2Fspecial", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -182,7 +187,8 @@ public class BulkPairingsApiTests
         };
         var expectedResult = CreateTestBulkPairing("new123");
         _httpClientMock
-            .Setup(x => x.PostAsync<BulkPairing>("/api/bulk-pairing", It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<BulkPairing>("/api/bulk-pairing", It.IsAny<FormUrlEncodedContent>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
         // Act
@@ -191,7 +197,9 @@ public class BulkPairingsApiTests
         // Assert
         result.Should().NotBeNull();
         result.Id.Should().Be("new123");
-        _httpClientMock.Verify(x => x.PostAsync<BulkPairing>("/api/bulk-pairing", It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<BulkPairing>("/api/bulk-pairing", It.IsAny<FormUrlEncodedContent>(),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -252,7 +260,8 @@ public class BulkPairingsApiTests
 
         HttpContent? capturedContent = null;
         _httpClientMock
-            .Setup(x => x.PostAsync<BulkPairing>("/api/bulk-pairing", It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<BulkPairing>("/api/bulk-pairing", It.IsAny<FormUrlEncodedContent>(),
+                It.IsAny<CancellationToken>()))
             .Callback<string, HttpContent, CancellationToken>((_, content, _) => capturedContent = content)
             .ReturnsAsync(expectedResult);
 
@@ -280,7 +289,8 @@ public class BulkPairingsApiTests
     {
         // Arrange
         _httpClientMock
-            .Setup(x => x.PostNoContentAsync("/api/bulk-pairing/test123/start-clocks", null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostNoContentAsync("/api/bulk-pairing/test123/start-clocks", null,
+                It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         // Act
@@ -288,7 +298,9 @@ public class BulkPairingsApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostNoContentAsync("/api/bulk-pairing/test123/start-clocks", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostNoContentAsync("/api/bulk-pairing/test123/start-clocks", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -324,7 +336,8 @@ public class BulkPairingsApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.DeleteNoContentAsync("/api/bulk-pairing/test123", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(x => x.DeleteNoContentAsync("/api/bulk-pairing/test123", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -353,7 +366,8 @@ public class BulkPairingsApiTests
         // Arrange
         var expectedPgn = "[White \"Player1\"]\n[Black \"Player2\"]\n1. e4 e5 2. Nf3 Nc6 *";
         _httpClientMock
-            .Setup(x => x.GetStringWithAcceptAsync("/api/bulk-pairing/test123/games", "application/x-chess-pgn", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetStringWithAcceptAsync("/api/bulk-pairing/test123/games", "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedPgn);
 
         // Act
@@ -361,7 +375,9 @@ public class BulkPairingsApiTests
 
         // Assert
         result.Should().Be(expectedPgn);
-        _httpClientMock.Verify(x => x.GetStringWithAcceptAsync("/api/bulk-pairing/test123/games", "application/x-chess-pgn", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetStringWithAcceptAsync("/api/bulk-pairing/test123/games", "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -423,10 +439,7 @@ public class BulkPairingsApiTests
 
         // Act
         var result = new List<GameJson>();
-        await foreach (var game in _bulkPairingsApi.StreamGamesAsync("test123"))
-        {
-            result.Add(game);
-        }
+        await foreach (var game in _bulkPairingsApi.StreamGamesAsync("test123")) result.Add(game);
 
         // Assert
         result.Should().HaveCount(2);
@@ -513,5 +526,4 @@ public class BulkPairingsApiTests
             ScheduledAt = 1699999000000
         };
     }
-
 }

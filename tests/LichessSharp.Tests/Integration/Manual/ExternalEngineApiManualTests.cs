@@ -1,23 +1,19 @@
 using FluentAssertions;
-
 using LichessSharp.Api.Contracts;
-
 using Xunit;
 
 namespace LichessSharp.Tests.Integration.Manual;
 
 /// <summary>
-/// Manual integration tests for the External Engine API.
-/// These tests require specific OAuth scopes (engine:read, engine:write) and
-/// are intended to be run manually rather than in automated CI.
-///
-/// To run these tests:
-/// 1. Create a personal access token at https://lichess.org/account/oauth/token
-/// 2. Select the engine:read and engine:write scopes
-/// 3. Set the LICHESS_TEST_TOKEN environment variable
-/// 4. Run: dotnet test --filter "Category=Manual"
-///
-/// WARNING: The External Engine API is in alpha and subject to change.
+///     Manual integration tests for the External Engine API.
+///     These tests require specific OAuth scopes (engine:read, engine:write) and
+///     are intended to be run manually rather than in automated CI.
+///     To run these tests:
+///     1. Create a personal access token at https://lichess.org/account/oauth/token
+///     2. Select the engine:read and engine:write scopes
+///     3. Set the LICHESS_TEST_TOKEN environment variable
+///     4. Run: dotnet test --filter "Category=Manual"
+///     WARNING: The External Engine API is in alpha and subject to change.
 /// </summary>
 [IntegrationTest]
 [Trait("Category", "Integration")]
@@ -25,7 +21,6 @@ namespace LichessSharp.Tests.Integration.Manual;
 [RequiresScope("engine:read", "engine:write")]
 public class ExternalEngineApiManualTests : AuthenticatedTestBase
 {
-
     [Fact]
     public async Task ListAsync_WithValidToken_ReturnsEngineList()
     {
@@ -54,9 +49,9 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
     }
 
     /// <summary>
-    /// Test creating an external engine.
-    /// WARNING: This will create a real engine registration on your account.
-    /// You should delete it afterward using DeleteAsync.
+    ///     Test creating an external engine.
+    ///     WARNING: This will create a real engine registration on your account.
+    ///     You should delete it afterward using DeleteAsync.
     /// </summary>
     [Fact(Skip = "Creates real engine - run manually only")]
     public async Task CreateAsync_WithValidRegistration_CreatesEngine()
@@ -90,10 +85,7 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
     {
         // Arrange - first list engines to get an ID
         var engines = await Client.ExternalEngine.ListAsync();
-        if (engines.Count == 0)
-        {
-            return; // No engines to test with
-        }
+        if (engines.Count == 0) return; // No engines to test with
 
         var engineId = engines[0].Id;
 
@@ -110,10 +102,7 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
     {
         // Arrange - first list engines to get an ID
         var engines = await Client.ExternalEngine.ListAsync();
-        if (engines.Count == 0)
-        {
-            return;
-        }
+        if (engines.Count == 0) return;
 
         var engineId = engines[0].Id;
         var originalEngine = engines[0];
@@ -174,10 +163,7 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
     {
         // Arrange
         var engines = await Client.ExternalEngine.ListAsync();
-        if (engines.Count == 0)
-        {
-            return;
-        }
+        if (engines.Count == 0) return;
 
         var engine = engines[0];
         var request = new EngineAnalysisRequest
@@ -229,11 +215,10 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
             work.Work.Should().NotBeNull();
         }
     }
-
 }
 
 /// <summary>
-/// Unauthenticated tests for External Engine API - verifies auth is required.
+///     Unauthenticated tests for External Engine API - verifies auth is required.
 /// </summary>
 [IntegrationTest]
 [Trait("Category", "Integration")]

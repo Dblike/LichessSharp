@@ -1,17 +1,18 @@
 using System.Text;
-
 using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
 
 namespace LichessSharp.Api;
 
 /// <summary>
-/// Implementation of the Tablebase API.
+///     Implementation of the Tablebase API.
 /// </summary>
 internal sealed class TablebaseApi(ILichessHttpClient httpClient, Uri tablebaseBaseAddress) : ITablebaseApi
 {
+    private readonly Uri _baseAddress =
+        tablebaseBaseAddress ?? throw new ArgumentNullException(nameof(tablebaseBaseAddress));
+
     private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-    private readonly Uri _baseAddress = tablebaseBaseAddress ?? throw new ArgumentNullException(nameof(tablebaseBaseAddress));
 
     /// <inheritdoc />
     public async Task<TablebaseResult> LookupAsync(string fen, CancellationToken cancellationToken = default)

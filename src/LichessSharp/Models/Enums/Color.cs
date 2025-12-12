@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 namespace LichessSharp.Models.Enums;
 
 /// <summary>
-/// Chess piece colors.
+///     Chess piece colors.
 /// </summary>
 [JsonConverter(typeof(JsonStringEnumConverter<Color>))]
 public enum Color

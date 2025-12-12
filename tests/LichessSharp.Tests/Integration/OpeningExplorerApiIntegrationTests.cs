@@ -5,9 +5,9 @@ using Xunit;
 namespace LichessSharp.Tests.Integration;
 
 /// <summary>
-/// Integration tests for the Opening Explorer API.
-/// These tests use FEN positions and play sequences from the OpenAPI spec examples.
-/// Endpoint: explorer.lichess.ovh
+///     Integration tests for the Opening Explorer API.
+///     These tests use FEN positions and play sequences from the OpenAPI spec examples.
+///     Endpoint: explorer.lichess.ovh
 /// </summary>
 [IntegrationTest]
 [Trait("Category", "Integration")]
@@ -21,6 +21,7 @@ public class OpeningExplorerApiIntegrationTests : IntegrationTestBase
 
     // Queen's Gambit position after 1.d4 d5 2.c4
     private const string QueensGambitFen = "rnbqkbnr/ppp1pppp/8/3p4/2PP4/8/PP2PPPP/RNBQKBNR b KQkq c3 0 2";
+
     [Fact]
     public async Task GetMastersAsync_WithStartingPosition_ReturnsOpeningData()
     {
@@ -63,10 +64,7 @@ public class OpeningExplorerApiIntegrationTests : IntegrationTestBase
 
         // Assert
         result.Should().NotBeNull();
-        if (result.TopGames != null)
-        {
-            result.TopGames.Should().HaveCountLessThanOrEqualTo(5);
-        }
+        if (result.TopGames != null) result.TopGames.Should().HaveCountLessThanOrEqualTo(5);
     }
 
     [Fact]
@@ -178,5 +176,4 @@ public class OpeningExplorerApiIntegrationTests : IntegrationTestBase
     //    // Assert
     //    result.Should().NotBeNull();
     //}
-
 }

@@ -5,14 +5,13 @@ using Xunit;
 namespace LichessSharp.Tests.Integration;
 
 /// <summary>
-/// Integration tests for the Puzzles API.
-/// These tests verify that the API client works correctly against the live Lichess API.
+///     Integration tests for the Puzzles API.
+///     These tests verify that the API client works correctly against the live Lichess API.
 /// </summary>
 [IntegrationTest]
 [Trait("Category", "Integration")]
 public class PuzzlesApiIntegrationTests : IntegrationTestBase
 {
-
     [Fact]
     public async Task GetDailyAsync_ReturnsDailyPuzzle()
     {
@@ -70,7 +69,7 @@ public class PuzzlesApiIntegrationTests : IntegrationTestBase
         var username = "DrNykterstein";
 
         // Act
-        var dashboard = await Client.Puzzles.GetStormDashboardAsync(username, days: 7);
+        var dashboard = await Client.Puzzles.GetStormDashboardAsync(username, 7);
 
         // Assert
         dashboard.Should().NotBeNull();
@@ -117,5 +116,4 @@ public class PuzzlesApiIntegrationTests : IntegrationTestBase
         await Assert.ThrowsAsync<LichessNotFoundException>(async () =>
             await Client.Puzzles.GetRaceAsync(raceId));
     }
-
 }

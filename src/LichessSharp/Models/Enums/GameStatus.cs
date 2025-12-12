@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 namespace LichessSharp.Models.Enums;
 
 /// <summary>
-/// Game termination status.
+///     Game termination status.
 /// </summary>
 [JsonConverter(typeof(JsonStringEnumConverter<GameStatus>))]
 public enum GameStatus

@@ -3,234 +3,234 @@ using System.Text.Json.Serialization;
 namespace LichessSharp.Models.Account;
 
 /// <summary>
-/// Account preferences response wrapper.
+///     Account preferences response wrapper.
 /// </summary>
 public class AccountPreferences
 {
     /// <summary>
-    /// The user's preferences.
+    ///     The user's preferences.
     /// </summary>
     [JsonPropertyName("prefs")]
     public UserPreferences? Prefs { get; init; }
 
     /// <summary>
-    /// The user's language setting.
+    ///     The user's language setting.
     /// </summary>
     [JsonPropertyName("language")]
     public string? Language { get; init; }
 }
 
 /// <summary>
-/// User preferences.
+///     User preferences.
 /// </summary>
 public class UserPreferences
 {
     /// <summary>
-    /// Dark mode setting.
+    ///     Dark mode setting.
     /// </summary>
     [JsonPropertyName("dark")]
     public bool? Dark { get; init; }
 
     /// <summary>
-    /// Whether the background is transparent.
+    ///     Whether the background is transparent.
     /// </summary>
     [JsonPropertyName("transp")]
     public bool? TransparentBackground { get; init; }
 
     /// <summary>
-    /// Background image URL.
+    ///     Background image URL.
     /// </summary>
     [JsonPropertyName("bgImg")]
     public string? BackgroundImageUrl { get; init; }
 
     /// <summary>
-    /// Whether the board is 3D.
+    ///     Whether the board is 3D.
     /// </summary>
     [JsonPropertyName("is3d")]
     public bool? Is3d { get; init; }
 
     /// <summary>
-    /// Theme setting.
+    ///     Theme setting.
     /// </summary>
     [JsonPropertyName("theme")]
     public string? Theme { get; init; }
 
     /// <summary>
-    /// Piece set.
+    ///     Piece set.
     /// </summary>
     [JsonPropertyName("pieceSet")]
     public string? PieceSet { get; init; }
 
     /// <summary>
-    /// 3D piece set.
+    ///     3D piece set.
     /// </summary>
     [JsonPropertyName("theme3d")]
     public string? Theme3d { get; init; }
 
     /// <summary>
-    /// 3D piece set.
+    ///     3D piece set.
     /// </summary>
     [JsonPropertyName("pieceSet3d")]
     public string? PieceSet3d { get; init; }
 
     /// <summary>
-    /// Sound set.
+    ///     Sound set.
     /// </summary>
     [JsonPropertyName("soundSet")]
     public string? SoundSet { get; init; }
 
     /// <summary>
-    /// Blindfold mode.
+    ///     Blindfold mode.
     /// </summary>
     [JsonPropertyName("blindfold")]
     public int? Blindfold { get; init; }
 
     /// <summary>
-    /// Auto-queen promotion setting.
+    ///     Auto-queen promotion setting.
     /// </summary>
     [JsonPropertyName("autoQueen")]
     public int? AutoQueen { get; init; }
 
     /// <summary>
-    /// Auto-threefold claim setting.
+    ///     Auto-threefold claim setting.
     /// </summary>
     [JsonPropertyName("autoThreefold")]
     public int? AutoThreefold { get; init; }
 
     /// <summary>
-    /// Takeback setting.
+    ///     Takeback setting.
     /// </summary>
     [JsonPropertyName("takeback")]
     public int? Takeback { get; init; }
 
     /// <summary>
-    /// Moretime setting.
+    ///     Moretime setting.
     /// </summary>
     [JsonPropertyName("moretime")]
     public int? Moretime { get; init; }
 
     /// <summary>
-    /// Clock tenths display setting.
+    ///     Clock tenths display setting.
     /// </summary>
     [JsonPropertyName("clockTenths")]
     public int? ClockTenths { get; init; }
 
     /// <summary>
-    /// Clock bar setting.
+    ///     Clock bar setting.
     /// </summary>
     [JsonPropertyName("clockBar")]
     public bool? ClockBar { get; init; }
 
     /// <summary>
-    /// Clock sound setting.
+    ///     Clock sound setting.
     /// </summary>
     [JsonPropertyName("clockSound")]
     public bool? ClockSound { get; init; }
 
     /// <summary>
-    /// Premove setting.
+    ///     Premove setting.
     /// </summary>
     [JsonPropertyName("premove")]
     public bool? Premove { get; init; }
 
     /// <summary>
-    /// Animation setting.
+    ///     Animation setting.
     /// </summary>
     [JsonPropertyName("animation")]
     public int? Animation { get; init; }
 
     /// <summary>
-    /// Captured pieces display setting.
+    ///     Captured pieces display setting.
     /// </summary>
     [JsonPropertyName("captured")]
     public bool? Captured { get; init; }
 
     /// <summary>
-    /// Follow game setting.
+    ///     Follow game setting.
     /// </summary>
     [JsonPropertyName("follow")]
     public bool? Follow { get; init; }
 
     /// <summary>
-    /// Highlight setting.
+    ///     Highlight setting.
     /// </summary>
     [JsonPropertyName("highlight")]
     public bool? Highlight { get; init; }
 
     /// <summary>
-    /// Destination squares setting.
+    ///     Destination squares setting.
     /// </summary>
     [JsonPropertyName("destination")]
     public bool? Destination { get; init; }
 
     /// <summary>
-    /// Board coordinates setting.
+    ///     Board coordinates setting.
     /// </summary>
     [JsonPropertyName("coords")]
     public int? Coords { get; init; }
 
     /// <summary>
-    /// Replay setting.
+    ///     Replay setting.
     /// </summary>
     [JsonPropertyName("replay")]
     public int? Replay { get; init; }
 
     /// <summary>
-    /// Challenge setting.
+    ///     Challenge setting.
     /// </summary>
     [JsonPropertyName("challenge")]
     public int? Challenge { get; init; }
 
     /// <summary>
-    /// Message setting.
+    ///     Message setting.
     /// </summary>
     [JsonPropertyName("message")]
     public int? Message { get; init; }
 
     /// <summary>
-    /// Coordinate training setting.
+    ///     Coordinate training setting.
     /// </summary>
     [JsonPropertyName("coordColor")]
     public int? CoordColor { get; init; }
 
     /// <summary>
-    /// Submit move setting.
+    ///     Submit move setting.
     /// </summary>
     [JsonPropertyName("submitMove")]
     public int? SubmitMove { get; init; }
 
     /// <summary>
-    /// Confirm resign setting.
+    ///     Confirm resign setting.
     /// </summary>
     [JsonPropertyName("confirmResign")]
     public int? ConfirmResign { get; init; }
 
     /// <summary>
-    /// Insight share setting.
+    ///     Insight share setting.
     /// </summary>
     [JsonPropertyName("insightShare")]
     public int? InsightShare { get; init; }
 
     /// <summary>
-    /// Keyboard move setting.
+    ///     Keyboard move setting.
     /// </summary>
     [JsonPropertyName("keyboardMove")]
     public int? KeyboardMove { get; init; }
 
     /// <summary>
-    /// Zen mode setting.
+    ///     Zen mode setting.
     /// </summary>
     [JsonPropertyName("zen")]
     public int? Zen { get; init; }
 
     /// <summary>
-    /// Move event setting.
+    ///     Move event setting.
     /// </summary>
     [JsonPropertyName("moveEvent")]
     public int? MoveEvent { get; init; }
 
     /// <summary>
-    /// Rook castling setting.
+    ///     Rook castling setting.
     /// </summary>
     [JsonPropertyName("rookCastle")]
     public int? RookCastle { get; init; }

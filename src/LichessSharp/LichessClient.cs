@@ -3,11 +3,12 @@ using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
 
 namespace LichessSharp;
 
 /// <summary>
-/// The main client for interacting with the Lichess API.
+///     The main client for interacting with the Lichess API.
 /// </summary>
 public sealed class LichessClient : ILichessClient
 {
@@ -15,7 +16,7 @@ public sealed class LichessClient : ILichessClient
     private bool _disposed;
 
     /// <summary>
-    /// Creates a new Lichess client with the specified options.
+    ///     Creates a new Lichess client with the specified options.
     /// </summary>
     /// <param name="httpClient">The HTTP client to use for requests.</param>
     /// <param name="options">The client options.</param>
@@ -34,14 +35,14 @@ public sealed class LichessClient : ILichessClient
 
         _httpClient = new LichessHttpClient(
             httpClient,
-            Microsoft.Extensions.Options.Options.Create(options),
+            Options.Create(options),
             httpLogger);
 
         InitializeApis();
     }
 
     /// <summary>
-    /// Creates a new Lichess client with default options.
+    ///     Creates a new Lichess client with default options.
     /// </summary>
     /// <param name="accessToken">Optional access token for authenticated requests.</param>
     public LichessClient(string? accessToken = null)
@@ -118,6 +119,14 @@ public sealed class LichessClient : ILichessClient
     /// <inheritdoc />
     public IExternalEngineApi ExternalEngine { get; private set; } = null!;
 
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        if (_disposed) return;
+
+        _disposed = true;
+    }
+
     private void InitializeApis()
     {
         // Initialize API implementations
@@ -145,16 +154,5 @@ public sealed class LichessClient : ILichessClient
         Fide = new FideApi(_httpClient);
         OAuth = new OAuthApi(_httpClient);
         ExternalEngine = new ExternalEngineApi(_httpClient, LichessApiUrls.EngineBaseAddress);
-    }
-
-    /// <inheritdoc />
-    public void Dispose()
-    {
-        if (_disposed)
-        {
-            return;
-        }
-
-        _disposed = true;
     }
 }

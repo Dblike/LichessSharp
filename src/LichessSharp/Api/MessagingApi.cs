@@ -4,7 +4,7 @@ using LichessSharp.Http;
 namespace LichessSharp.Api;
 
 /// <summary>
-/// Implementation of the Messaging API.
+///     Implementation of the Messaging API.
 /// </summary>
 internal sealed class MessagingApi(ILichessHttpClient httpClient) : IMessagingApi
 {
@@ -24,7 +24,8 @@ internal sealed class MessagingApi(ILichessHttpClient httpClient) : IMessagingAp
         var content = new FormUrlEncodedContent(parameters);
         var endpoint = $"/inbox/{Uri.EscapeDataString(username)}";
 
-        var response = await _httpClient.PostAsync<MessageSentResponse>(endpoint, content, cancellationToken).ConfigureAwait(false);
+        var response = await _httpClient.PostAsync<MessageSentResponse>(endpoint, content, cancellationToken)
+            .ConfigureAwait(false);
         return response.Ok;
     }
 }

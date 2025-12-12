@@ -6,9 +6,9 @@ using Xunit;
 namespace LichessSharp.Tests.Integration;
 
 /// <summary>
-/// Integration tests for the Challenges API.
-/// These tests make real HTTP calls to Lichess.
-/// Note: Most Challenges API endpoints require authentication.
+///     Integration tests for the Challenges API.
+///     These tests make real HTTP calls to Lichess.
+///     Note: Most Challenges API endpoints require authentication.
 /// </summary>
 [IntegrationTest]
 [Trait("Category", "Integration")]

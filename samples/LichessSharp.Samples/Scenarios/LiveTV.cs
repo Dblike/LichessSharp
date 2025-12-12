@@ -1,10 +1,11 @@
+using LichessSharp.Api.Contracts;
 using LichessSharp.Samples.Helpers;
 
 namespace LichessSharp.Samples.Scenarios;
 
 /// <summary>
-/// Sample 04: Live TV
-/// Demonstrates how to watch live games on Lichess TV.
+///     Sample 04: Live TV
+///     Demonstrates how to watch live games on Lichess TV.
 /// </summary>
 public static class LiveTV
 {
@@ -73,9 +74,7 @@ public static class LiveTV
                 {
                     Console.WriteLine("    Players:");
                     foreach (var player in tvEvent.Data.Players)
-                    {
                         Console.WriteLine($"      {player.Color}: {player.User?.Name ?? "Unknown"} ({player.Rating})");
-                    }
                 }
 
                 if (updateCount >= 5)
@@ -161,7 +160,7 @@ public static class LiveTV
         SampleRunner.PrintSuccess("Live TV sample completed!");
     }
 
-    private static void PrintTvGame(string channel, LichessSharp.Api.Contracts.TvGame game)
+    private static void PrintTvGame(string channel, TvGame game)
     {
         var white = game.User?.Name ?? "Unknown";
         Console.WriteLine($"  {channel,-12}: {white} ({game.Rating}) - Game: {game.GameId}");

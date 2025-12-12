@@ -1,6 +1,5 @@
 using System.Runtime.CompilerServices;
 using System.Text;
-
 using LichessSharp.Api.Contracts;
 using LichessSharp.Api.Options;
 using LichessSharp.Http;
@@ -10,14 +9,15 @@ using LichessSharp.Models.Games;
 namespace LichessSharp.Api;
 
 /// <summary>
-/// Implementation of the Games API.
+///     Implementation of the Games API.
 /// </summary>
 internal sealed class GamesApi(ILichessHttpClient httpClient) : IGamesApi
 {
     private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
     /// <inheritdoc />
-    public async Task<GameJson> ExportAsync(string gameId, ExportGameOptions? options = null, CancellationToken cancellationToken = default)
+    public async Task<GameJson> ExportAsync(string gameId, ExportGameOptions? options = null,
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(gameId);
 
@@ -26,16 +26,19 @@ internal sealed class GamesApi(ILichessHttpClient httpClient) : IGamesApi
     }
 
     /// <inheritdoc />
-    public async Task<string> GetPgnAsync(string gameId, ExportGameOptions? options = null, CancellationToken cancellationToken = default)
+    public async Task<string> GetPgnAsync(string gameId, ExportGameOptions? options = null,
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(gameId);
 
         var endpoint = BuildExportGameEndpoint(gameId, options);
-        return await _httpClient.GetStringWithAcceptAsync(endpoint, "application/x-chess-pgn", cancellationToken).ConfigureAwait(false);
+        return await _httpClient.GetStringWithAcceptAsync(endpoint, "application/x-chess-pgn", cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <inheritdoc />
-    public async Task<GameJson> GetCurrentGameByUserAsync(string username, ExportGameOptions? options = null, CancellationToken cancellationToken = default)
+    public async Task<GameJson> GetCurrentGameByUserAsync(string username, ExportGameOptions? options = null,
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
 
@@ -44,77 +47,68 @@ internal sealed class GamesApi(ILichessHttpClient httpClient) : IGamesApi
     }
 
     /// <inheritdoc />
-    public async IAsyncEnumerable<GameJson> StreamUserGamesAsync(string username, ExportUserGamesOptions? options = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<GameJson> StreamUserGamesAsync(string username,
+        ExportUserGamesOptions? options = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
 
         var endpoint = BuildUserGamesEndpoint(username, options);
-        await foreach (var game in _httpClient.StreamNdjsonAsync<GameJson>(endpoint, cancellationToken).ConfigureAwait(false))
-        {
-            yield return game;
-        }
+        await foreach (var game in _httpClient.StreamNdjsonAsync<GameJson>(endpoint, cancellationToken)
+                           .ConfigureAwait(false)) yield return game;
     }
 
     /// <inheritdoc />
-    public async IAsyncEnumerable<GameJson> StreamByIdsAsync(IEnumerable<string> gameIds, ExportGameOptions? options = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<GameJson> StreamByIdsAsync(IEnumerable<string> gameIds,
+        ExportGameOptions? options = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(gameIds);
 
         var idsList = gameIds.ToList();
-        if (idsList.Count == 0)
-        {
-            yield break;
-        }
+        if (idsList.Count == 0) yield break;
 
         if (idsList.Count > 300)
-        {
             throw new ArgumentException("Cannot export more than 300 games at once.", nameof(gameIds));
-        }
 
         var endpoint = BuildExportByIdsEndpoint(options);
         var body = string.Join(",", idsList);
 
-        await foreach (var game in _httpClient.StreamNdjsonPostAsync<GameJson>(endpoint, new StringContent(body, Encoding.UTF8, "text/plain"), cancellationToken).ConfigureAwait(false))
-        {
-            yield return game;
-        }
+        await foreach (var game in _httpClient
+                           .StreamNdjsonPostAsync<GameJson>(endpoint,
+                               new StringContent(body, Encoding.UTF8, "text/plain"), cancellationToken)
+                           .ConfigureAwait(false)) yield return game;
     }
 
     /// <inheritdoc />
-    public async IAsyncEnumerable<GameJson> StreamByUsersAsync(IEnumerable<string> userIds, bool withCurrentGames = false, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<GameJson> StreamByUsersAsync(IEnumerable<string> userIds,
+        bool withCurrentGames = false, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(userIds);
 
         var idsList = userIds.ToList();
-        if (idsList.Count == 0)
-        {
-            yield break;
-        }
+        if (idsList.Count == 0) yield break;
 
         if (idsList.Count > 300)
-        {
             throw new ArgumentException("Cannot stream games for more than 300 users at once.", nameof(userIds));
-        }
 
         var endpoint = $"/api/stream/games-by-users{(withCurrentGames ? "?withCurrentGames=true" : "")}";
         var body = string.Join(",", idsList);
 
-        await foreach (var game in _httpClient.StreamNdjsonPostAsync<GameJson>(endpoint, new StringContent(body, Encoding.UTF8, "text/plain"), cancellationToken).ConfigureAwait(false))
-        {
-            yield return game;
-        }
+        await foreach (var game in _httpClient
+                           .StreamNdjsonPostAsync<GameJson>(endpoint,
+                               new StringContent(body, Encoding.UTF8, "text/plain"), cancellationToken)
+                           .ConfigureAwait(false)) yield return game;
     }
 
     /// <inheritdoc />
-    public async Task<IReadOnlyList<OngoingGame>> GetOngoingGamesAsync(int count = 9, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<OngoingGame>> GetOngoingGamesAsync(int count = 9,
+        CancellationToken cancellationToken = default)
     {
         if (count < 1 || count > 50)
-        {
             throw new ArgumentOutOfRangeException(nameof(count), "Count must be between 1 and 50.");
-        }
 
         var endpoint = $"/api/account/playing?nb={count}";
-        var response = await _httpClient.GetAsync<OngoingGamesResponse>(endpoint, cancellationToken).ConfigureAwait(false);
+        var response = await _httpClient.GetAsync<OngoingGamesResponse>(endpoint, cancellationToken)
+            .ConfigureAwait(false);
         return response.NowPlaying ?? [];
     }
 
@@ -128,7 +122,8 @@ internal sealed class GamesApi(ILichessHttpClient httpClient) : IGamesApi
             ["pgn"] = pgn
         });
 
-        return await _httpClient.PostAsync<ImportGameResponse>("/api/import", content, cancellationToken).ConfigureAwait(false);
+        return await _httpClient.PostAsync<ImportGameResponse>("/api/import", content, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <inheritdoc />
@@ -146,10 +141,8 @@ internal sealed class GamesApi(ILichessHttpClient httpClient) : IGamesApi
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var endpoint = BuildExportBookmarksEndpoint(options);
-        await foreach (var game in _httpClient.StreamNdjsonAsync<GameJson>(endpoint, cancellationToken).ConfigureAwait(false))
-        {
-            yield return game;
-        }
+        await foreach (var game in _httpClient.StreamNdjsonAsync<GameJson>(endpoint, cancellationToken)
+                           .ConfigureAwait(false)) yield return game;
     }
 
     /// <inheritdoc />
@@ -160,10 +153,8 @@ internal sealed class GamesApi(ILichessHttpClient httpClient) : IGamesApi
         ArgumentException.ThrowIfNullOrWhiteSpace(gameId);
 
         var endpoint = $"/api/stream/game/{Uri.EscapeDataString(gameId)}";
-        await foreach (var evt in _httpClient.StreamNdjsonAsync<MoveStreamEvent>(endpoint, cancellationToken).ConfigureAwait(false))
-        {
-            yield return evt;
-        }
+        await foreach (var evt in _httpClient.StreamNdjsonAsync<MoveStreamEvent>(endpoint, cancellationToken)
+                           .ConfigureAwait(false)) yield return evt;
     }
 
     /// <inheritdoc />
@@ -176,26 +167,19 @@ internal sealed class GamesApi(ILichessHttpClient httpClient) : IGamesApi
         ArgumentNullException.ThrowIfNull(gameIds);
 
         var idsList = gameIds.ToList();
-        if (idsList.Count == 0)
-        {
-            yield break;
-        }
+        if (idsList.Count == 0) yield break;
 
         if (idsList.Count > 500)
-        {
             throw new ArgumentException("Cannot stream more than 500 games at once.", nameof(gameIds));
-        }
 
         var endpoint = $"/api/stream/games/{Uri.EscapeDataString(streamId)}";
         var body = string.Join(",", idsList);
 
         await foreach (var evt in _httpClient.StreamNdjsonPostAsync<GameStreamEvent>(
-            endpoint,
-            new StringContent(body, Encoding.UTF8, "text/plain"),
-            cancellationToken).ConfigureAwait(false))
-        {
+                           endpoint,
+                           new StringContent(body, Encoding.UTF8, "text/plain"),
+                           cancellationToken).ConfigureAwait(false))
             yield return evt;
-        }
     }
 
     /// <inheritdoc />
@@ -208,15 +192,10 @@ internal sealed class GamesApi(ILichessHttpClient httpClient) : IGamesApi
         ArgumentNullException.ThrowIfNull(gameIds);
 
         var idsList = gameIds.ToList();
-        if (idsList.Count == 0)
-        {
-            return;
-        }
+        if (idsList.Count == 0) return;
 
         if (idsList.Count > 500)
-        {
             throw new ArgumentException("Cannot add more than 500 games at once.", nameof(gameIds));
-        }
 
         var endpoint = $"/api/stream/games/{Uri.EscapeDataString(streamId)}/add";
         var body = string.Join(",", idsList);
@@ -281,10 +260,7 @@ internal sealed class GamesApi(ILichessHttpClient httpClient) : IGamesApi
 
     private static void AppendExportGameOptions(StringBuilder sb, ExportGameOptions? options, ref bool hasQuery)
     {
-        if (options == null)
-        {
-            return;
-        }
+        if (options == null) return;
 
         AppendBoolParam(sb, "moves", options.Moves, ref hasQuery);
         AppendBoolParam(sb, "pgnInJson", options.PgnInJson, ref hasQuery);
@@ -307,10 +283,7 @@ internal sealed class GamesApi(ILichessHttpClient httpClient) : IGamesApi
 
     private static void AppendUserGamesOptions(StringBuilder sb, ExportUserGamesOptions? options, ref bool hasQuery)
     {
-        if (options == null)
-        {
-            return;
-        }
+        if (options == null) return;
 
         if (options.Since.HasValue)
         {
@@ -398,10 +371,7 @@ internal sealed class GamesApi(ILichessHttpClient httpClient) : IGamesApi
 
     private static void AppendBookmarksOptions(StringBuilder sb, ExportBookmarksOptions? options, ref bool hasQuery)
     {
-        if (options == null)
-        {
-            return;
-        }
+        if (options == null) return;
 
         if (options.Since.HasValue)
         {

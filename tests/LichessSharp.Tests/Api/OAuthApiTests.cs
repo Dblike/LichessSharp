@@ -1,27 +1,24 @@
 using System.Text.Json;
-
 using FluentAssertions;
-
 using LichessSharp.Api;
 using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
-
 using Moq;
-
 using Xunit;
 
 namespace LichessSharp.Tests.Api;
 
 public class OAuthApiTests
 {
-    private readonly Mock<ILichessHttpClient> _httpClientMock;
     private readonly OAuthApi _api;
+    private readonly Mock<ILichessHttpClient> _httpClientMock;
 
     public OAuthApiTests()
     {
         _httpClientMock = new Mock<ILichessHttpClient>();
         _api = new OAuthApi(_httpClientMock.Object);
     }
+
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -257,11 +254,11 @@ public class OAuthApiTests
         // Arrange
         var tokens = new[] { "lip_token1", "lip_token2" };
         var responseJson = JsonSerializer.Deserialize<JsonElement>("""
-            {
-                "lip_token1": {"userId": "user1", "scopes": "read,write", "expires": 1234567890000},
-                "lip_token2": null
-            }
-            """);
+                                                                   {
+                                                                       "lip_token1": {"userId": "user1", "scopes": "read,write", "expires": 1234567890000},
+                                                                       "lip_token2": null
+                                                                   }
+                                                                   """);
 
         _httpClientMock
             .Setup(x => x.PostPlainTextAsync<JsonElement>(
@@ -340,10 +337,10 @@ public class OAuthApiTests
         // Arrange
         var tokens = new[] { "lip_single_token" };
         var responseJson = JsonSerializer.Deserialize<JsonElement>("""
-            {
-                "lip_single_token": {"userId": "testuser", "scopes": "", "expires": null}
-            }
-            """);
+                                                                   {
+                                                                       "lip_single_token": {"userId": "testuser", "scopes": "", "expires": null}
+                                                                   }
+                                                                   """);
 
         _httpClientMock
             .Setup(x => x.PostPlainTextAsync<JsonElement>(
@@ -400,12 +397,12 @@ public class OAuthApiTests
         // Arrange
         var tokens = new[] { "token1", "token2", "token3" };
         var responseJson = JsonSerializer.Deserialize<JsonElement>("""
-            {
-                "token1": {"userId": "user1", "scopes": "read", "expires": 1000},
-                "token2": {"userId": "user2", "scopes": "write", "expires": 2000},
-                "token3": {"userId": "user3", "scopes": "read,write", "expires": 3000}
-            }
-            """);
+                                                                   {
+                                                                       "token1": {"userId": "user1", "scopes": "read", "expires": 1000},
+                                                                       "token2": {"userId": "user2", "scopes": "write", "expires": 2000},
+                                                                       "token3": {"userId": "user3", "scopes": "read,write", "expires": 3000}
+                                                                   }
+                                                                   """);
 
         _httpClientMock
             .Setup(x => x.PostPlainTextAsync<JsonElement>(
@@ -428,11 +425,11 @@ public class OAuthApiTests
         // Arrange
         var tokens = new[] { "invalid1", "invalid2" };
         var responseJson = JsonSerializer.Deserialize<JsonElement>("""
-            {
-                "invalid1": null,
-                "invalid2": null
-            }
-            """);
+                                                                   {
+                                                                       "invalid1": null,
+                                                                       "invalid2": null
+                                                                   }
+                                                                   """);
 
         _httpClientMock
             .Setup(x => x.PostPlainTextAsync<JsonElement>(
@@ -448,5 +445,4 @@ public class OAuthApiTests
         result.Should().HaveCount(2);
         result.Values.Should().AllSatisfy(info => info.Should().BeNull());
     }
-
 }

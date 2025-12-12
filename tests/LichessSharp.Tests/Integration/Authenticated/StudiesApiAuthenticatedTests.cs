@@ -1,14 +1,12 @@
 using FluentAssertions;
-
 using LichessSharp.Api.Contracts;
-
 using Xunit;
 
 namespace LichessSharp.Tests.Integration.Authenticated;
 
 /// <summary>
-/// Authenticated integration tests for the Studies API.
-/// Requires LICHESS_TEST_TOKEN environment variable with study:read scope.
+///     Authenticated integration tests for the Studies API.
+///     Requires LICHESS_TEST_TOKEN environment variable with study:read scope.
 /// </summary>
 [IntegrationTest]
 [AuthenticatedTest]
@@ -17,7 +15,6 @@ namespace LichessSharp.Tests.Integration.Authenticated;
 [RequiresScope("study:read")]
 public class StudiesApiAuthenticatedTests : AuthenticatedTestBase
 {
-
     [Fact]
     public async Task StreamUserStudiesAsync_WithAuthenticatedUser_ReturnsStudies()
     {
@@ -30,10 +27,7 @@ public class StudiesApiAuthenticatedTests : AuthenticatedTestBase
         {
             studies.Add(study);
             // Limit to avoid long-running test
-            if (studies.Count >= 10)
-            {
-                break;
-            }
+            if (studies.Count >= 10) break;
         }
 
         // Assert
@@ -57,10 +51,7 @@ public class StudiesApiAuthenticatedTests : AuthenticatedTestBase
         await foreach (var study in Client.Studies.StreamUserStudiesAsync(username))
         {
             studies.Add(study);
-            if (studies.Count >= 5)
-            {
-                break;
-            }
+            if (studies.Count >= 5) break;
         }
 
         // Assert
@@ -82,10 +73,8 @@ public class StudiesApiAuthenticatedTests : AuthenticatedTestBase
         }
 
         if (studyId == null)
-        {
             // No studies found, skip test
             return;
-        }
 
         // Act
         var pgn = await Client.Studies.ExportStudyPgnAsync(studyId);
@@ -109,10 +98,7 @@ public class StudiesApiAuthenticatedTests : AuthenticatedTestBase
             break;
         }
 
-        if (studyId == null)
-        {
-            return;
-        }
+        if (studyId == null) return;
 
         var options = new StudyExportOptions
         {
@@ -152,10 +138,7 @@ public class StudiesApiAuthenticatedTests : AuthenticatedTestBase
         // May be empty if user has no studies
         pgn.Should().NotBeNull();
         // If not empty, should be valid PGN
-        if (!string.IsNullOrWhiteSpace(pgn))
-        {
-            pgn.Should().Contain("[", "Non-empty result should be valid PGN");
-        }
+        if (!string.IsNullOrWhiteSpace(pgn)) pgn.Should().Contain("[", "Non-empty result should be valid PGN");
     }
 
     [Fact]
@@ -171,12 +154,11 @@ public class StudiesApiAuthenticatedTests : AuthenticatedTestBase
         // thibault likely has studies
         pgn.Should().NotBeNull();
     }
-
 }
 
 /// <summary>
-/// Unauthenticated integration tests for the Studies API.
-/// Tests public endpoints that don't require authentication.
+///     Unauthenticated integration tests for the Studies API.
+///     Tests public endpoints that don't require authentication.
 /// </summary>
 [IntegrationTest]
 [Trait("Category", "Integration")]
@@ -193,10 +175,7 @@ public class StudiesApiIntegrationTests : IntegrationTestBase
         await foreach (var study in Client.Studies.StreamUserStudiesAsync(username))
         {
             studies.Add(study);
-            if (studies.Count >= 5)
-            {
-                break;
-            }
+            if (studies.Count >= 5) break;
         }
 
         // Assert
@@ -235,10 +214,7 @@ public class StudiesApiIntegrationTests : IntegrationTestBase
             break;
         }
 
-        if (studyId == null)
-        {
-            return;
-        }
+        if (studyId == null) return;
 
         // Act
         var pgn = await Client.Studies.ExportStudyPgnAsync(studyId);

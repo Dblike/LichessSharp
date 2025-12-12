@@ -4,8 +4,8 @@ using Xunit;
 namespace LichessSharp.Tests.Integration;
 
 /// <summary>
-/// Integration tests for the Simuls API.
-/// These tests make real HTTP calls to Lichess.
+///     Integration tests for the Simuls API.
+///     These tests make real HTTP calls to Lichess.
 /// </summary>
 [IntegrationTest]
 [Trait("Category", "Integration")]
@@ -34,8 +34,8 @@ public class SimulsApiIntegrationTests : IntegrationTestBase
 
         // Assert - check any simul we can find has valid structure
         var anySimul = result.Started.FirstOrDefault()
-            ?? result.Created.FirstOrDefault()
-            ?? result.Finished.FirstOrDefault();
+                       ?? result.Created.FirstOrDefault()
+                       ?? result.Finished.FirstOrDefault();
 
         if (anySimul != null)
         {
@@ -102,8 +102,8 @@ public class SimulsApiIntegrationTests : IntegrationTestBase
 
         // Assert - any simul should have at least one variant
         var anySimul = result.Started.FirstOrDefault()
-            ?? result.Created.FirstOrDefault()
-            ?? result.Finished.FirstOrDefault();
+                       ?? result.Created.FirstOrDefault()
+                       ?? result.Finished.FirstOrDefault();
 
         if (anySimul != null)
         {

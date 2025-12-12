@@ -1,11 +1,12 @@
+using LichessSharp.Models.Enums;
 using LichessSharp.Samples.Helpers;
 
 namespace LichessSharp.Samples.Scenarios;
 
 /// <summary>
-/// Sample 09: Bot Development
-/// Demonstrates how to build a Lichess bot using the Bot API.
-/// Requires a bot account with 'bot:play' scope.
+///     Sample 09: Bot Development
+///     Demonstrates how to build a Lichess bot using the Bot API.
+///     Requires a bot account with 'bot:play' scope.
 /// </summary>
 public static class BotDevelopment
 {
@@ -43,7 +44,7 @@ public static class BotDevelopment
         try
         {
             var profile = await client.Account.GetProfileAsync();
-            if (profile.Title == LichessSharp.Models.Enums.Title.BOT)
+            if (profile.Title == Title.BOT)
             {
                 SampleRunner.PrintSuccess($"Logged in as bot: {profile.Username}");
             }
@@ -66,7 +67,7 @@ public static class BotDevelopment
         Console.WriteLine("Currently online bots (limit 10)...");
 
         var botCount = 0;
-        await foreach (var bot in client.Bot.GetOnlineBotsAsync(count: 10))
+        await foreach (var bot in client.Bot.GetOnlineBotsAsync(10))
         {
             botCount++;
             Console.WriteLine($"  {botCount}. {bot.Username} ({bot.Perfs?.Blitz?.Rating ?? 0} blitz)");

@@ -6,8 +6,8 @@ using Xunit;
 namespace LichessSharp.Tests.Integration.Authenticated;
 
 /// <summary>
-/// Authenticated integration tests for the Relations API.
-/// Requires a token with follow:read and follow:write scopes.
+///     Authenticated integration tests for the Relations API.
+///     Requires a token with follow:read and follow:write scopes.
 /// </summary>
 [AuthenticatedTest]
 [IntegrationTest]
@@ -25,10 +25,7 @@ public class RelationsApiAuthenticatedTests : AuthenticatedTestBase
         {
             following.Add(user);
             // Limit to first 10 for test performance
-            if (following.Count >= 10)
-            {
-                break;
-            }
+            if (following.Count >= 10) break;
         }
 
         // Assert

@@ -17,6 +17,7 @@ public class MessagingApiTests
         _httpClientMock = new Mock<ILichessHttpClient>();
         _messagingApi = new MessagingApi(_httpClientMock.Object);
     }
+
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -34,7 +35,8 @@ public class MessagingApiTests
         // Arrange
         var expectedResponse = new MessageSentResponse { Ok = true };
         _httpClientMock
-            .Setup(x => x.PostAsync<MessageSentResponse>("/inbox/testuser", It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<MessageSentResponse>("/inbox/testuser", It.IsAny<FormUrlEncodedContent>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResponse);
 
         // Act
@@ -42,7 +44,9 @@ public class MessagingApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<MessageSentResponse>("/inbox/testuser", It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<MessageSentResponse>("/inbox/testuser", It.IsAny<FormUrlEncodedContent>(),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -51,7 +55,8 @@ public class MessagingApiTests
         // Arrange
         var expectedResponse = new MessageSentResponse { Ok = true };
         _httpClientMock
-            .Setup(x => x.PostAsync<MessageSentResponse>(It.IsAny<string>(), It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<MessageSentResponse>(It.IsAny<string>(), It.IsAny<FormUrlEncodedContent>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResponse);
 
         // Act
@@ -67,7 +72,8 @@ public class MessagingApiTests
         // Arrange
         var expectedResponse = new MessageSentResponse { Ok = false };
         _httpClientMock
-            .Setup(x => x.PostAsync<MessageSentResponse>(It.IsAny<string>(), It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<MessageSentResponse>(It.IsAny<string>(), It.IsAny<FormUrlEncodedContent>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResponse);
 
         // Act
@@ -143,14 +149,17 @@ public class MessagingApiTests
         // Arrange
         var expectedResponse = new MessageSentResponse { Ok = true };
         _httpClientMock
-            .Setup(x => x.PostAsync<MessageSentResponse>("/inbox/user%2Fspecial", It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<MessageSentResponse>("/inbox/user%2Fspecial", It.IsAny<FormUrlEncodedContent>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResponse);
 
         // Act
         await _messagingApi.SendAsync("user/special", "Hello!");
 
         // Assert
-        _httpClientMock.Verify(x => x.PostAsync<MessageSentResponse>("/inbox/user%2Fspecial", It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<MessageSentResponse>("/inbox/user%2Fspecial", It.IsAny<FormUrlEncodedContent>(),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -160,7 +169,8 @@ public class MessagingApiTests
         var expectedResponse = new MessageSentResponse { Ok = true };
         HttpContent? capturedContent = null;
         _httpClientMock
-            .Setup(x => x.PostAsync<MessageSentResponse>(It.IsAny<string>(), It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<MessageSentResponse>(It.IsAny<string>(), It.IsAny<FormUrlEncodedContent>(),
+                It.IsAny<CancellationToken>()))
             .Callback<string, HttpContent, CancellationToken>((_, content, _) => capturedContent = content)
             .ReturnsAsync(expectedResponse);
 
@@ -180,14 +190,17 @@ public class MessagingApiTests
         var expectedResponse = new MessageSentResponse { Ok = true };
         var cts = new CancellationTokenSource();
         _httpClientMock
-            .Setup(x => x.PostAsync<MessageSentResponse>(It.IsAny<string>(), It.IsAny<FormUrlEncodedContent>(), cts.Token))
+            .Setup(x => x.PostAsync<MessageSentResponse>(It.IsAny<string>(), It.IsAny<FormUrlEncodedContent>(),
+                cts.Token))
             .ReturnsAsync(expectedResponse);
 
         // Act
         await _messagingApi.SendAsync("testuser", "Hello!", cts.Token);
 
         // Assert
-        _httpClientMock.Verify(x => x.PostAsync<MessageSentResponse>(It.IsAny<string>(), It.IsAny<FormUrlEncodedContent>(), cts.Token), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<MessageSentResponse>(It.IsAny<string>(), It.IsAny<FormUrlEncodedContent>(), cts.Token),
+            Times.Once);
     }
 
     [Fact]
@@ -197,7 +210,8 @@ public class MessagingApiTests
         var expectedResponse = new MessageSentResponse { Ok = true };
         HttpContent? capturedContent = null;
         _httpClientMock
-            .Setup(x => x.PostAsync<MessageSentResponse>(It.IsAny<string>(), It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<MessageSentResponse>(It.IsAny<string>(), It.IsAny<FormUrlEncodedContent>(),
+                It.IsAny<CancellationToken>()))
             .Callback<string, HttpContent, CancellationToken>((_, content, _) => capturedContent = content)
             .ReturnsAsync(expectedResponse);
 
@@ -219,7 +233,8 @@ public class MessagingApiTests
         var longMessage = new string('a', 10000);
         var expectedResponse = new MessageSentResponse { Ok = true };
         _httpClientMock
-            .Setup(x => x.PostAsync<MessageSentResponse>(It.IsAny<string>(), It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<MessageSentResponse>(It.IsAny<string>(), It.IsAny<FormUrlEncodedContent>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResponse);
 
         // Act
@@ -227,7 +242,8 @@ public class MessagingApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<MessageSentResponse>(It.IsAny<string>(), It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<MessageSentResponse>(It.IsAny<string>(), It.IsAny<FormUrlEncodedContent>(),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
-
 }

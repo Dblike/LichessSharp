@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Text.Json;
 using LichessSharp.Exceptions;
 using LichessSharp.Serialization;
@@ -11,14 +12,14 @@ using Microsoft.Extensions.Options;
 namespace LichessSharp.Http;
 
 /// <summary>
-/// HTTP client implementation for the Lichess API.
+///     HTTP client implementation for the Lichess API.
 /// </summary>
 internal sealed class LichessHttpClient : ILichessHttpClient
 {
     private readonly HttpClient _httpClient;
-    private readonly LichessClientOptions _options;
-    private readonly ILogger<LichessHttpClient> _logger;
     private readonly JsonSerializerOptions _jsonOptions;
+    private readonly ILogger<LichessHttpClient> _logger;
+    private readonly LichessClientOptions _options;
 
     public LichessHttpClient(
         HttpClient httpClient,
@@ -33,19 +34,6 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         ConfigureHttpClient();
     }
 
-    private void ConfigureHttpClient()
-    {
-        _httpClient.BaseAddress = LichessApiUrls.BaseAddress;
-        _httpClient.Timeout = _options.DefaultTimeout;
-        _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-        if (!string.IsNullOrEmpty(_options.AccessToken))
-        {
-            _httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", _options.AccessToken);
-        }
-    }
-
     public async Task<T> GetAsync<T>(string endpoint, CancellationToken cancellationToken = default)
     {
         var response = await SendRequestAsync(HttpMethod.Get, endpoint, null, cancellationToken).ConfigureAwait(false);
@@ -58,61 +46,75 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<string> GetStringWithAcceptAsync(string endpoint, string acceptHeader, CancellationToken cancellationToken = default)
+    public async Task<string> GetStringWithAcceptAsync(string endpoint, string acceptHeader,
+        CancellationToken cancellationToken = default)
     {
-        var response = await SendRequestWithAcceptAsync(HttpMethod.Get, endpoint, null, acceptHeader, cancellationToken).ConfigureAwait(false);
+        var response = await SendRequestWithAcceptAsync(HttpMethod.Get, endpoint, null, acceptHeader, cancellationToken)
+            .ConfigureAwait(false);
         return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<T> PostAsync<T>(string endpoint, HttpContent? content = null, CancellationToken cancellationToken = default)
+    public async Task<T> PostAsync<T>(string endpoint, HttpContent? content = null,
+        CancellationToken cancellationToken = default)
     {
-        var response = await SendRequestAsync(HttpMethod.Post, endpoint, content, cancellationToken).ConfigureAwait(false);
+        var response = await SendRequestAsync(HttpMethod.Post, endpoint, content, cancellationToken)
+            .ConfigureAwait(false);
         return await DeserializeResponseAsync<T>(response, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<string> PostStringAsync(string endpoint, HttpContent? content = null, CancellationToken cancellationToken = default)
+    public async Task<string> PostStringAsync(string endpoint, HttpContent? content = null,
+        CancellationToken cancellationToken = default)
     {
-        var response = await SendRequestAsync(HttpMethod.Post, endpoint, content, cancellationToken).ConfigureAwait(false);
+        var response = await SendRequestAsync(HttpMethod.Post, endpoint, content, cancellationToken)
+            .ConfigureAwait(false);
         return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<T> PostPlainTextAsync<T>(string endpoint, string body, CancellationToken cancellationToken = default)
+    public async Task<T> PostPlainTextAsync<T>(string endpoint, string body,
+        CancellationToken cancellationToken = default)
     {
-        using var content = new StringContent(body, System.Text.Encoding.UTF8, "text/plain");
-        var response = await SendRequestAsync(HttpMethod.Post, endpoint, content, cancellationToken).ConfigureAwait(false);
+        using var content = new StringContent(body, Encoding.UTF8, "text/plain");
+        var response = await SendRequestAsync(HttpMethod.Post, endpoint, content, cancellationToken)
+            .ConfigureAwait(false);
         return await DeserializeResponseAsync<T>(response, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<T> PostFormAsync<T>(string endpoint, IDictionary<string, string> formData, CancellationToken cancellationToken = default)
+    public async Task<T> PostFormAsync<T>(string endpoint, IDictionary<string, string> formData,
+        CancellationToken cancellationToken = default)
     {
         using var content = new FormUrlEncodedContent(formData);
-        var response = await SendRequestAsync(HttpMethod.Post, endpoint, content, cancellationToken).ConfigureAwait(false);
+        var response = await SendRequestAsync(HttpMethod.Post, endpoint, content, cancellationToken)
+            .ConfigureAwait(false);
         return await DeserializeResponseAsync<T>(response, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<T> DeleteAsync<T>(string endpoint, CancellationToken cancellationToken = default)
     {
-        var response = await SendRequestAsync(HttpMethod.Delete, endpoint, null, cancellationToken).ConfigureAwait(false);
+        var response = await SendRequestAsync(HttpMethod.Delete, endpoint, null, cancellationToken)
+            .ConfigureAwait(false);
         return await DeserializeResponseAsync<T>(response, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<T> PutJsonAsync<T>(string endpoint, object body, CancellationToken cancellationToken = default)
     {
         var json = JsonSerializer.Serialize(body, _jsonOptions);
-        using var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-        var response = await SendRequestAsync(HttpMethod.Put, endpoint, content, cancellationToken).ConfigureAwait(false);
+        using var content = new StringContent(json, Encoding.UTF8, "application/json");
+        var response = await SendRequestAsync(HttpMethod.Put, endpoint, content, cancellationToken)
+            .ConfigureAwait(false);
         return await DeserializeResponseAsync<T>(response, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<T> PostJsonAsync<T>(string endpoint, object body, CancellationToken cancellationToken = default)
     {
         var json = JsonSerializer.Serialize(body, _jsonOptions);
-        using var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-        var response = await SendRequestAsync(HttpMethod.Post, endpoint, content, cancellationToken).ConfigureAwait(false);
+        using var content = new StringContent(json, Encoding.UTF8, "application/json");
+        var response = await SendRequestAsync(HttpMethod.Post, endpoint, content, cancellationToken)
+            .ConfigureAwait(false);
         return await DeserializeResponseAsync<T>(response, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task PostNoContentAsync(string endpoint, HttpContent? content = null, CancellationToken cancellationToken = default)
+    public async Task PostNoContentAsync(string endpoint, HttpContent? content = null,
+        CancellationToken cancellationToken = default)
     {
         await SendRequestAsync(HttpMethod.Post, endpoint, content, cancellationToken).ConfigureAwait(false);
     }
@@ -124,13 +126,15 @@ internal sealed class LichessHttpClient : ILichessHttpClient
 
     public async Task<T> GetAbsoluteAsync<T>(Uri absoluteUrl, CancellationToken cancellationToken = default)
     {
-        var response = await SendAbsoluteRequestAsync(HttpMethod.Get, absoluteUrl, null, cancellationToken).ConfigureAwait(false);
+        var response = await SendAbsoluteRequestAsync(HttpMethod.Get, absoluteUrl, null, cancellationToken)
+            .ConfigureAwait(false);
         return await DeserializeResponseAsync<T>(response, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<T> GetAbsoluteNdjsonLastAsync<T>(Uri absoluteUrl, CancellationToken cancellationToken = default)
     {
-        var response = await SendAbsoluteRequestAsync(HttpMethod.Get, absoluteUrl, null, cancellationToken).ConfigureAwait(false);
+        var response = await SendAbsoluteRequestAsync(HttpMethod.Get, absoluteUrl, null, cancellationToken)
+            .ConfigureAwait(false);
 
         using var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
         using var reader = new StreamReader(stream);
@@ -139,18 +143,12 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         string? line;
         while ((line = await reader.ReadLineAsync(cancellationToken).ConfigureAwait(false)) != null)
         {
-            if (string.IsNullOrWhiteSpace(line))
-            {
-                continue;
-            }
+            if (string.IsNullOrWhiteSpace(line)) continue;
 
             try
             {
                 var item = JsonSerializer.Deserialize<T>(line, _jsonOptions);
-                if (item != null)
-                {
-                    lastItem = item;
-                }
+                if (item != null) lastItem = item;
             }
             catch (JsonException ex)
             {
@@ -158,15 +156,13 @@ internal sealed class LichessHttpClient : ILichessHttpClient
             }
         }
 
-        if (lastItem == null)
-        {
-            throw new LichessException("No valid JSON lines found in response");
-        }
+        if (lastItem == null) throw new LichessException("No valid JSON lines found in response");
 
         return lastItem;
     }
 
-    public async Task<string> GetAbsoluteStringAsync(Uri absoluteUrl, string acceptHeader, CancellationToken cancellationToken = default)
+    public async Task<string> GetAbsoluteStringAsync(Uri absoluteUrl, string acceptHeader,
+        CancellationToken cancellationToken = default)
     {
         using var request = new HttpRequestMessage(HttpMethod.Get, absoluteUrl);
         request.Headers.Accept.Clear();
@@ -177,34 +173,35 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public async IAsyncEnumerable<T> StreamNdjsonAsync<T>(string endpoint, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<T> StreamNdjsonAsync<T>(string endpoint,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        await foreach (var item in StreamNdjsonCoreAsync<T>(HttpMethod.Get, endpoint, null, cancellationToken).ConfigureAwait(false))
-        {
-            yield return item;
-        }
+        await foreach (var item in StreamNdjsonCoreAsync<T>(HttpMethod.Get, endpoint, null, cancellationToken)
+                           .ConfigureAwait(false)) yield return item;
     }
 
-    public async IAsyncEnumerable<T> StreamNdjsonPostAsync<T>(string endpoint, HttpContent? content = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<T> StreamNdjsonPostAsync<T>(string endpoint, HttpContent? content = null,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        await foreach (var item in StreamNdjsonCoreAsync<T>(HttpMethod.Post, endpoint, content, cancellationToken).ConfigureAwait(false))
-        {
-            yield return item;
-        }
+        await foreach (var item in StreamNdjsonCoreAsync<T>(HttpMethod.Post, endpoint, content, cancellationToken)
+                           .ConfigureAwait(false)) yield return item;
     }
 
-    public async Task<T> PostAbsoluteJsonAsync<T>(Uri absoluteUrl, object body, CancellationToken cancellationToken = default)
+    public async Task<T> PostAbsoluteJsonAsync<T>(Uri absoluteUrl, object body,
+        CancellationToken cancellationToken = default)
     {
         var json = JsonSerializer.Serialize(body, _jsonOptions);
-        using var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-        var response = await SendAbsoluteRequestAsync(HttpMethod.Post, absoluteUrl, content, cancellationToken).ConfigureAwait(false);
+        using var content = new StringContent(json, Encoding.UTF8, "application/json");
+        var response = await SendAbsoluteRequestAsync(HttpMethod.Post, absoluteUrl, content, cancellationToken)
+            .ConfigureAwait(false);
         return await DeserializeResponseAsync<T>(response, cancellationToken).ConfigureAwait(false);
     }
 
-    public async IAsyncEnumerable<T> StreamAbsoluteNdjsonPostAsync<T>(Uri absoluteUrl, object body, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<T> StreamAbsoluteNdjsonPostAsync<T>(Uri absoluteUrl, object body,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var json = JsonSerializer.Serialize(body, _jsonOptions);
-        using var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+        using var content = new StringContent(json, Encoding.UTF8, "application/json");
 
         using var request = new HttpRequestMessage(HttpMethod.Post, absoluteUrl);
         request.Headers.Accept.Clear();
@@ -225,15 +222,9 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         {
             var line = await reader.ReadLineAsync(cancellationToken).ConfigureAwait(false);
 
-            if (line == null)
-            {
-                break;
-            }
+            if (line == null) break;
 
-            if (string.IsNullOrWhiteSpace(line))
-            {
-                continue;
-            }
+            if (string.IsNullOrWhiteSpace(line)) continue;
 
             T? item;
             try
@@ -246,14 +237,12 @@ internal sealed class LichessHttpClient : ILichessHttpClient
                 continue;
             }
 
-            if (item != null)
-            {
-                yield return item;
-            }
+            if (item != null) yield return item;
         }
     }
 
-    public async Task PostAbsoluteStreamAsync(Uri absoluteUrl, IAsyncEnumerable<string> lines, CancellationToken cancellationToken = default)
+    public async Task PostAbsoluteStreamAsync(Uri absoluteUrl, IAsyncEnumerable<string> lines,
+        CancellationToken cancellationToken = default)
     {
         // Create a pipe for streaming content
         using var pipeContent = new StreamContent(new AsyncEnumerableStream(lines, cancellationToken));
@@ -266,6 +255,17 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         await EnsureSuccessStatusCodeAsync(response, cancellationToken).ConfigureAwait(false);
     }
 
+    private void ConfigureHttpClient()
+    {
+        _httpClient.BaseAddress = LichessApiUrls.BaseAddress;
+        _httpClient.Timeout = _options.DefaultTimeout;
+        _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+        if (!string.IsNullOrEmpty(_options.AccessToken))
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", _options.AccessToken);
+    }
+
     private async IAsyncEnumerable<T> StreamNdjsonCoreAsync<T>(
         HttpMethod method,
         string endpoint,
@@ -276,10 +276,7 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         request.Headers.Accept.Clear();
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-ndjson"));
 
-        if (content != null)
-        {
-            request.Content = content;
-        }
+        if (content != null) request.Content = content;
 
         using var response = await _httpClient.SendAsync(
             request,
@@ -296,15 +293,9 @@ internal sealed class LichessHttpClient : ILichessHttpClient
             var line = await reader.ReadLineAsync(cancellationToken).ConfigureAwait(false);
 
             // ReadLineAsync returns null at end of stream
-            if (line == null)
-            {
-                break;
-            }
+            if (line == null) break;
 
-            if (string.IsNullOrWhiteSpace(line))
-            {
-                continue;
-            }
+            if (string.IsNullOrWhiteSpace(line)) continue;
 
             T? item;
             try
@@ -317,10 +308,7 @@ internal sealed class LichessHttpClient : ILichessHttpClient
                 continue;
             }
 
-            if (item != null)
-            {
-                yield return item;
-            }
+            if (item != null) yield return item;
         }
     }
 
@@ -345,10 +333,7 @@ internal sealed class LichessHttpClient : ILichessHttpClient
             {
                 using var request = new HttpRequestMessage(method, endpoint);
 
-                if (content != null)
-                {
-                    request.Content = content;
-                }
+                if (content != null) request.Content = content;
 
                 _logger.LogDebug("Sending {Method} request to {Endpoint}", method, endpoint);
 
@@ -422,12 +407,10 @@ internal sealed class LichessHttpClient : ILichessHttpClient
                 request.Headers.Accept.Clear();
                 request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptHeader));
 
-                if (content != null)
-                {
-                    request.Content = content;
-                }
+                if (content != null) request.Content = content;
 
-                _logger.LogDebug("Sending {Method} request to {Endpoint} with Accept: {Accept}", method, endpoint, acceptHeader);
+                _logger.LogDebug("Sending {Method} request to {Endpoint} with Accept: {Accept}", method, endpoint,
+                    acceptHeader);
 
                 response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
             }
@@ -497,10 +480,7 @@ internal sealed class LichessHttpClient : ILichessHttpClient
                 request.Headers.Accept.Clear();
                 request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                if (content != null)
-                {
-                    request.Content = content;
-                }
+                if (content != null) request.Content = content;
 
                 _logger.LogDebug("Sending {Method} request to {Url}", method, absoluteUrl);
 
@@ -551,10 +531,7 @@ internal sealed class LichessHttpClient : ILichessHttpClient
 
     private static TimeSpan GetRetryAfter(HttpResponseMessage response)
     {
-        if (response.Headers.RetryAfter?.Delta is { } delta)
-        {
-            return delta;
-        }
+        if (response.Headers.RetryAfter?.Delta is { } delta) return delta;
 
         if (response.Headers.RetryAfter?.Date is { } date)
         {
@@ -567,10 +544,7 @@ internal sealed class LichessHttpClient : ILichessHttpClient
 
     private async Task EnsureSuccessStatusCodeAsync(HttpResponseMessage response, CancellationToken cancellationToken)
     {
-        if (response.IsSuccessStatusCode)
-        {
-            return;
-        }
+        if (response.IsSuccessStatusCode) return;
 
         var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
         var lichessError = TryExtractError(content);
@@ -608,25 +582,20 @@ internal sealed class LichessHttpClient : ILichessHttpClient
     {
         var str = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
         await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
-        var result = await JsonSerializer.DeserializeAsync<T>(stream, _jsonOptions, cancellationToken).ConfigureAwait(false);
+        var result = await JsonSerializer.DeserializeAsync<T>(stream, _jsonOptions, cancellationToken)
+            .ConfigureAwait(false);
 
         return result ?? throw new LichessException("Failed to deserialize response");
     }
 
     private static string? TryExtractError(string content)
     {
-        if (string.IsNullOrWhiteSpace(content))
-        {
-            return null;
-        }
+        if (string.IsNullOrWhiteSpace(content)) return null;
 
         try
         {
             using var doc = JsonDocument.Parse(content);
-            if (doc.RootElement.TryGetProperty("error", out var errorElement))
-            {
-                return errorElement.GetString();
-            }
+            if (doc.RootElement.TryGetProperty("error", out var errorElement)) return errorElement.GetString();
         }
         catch
         {
@@ -637,7 +606,7 @@ internal sealed class LichessHttpClient : ILichessHttpClient
     }
 
     /// <summary>
-    /// Determines if an exception represents a transient failure that should be retried.
+    ///     Determines if an exception represents a transient failure that should be retried.
     /// </summary>
     private static bool IsTransientException(Exception ex)
     {
@@ -657,21 +626,15 @@ internal sealed class LichessHttpClient : ILichessHttpClient
     }
 
     /// <summary>
-    /// Determines if an HttpRequestException represents a transient failure.
+    ///     Determines if an HttpRequestException represents a transient failure.
     /// </summary>
     private static bool IsTransientHttpRequestException(HttpRequestException ex)
     {
         // Check inner exception for socket/network errors
-        if (ex.InnerException is SocketException)
-        {
-            return true;
-        }
+        if (ex.InnerException is SocketException) return true;
 
         // ObjectDisposedException means the content was already consumed - not transient
-        if (ex.InnerException is ObjectDisposedException)
-        {
-            return false;
-        }
+        if (ex.InnerException is ObjectDisposedException) return false;
 
         // DNS resolution failures, connection refused, etc.
         // HttpRequestError was added in .NET 7 and is non-nullable
@@ -688,7 +651,7 @@ internal sealed class LichessHttpClient : ILichessHttpClient
     }
 
     /// <summary>
-    /// Calculates the delay for a transient retry with exponential backoff and jitter.
+    ///     Calculates the delay for a transient retry with exponential backoff and jitter.
     /// </summary>
     private TimeSpan CalculateTransientRetryDelay(int retryAttempt)
     {
@@ -702,24 +665,21 @@ internal sealed class LichessHttpClient : ILichessHttpClient
 
         // Cap at max delay
         var maxDelayMs = _options.TransientRetryMaxDelay.TotalMilliseconds;
-        if (totalDelayMs > maxDelayMs)
-        {
-            totalDelayMs = maxDelayMs;
-        }
+        if (totalDelayMs > maxDelayMs) totalDelayMs = maxDelayMs;
 
         return TimeSpan.FromMilliseconds(totalDelayMs);
     }
 
     /// <summary>
-    /// A stream that reads from an async enumerable of strings, converting each to a line.
+    ///     A stream that reads from an async enumerable of strings, converting each to a line.
     /// </summary>
     private sealed class AsyncEnumerableStream : Stream
     {
-        private readonly IAsyncEnumerator<string> _enumerator;
         private readonly CancellationToken _cancellationToken;
+        private readonly IAsyncEnumerator<string> _enumerator;
+        private bool _completed;
         private byte[] _currentBuffer = [];
         private int _currentPosition;
-        private bool _completed;
 
         public AsyncEnumerableStream(IAsyncEnumerable<string> lines, CancellationToken cancellationToken)
         {
@@ -731,18 +691,17 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         public override bool CanSeek => false;
         public override bool CanWrite => false;
         public override long Length => throw new NotSupportedException();
+
         public override long Position
         {
             get => throw new NotSupportedException();
             set => throw new NotSupportedException();
         }
 
-        public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        public override async Task<int> ReadAsync(byte[] buffer, int offset, int count,
+            CancellationToken cancellationToken)
         {
-            if (_completed)
-            {
-                return 0;
-            }
+            if (_completed) return 0;
 
             // If we have data in the current buffer, return it
             if (_currentPosition < _currentBuffer.Length)
@@ -754,7 +713,8 @@ internal sealed class LichessHttpClient : ILichessHttpClient
             }
 
             // Try to get the next line
-            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _cancellationToken);
+            using var linkedCts =
+                CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _cancellationToken);
             if (!await _enumerator.MoveNextAsync().ConfigureAwait(false))
             {
                 _completed = true;
@@ -762,7 +722,7 @@ internal sealed class LichessHttpClient : ILichessHttpClient
             }
 
             // Convert line to bytes with newline
-            _currentBuffer = System.Text.Encoding.UTF8.GetBytes(_enumerator.Current + "\n");
+            _currentBuffer = Encoding.UTF8.GetBytes(_enumerator.Current + "\n");
             _currentPosition = 0;
 
             var bytesToReturn = Math.Min(count, _currentBuffer.Length);
@@ -776,17 +736,28 @@ internal sealed class LichessHttpClient : ILichessHttpClient
             return ReadAsync(buffer, offset, count, CancellationToken.None).GetAwaiter().GetResult();
         }
 
-        public override void Flush() { }
-        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
-        public override void SetLength(long value) => throw new NotSupportedException();
-        public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+        public override void Flush()
+        {
+        }
+
+        public override long Seek(long offset, SeekOrigin origin)
+        {
+            throw new NotSupportedException();
+        }
+
+        public override void SetLength(long value)
+        {
+            throw new NotSupportedException();
+        }
+
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            throw new NotSupportedException();
+        }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                _enumerator.DisposeAsync().AsTask().GetAwaiter().GetResult();
-            }
+            if (disposing) _enumerator.DisposeAsync().AsTask().GetAwaiter().GetResult();
             base.Dispose(disposing);
         }
 

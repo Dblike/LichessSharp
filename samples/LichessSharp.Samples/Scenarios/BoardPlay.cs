@@ -1,13 +1,12 @@
-using LichessSharp.Api.Contracts;
 using LichessSharp.Samples.Helpers;
 
 namespace LichessSharp.Samples.Scenarios;
 
 /// <summary>
-/// Sample 08: Board Play
-/// Demonstrates how to play games using the Board API.
-/// This is for playing with physical boards or third-party clients.
-/// Requires authentication with 'board:play' scope.
+///     Sample 08: Board Play
+///     Demonstrates how to play games using the Board API.
+///     This is for playing with physical boards or third-party clients.
+///     Requires authentication with 'board:play' scope.
 /// </summary>
 public static class BoardPlay
 {

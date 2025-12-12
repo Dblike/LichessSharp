@@ -1,26 +1,25 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-
 using LichessSharp.Models.Games;
 using LichessSharp.Serialization.Converters;
 
 namespace LichessSharp.Api.Contracts;
 
 /// <summary>
-/// Arena Tournaments API - Access Arena tournaments played on Lichess.
-/// See <see href="https://lichess.org/api#tag/Arena-tournaments"/>.
+///     Arena Tournaments API - Access Arena tournaments played on Lichess.
+///     See <see href="https://lichess.org/api#tag/Arena-tournaments" />.
 /// </summary>
 public interface IArenaTournamentsApi
 {
     /// <summary>
-    /// Get upcoming, ongoing, and recently finished Arena tournaments.
+    ///     Get upcoming, ongoing, and recently finished Arena tournaments.
     /// </summary>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Arena tournaments grouped by status (created, started, finished).</returns>
     Task<ArenaTournamentList> GetCurrentAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Create a new Arena tournament.
+    ///     Create a new Arena tournament.
     /// </summary>
     /// <param name="options">Tournament creation options.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
@@ -28,7 +27,7 @@ public interface IArenaTournamentsApi
     Task<ArenaTournament> CreateAsync(ArenaCreateOptions options, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Get info about an Arena tournament.
+    ///     Get info about an Arena tournament.
     /// </summary>
     /// <param name="id">The tournament ID.</param>
     /// <param name="page">Page number for standings (starting at 1).</param>
@@ -37,18 +36,19 @@ public interface IArenaTournamentsApi
     Task<ArenaTournament> GetAsync(string id, int page = 1, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Update an existing Arena tournament.
-    /// Be mindful not to make important changes to ongoing tournaments.
+    ///     Update an existing Arena tournament.
+    ///     Be mindful not to make important changes to ongoing tournaments.
     /// </summary>
     /// <param name="id">The tournament ID.</param>
     /// <param name="options">Tournament update options.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The updated tournament.</returns>
-    Task<ArenaTournament> UpdateAsync(string id, ArenaUpdateOptions options, CancellationToken cancellationToken = default);
+    Task<ArenaTournament> UpdateAsync(string id, ArenaUpdateOptions options,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Join an Arena tournament, possibly with a password and/or a team.
-    /// Also unpauses if you had previously paused the tournament.
+    ///     Join an Arena tournament, possibly with a password and/or a team.
+    ///     Also unpauses if you had previously paused the tournament.
     /// </summary>
     /// <param name="id">The tournament ID.</param>
     /// <param name="password">Optional password for private tournaments.</param>
@@ -56,11 +56,12 @@ public interface IArenaTournamentsApi
     /// <param name="pairMeAsap">Request immediate pairing in tournaments with less than 30 players.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>True if successfully joined.</returns>
-    Task<bool> JoinAsync(string id, string? password = null, string? team = null, bool? pairMeAsap = null, CancellationToken cancellationToken = default);
+    Task<bool> JoinAsync(string id, string? password = null, string? team = null, bool? pairMeAsap = null,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Leave a future Arena tournament, or take a break on an ongoing Arena tournament.
-    /// It's possible to join again later. Points and streaks are preserved.
+    ///     Leave a future Arena tournament, or take a break on an ongoing Arena tournament.
+    ///     It's possible to join again later. Points and streaks are preserved.
     /// </summary>
     /// <param name="id">The tournament ID.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
@@ -68,8 +69,8 @@ public interface IArenaTournamentsApi
     Task<bool> PauseOrWithdrawAsync(string id, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Terminate an Arena tournament.
-    /// Only the tournament creator or Lichess admins can terminate tournaments.
+    ///     Terminate an Arena tournament.
+    ///     Only the tournament creator or Lichess admins can terminate tournaments.
     /// </summary>
     /// <param name="id">The tournament ID.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
@@ -77,38 +78,41 @@ public interface IArenaTournamentsApi
     Task<bool> TerminateAsync(string id, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Update a team battle tournament.
+    ///     Update a team battle tournament.
     /// </summary>
     /// <param name="id">The tournament ID.</param>
     /// <param name="teams">Teams participating in the battle (comma-separated team IDs, max 200 teams).</param>
     /// <param name="nbLeaders">Number of leaders whose score counts (1-20, default 5).</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The updated tournament.</returns>
-    Task<ArenaTournament> UpdateTeamBattleAsync(string id, string teams, int? nbLeaders = null, CancellationToken cancellationToken = default);
+    Task<ArenaTournament> UpdateTeamBattleAsync(string id, string teams, int? nbLeaders = null,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Export games of an Arena tournament.
-    /// Games are sorted by reverse chronological order (most recent first).
+    ///     Export games of an Arena tournament.
+    ///     Games are sorted by reverse chronological order (most recent first).
     /// </summary>
     /// <param name="id">The tournament ID.</param>
     /// <param name="options">Export options.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Stream of games.</returns>
-    IAsyncEnumerable<GameJson> StreamGamesAsync(string id, ArenaGamesExportOptions? options = null, CancellationToken cancellationToken = default);
+    IAsyncEnumerable<GameJson> StreamGamesAsync(string id, ArenaGamesExportOptions? options = null,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Get results of an Arena tournament.
-    /// Players are sorted by rank (best first).
+    ///     Get results of an Arena tournament.
+    ///     Players are sorted by rank (best first).
     /// </summary>
     /// <param name="id">The tournament ID.</param>
     /// <param name="nb">Max number of players to fetch (default: all).</param>
     /// <param name="sheet">Include score sheet with individual game results.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Stream of player results.</returns>
-    IAsyncEnumerable<ArenaPlayerResult> StreamResultsAsync(string id, int? nb = null, bool sheet = false, CancellationToken cancellationToken = default);
+    IAsyncEnumerable<ArenaPlayerResult> StreamResultsAsync(string id, int? nb = null, bool sheet = false,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Get team standings in a team battle.
+    ///     Get team standings in a team battle.
     /// </summary>
     /// <param name="id">The tournament ID.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
@@ -116,1331 +120,1334 @@ public interface IArenaTournamentsApi
     Task<ArenaTeamStanding> GetTeamStandingAsync(string id, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Get Arena tournaments created by a user.
-    /// Tournaments are sorted by reverse chronological order.
+    ///     Get Arena tournaments created by a user.
+    ///     Tournaments are sorted by reverse chronological order.
     /// </summary>
     /// <param name="username">The username.</param>
     /// <param name="status">Filter by status (default: all).</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Stream of tournaments created by the user.</returns>
-    IAsyncEnumerable<ArenaTournamentSummary> StreamCreatedByAsync(string username, ArenaStatusFilter? status = null, CancellationToken cancellationToken = default);
+    IAsyncEnumerable<ArenaTournamentSummary> StreamCreatedByAsync(string username, ArenaStatusFilter? status = null,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Get Arena tournaments played by a user.
-    /// Tournaments are sorted by reverse chronological order.
+    ///     Get Arena tournaments played by a user.
+    ///     Tournaments are sorted by reverse chronological order.
     /// </summary>
     /// <param name="username">The username.</param>
     /// <param name="nb">Max number of tournaments to fetch.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Stream of tournaments played by the user.</returns>
-    IAsyncEnumerable<ArenaPlayedTournament> StreamPlayedByAsync(string username, int? nb = null, CancellationToken cancellationToken = default);
+    IAsyncEnumerable<ArenaPlayedTournament> StreamPlayedByAsync(string username, int? nb = null,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Get Arena tournaments for a team.
-    /// Tournaments are sorted by reverse chronological order.
+    ///     Get Arena tournaments for a team.
+    ///     Tournaments are sorted by reverse chronological order.
     /// </summary>
     /// <param name="teamId">The team ID.</param>
     /// <param name="max">Max number of tournaments to fetch (default: 100).</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Stream of team tournaments.</returns>
-    IAsyncEnumerable<ArenaTournamentSummary> StreamTeamTournamentsAsync(string teamId, int? max = null, CancellationToken cancellationToken = default);
+    IAsyncEnumerable<ArenaTournamentSummary> StreamTeamTournamentsAsync(string teamId, int? max = null,
+        CancellationToken cancellationToken = default);
 }
+
 /// <summary>
-/// Arena tournament status values.
+///     Arena tournament status values.
 /// </summary>
 public enum ArenaStatus
 {
     /// <summary>
-    /// Tournament has been created but not yet started.
+    ///     Tournament has been created but not yet started.
     /// </summary>
     Created = 10,
 
     /// <summary>
-    /// Tournament is currently in progress.
+    ///     Tournament is currently in progress.
     /// </summary>
     Started = 20,
 
     /// <summary>
-    /// Tournament has finished.
+    ///     Tournament has finished.
     /// </summary>
     Finished = 30
 }
 
 /// <summary>
-/// Arena status filter for querying tournaments.
+///     Arena status filter for querying tournaments.
 /// </summary>
 public enum ArenaStatusFilter
 {
     /// <summary>
-    /// Created tournaments only.
+    ///     Created tournaments only.
     /// </summary>
     Created,
 
     /// <summary>
-    /// Started tournaments only.
+    ///     Started tournaments only.
     /// </summary>
     Started,
 
     /// <summary>
-    /// Finished tournaments only.
+    ///     Finished tournaments only.
     /// </summary>
     Finished
 }
 
 /// <summary>
-/// Options for creating an Arena tournament.
+///     Options for creating an Arena tournament.
 /// </summary>
 public class ArenaCreateOptions
 {
     /// <summary>
-    /// The tournament name. Leave empty to use auto-generated name based on variant.
-    /// Must be between 2 and 30 characters if specified.
+    ///     The tournament name. Leave empty to use auto-generated name based on variant.
+    ///     Must be between 2 and 30 characters if specified.
     /// </summary>
     public string? Name { get; init; }
 
     /// <summary>
-    /// Clock time in minutes (0 to 60).
+    ///     Clock time in minutes (0 to 60).
     /// </summary>
     public required int ClockTime { get; init; }
 
     /// <summary>
-    /// Clock increment in seconds (0 to 180).
+    ///     Clock increment in seconds (0 to 180).
     /// </summary>
     public required int ClockIncrement { get; init; }
 
     /// <summary>
-    /// Duration of the tournament in minutes (20 to 720).
+    ///     Duration of the tournament in minutes (20 to 720).
     /// </summary>
     public required int Minutes { get; init; }
 
     /// <summary>
-    /// How long to wait before starting (0 to 60 minutes, in minutes).
+    ///     How long to wait before starting (0 to 60 minutes, in minutes).
     /// </summary>
     public int? WaitMinutes { get; init; }
 
     /// <summary>
-    /// Start at a specific time (Unix timestamp in milliseconds).
-    /// Overrides WaitMinutes.
+    ///     Start at a specific time (Unix timestamp in milliseconds).
+    ///     Overrides WaitMinutes.
     /// </summary>
     public long? StartDate { get; init; }
 
     /// <summary>
-    /// The chess variant.
+    ///     The chess variant.
     /// </summary>
     public string? Variant { get; init; }
 
     /// <summary>
-    /// Whether the tournament is rated. Defaults to true.
+    ///     Whether the tournament is rated. Defaults to true.
     /// </summary>
     public bool? Rated { get; init; }
 
     /// <summary>
-    /// Draw position from FEN for a thematic tournament.
-    /// Variant must be standard, fromPosition, or chess960.
+    ///     Draw position from FEN for a thematic tournament.
+    ///     Variant must be standard, fromPosition, or chess960.
     /// </summary>
     public string? Position { get; init; }
 
     /// <summary>
-    /// Whether players can berserk (halve time for extra point). Defaults to true.
+    ///     Whether players can berserk (halve time for extra point). Defaults to true.
     /// </summary>
     public bool? Berserkable { get; init; }
 
     /// <summary>
-    /// Whether to streak. A win grants an extra point and a double win streak.
+    ///     Whether to streak. A win grants an extra point and a double win streak.
     /// </summary>
     public bool? Streakable { get; init; }
 
     /// <summary>
-    /// Whether to add a chat room for participants.
+    ///     Whether to add a chat room for participants.
     /// </summary>
     public bool? HasChat { get; init; }
 
     /// <summary>
-    /// Description displayed below the tournament name (max 400 chars, Markdown supported).
+    ///     Description displayed below the tournament name (max 400 chars, Markdown supported).
     /// </summary>
     public string? Description { get; init; }
 
     /// <summary>
-    /// Password to join the tournament.
+    ///     Password to join the tournament.
     /// </summary>
     public string? Password { get; init; }
 
     /// <summary>
-    /// Team ID for team-restricted tournaments.
+    ///     Team ID for team-restricted tournaments.
     /// </summary>
     public string? TeamId { get; init; }
 
     /// <summary>
-    /// Minimum rating to join.
+    ///     Minimum rating to join.
     /// </summary>
     public int? MinRating { get; init; }
 
     /// <summary>
-    /// Maximum rating to join.
+    ///     Maximum rating to join.
     /// </summary>
     public int? MaxRating { get; init; }
 
     /// <summary>
-    /// Minimum number of rated games to join.
+    ///     Minimum number of rated games to join.
     /// </summary>
     public int? MinRatedGames { get; init; }
 }
 
 /// <summary>
-/// Options for updating an Arena tournament.
+///     Options for updating an Arena tournament.
 /// </summary>
 public class ArenaUpdateOptions
 {
     /// <summary>
-    /// The tournament name. Must be between 2 and 30 characters if specified.
+    ///     The tournament name. Must be between 2 and 30 characters if specified.
     /// </summary>
     public string? Name { get; init; }
 
     /// <summary>
-    /// Clock time in minutes (0 to 60).
+    ///     Clock time in minutes (0 to 60).
     /// </summary>
     public int? ClockTime { get; init; }
 
     /// <summary>
-    /// Clock increment in seconds (0 to 180).
+    ///     Clock increment in seconds (0 to 180).
     /// </summary>
     public int? ClockIncrement { get; init; }
 
     /// <summary>
-    /// Duration of the tournament in minutes (20 to 720).
+    ///     Duration of the tournament in minutes (20 to 720).
     /// </summary>
     public int? Minutes { get; init; }
 
     /// <summary>
-    /// Start at a specific time (Unix timestamp in milliseconds).
+    ///     Start at a specific time (Unix timestamp in milliseconds).
     /// </summary>
     public long? StartDate { get; init; }
 
     /// <summary>
-    /// The chess variant.
+    ///     The chess variant.
     /// </summary>
     public string? Variant { get; init; }
 
     /// <summary>
-    /// Whether the tournament is rated.
+    ///     Whether the tournament is rated.
     /// </summary>
     public bool? Rated { get; init; }
 
     /// <summary>
-    /// Draw position from FEN for a thematic tournament.
+    ///     Draw position from FEN for a thematic tournament.
     /// </summary>
     public string? Position { get; init; }
 
     /// <summary>
-    /// Whether players can berserk.
+    ///     Whether players can berserk.
     /// </summary>
     public bool? Berserkable { get; init; }
 
     /// <summary>
-    /// Whether to streak.
+    ///     Whether to streak.
     /// </summary>
     public bool? Streakable { get; init; }
 
     /// <summary>
-    /// Whether to add a chat room.
+    ///     Whether to add a chat room.
     /// </summary>
     public bool? HasChat { get; init; }
 
     /// <summary>
-    /// Tournament description (max 400 chars, Markdown supported).
+    ///     Tournament description (max 400 chars, Markdown supported).
     /// </summary>
     public string? Description { get; init; }
 
     /// <summary>
-    /// Password to join.
+    ///     Password to join.
     /// </summary>
     public string? Password { get; init; }
 
     /// <summary>
-    /// Minimum rating to join.
+    ///     Minimum rating to join.
     /// </summary>
     public int? MinRating { get; init; }
 
     /// <summary>
-    /// Maximum rating to join.
+    ///     Maximum rating to join.
     /// </summary>
     public int? MaxRating { get; init; }
 
     /// <summary>
-    /// Minimum number of rated games to join.
+    ///     Minimum number of rated games to join.
     /// </summary>
     public int? MinRatedGames { get; init; }
 }
 
 /// <summary>
-/// Options for exporting Arena tournament games.
+///     Options for exporting Arena tournament games.
 /// </summary>
 public class ArenaGamesExportOptions
 {
     /// <summary>
-    /// Only get games of a specific player.
+    ///     Only get games of a specific player.
     /// </summary>
     public string? Player { get; init; }
 
     /// <summary>
-    /// Include the PGN moves.
+    ///     Include the PGN moves.
     /// </summary>
     public bool? Moves { get; init; }
 
     /// <summary>
-    /// Include the full PGN within the JSON response.
+    ///     Include the full PGN within the JSON response.
     /// </summary>
     public bool? PgnInJson { get; init; }
 
     /// <summary>
-    /// Include the PGN tags.
+    ///     Include the PGN tags.
     /// </summary>
     public bool? Tags { get; init; }
 
     /// <summary>
-    /// Include clock status when available.
+    ///     Include clock status when available.
     /// </summary>
     public bool? Clocks { get; init; }
 
     /// <summary>
-    /// Include analysis evaluations when available.
+    ///     Include analysis evaluations when available.
     /// </summary>
     public bool? Evals { get; init; }
 
     /// <summary>
-    /// Include opening information.
+    ///     Include opening information.
     /// </summary>
     public bool? Opening { get; init; }
 }
 
 /// <summary>
-/// List of Arena tournaments grouped by status.
+///     List of Arena tournaments grouped by status.
 /// </summary>
 public class ArenaTournamentList
 {
     /// <summary>
-    /// Tournaments that have been created but not yet started.
+    ///     Tournaments that have been created but not yet started.
     /// </summary>
     [JsonPropertyName("created")]
     public IReadOnlyList<ArenaTournamentSummary> Created { get; init; } = [];
 
     /// <summary>
-    /// Tournaments that are currently in progress.
+    ///     Tournaments that are currently in progress.
     /// </summary>
     [JsonPropertyName("started")]
     public IReadOnlyList<ArenaTournamentSummary> Started { get; init; } = [];
 
     /// <summary>
-    /// Tournaments that have finished.
+    ///     Tournaments that have finished.
     /// </summary>
     [JsonPropertyName("finished")]
     public IReadOnlyList<ArenaTournamentSummary> Finished { get; init; } = [];
 }
 
 /// <summary>
-/// Summary of an Arena tournament (used in lists).
+///     Summary of an Arena tournament (used in lists).
 /// </summary>
 public class ArenaTournamentSummary
 {
     /// <summary>
-    /// The tournament ID.
+    ///     The tournament ID.
     /// </summary>
     [JsonPropertyName("id")]
     public string Id { get; init; } = "";
 
     /// <summary>
-    /// Who created the tournament.
+    ///     Who created the tournament.
     /// </summary>
     [JsonPropertyName("createdBy")]
     public string CreatedBy { get; init; } = "";
 
     /// <summary>
-    /// Tournament system (always "arena").
+    ///     Tournament system (always "arena").
     /// </summary>
     [JsonPropertyName("system")]
     public string System { get; init; } = "arena";
 
     /// <summary>
-    /// Duration in minutes.
+    ///     Duration in minutes.
     /// </summary>
     [JsonPropertyName("minutes")]
     public int Minutes { get; init; }
 
     /// <summary>
-    /// Clock settings.
+    ///     Clock settings.
     /// </summary>
     [JsonPropertyName("clock")]
     public ArenaClock? Clock { get; init; }
 
     /// <summary>
-    /// Whether the tournament is rated.
+    ///     Whether the tournament is rated.
     /// </summary>
     [JsonPropertyName("rated")]
     public bool Rated { get; init; }
 
     /// <summary>
-    /// The full tournament name.
+    ///     The full tournament name.
     /// </summary>
     [JsonPropertyName("fullName")]
     public string FullName { get; init; } = "";
 
     /// <summary>
-    /// Number of players.
+    ///     Number of players.
     /// </summary>
     [JsonPropertyName("nbPlayers")]
     public int NbPlayers { get; init; }
 
     /// <summary>
-    /// The chess variant.
+    ///     The chess variant.
     /// </summary>
     [JsonPropertyName("variant")]
     [JsonConverter(typeof(FlexibleVariantConverter))]
     public ArenaVariant? Variant { get; init; }
 
     /// <summary>
-    /// Tournament start time.
+    ///     Tournament start time.
     /// </summary>
     [JsonPropertyName("startsAt")]
     [JsonConverter(typeof(FlexibleTimestampConverter))]
     public DateTimeOffset StartsAt { get; init; }
 
     /// <summary>
-    /// Tournament finish time.
+    ///     Tournament finish time.
     /// </summary>
     [JsonPropertyName("finishesAt")]
     [JsonConverter(typeof(FlexibleTimestampConverter))]
     public DateTimeOffset FinishesAt { get; init; }
 
     /// <summary>
-    /// Tournament status.
+    ///     Tournament status.
     /// </summary>
     [JsonPropertyName("status")]
     public int Status { get; init; }
 
     /// <summary>
-    /// Performance type info.
+    ///     Performance type info.
     /// </summary>
     [JsonPropertyName("perf")]
     public ArenaPerf? Perf { get; init; }
 
     /// <summary>
-    /// Seconds until the tournament starts (if not yet started).
+    ///     Seconds until the tournament starts (if not yet started).
     /// </summary>
     [JsonPropertyName("secondsToStart")]
     public int? SecondsToStart { get; init; }
 
     /// <summary>
-    /// Whether the tournament has a maximum rating restriction.
+    ///     Whether the tournament has a maximum rating restriction.
     /// </summary>
     [JsonPropertyName("hasMaxRating")]
     public bool? HasMaxRating { get; init; }
 
     /// <summary>
-    /// Maximum rating restriction.
+    ///     Maximum rating restriction.
     /// </summary>
     [JsonPropertyName("maxRating")]
     public ArenaRatingRestriction? MaxRating { get; init; }
 
     /// <summary>
-    /// Minimum rating restriction.
+    ///     Minimum rating restriction.
     /// </summary>
     [JsonPropertyName("minRating")]
     public ArenaRatingRestriction? MinRating { get; init; }
 
     /// <summary>
-    /// Whether this is a private tournament.
+    ///     Whether this is a private tournament.
     /// </summary>
     [JsonPropertyName("private")]
     public bool? IsPrivate { get; init; }
 
     /// <summary>
-    /// Team ID if this is a team-restricted tournament.
+    ///     Team ID if this is a team-restricted tournament.
     /// </summary>
     [JsonPropertyName("teamMember")]
     public string? TeamMember { get; init; }
 
     /// <summary>
-    /// Team battle info if this is a team battle.
+    ///     Team battle info if this is a team battle.
     /// </summary>
     [JsonPropertyName("teamBattle")]
     public ArenaTeamBattle? TeamBattle { get; init; }
 
     /// <summary>
-    /// The winner if the tournament has finished.
+    ///     The winner if the tournament has finished.
     /// </summary>
     [JsonPropertyName("winner")]
     public ArenaWinner? Winner { get; init; }
 
     /// <summary>
-    /// Starting position info for thematic tournaments.
+    ///     Starting position info for thematic tournaments.
     /// </summary>
     [JsonPropertyName("position")]
     public ArenaPosition? Position { get; init; }
 }
 
 /// <summary>
-/// Full Arena tournament info (returned from ExportAsync).
+///     Full Arena tournament info (returned from ExportAsync).
 /// </summary>
 public class ArenaTournament : ArenaTournamentSummary
 {
     /// <summary>
-    /// Whether players can berserk.
+    ///     Whether players can berserk.
     /// </summary>
     [JsonPropertyName("berserkable")]
     public bool? Berserkable { get; init; }
 
     /// <summary>
-    /// Only titled players allowed.
+    ///     Only titled players allowed.
     /// </summary>
     [JsonPropertyName("onlyTitled")]
     public bool? OnlyTitled { get; init; }
 
     /// <summary>
-    /// Seconds until the tournament finishes.
+    ///     Seconds until the tournament finishes.
     /// </summary>
     [JsonPropertyName("secondsToFinish")]
     public int? SecondsToFinish { get; init; }
 
     /// <summary>
-    /// Whether the tournament is finished.
+    ///     Whether the tournament is finished.
     /// </summary>
     [JsonPropertyName("isFinished")]
     public bool? IsFinished { get; init; }
 
     /// <summary>
-    /// Whether the tournament recently finished.
+    ///     Whether the tournament recently finished.
     /// </summary>
     [JsonPropertyName("isRecentlyFinished")]
     public bool? IsRecentlyFinished { get; init; }
 
     /// <summary>
-    /// Whether pairings are closed.
+    ///     Whether pairings are closed.
     /// </summary>
     [JsonPropertyName("pairingsClosed")]
     public bool? PairingsClosed { get; init; }
 
     /// <summary>
-    /// Verdicts for joining the tournament.
+    ///     Verdicts for joining the tournament.
     /// </summary>
     [JsonPropertyName("verdicts")]
     public ArenaVerdicts? Verdicts { get; init; }
 
     /// <summary>
-    /// Quote displayed on the tournament page.
+    ///     Quote displayed on the tournament page.
     /// </summary>
     [JsonPropertyName("quote")]
     public ArenaQuote? Quote { get; init; }
 
     /// <summary>
-    /// Tournament spotlight info.
+    ///     Tournament spotlight info.
     /// </summary>
     [JsonPropertyName("spotlight")]
     public ArenaSpotlight? Spotlight { get; init; }
 
     /// <summary>
-    /// Whether the current user is a member.
+    ///     Whether the current user is a member.
     /// </summary>
     [JsonPropertyName("me")]
     public ArenaTournamentMe? Me { get; init; }
 
     /// <summary>
-    /// Tournament standing.
+    ///     Tournament standing.
     /// </summary>
     [JsonPropertyName("standing")]
     public ArenaStanding? Standing { get; init; }
 
     /// <summary>
-    /// Podium (top 3 players).
+    ///     Podium (top 3 players).
     /// </summary>
     [JsonPropertyName("podium")]
     public IReadOnlyList<ArenaPodiumPlayer>? Podium { get; init; }
 
     /// <summary>
-    /// Featured game (if any).
+    ///     Featured game (if any).
     /// </summary>
     [JsonPropertyName("featured")]
     public ArenaFeaturedGame? Featured { get; init; }
 
     /// <summary>
-    /// Current duels (pairings) in the tournament.
+    ///     Current duels (pairings) in the tournament.
     /// </summary>
     [JsonPropertyName("duels")]
     public IReadOnlyList<ArenaDuel>? Duels { get; init; }
 
     /// <summary>
-    /// Duel teams info for team battles.
+    ///     Duel teams info for team battles.
     /// </summary>
     [JsonPropertyName("duelTeams")]
     public ArenaDuelTeams? DuelTeams { get; init; }
 
     /// <summary>
-    /// Tournament description.
+    ///     Tournament description.
     /// </summary>
     [JsonPropertyName("description")]
     public string? Description { get; init; }
 
     /// <summary>
-    /// Great player displayed on the tournament page.
+    ///     Great player displayed on the tournament page.
     /// </summary>
     [JsonPropertyName("greatPlayer")]
     public ArenaGreatPlayer? GreatPlayer { get; init; }
 }
 
 /// <summary>
-/// Clock settings for an Arena tournament.
+///     Clock settings for an Arena tournament.
 /// </summary>
 public class ArenaClock
 {
     /// <summary>
-    /// Initial time in seconds.
+    ///     Initial time in seconds.
     /// </summary>
     [JsonPropertyName("limit")]
     public int Limit { get; init; }
 
     /// <summary>
-    /// Increment per move in seconds.
+    ///     Increment per move in seconds.
     /// </summary>
     [JsonPropertyName("increment")]
     public int Increment { get; init; }
 }
 
 /// <summary>
-/// Variant info for Arena tournaments.
+///     Variant info for Arena tournaments.
 /// </summary>
 public class ArenaVariant
 {
     /// <summary>
-    /// Variant key (e.g., "standard", "chess960").
+    ///     Variant key (e.g., "standard", "chess960").
     /// </summary>
     [JsonPropertyName("key")]
     public string Key { get; init; } = "";
 
     /// <summary>
-    /// Short variant name.
+    ///     Short variant name.
     /// </summary>
     [JsonPropertyName("short")]
     public string? Short { get; init; }
 
     /// <summary>
-    /// Full variant name.
+    ///     Full variant name.
     /// </summary>
     [JsonPropertyName("name")]
     public string? Name { get; init; }
 }
 
 /// <summary>
-/// Performance type info.
+///     Performance type info.
 /// </summary>
 public class ArenaPerf
 {
     /// <summary>
-    /// Perf key (e.g., "blitz", "rapid").
+    ///     Perf key (e.g., "blitz", "rapid").
     /// </summary>
     [JsonPropertyName("key")]
     public string Key { get; init; } = "";
 
     /// <summary>
-    /// Perf name.
+    ///     Perf name.
     /// </summary>
     [JsonPropertyName("name")]
     public string? Name { get; init; }
 
     /// <summary>
-    /// Position.
+    ///     Position.
     /// </summary>
     [JsonPropertyName("position")]
     public int? Position { get; init; }
 
     /// <summary>
-    /// Icon character.
+    ///     Icon character.
     /// </summary>
     [JsonPropertyName("icon")]
     public string? Icon { get; init; }
 }
 
 /// <summary>
-/// Rating restriction for Arena tournaments.
+///     Rating restriction for Arena tournaments.
 /// </summary>
 public class ArenaRatingRestriction
 {
     /// <summary>
-    /// Performance type.
+    ///     Performance type.
     /// </summary>
     [JsonPropertyName("perf")]
     public string? Perf { get; init; }
 
     /// <summary>
-    /// Rating value.
+    ///     Rating value.
     /// </summary>
     [JsonPropertyName("rating")]
     public int Rating { get; init; }
 }
 
 /// <summary>
-/// Team battle info.
+///     Team battle info.
 /// </summary>
 public class ArenaTeamBattle
 {
     /// <summary>
-    /// List of team IDs.
+    ///     List of team IDs.
     /// </summary>
     [JsonPropertyName("teams")]
     public IReadOnlyList<string>? Teams { get; init; }
 
     /// <summary>
-    /// Number of leaders that count for the team score.
+    ///     Number of leaders that count for the team score.
     /// </summary>
     [JsonPropertyName("nbLeaders")]
     public int? NbLeaders { get; init; }
 }
 
 /// <summary>
-/// Arena tournament winner.
+///     Arena tournament winner.
 /// </summary>
 public class ArenaWinner
 {
     /// <summary>
-    /// User ID.
+    ///     User ID.
     /// </summary>
     [JsonPropertyName("id")]
     public string Id { get; init; } = "";
 
     /// <summary>
-    /// Username.
+    ///     Username.
     /// </summary>
     [JsonPropertyName("name")]
     public string Name { get; init; } = "";
 
     /// <summary>
-    /// Title (GM, IM, etc.).
+    ///     Title (GM, IM, etc.).
     /// </summary>
     [JsonPropertyName("title")]
     public string? Title { get; init; }
 }
 
 /// <summary>
-/// Starting position for thematic Arena tournaments.
+///     Starting position for thematic Arena tournaments.
 /// </summary>
 public class ArenaPosition
 {
     /// <summary>
-    /// ECO code.
+    ///     ECO code.
     /// </summary>
     [JsonPropertyName("eco")]
     public string? Eco { get; init; }
 
     /// <summary>
-    /// Opening name.
+    ///     Opening name.
     /// </summary>
     [JsonPropertyName("name")]
     public string? Name { get; init; }
 
     /// <summary>
-    /// FEN position.
+    ///     FEN position.
     /// </summary>
     [JsonPropertyName("fen")]
     public string? Fen { get; init; }
 
     /// <summary>
-    /// Opening URL.
+    ///     Opening URL.
     /// </summary>
     [JsonPropertyName("url")]
     public string? Url { get; init; }
 }
 
 /// <summary>
-/// Verdicts for joining an Arena tournament.
+///     Verdicts for joining an Arena tournament.
 /// </summary>
 public class ArenaVerdicts
 {
     /// <summary>
-    /// Whether the current user is accepted.
+    ///     Whether the current user is accepted.
     /// </summary>
     [JsonPropertyName("accepted")]
     public bool Accepted { get; init; }
 
     /// <summary>
-    /// List of individual verdicts.
+    ///     List of individual verdicts.
     /// </summary>
     [JsonPropertyName("list")]
     public IReadOnlyList<ArenaVerdict>? List { get; init; }
 }
 
 /// <summary>
-/// Individual verdict for joining.
+///     Individual verdict for joining.
 /// </summary>
 public class ArenaVerdict
 {
     /// <summary>
-    /// The condition being checked.
+    ///     The condition being checked.
     /// </summary>
     [JsonPropertyName("condition")]
     public string? Condition { get; init; }
 
     /// <summary>
-    /// The verdict result.
+    ///     The verdict result.
     /// </summary>
     [JsonPropertyName("verdict")]
     public string? Verdict { get; init; }
 }
 
 /// <summary>
-/// Quote displayed on the tournament page.
+///     Quote displayed on the tournament page.
 /// </summary>
 public class ArenaQuote
 {
     /// <summary>
-    /// Quote text.
+    ///     Quote text.
     /// </summary>
     [JsonPropertyName("text")]
     public string? Text { get; init; }
 
     /// <summary>
-    /// Quote author.
+    ///     Quote author.
     /// </summary>
     [JsonPropertyName("author")]
     public string? Author { get; init; }
 }
 
 /// <summary>
-/// Tournament spotlight info.
+///     Tournament spotlight info.
 /// </summary>
 public class ArenaSpotlight
 {
     /// <summary>
-    /// Spotlight headline.
+    ///     Spotlight headline.
     /// </summary>
     [JsonPropertyName("headline")]
     public string? Headline { get; init; }
 }
 
 /// <summary>
-/// Current user's info in the tournament.
+///     Current user's info in the tournament.
 /// </summary>
 public class ArenaTournamentMe
 {
     /// <summary>
-    /// Current user's rank.
+    ///     Current user's rank.
     /// </summary>
     [JsonPropertyName("rank")]
     public int? Rank { get; init; }
 
     /// <summary>
-    /// Whether the user is paused.
+    ///     Whether the user is paused.
     /// </summary>
     [JsonPropertyName("withdraw")]
     public bool? Withdraw { get; init; }
 
     /// <summary>
-    /// Whether the current user joined the tournament.
+    ///     Whether the current user joined the tournament.
     /// </summary>
     [JsonPropertyName("username")]
     public string? Username { get; init; }
 }
 
 /// <summary>
-/// Arena tournament standing.
+///     Arena tournament standing.
 /// </summary>
 public class ArenaStanding
 {
     /// <summary>
-    /// Current page number.
+    ///     Current page number.
     /// </summary>
     [JsonPropertyName("page")]
     public int Page { get; init; }
 
     /// <summary>
-    /// Players in this page.
+    ///     Players in this page.
     /// </summary>
     [JsonPropertyName("players")]
     public IReadOnlyList<ArenaStandingPlayer>? Players { get; init; }
 }
 
 /// <summary>
-/// Player in the standings.
+///     Player in the standings.
 /// </summary>
 public class ArenaStandingPlayer
 {
     /// <summary>
-    /// Player name.
+    ///     Player name.
     /// </summary>
     [JsonPropertyName("name")]
     public string Name { get; init; } = "";
 
     /// <summary>
-    /// Player rank.
+    ///     Player rank.
     /// </summary>
     [JsonPropertyName("rank")]
     public int Rank { get; init; }
 
     /// <summary>
-    /// Player rating.
+    ///     Player rating.
     /// </summary>
     [JsonPropertyName("rating")]
     public int Rating { get; init; }
 
     /// <summary>
-    /// Player score.
+    ///     Player score.
     /// </summary>
     [JsonPropertyName("score")]
     public int Score { get; init; }
 
     /// <summary>
-    /// Score sheet.
+    ///     Score sheet.
     /// </summary>
     [JsonPropertyName("sheet")]
     public ArenaSheet? Sheet { get; init; }
 
     /// <summary>
-    /// Player title.
+    ///     Player title.
     /// </summary>
     [JsonPropertyName("title")]
     public string? Title { get; init; }
 
     /// <summary>
-    /// Team ID.
+    ///     Team ID.
     /// </summary>
     [JsonPropertyName("team")]
     public string? Team { get; init; }
 }
 
 /// <summary>
-/// Score sheet for Arena tournament results.
+///     Score sheet for Arena tournament results.
 /// </summary>
 public class ArenaSheet
 {
     /// <summary>
-    /// Encoded score string.
+    ///     Encoded score string.
     /// </summary>
     [JsonPropertyName("scores")]
     public string Scores { get; init; } = "";
 
     /// <summary>
-    /// Whether the player is on fire (streak).
+    ///     Whether the player is on fire (streak).
     /// </summary>
     [JsonPropertyName("fire")]
     public bool? Fire { get; init; }
 }
 
 /// <summary>
-/// Podium player info.
+///     Podium player info.
 /// </summary>
 public class ArenaPodiumPlayer
 {
     /// <summary>
-    /// Player name.
+    ///     Player name.
     /// </summary>
     [JsonPropertyName("name")]
     public string Name { get; init; } = "";
 
     /// <summary>
-    /// Player rank.
+    ///     Player rank.
     /// </summary>
     [JsonPropertyName("rank")]
     public int Rank { get; init; }
 
     /// <summary>
-    /// Player rating.
+    ///     Player rating.
     /// </summary>
     [JsonPropertyName("rating")]
     public int Rating { get; init; }
 
     /// <summary>
-    /// Player score.
+    ///     Player score.
     /// </summary>
     [JsonPropertyName("score")]
     public int Score { get; init; }
 
     /// <summary>
-    /// Player title.
+    ///     Player title.
     /// </summary>
     [JsonPropertyName("title")]
     public string? Title { get; init; }
 
     /// <summary>
-    /// Performance rating.
+    ///     Performance rating.
     /// </summary>
     [JsonPropertyName("performance")]
     public int? Performance { get; init; }
 
     /// <summary>
-    /// Number of berserk games.
+    ///     Number of berserk games.
     /// </summary>
     [JsonPropertyName("nb")]
     public ArenaPodiumNb? Nb { get; init; }
 }
 
 /// <summary>
-/// Podium player game counts.
+///     Podium player game counts.
 /// </summary>
 public class ArenaPodiumNb
 {
     /// <summary>
-    /// Number of games played.
+    ///     Number of games played.
     /// </summary>
     [JsonPropertyName("game")]
     public int? Game { get; init; }
 
     /// <summary>
-    /// Number of berserk games.
+    ///     Number of berserk games.
     /// </summary>
     [JsonPropertyName("berserk")]
     public int? Berserk { get; init; }
 
     /// <summary>
-    /// Number of wins.
+    ///     Number of wins.
     /// </summary>
     [JsonPropertyName("win")]
     public int? Win { get; init; }
 }
 
 /// <summary>
-/// Featured game in the tournament.
+///     Featured game in the tournament.
 /// </summary>
 public class ArenaFeaturedGame
 {
     /// <summary>
-    /// Game ID.
+    ///     Game ID.
     /// </summary>
     [JsonPropertyName("id")]
     public string? Id { get; init; }
 
     /// <summary>
-    /// Current FEN position.
+    ///     Current FEN position.
     /// </summary>
     [JsonPropertyName("fen")]
     public string? Fen { get; init; }
 
     /// <summary>
-    /// Board orientation.
+    ///     Board orientation.
     /// </summary>
     [JsonPropertyName("orientation")]
     public string? Orientation { get; init; }
 
     /// <summary>
-    /// Color whose turn it is.
+    ///     Color whose turn it is.
     /// </summary>
     [JsonPropertyName("color")]
     public string? Color { get; init; }
 
     /// <summary>
-    /// Last move.
+    ///     Last move.
     /// </summary>
     [JsonPropertyName("lastMove")]
     public string? LastMove { get; init; }
 
     /// <summary>
-    /// White player.
+    ///     White player.
     /// </summary>
     [JsonPropertyName("white")]
     public ArenaFeaturedPlayer? White { get; init; }
 
     /// <summary>
-    /// Black player.
+    ///     Black player.
     /// </summary>
     [JsonPropertyName("black")]
     public ArenaFeaturedPlayer? Black { get; init; }
 }
 
 /// <summary>
-/// Player in a featured game.
+///     Player in a featured game.
 /// </summary>
 public class ArenaFeaturedPlayer
 {
     /// <summary>
-    /// Player rank.
+    ///     Player rank.
     /// </summary>
     [JsonPropertyName("rank")]
     public int? Rank { get; init; }
 
     /// <summary>
-    /// Player name.
+    ///     Player name.
     /// </summary>
     [JsonPropertyName("name")]
     public string? Name { get; init; }
 
     /// <summary>
-    /// Player rating.
+    ///     Player rating.
     /// </summary>
     [JsonPropertyName("rating")]
     public int? Rating { get; init; }
 
     /// <summary>
-    /// Player title.
+    ///     Player title.
     /// </summary>
     [JsonPropertyName("title")]
     public string? Title { get; init; }
 
     /// <summary>
-    /// Whether the player berserked.
+    ///     Whether the player berserked.
     /// </summary>
     [JsonPropertyName("berserk")]
     public bool? Berserk { get; init; }
 }
 
 /// <summary>
-/// A duel (pairing) in an Arena tournament.
+///     A duel (pairing) in an Arena tournament.
 /// </summary>
 public class ArenaDuel
 {
     /// <summary>
-    /// Game ID.
+    ///     Game ID.
     /// </summary>
     [JsonPropertyName("id")]
     public string? Id { get; init; }
 
     /// <summary>
-    /// Players in this duel.
+    ///     Players in this duel.
     /// </summary>
     [JsonPropertyName("p")]
     public IReadOnlyList<ArenaDuelPlayer>? Players { get; init; }
 }
 
 /// <summary>
-/// Player in an Arena duel.
+///     Player in an Arena duel.
 /// </summary>
 public class ArenaDuelPlayer
 {
     /// <summary>
-    /// Player name.
+    ///     Player name.
     /// </summary>
     [JsonPropertyName("n")]
     public string? Name { get; init; }
 
     /// <summary>
-    /// Player rating.
+    ///     Player rating.
     /// </summary>
     [JsonPropertyName("r")]
     public int? Rating { get; init; }
 
     /// <summary>
-    /// Player rank in the tournament.
+    ///     Player rank in the tournament.
     /// </summary>
     [JsonPropertyName("k")]
     public int? Rank { get; init; }
 
     /// <summary>
-    /// Player title (e.g., "GM", "FM").
+    ///     Player title (e.g., "GM", "FM").
     /// </summary>
     [JsonPropertyName("t")]
     public string? Title { get; init; }
 }
 
 /// <summary>
-/// Duel teams info for team battles.
-/// Contains dynamic team data keyed by team ID.
+///     Duel teams info for team battles.
+///     Contains dynamic team data keyed by team ID.
 /// </summary>
 public class ArenaDuelTeams
 {
     /// <summary>
-    /// Team entries. Keys are team IDs, values are team data.
-    /// Using JsonElement for AOT compatibility with extension data.
+    ///     Team entries. Keys are team IDs, values are team data.
+    ///     Using JsonElement for AOT compatibility with extension data.
     /// </summary>
     [JsonExtensionData]
     public Dictionary<string, JsonElement>? Data { get; set; }
 }
 
 /// <summary>
-/// Great player displayed on the tournament page.
+///     Great player displayed on the tournament page.
 /// </summary>
 public class ArenaGreatPlayer
 {
     /// <summary>
-    /// Player name.
+    ///     Player name.
     /// </summary>
     [JsonPropertyName("name")]
     public string? Name { get; init; }
 
     /// <summary>
-    /// Player URL.
+    ///     Player URL.
     /// </summary>
     [JsonPropertyName("url")]
     public string? Url { get; init; }
 }
 
 /// <summary>
-/// Player result from streaming results endpoint.
+///     Player result from streaming results endpoint.
 /// </summary>
 public class ArenaPlayerResult
 {
     /// <summary>
-    /// Player rank.
+    ///     Player rank.
     /// </summary>
     [JsonPropertyName("rank")]
     public int Rank { get; init; }
 
     /// <summary>
-    /// Player score.
+    ///     Player score.
     /// </summary>
     [JsonPropertyName("score")]
     public int Score { get; init; }
 
     /// <summary>
-    /// Player rating.
+    ///     Player rating.
     /// </summary>
     [JsonPropertyName("rating")]
     public int Rating { get; init; }
 
     /// <summary>
-    /// Player username.
+    ///     Player username.
     /// </summary>
     [JsonPropertyName("username")]
     public string Username { get; init; } = "";
 
     /// <summary>
-    /// Player title.
+    ///     Player title.
     /// </summary>
     [JsonPropertyName("title")]
     public string? Title { get; init; }
 
     /// <summary>
-    /// Performance rating.
+    ///     Performance rating.
     /// </summary>
     [JsonPropertyName("performance")]
     public int? Performance { get; init; }
 
     /// <summary>
-    /// Team ID.
+    ///     Team ID.
     /// </summary>
     [JsonPropertyName("team")]
     public string? Team { get; init; }
 
     /// <summary>
-    /// Score sheet.
+    ///     Score sheet.
     /// </summary>
     [JsonPropertyName("sheet")]
     public ArenaSheet? Sheet { get; init; }
 }
 
 /// <summary>
-/// Team standing in a team battle.
+///     Team standing in a team battle.
 /// </summary>
 public class ArenaTeamStanding
 {
     /// <summary>
-    /// Tournament ID.
+    ///     Tournament ID.
     /// </summary>
     [JsonPropertyName("id")]
     public string? Id { get; init; }
 
     /// <summary>
-    /// Team standings.
+    ///     Team standings.
     /// </summary>
     [JsonPropertyName("teams")]
     public IReadOnlyList<ArenaTeamResult>? Teams { get; init; }
 }
 
 /// <summary>
-/// Team result in a team battle.
+///     Team result in a team battle.
 /// </summary>
 public class ArenaTeamResult
 {
     /// <summary>
-    /// Team ID.
+    ///     Team ID.
     /// </summary>
     [JsonPropertyName("id")]
     public string Id { get; init; } = "";
 
     /// <summary>
-    /// Team score.
+    ///     Team score.
     /// </summary>
     [JsonPropertyName("score")]
     public int Score { get; init; }
 
     /// <summary>
-    /// Team rank.
+    ///     Team rank.
     /// </summary>
     [JsonPropertyName("rank")]
     public int Rank { get; init; }
 
     /// <summary>
-    /// Number of players.
+    ///     Number of players.
     /// </summary>
     [JsonPropertyName("players")]
     public IReadOnlyList<ArenaTeamPlayer>? Players { get; init; }
 }
 
 /// <summary>
-/// Player in a team result.
+///     Player in a team result.
 /// </summary>
 public class ArenaTeamPlayer
 {
     /// <summary>
-    /// User info.
+    ///     User info.
     /// </summary>
     [JsonPropertyName("user")]
     public ArenaTeamPlayerUser? User { get; init; }
 
     /// <summary>
-    /// Player score.
+    ///     Player score.
     /// </summary>
     [JsonPropertyName("score")]
     public int Score { get; init; }
 }
 
 /// <summary>
-/// User info for team player.
+///     User info for team player.
 /// </summary>
 public class ArenaTeamPlayerUser
 {
     /// <summary>
-    /// User ID.
+    ///     User ID.
     /// </summary>
     [JsonPropertyName("id")]
     public string Id { get; init; } = "";
 
     /// <summary>
-    /// Username.
+    ///     Username.
     /// </summary>
     [JsonPropertyName("name")]
     public string Name { get; init; } = "";
 
     /// <summary>
-    /// Title.
+    ///     Title.
     /// </summary>
     [JsonPropertyName("title")]
     public string? Title { get; init; }
 }
 
 /// <summary>
-/// Tournament that a user played in.
+///     Tournament that a user played in.
 /// </summary>
 public class ArenaPlayedTournament
 {
     /// <summary>
-    /// Tournament info.
+    ///     Tournament info.
     /// </summary>
     [JsonPropertyName("tournament")]
     public ArenaTournamentSummary? Tournament { get; init; }
 
     /// <summary>
-    /// Player's result in the tournament.
+    ///     Player's result in the tournament.
     /// </summary>
     [JsonPropertyName("player")]
     public ArenaPlayedPlayer? Player { get; init; }
 }
 
 /// <summary>
-/// Player's result in a played tournament.
+///     Player's result in a played tournament.
 /// </summary>
 public class ArenaPlayedPlayer
 {
     /// <summary>
-    /// Player rating.
+    ///     Player rating.
     /// </summary>
     [JsonPropertyName("rating")]
     public int? Rating { get; init; }
 
     /// <summary>
-    /// Player score.
+    ///     Player score.
     /// </summary>
     [JsonPropertyName("score")]
     public int? Score { get; init; }
 
     /// <summary>
-    /// Player rank.
+    ///     Player rank.
     /// </summary>
     [JsonPropertyName("rank")]
     public int? Rank { get; init; }
 }
-

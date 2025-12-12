@@ -3,48 +3,48 @@ using System.Text.Json.Serialization;
 namespace LichessSharp.Models.Users;
 
 /// <summary>
-/// Player autocomplete result (object mode).
+///     Player autocomplete result (object mode).
 /// </summary>
 public class AutocompletePlayer
 {
     /// <summary>
-    /// User ID.
+    ///     User ID.
     /// </summary>
     [JsonPropertyName("id")]
     public required string Id { get; init; }
 
     /// <summary>
-    /// Username.
+    ///     Username.
     /// </summary>
     [JsonPropertyName("name")]
     public required string Name { get; init; }
 
     /// <summary>
-    /// Title.
+    ///     Title.
     /// </summary>
     [JsonPropertyName("title")]
     public string? Title { get; init; }
 
     /// <summary>
-    /// Whether the user is a patron.
+    ///     Whether the user is a patron.
     /// </summary>
     [JsonPropertyName("patron")]
     public bool? Patron { get; init; }
 
     /// <summary>
-    /// Whether the user is online.
+    ///     Whether the user is online.
     /// </summary>
     [JsonPropertyName("online")]
     public bool? Online { get; init; }
 }
 
 /// <summary>
-/// Response wrapper for autocomplete with object mode.
+///     Response wrapper for autocomplete with object mode.
 /// </summary>
 public class AutocompleteResponse
 {
     /// <summary>
-    /// The result players.
+    ///     The result players.
     /// </summary>
     [JsonPropertyName("result")]
     public IReadOnlyList<AutocompletePlayer>? Result { get; init; }

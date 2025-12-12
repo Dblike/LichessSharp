@@ -1,12 +1,12 @@
 namespace LichessSharp.Samples.Helpers;
 
 /// <summary>
-/// Helper utilities for running samples with consistent formatting.
+///     Helper utilities for running samples with consistent formatting.
 /// </summary>
 public static class SampleRunner
 {
     /// <summary>
-    /// Prints a section header.
+    ///     Prints a section header.
     /// </summary>
     public static void PrintHeader(string title)
     {
@@ -18,7 +18,7 @@ public static class SampleRunner
     }
 
     /// <summary>
-    /// Prints a subsection header.
+    ///     Prints a subsection header.
     /// </summary>
     public static void PrintSubHeader(string title)
     {
@@ -28,7 +28,7 @@ public static class SampleRunner
     }
 
     /// <summary>
-    /// Prints an info message.
+    ///     Prints an info message.
     /// </summary>
     public static void PrintInfo(string message)
     {
@@ -36,7 +36,7 @@ public static class SampleRunner
     }
 
     /// <summary>
-    /// Prints a success message.
+    ///     Prints a success message.
     /// </summary>
     public static void PrintSuccess(string message)
     {
@@ -44,7 +44,7 @@ public static class SampleRunner
     }
 
     /// <summary>
-    /// Prints a warning message.
+    ///     Prints a warning message.
     /// </summary>
     public static void PrintWarning(string message)
     {
@@ -52,7 +52,7 @@ public static class SampleRunner
     }
 
     /// <summary>
-    /// Prints an error message.
+    ///     Prints an error message.
     /// </summary>
     public static void PrintError(string message)
     {
@@ -60,7 +60,7 @@ public static class SampleRunner
     }
 
     /// <summary>
-    /// Prints a key-value pair.
+    ///     Prints a key-value pair.
     /// </summary>
     public static void PrintKeyValue(string key, object? value)
     {
@@ -68,7 +68,7 @@ public static class SampleRunner
     }
 
     /// <summary>
-    /// Gets the Lichess test token from environment variable.
+    ///     Gets the Lichess test token from environment variable.
     /// </summary>
     public static string? GetToken()
     {
@@ -76,7 +76,7 @@ public static class SampleRunner
     }
 
     /// <summary>
-    /// Checks if authentication is available and prints appropriate message.
+    ///     Checks if authentication is available and prints appropriate message.
     /// </summary>
     public static bool CheckAuthentication(string? token)
     {
@@ -92,22 +92,22 @@ public static class SampleRunner
     }
 
     /// <summary>
-    /// Waits for user to press a key to continue.
+    ///     Waits for user to press a key to continue.
     /// </summary>
     public static void WaitForKey(string message = "Press any key to continue...")
     {
         Console.WriteLine();
         Console.WriteLine(message);
-        Console.ReadKey(intercept: true);
+        Console.ReadKey(true);
     }
 
     /// <summary>
-    /// Asks user a yes/no question.
+    ///     Asks user a yes/no question.
     /// </summary>
     public static bool AskYesNo(string question)
     {
         Console.Write($"{question} (y/n): ");
-        var key = Console.ReadKey(intercept: false);
+        var key = Console.ReadKey(false);
         Console.WriteLine();
         return key.KeyChar is 'y' or 'Y';
     }

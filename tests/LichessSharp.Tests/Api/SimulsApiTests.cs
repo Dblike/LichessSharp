@@ -17,6 +17,7 @@ public class SimulsApiTests
         _httpClientMock = new Mock<ILichessHttpClient>();
         _simulsApi = new SimulsApi(_httpClientMock.Object);
     }
+
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -276,5 +277,4 @@ public class SimulsApiTests
             NbPairings = 3
         };
     }
-
 }

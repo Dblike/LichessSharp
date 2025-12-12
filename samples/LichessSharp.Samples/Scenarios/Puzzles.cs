@@ -3,8 +3,8 @@ using LichessSharp.Samples.Helpers;
 namespace LichessSharp.Samples.Scenarios;
 
 /// <summary>
-/// Sample 05: Puzzles
-/// Demonstrates how to work with Lichess puzzles.
+///     Sample 05: Puzzles
+///     Demonstrates how to work with Lichess puzzles.
 /// </summary>
 public static class Puzzles
 {
@@ -77,15 +77,12 @@ public static class Puzzles
             try
             {
                 // GetBatchAsync requires authentication and fetches puzzles by theme
-                var batch = await authClient.Puzzles.GetBatchAsync("fork", nb: 3);
+                var batch = await authClient.Puzzles.GetBatchAsync("fork", 3);
                 Console.WriteLine($"Retrieved {batch.Puzzles?.Count ?? 0} puzzles:");
                 if (batch.Puzzles != null)
-                {
                     foreach (var p in batch.Puzzles)
-                    {
-                        Console.WriteLine($"  - {p.Puzzle?.Id}: Rating {p.Puzzle?.Rating}, Themes: {string.Join(", ", p.Puzzle?.Themes?.Take(3) ?? [])}");
-                    }
-                }
+                        Console.WriteLine(
+                            $"  - {p.Puzzle?.Id}: Rating {p.Puzzle?.Rating}, Themes: {string.Join(", ", p.Puzzle?.Themes?.Take(3) ?? [])}");
             }
             catch (Exception ex)
             {
@@ -106,7 +103,7 @@ public static class Puzzles
             using var authClient = new LichessClient(token);
             try
             {
-                var dashboard = await authClient.Puzzles.GetDashboardAsync(days: 30);
+                var dashboard = await authClient.Puzzles.GetDashboardAsync(30);
                 Console.WriteLine("Your puzzle stats (last 30 days):");
                 if (dashboard.Global != null)
                 {
@@ -120,9 +117,7 @@ public static class Puzzles
                 {
                     Console.WriteLine("  Theme performance (sample):");
                     foreach (var (theme, stats) in dashboard.Themes.Take(5))
-                    {
                         Console.WriteLine($"    {theme}: {stats.Results?.Count ?? 0} puzzles");
-                    }
                 }
             }
             catch (Exception ex)
@@ -148,11 +143,12 @@ public static class Puzzles
             var activityCount = 0;
             try
             {
-                await foreach (var activity in authClient.Puzzles.StreamActivityAsync(max: 5))
+                await foreach (var activity in authClient.Puzzles.StreamActivityAsync(5))
                 {
                     activityCount++;
                     var result = activity.Win ? "Solved" : "Failed";
-                    Console.WriteLine($"  {activityCount}. Puzzle {activity.Puzzle?.Id}: {result} (Rating: {activity.Puzzle?.Rating})");
+                    Console.WriteLine(
+                        $"  {activityCount}. Puzzle {activity.Puzzle?.Id}: {result} (Rating: {activity.Puzzle?.Rating})");
                 }
             }
             catch (Exception ex)
@@ -160,10 +156,7 @@ public static class Puzzles
                 SampleRunner.PrintError($"Could not stream activity: {ex.Message}");
             }
 
-            if (activityCount == 0)
-            {
-                Console.WriteLine("  No recent puzzle activity found.");
-            }
+            if (activityCount == 0) Console.WriteLine("  No recent puzzle activity found.");
         }
         else
         {
@@ -180,7 +173,7 @@ public static class Puzzles
             using var authClient = new LichessClient(token);
             try
             {
-                var storm = await authClient.Puzzles.GetStormDashboardAsync("me", days: 30);
+                var storm = await authClient.Puzzles.GetStormDashboardAsync("me", 30);
                 Console.WriteLine("Your Puzzle Storm stats:");
                 if (storm.High != null)
                 {
@@ -189,6 +182,7 @@ public static class Puzzles
                     SampleRunner.PrintKeyValue("Week high", storm.High.Week);
                     SampleRunner.PrintKeyValue("Day high", storm.High.Day);
                 }
+
                 SampleRunner.PrintKeyValue("Days played", storm.Days?.Count ?? 0);
             }
             catch (Exception ex)

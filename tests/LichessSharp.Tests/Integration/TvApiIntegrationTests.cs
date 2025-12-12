@@ -1,16 +1,14 @@
 using FluentAssertions;
-
 using LichessSharp.Api.Contracts;
 using LichessSharp.Models.Enums;
 using LichessSharp.Models.Games;
-
 using Xunit;
 
 namespace LichessSharp.Tests.Integration;
 
 /// <summary>
-/// Integration tests for the TV API.
-/// These tests make real HTTP calls to Lichess.
+///     Integration tests for the TV API.
+///     These tests make real HTTP calls to Lichess.
 /// </summary>
 [IntegrationTest]
 [Trait("Category", "Integration")]
@@ -75,10 +73,7 @@ public class TvApiIntegrationTests : IntegrationTestBase
             {
                 receivedEvents.Add(evt);
                 // Just get the first event (should be "featured") and maybe one "fen"
-                if (receivedEvents.Count >= 2)
-                {
-                    break;
-                }
+                if (receivedEvents.Count >= 2) break;
             }
         }
         catch (OperationCanceledException)
@@ -108,10 +103,7 @@ public class TvApiIntegrationTests : IntegrationTestBase
             await foreach (var evt in Client.Tv.StreamChannelAsync("bullet", cts.Token))
             {
                 receivedEvents.Add(evt);
-                if (receivedEvents.Count >= 1)
-                {
-                    break;
-                }
+                if (receivedEvents.Count >= 1) break;
             }
         }
         catch (OperationCanceledException)
@@ -140,10 +132,7 @@ public class TvApiIntegrationTests : IntegrationTestBase
         await foreach (var game in Client.Tv.StreamChannelGamesAsync("blitz", options))
         {
             games.Add(game);
-            if (games.Count >= 3)
-            {
-                break;
-            }
+            if (games.Count >= 3) break;
         }
 
         // Assert
@@ -164,10 +153,7 @@ public class TvApiIntegrationTests : IntegrationTestBase
         await foreach (var game in Client.Tv.StreamChannelGamesAsync("rapid"))
         {
             games.Add(game);
-            if (games.Count >= 3)
-            {
-                break;
-            }
+            if (games.Count >= 3) break;
         }
 
         // Assert
@@ -188,14 +174,12 @@ public class TvApiIntegrationTests : IntegrationTestBase
 
         // Act
         await foreach (var game in Client.Tv.StreamChannelGamesAsync("bullet", options))
-        {
             // Assert - at least one game should have moves if it's ongoing
             if (!string.IsNullOrEmpty(game.Moves))
             {
                 game.Moves.Should().NotBeNullOrEmpty();
                 return; // Test passed
             }
-        }
 
         // If we get here, either no games had moves yet (new games) or no games were returned
         // This is acceptable for an integration test
@@ -213,7 +197,9 @@ public class TvApiIntegrationTests : IntegrationTestBase
         channels.Should().NotBeNull();
         // At least check that speed-based channels work
         // (variant channels might be empty more often)
-        var speedChannels = new[] { channels.UltraBullet, channels.Bullet, channels.Blitz, channels.Rapid, channels.Classical };
-        speedChannels.Count(c => c != null).Should().BeGreaterThan(0, "At least one speed-based channel should be active");
+        var speedChannels = new[]
+            { channels.UltraBullet, channels.Bullet, channels.Blitz, channels.Rapid, channels.Classical };
+        speedChannels.Count(c => c != null).Should()
+            .BeGreaterThan(0, "At least one speed-based channel should be active");
     }
 }

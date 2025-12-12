@@ -10,8 +10,8 @@ namespace LichessSharp.Tests.Api;
 
 public class BoardApiTests
 {
-    private readonly Mock<ILichessHttpClient> _httpClientMock;
     private readonly BoardApi _boardApi;
+    private readonly Mock<ILichessHttpClient> _httpClientMock;
 
     public BoardApiTests()
     {
@@ -45,16 +45,15 @@ public class BoardApiTests
 
         // Act
         var results = new List<BoardAccountEvent>();
-        await foreach (var evt in _boardApi.StreamEventsAsync())
-        {
-            results.Add(evt);
-        }
+        await foreach (var evt in _boardApi.StreamEventsAsync()) results.Add(evt);
 
         // Assert
         results.Should().HaveCount(2);
         results[0].Type.Should().Be("gameStart");
         results[1].Type.Should().Be("challenge");
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<BoardAccountEvent>("/api/stream/event", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<BoardAccountEvent>("/api/stream/event", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -68,19 +67,19 @@ public class BoardApiTests
             new() { Type = "gameState" }
         };
         _httpClientMock
-            .Setup(x => x.StreamNdjsonAsync<BoardGameEvent>($"/api/board/game/stream/{gameId}", It.IsAny<CancellationToken>()))
+            .Setup(x => x.StreamNdjsonAsync<BoardGameEvent>($"/api/board/game/stream/{gameId}",
+                It.IsAny<CancellationToken>()))
             .Returns(ToAsyncEnumerable(events));
 
         // Act
         var results = new List<BoardGameEvent>();
-        await foreach (var evt in _boardApi.StreamGameAsync(gameId))
-        {
-            results.Add(evt);
-        }
+        await foreach (var evt in _boardApi.StreamGameAsync(gameId)) results.Add(evt);
 
         // Assert
         results.Should().HaveCount(2);
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<BoardGameEvent>($"/api/board/game/stream/{gameId}", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<BoardGameEvent>($"/api/board/game/stream/{gameId}", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -89,7 +88,9 @@ public class BoardApiTests
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentNullException>(async () =>
         {
-            await foreach (var _ in _boardApi.StreamGameAsync(null!)) { }
+            await foreach (var _ in _boardApi.StreamGameAsync(null!))
+            {
+            }
         });
     }
 
@@ -100,7 +101,8 @@ public class BoardApiTests
         var gameId = "game123";
         var move = "e2e4";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/move/{move}", null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/move/{move}", null,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
@@ -108,7 +110,9 @@ public class BoardApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/move/{move}", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/move/{move}", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -118,15 +122,18 @@ public class BoardApiTests
         var gameId = "game123";
         var move = "e2e4";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>(It.Is<string>(s => s.Contains("offeringDraw=true")), null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>(It.Is<string>(s => s.Contains("offeringDraw=true")), null,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
-        var result = await _boardApi.MakeMoveAsync(gameId, move, offeringDraw: true);
+        var result = await _boardApi.MakeMoveAsync(gameId, move, true);
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>(It.Is<string>(s => s.Contains("offeringDraw=true")), null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>(It.Is<string>(s => s.Contains("offeringDraw=true")), null,
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -164,7 +171,9 @@ public class BoardApiTests
 
         // Assert
         result.Should().HaveCount(2);
-        _httpClientMock.Verify(x => x.GetAsync<List<ChatMessage>>($"/api/board/game/{gameId}/chat", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<List<ChatMessage>>($"/api/board/game/{gameId}/chat", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -173,7 +182,8 @@ public class BoardApiTests
         // Arrange
         var gameId = "game123";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/chat", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/chat", It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
@@ -181,7 +191,9 @@ public class BoardApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/chat", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/chat", It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -198,7 +210,9 @@ public class BoardApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/abort", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/abort", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -207,7 +221,8 @@ public class BoardApiTests
         // Arrange
         var gameId = "game123";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/resign", null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/resign", null,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
@@ -215,7 +230,9 @@ public class BoardApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/resign", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/resign", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -224,15 +241,18 @@ public class BoardApiTests
         // Arrange
         var gameId = "game123";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/draw/yes", null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/draw/yes", null,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
-        var result = await _boardApi.HandleDrawAsync(gameId, accept: true);
+        var result = await _boardApi.HandleDrawAsync(gameId, true);
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/draw/yes", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/draw/yes", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -241,15 +261,18 @@ public class BoardApiTests
         // Arrange
         var gameId = "game123";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/draw/no", null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/draw/no", null,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
-        var result = await _boardApi.HandleDrawAsync(gameId, accept: false);
+        var result = await _boardApi.HandleDrawAsync(gameId, false);
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/draw/no", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/draw/no", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -258,15 +281,18 @@ public class BoardApiTests
         // Arrange
         var gameId = "game123";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/takeback/yes", null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/takeback/yes", null,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
-        var result = await _boardApi.HandleTakebackAsync(gameId, accept: true);
+        var result = await _boardApi.HandleTakebackAsync(gameId, true);
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/takeback/yes", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/takeback/yes", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -275,7 +301,8 @@ public class BoardApiTests
         // Arrange
         var gameId = "game123";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/claim-victory", null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/claim-victory", null,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
@@ -283,7 +310,9 @@ public class BoardApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/claim-victory", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/claim-victory", null,
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -292,7 +321,8 @@ public class BoardApiTests
         // Arrange
         var gameId = "game123";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/claim-draw", null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/claim-draw", null,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
@@ -300,7 +330,9 @@ public class BoardApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/claim-draw", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/claim-draw", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -317,7 +349,8 @@ public class BoardApiTests
         // Arrange
         var gameId = "game123";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/berserk", null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/berserk", null,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
@@ -325,7 +358,9 @@ public class BoardApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/berserk", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/board/game/{gameId}/berserk", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -335,19 +370,19 @@ public class BoardApiTests
         var options = new SeekOptions { Rated = true, Time = 5, Increment = 3 };
         var results = new List<SeekResult> { new() { Id = "game123" } };
         _httpClientMock
-            .Setup(x => x.StreamNdjsonPostAsync<SeekResult>("/api/board/seek", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.StreamNdjsonPostAsync<SeekResult>("/api/board/seek", It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()))
             .Returns(ToAsyncEnumerable(results));
 
         // Act
         var seekResults = new List<SeekResult>();
-        await foreach (var result in _boardApi.SeekAsync(options))
-        {
-            seekResults.Add(result);
-        }
+        await foreach (var result in _boardApi.SeekAsync(options)) seekResults.Add(result);
 
         // Assert
         seekResults.Should().HaveCount(1);
-        _httpClientMock.Verify(x => x.StreamNdjsonPostAsync<SeekResult>("/api/board/seek", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonPostAsync<SeekResult>("/api/board/seek", It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -356,17 +391,15 @@ public class BoardApiTests
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentNullException>(async () =>
         {
-            await foreach (var _ in _boardApi.SeekAsync(null!)) { }
+            await foreach (var _ in _boardApi.SeekAsync(null!))
+            {
+            }
         });
     }
 
     private static async IAsyncEnumerable<T> ToAsyncEnumerable<T>(IEnumerable<T> items)
     {
-        foreach (var item in items)
-        {
-            yield return item;
-        }
+        foreach (var item in items) yield return item;
         await Task.CompletedTask;
     }
-
 }

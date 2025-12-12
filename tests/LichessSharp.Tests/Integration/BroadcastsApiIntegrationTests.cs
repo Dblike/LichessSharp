@@ -1,20 +1,17 @@
 using FluentAssertions;
-
 using LichessSharp.Api.Contracts;
-
 using Xunit;
 
 namespace LichessSharp.Tests.Integration;
 
 /// <summary>
-/// Integration tests for the Broadcasts API.
-/// These tests make real HTTP calls to Lichess.
+///     Integration tests for the Broadcasts API.
+///     These tests make real HTTP calls to Lichess.
 /// </summary>
 [IntegrationTest]
 [Trait("Category", "Integration")]
 public class BroadcastsApiIntegrationTests : IntegrationTestBase
 {
-
     [Fact]
     public async Task StreamOfficialBroadcastsAsync_ReturnsOfficialBroadcasts()
     {
@@ -22,13 +19,10 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         var broadcasts = new List<BroadcastWithRounds>();
 
         // Act
-        await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(nb: 5))
+        await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(5))
         {
             broadcasts.Add(broadcast);
-            if (broadcasts.Count >= 3)
-            {
-                break;
-            }
+            if (broadcasts.Count >= 3) break;
         }
 
         // Assert
@@ -44,7 +38,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
     public async Task StreamOfficialBroadcastsAsync_BroadcastsHaveValidStructure()
     {
         // Act
-        await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(nb: 3))
+        await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(3))
         {
             // Assert - each broadcast should have valid structure
             broadcast.Tour.Should().NotBeNull();
@@ -73,7 +67,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         // Assert
         result.Should().NotBeNull();
         // Should have either active or past broadcasts
-        var hasContent = (result.Active?.Count > 0) || (result.Past?.CurrentPageResults?.Count > 0);
+        var hasContent = result.Active?.Count > 0 || result.Past?.CurrentPageResults?.Count > 0;
         hasContent.Should().BeTrue("Top broadcasts page should have content");
     }
 
@@ -97,8 +91,8 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
     public async Task GetTopBroadcastsAsync_WithPage2_ReturnsDifferentResults()
     {
         // Act
-        var page1 = await Client.Broadcasts.GetTopBroadcastsAsync(page: 1);
-        var page2 = await Client.Broadcasts.GetTopBroadcastsAsync(page: 2);
+        var page1 = await Client.Broadcasts.GetTopBroadcastsAsync(1);
+        var page2 = await Client.Broadcasts.GetTopBroadcastsAsync(2);
 
         // Assert
         page1.Should().NotBeNull();
@@ -159,17 +153,15 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
     {
         // First get a known tournament ID from official broadcasts
         string? tournamentId = null;
-        await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(nb: 1))
+        await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(1))
         {
             tournamentId = broadcast.Tour.Id;
             break;
         }
 
         if (tournamentId == null)
-        {
             // Skip if no broadcasts available
             return;
-        }
 
         // Act
         var result = await Client.Broadcasts.GetTournamentAsync(tournamentId);
@@ -186,16 +178,13 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
     {
         // First get a known tournament ID from official broadcasts
         string? tournamentId = null;
-        await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(nb: 1))
+        await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(1))
         {
             tournamentId = broadcast.Tour.Id;
             break;
         }
 
-        if (tournamentId == null)
-        {
-            return;
-        }
+        if (tournamentId == null) return;
 
         // Act
         var result = await Client.Broadcasts.GetTournamentAsync(tournamentId);
@@ -216,20 +205,15 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         // First get a known round from official broadcasts
         BroadcastRoundInfo? roundInfo = null;
         string? tournamentSlug = null;
-        await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(nb: 1))
-        {
+        await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(1))
             if (broadcast.Rounds.Count > 0)
             {
                 roundInfo = broadcast.Rounds[0];
                 tournamentSlug = broadcast.Tour.Slug ?? broadcast.Tour.Id;
                 break;
             }
-        }
 
-        if (roundInfo == null || tournamentSlug == null)
-        {
-            return;
-        }
+        if (roundInfo == null || tournamentSlug == null) return;
 
         // Act
         var result = await Client.Broadcasts.GetRoundAsync(tournamentSlug, roundInfo.Slug, roundInfo.Id);
@@ -248,25 +232,21 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         // First get a known round from official broadcasts
         BroadcastRoundInfo? roundInfo = null;
         string? tournamentSlug = null;
-        await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(nb: 5))
+        await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(5))
         {
             // Look for a round that might have games
             foreach (var round in broadcast.Rounds)
-            {
                 if (round.Ongoing == true || round.Finished == true)
                 {
                     roundInfo = round;
                     tournamentSlug = broadcast.Tour.Slug ?? broadcast.Tour.Id;
                     break;
                 }
-            }
+
             if (roundInfo != null) break;
         }
 
-        if (roundInfo == null || tournamentSlug == null)
-        {
-            return;
-        }
+        if (roundInfo == null || tournamentSlug == null) return;
 
         // Act
         var result = await Client.Broadcasts.GetRoundAsync(tournamentSlug, roundInfo.Slug, roundInfo.Id);
@@ -288,13 +268,10 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         var broadcasts = new List<BroadcastByUser>();
 
         // Act
-        await foreach (var broadcast in Client.Broadcasts.StreamUserBroadcastsAsync("lichess", nb: 5))
+        await foreach (var broadcast in Client.Broadcasts.StreamUserBroadcastsAsync("lichess", 5))
         {
             broadcasts.Add(broadcast);
-            if (broadcasts.Count >= 3)
-            {
-                break;
-            }
+            if (broadcasts.Count >= 3) break;
         }
 
         // Assert
@@ -307,30 +284,23 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
     {
         // First get a known tournament ID
         string? tournamentId = null;
-        await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(nb: 5))
-        {
+        await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(5))
             // Look for a tournament that might have player data
             if (broadcast.Tour.Tier >= 3) // Higher tier tournaments usually have player data
             {
                 tournamentId = broadcast.Tour.Id;
                 break;
             }
-        }
 
         // Fall back to any tournament
         if (tournamentId == null)
-        {
-            await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(nb: 1))
+            await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(1))
             {
                 tournamentId = broadcast.Tour.Id;
                 break;
             }
-        }
 
-        if (tournamentId == null)
-        {
-            return;
-        }
+        if (tournamentId == null) return;
 
         // Act
         var result = await Client.Broadcasts.GetPlayersAsync(tournamentId);
@@ -350,20 +320,15 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
     {
         // First get a finished round that should have PGN
         BroadcastRoundInfo? finishedRound = null;
-        await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(nb: 10))
+        await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(10))
         {
             finishedRound = broadcast.Rounds.FirstOrDefault(r => r.Finished == true);
-            if (finishedRound != null)
-            {
-                break;
-            }
+            if (finishedRound != null) break;
         }
 
         if (finishedRound == null)
-        {
             // No finished rounds available
             return;
-        }
 
         // Act
         var pgn = await Client.Broadcasts.ExportRoundPgnAsync(finishedRound.Id);
@@ -378,19 +343,14 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
     {
         // First get a tournament with finished rounds
         string? tournamentId = null;
-        await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(nb: 10))
-        {
+        await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(10))
             if (broadcast.Rounds.Any(r => r.Finished == true))
             {
                 tournamentId = broadcast.Tour.Id;
                 break;
             }
-        }
 
-        if (tournamentId == null)
-        {
-            return;
-        }
+        if (tournamentId == null) return;
 
         // Act
         var pgn = await Client.Broadcasts.ExportAllRoundsPgnAsync(tournamentId);
@@ -399,5 +359,4 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         pgn.Should().NotBeNullOrWhiteSpace("Tournament with finished rounds should have PGN");
         pgn.Should().Contain("[Event", "PGN should contain Event tag");
     }
-
 }

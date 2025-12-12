@@ -4,8 +4,8 @@ using LichessSharp.Samples.Helpers;
 namespace LichessSharp.Samples.Scenarios;
 
 /// <summary>
-/// Sample 11: Error Handling
-/// Demonstrates how to handle various error scenarios when using the Lichess API.
+///     Sample 11: Error Handling
+///     Demonstrates how to handle various error scenarios when using the Lichess API.
 /// </summary>
 public static class ErrorHandling
 {
@@ -143,7 +143,8 @@ public static class ErrorHandling
         {
             try
             {
-                await foreach (var game in client.Games.StreamUserGamesAsync("DrNykterstein", cancellationToken: cts.Token))
+                await foreach (var game in client.Games.StreamUserGamesAsync("DrNykterstein",
+                                   cancellationToken: cts.Token))
                 {
                     Console.WriteLine($"  Received game: {game.Id}");
                     await Task.Delay(100); // Simulate processing

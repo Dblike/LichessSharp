@@ -17,6 +17,7 @@ public class StudiesApiTests
         _httpClientMock = new Mock<ILichessHttpClient>();
         _studiesApi = new StudiesApi(_httpClientMock.Object);
     }
+
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -36,7 +37,8 @@ public class StudiesApiTests
         var chapterId = "xyz67890";
         var expectedPgn = "[Event \"Test\"]\n1. e4 e5 *";
         _httpClientMock
-            .Setup(x => x.GetStringWithAcceptAsync($"/api/study/{studyId}/{chapterId}.pgn", "application/x-chess-pgn", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetStringWithAcceptAsync($"/api/study/{studyId}/{chapterId}.pgn", "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedPgn);
 
         // Act
@@ -44,7 +46,9 @@ public class StudiesApiTests
 
         // Assert
         result.Should().Be(expectedPgn);
-        _httpClientMock.Verify(x => x.GetStringWithAcceptAsync($"/api/study/{studyId}/{chapterId}.pgn", "application/x-chess-pgn", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetStringWithAcceptAsync($"/api/study/{studyId}/{chapterId}.pgn", "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -61,7 +65,10 @@ public class StudiesApiTests
         };
         var expectedPgn = "[Event \"Test\"]\n1. e4 e5 *";
         _httpClientMock
-            .Setup(x => x.GetStringWithAcceptAsync(It.Is<string>(s => s.Contains("clocks=true") && s.Contains("comments=true") && s.Contains("variations=false")), "application/x-chess-pgn", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetStringWithAcceptAsync(
+                It.Is<string>(s =>
+                    s.Contains("clocks=true") && s.Contains("comments=true") && s.Contains("variations=false")),
+                "application/x-chess-pgn", It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedPgn);
 
         // Act
@@ -98,7 +105,8 @@ public class StudiesApiTests
         var studyId = "abc12345";
         var expectedPgn = "[Event \"Test\"]\n1. e4 e5 *";
         _httpClientMock
-            .Setup(x => x.GetStringWithAcceptAsync($"/api/study/{studyId}.pgn", "application/x-chess-pgn", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetStringWithAcceptAsync($"/api/study/{studyId}.pgn", "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedPgn);
 
         // Act
@@ -106,7 +114,9 @@ public class StudiesApiTests
 
         // Assert
         result.Should().Be(expectedPgn);
-        _httpClientMock.Verify(x => x.GetStringWithAcceptAsync($"/api/study/{studyId}.pgn", "application/x-chess-pgn", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetStringWithAcceptAsync($"/api/study/{studyId}.pgn", "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -158,7 +168,8 @@ public class StudiesApiTests
         var username = "testuser";
         var expectedPgn = "[Event \"Test\"]\n1. e4 e5 *";
         _httpClientMock
-            .Setup(x => x.GetStringWithAcceptAsync($"/study/by/{username}/export.pgn", "application/x-chess-pgn", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetStringWithAcceptAsync($"/study/by/{username}/export.pgn", "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedPgn);
 
         // Act
@@ -166,7 +177,9 @@ public class StudiesApiTests
 
         // Assert
         result.Should().Be(expectedPgn);
-        _httpClientMock.Verify(x => x.GetStringWithAcceptAsync($"/study/by/{username}/export.pgn", "application/x-chess-pgn", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetStringWithAcceptAsync($"/study/by/{username}/export.pgn", "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -195,10 +208,7 @@ public class StudiesApiTests
 
         // Act
         var result = new List<StudyMetadata>();
-        await foreach (var study in _studiesApi.StreamUserStudiesAsync(username))
-        {
-            result.Add(study);
-        }
+        await foreach (var study in _studiesApi.StreamUserStudiesAsync(username)) result.Add(study);
 
         // Assert
         result.Should().HaveCount(2);
@@ -233,7 +243,8 @@ public class StudiesApiTests
             }
         };
         _httpClientMock
-            .Setup(x => x.PostAsync<StudyImportResult>($"/api/study/{studyId}/import-pgn", It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<StudyImportResult>($"/api/study/{studyId}/import-pgn",
+                It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
         // Act
@@ -265,7 +276,8 @@ public class StudiesApiTests
             }
         };
         _httpClientMock
-            .Setup(x => x.PostAsync<StudyImportResult>($"/api/study/{studyId}/import-pgn", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<StudyImportResult>($"/api/study/{studyId}/import-pgn", It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
         // Act
@@ -273,7 +285,9 @@ public class StudiesApiTests
 
         // Assert
         result.Should().NotBeNull();
-        _httpClientMock.Verify(x => x.PostAsync<StudyImportResult>($"/api/study/{studyId}/import-pgn", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<StudyImportResult>($"/api/study/{studyId}/import-pgn", It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -304,7 +318,8 @@ public class StudiesApiTests
         var chapterId = "xyz67890";
         var pgnTags = "[Event \"Test\"]\n[Site \"Test Site\"]";
         _httpClientMock
-            .Setup(x => x.PostNoContentAsync($"/api/study/{studyId}/{chapterId}/tags", It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostNoContentAsync($"/api/study/{studyId}/{chapterId}/tags",
+                It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         // Act
@@ -312,7 +327,9 @@ public class StudiesApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostNoContentAsync($"/api/study/{studyId}/{chapterId}/tags", It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostNoContentAsync($"/api/study/{studyId}/{chapterId}/tags", It.IsAny<FormUrlEncodedContent>(),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -360,7 +377,9 @@ public class StudiesApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.DeleteNoContentAsync($"/api/study/{studyId}/{chapterId}", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.DeleteNoContentAsync($"/api/study/{studyId}/{chapterId}", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -396,7 +415,8 @@ public class StudiesApiTests
         await _studiesApi.ExportChapterPgnAsync("study", "chapter", null, cts.Token);
 
         // Assert
-        _httpClientMock.Verify(x => x.GetStringWithAcceptAsync(It.IsAny<string>(), "application/x-chess-pgn", cts.Token), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetStringWithAcceptAsync(It.IsAny<string>(), "application/x-chess-pgn", cts.Token), Times.Once);
     }
 
     [Fact]
@@ -405,14 +425,16 @@ public class StudiesApiTests
         // Arrange
         var cts = new CancellationTokenSource();
         _httpClientMock
-            .Setup(x => x.PostAsync<StudyImportResult>(It.IsAny<string>(), It.IsAny<FormUrlEncodedContent>(), cts.Token))
+            .Setup(x => x.PostAsync<StudyImportResult>(It.IsAny<string>(), It.IsAny<FormUrlEncodedContent>(),
+                cts.Token))
             .ReturnsAsync(new StudyImportResult());
 
         // Act
         await _studiesApi.ImportPgnAsync("study", "pgn content", null, cts.Token);
 
         // Assert
-        _httpClientMock.Verify(x => x.PostAsync<StudyImportResult>(It.IsAny<string>(), It.IsAny<FormUrlEncodedContent>(), cts.Token), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<StudyImportResult>(It.IsAny<string>(), It.IsAny<FormUrlEncodedContent>(), cts.Token),
+            Times.Once);
     }
-
 }

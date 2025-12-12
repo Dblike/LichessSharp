@@ -3,8 +3,8 @@ using LichessSharp.Samples.Helpers;
 namespace LichessSharp.Samples.Scenarios;
 
 /// <summary>
-/// Sample 01: Getting Started
-/// Demonstrates basic client setup and configuration options.
+///     Sample 01: Getting Started
+///     Demonstrates basic client setup and configuration options.
 /// </summary>
 public static class GettingStarted
 {

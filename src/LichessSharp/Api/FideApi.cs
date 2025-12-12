@@ -5,7 +5,7 @@ using LichessSharp.Models.Fide;
 namespace LichessSharp.Api;
 
 /// <summary>
-/// Implementation of the FIDE API.
+///     Implementation of the FIDE API.
 /// </summary>
 internal sealed class FideApi : IFideApi
 {
@@ -20,15 +20,15 @@ internal sealed class FideApi : IFideApi
     public async Task<FidePlayer> GetPlayerAsync(int playerId, CancellationToken cancellationToken = default)
     {
         if (playerId <= 0)
-        {
             throw new ArgumentOutOfRangeException(nameof(playerId), playerId, "FIDE player ID must be positive.");
-        }
 
-        return await _httpClient.GetAsync<FidePlayer>($"/api/fide/player/{playerId}", cancellationToken).ConfigureAwait(false);
+        return await _httpClient.GetAsync<FidePlayer>($"/api/fide/player/{playerId}", cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <inheritdoc />
-    public async Task<IReadOnlyList<FidePlayer>> SearchPlayersAsync(string query, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<FidePlayer>> SearchPlayersAsync(string query,
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(query);
 

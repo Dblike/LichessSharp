@@ -10,8 +10,8 @@ namespace LichessSharp.Tests.Api;
 
 public class AnalysisApiTests
 {
-    private readonly Mock<ILichessHttpClient> _httpClientMock;
     private readonly AnalysisApi _analysisApi;
+    private readonly Mock<ILichessHttpClient> _httpClientMock;
 
     public AnalysisApiTests()
     {
@@ -61,7 +61,7 @@ public class AnalysisApiTests
             .ReturnsAsync(CreateTestCloudEvaluation(fen));
 
         // Act
-        await _analysisApi.GetCloudEvaluationAsync(fen, multiPv: 3);
+        await _analysisApi.GetCloudEvaluationAsync(fen, 3);
 
         // Assert
         _httpClientMock.Verify(x => x.GetAsync<CloudEvaluation>(
@@ -97,7 +97,7 @@ public class AnalysisApiTests
             .ReturnsAsync(CreateTestCloudEvaluation(fen));
 
         // Act
-        await _analysisApi.GetCloudEvaluationAsync(fen, multiPv: 5, variant: "atomic");
+        await _analysisApi.GetCloudEvaluationAsync(fen, 5, "atomic");
 
         // Assert
         _httpClientMock.Verify(x => x.GetAsync<CloudEvaluation>(
@@ -170,20 +170,22 @@ public class AnalysisApiTests
         _httpClientMock.Verify(x => x.GetAsync<CloudEvaluation>(
             It.Is<string>(s =>
                 s.Contains("%2F") && // Slashes encoded
-                !s.Contains(" ")),   // No raw spaces
+                !s.Contains(" ")), // No raw spaces
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    private static CloudEvaluation CreateTestCloudEvaluation(string fen) => new()
+    private static CloudEvaluation CreateTestCloudEvaluation(string fen)
     {
-        Fen = fen,
-        Depth = 40,
-        Knodes = 123456789,
-        Pvs = new List<PrincipalVariation>
+        return new CloudEvaluation
         {
-            new() { Moves = "e2e4 e7e5 g1f3", Cp = 25 },
-            new() { Moves = "d2d4 d7d5", Cp = 15 }
-        }
-    };
-
+            Fen = fen,
+            Depth = 40,
+            Knodes = 123456789,
+            Pvs = new List<PrincipalVariation>
+            {
+                new() { Moves = "e2e4 e7e5 g1f3", Cp = 25 },
+                new() { Moves = "d2d4 d7d5", Cp = 15 }
+            }
+        };
+    }
 }

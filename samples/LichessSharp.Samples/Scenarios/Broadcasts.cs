@@ -3,8 +3,8 @@ using LichessSharp.Samples.Helpers;
 namespace LichessSharp.Samples.Scenarios;
 
 /// <summary>
-/// Sample 10: Broadcasts
-/// Demonstrates how to access and stream live chess broadcasts.
+///     Sample 10: Broadcasts
+///     Demonstrates how to access and stream live chess broadcasts.
 /// </summary>
 public static class Broadcasts
 {
@@ -37,9 +37,7 @@ public static class Broadcasts
         {
             Console.WriteLine("\n  Past broadcasts:");
             foreach (var broadcast in topBroadcasts.Past.CurrentPageResults.Take(3))
-            {
                 Console.WriteLine($"    - {broadcast.Tour.Name}");
-            }
         }
 
         // =====================================================================
@@ -50,7 +48,7 @@ public static class Broadcasts
         Console.WriteLine("Streaming official broadcasts (limit 5)...");
 
         var broadcastCount = 0;
-        await foreach (var broadcast in client.Broadcasts.StreamOfficialBroadcastsAsync(nb: 5))
+        await foreach (var broadcast in client.Broadcasts.StreamOfficialBroadcastsAsync(5))
         {
             broadcastCount++;
             Console.WriteLine($"  {broadcastCount}. {broadcast.Tour?.Name}");
@@ -71,14 +69,10 @@ public static class Broadcasts
         Console.WriteLine("Searching for 'candidates' broadcasts...");
 
         var searchResults = await client.Broadcasts.SearchBroadcastsAsync("candidates");
-        Console.WriteLine($"Found broadcasts:");
+        Console.WriteLine("Found broadcasts:");
         if (searchResults.CurrentPageResults != null)
-        {
             foreach (var result in searchResults.CurrentPageResults.Take(5))
-            {
                 Console.WriteLine($"  - {result.Tour.Name}");
-            }
-        }
 
         // =====================================================================
         // Get Broadcast Details
@@ -87,7 +81,7 @@ public static class Broadcasts
 
         // Try to get details for a broadcast from our earlier results
         var broadcastTour = topBroadcasts.Active?.FirstOrDefault()?.Tour
-            ?? topBroadcasts.Past?.CurrentPageResults?.FirstOrDefault()?.Tour;
+                            ?? topBroadcasts.Past?.CurrentPageResults?.FirstOrDefault()?.Tour;
 
         if (broadcastTour?.Id != null)
         {
@@ -98,7 +92,8 @@ public static class Broadcasts
                 var tourDetails = await client.Broadcasts.GetTournamentAsync(broadcastTour.Id);
                 SampleRunner.PrintKeyValue("Name", tourDetails.Tour?.Name);
                 var desc = tourDetails.Tour?.Description;
-                SampleRunner.PrintKeyValue("Description", desc != null ? desc[..Math.Min(80, desc.Length)] + "..." : "(none)");
+                SampleRunner.PrintKeyValue("Description",
+                    desc != null ? desc[..Math.Min(80, desc.Length)] + "..." : "(none)");
                 SampleRunner.PrintKeyValue("Tier", tourDetails.Tour?.Tier);
 
                 if (tourDetails.Rounds?.Count > 0)
@@ -199,7 +194,6 @@ public static class Broadcasts
         SampleRunner.PrintSubHeader("Broadcast Players");
 
         if (broadcastTour?.Id != null)
-        {
             try
             {
                 var players = await client.Broadcasts.GetPlayersAsync(broadcastTour.Id);
@@ -218,7 +212,6 @@ public static class Broadcasts
             {
                 SampleRunner.PrintError($"Could not fetch players: {ex.Message}");
             }
-        }
 
         // =====================================================================
         // Broadcast Management (Authenticated)
@@ -250,16 +243,14 @@ public static class Broadcasts
             // Stream my rounds
             Console.WriteLine("Your broadcast rounds:");
             var myRoundCount = 0;
-            await foreach (var myRound in authClient.Broadcasts.StreamMyRoundsAsync(nb: 5))
+            await foreach (var myRound in authClient.Broadcasts.StreamMyRoundsAsync(5))
             {
                 myRoundCount++;
-                Console.WriteLine($"  {myRoundCount}. {myRound.Round?.Name ?? "Unknown"} - {myRound.Tour?.Name ?? "Unknown"}");
+                Console.WriteLine(
+                    $"  {myRoundCount}. {myRound.Round?.Name ?? "Unknown"} - {myRound.Tour?.Name ?? "Unknown"}");
             }
 
-            if (myRoundCount == 0)
-            {
-                Console.WriteLine("  No broadcast rounds found for your account.");
-            }
+            if (myRoundCount == 0) Console.WriteLine("  No broadcast rounds found for your account.");
         }
         else
         {

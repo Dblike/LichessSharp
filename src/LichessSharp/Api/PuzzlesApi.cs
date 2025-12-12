@@ -1,7 +1,6 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
-
 using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
 using LichessSharp.Models.Puzzles;
@@ -10,7 +9,7 @@ using LichessSharp.Serialization;
 namespace LichessSharp.Api;
 
 /// <summary>
-/// Implementation of the Puzzles API.
+///     Implementation of the Puzzles API.
 /// </summary>
 internal sealed class PuzzlesApi(ILichessHttpClient httpClient) : IPuzzlesApi
 {
@@ -27,11 +26,13 @@ internal sealed class PuzzlesApi(ILichessHttpClient httpClient) : IPuzzlesApi
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        return await _httpClient.GetAsync<PuzzleWithGame>($"/api/puzzle/{Uri.EscapeDataString(id)}", cancellationToken).ConfigureAwait(false);
+        return await _httpClient.GetAsync<PuzzleWithGame>($"/api/puzzle/{Uri.EscapeDataString(id)}", cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <inheritdoc />
-    public async Task<PuzzleWithGame> GetNextAsync(string? angle = null, string? difficulty = null, CancellationToken cancellationToken = default)
+    public async Task<PuzzleWithGame> GetNextAsync(string? angle = null, string? difficulty = null,
+        CancellationToken cancellationToken = default)
     {
         var endpoint = BuildNextPuzzleEndpoint(angle, difficulty);
         return await _httpClient.GetAsync<PuzzleWithGame>(endpoint, cancellationToken).ConfigureAwait(false);
@@ -45,20 +46,20 @@ internal sealed class PuzzlesApi(ILichessHttpClient httpClient) : IPuzzlesApi
     {
         var endpoint = BuildActivityEndpoint(max, before);
 
-        await foreach (var activity in _httpClient.StreamNdjsonAsync<PuzzleActivity>(endpoint, cancellationToken).ConfigureAwait(false))
-        {
-            yield return activity;
-        }
+        await foreach (var activity in _httpClient.StreamNdjsonAsync<PuzzleActivity>(endpoint, cancellationToken)
+                           .ConfigureAwait(false)) yield return activity;
     }
 
     /// <inheritdoc />
     public async Task<PuzzleDashboard> GetDashboardAsync(int days = 30, CancellationToken cancellationToken = default)
     {
-        return await _httpClient.GetAsync<PuzzleDashboard>($"/api/puzzle/dashboard/{days}", cancellationToken).ConfigureAwait(false);
+        return await _httpClient.GetAsync<PuzzleDashboard>($"/api/puzzle/dashboard/{days}", cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <inheritdoc />
-    public async Task<StormDashboard> GetStormDashboardAsync(string username, int days = 30, CancellationToken cancellationToken = default)
+    public async Task<StormDashboard> GetStormDashboardAsync(string username, int days = 30,
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
 
@@ -73,7 +74,8 @@ internal sealed class PuzzlesApi(ILichessHttpClient httpClient) : IPuzzlesApi
     }
 
     /// <inheritdoc />
-    public async Task<PuzzleBatch> GetBatchAsync(string angle, int? nb = null, string? difficulty = null, string? color = null, CancellationToken cancellationToken = default)
+    public async Task<PuzzleBatch> GetBatchAsync(string angle, int? nb = null, string? difficulty = null,
+        string? color = null, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(angle);
 
@@ -82,7 +84,8 @@ internal sealed class PuzzlesApi(ILichessHttpClient httpClient) : IPuzzlesApi
     }
 
     /// <inheritdoc />
-    public async Task<PuzzleBatchResult> SolveBatchAsync(string angle, IEnumerable<PuzzleSolution> solutions, int? nb = null, CancellationToken cancellationToken = default)
+    public async Task<PuzzleBatchResult> SolveBatchAsync(string angle, IEnumerable<PuzzleSolution> solutions,
+        int? nb = null, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(angle);
         ArgumentNullException.ThrowIfNull(solutions);
@@ -92,11 +95,13 @@ internal sealed class PuzzlesApi(ILichessHttpClient httpClient) : IPuzzlesApi
         var json = JsonSerializer.Serialize(request, LichessJsonContext.Default.PuzzleBatchSolveRequest);
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        return await _httpClient.PostAsync<PuzzleBatchResult>(endpoint, content, cancellationToken).ConfigureAwait(false);
+        return await _httpClient.PostAsync<PuzzleBatchResult>(endpoint, content, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <inheritdoc />
-    public async Task<PuzzleReplay> GetReplayAsync(int days, string theme, CancellationToken cancellationToken = default)
+    public async Task<PuzzleReplay> GetReplayAsync(int days, string theme,
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(theme);
 
@@ -109,7 +114,9 @@ internal sealed class PuzzlesApi(ILichessHttpClient httpClient) : IPuzzlesApi
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(raceId);
 
-        return await _httpClient.GetAsync<PuzzleRaceResults>($"/api/racer/{Uri.EscapeDataString(raceId)}", cancellationToken).ConfigureAwait(false);
+        return await _httpClient
+            .GetAsync<PuzzleRaceResults>($"/api/racer/{Uri.EscapeDataString(raceId)}", cancellationToken)
+            .ConfigureAwait(false);
     }
 
     private static string BuildNextPuzzleEndpoint(string? angle, string? difficulty)

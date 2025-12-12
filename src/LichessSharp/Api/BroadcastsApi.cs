@@ -1,19 +1,20 @@
 using System.Runtime.CompilerServices;
 using System.Text;
-
 using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
 
 namespace LichessSharp.Api;
 
 /// <summary>
-/// Implementation of the Broadcasts API.
+///     Implementation of the Broadcasts API.
 /// </summary>
 internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcastsApi
 {
     private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+
     /// <inheritdoc />
-    public async IAsyncEnumerable<BroadcastWithRounds> StreamOfficialBroadcastsAsync(int? nb = null, bool? html = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<BroadcastWithRounds> StreamOfficialBroadcastsAsync(int? nb = null, bool? html = null,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var sb = new StringBuilder("/api/broadcast");
         var hasParams = false;
@@ -33,21 +34,22 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
             sb.Append(html.Value.ToString().ToLowerInvariant());
         }
 
-        await foreach (var broadcast in _httpClient.StreamNdjsonAsync<BroadcastWithRounds>(sb.ToString(), cancellationToken).ConfigureAwait(false))
-        {
-            yield return broadcast;
-        }
+        await foreach (var broadcast in _httpClient
+                           .StreamNdjsonAsync<BroadcastWithRounds>(sb.ToString(), cancellationToken)
+                           .ConfigureAwait(false)) yield return broadcast;
     }
 
     /// <inheritdoc />
-    public async Task<BroadcastTopPage> GetTopBroadcastsAsync(int? page = null, CancellationToken cancellationToken = default)
+    public async Task<BroadcastTopPage> GetTopBroadcastsAsync(int? page = null,
+        CancellationToken cancellationToken = default)
     {
         var endpoint = page.HasValue ? $"/api/broadcast/top?page={page.Value}" : "/api/broadcast/top";
         return await _httpClient.GetAsync<BroadcastTopPage>(endpoint, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc />
-    public async IAsyncEnumerable<BroadcastByUser> StreamUserBroadcastsAsync(string username, int? nb = null, bool? html = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<BroadcastByUser> StreamUserBroadcastsAsync(string username, int? nb = null,
+        bool? html = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
 
@@ -69,14 +71,13 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
             sb.Append(html.Value.ToString().ToLowerInvariant());
         }
 
-        await foreach (var broadcast in _httpClient.StreamNdjsonAsync<BroadcastByUser>(sb.ToString(), cancellationToken).ConfigureAwait(false))
-        {
-            yield return broadcast;
-        }
+        await foreach (var broadcast in _httpClient.StreamNdjsonAsync<BroadcastByUser>(sb.ToString(), cancellationToken)
+                           .ConfigureAwait(false)) yield return broadcast;
     }
 
     /// <inheritdoc />
-    public async Task<BroadcastSearchPage> SearchBroadcastsAsync(string query, int? page = null, CancellationToken cancellationToken = default)
+    public async Task<BroadcastSearchPage> SearchBroadcastsAsync(string query, int? page = null,
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(query);
 
@@ -93,7 +94,8 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
     }
 
     /// <inheritdoc />
-    public async Task<BroadcastWithRounds> GetTournamentAsync(string broadcastTournamentId, bool? html = null, CancellationToken cancellationToken = default)
+    public async Task<BroadcastWithRounds> GetTournamentAsync(string broadcastTournamentId, bool? html = null,
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(broadcastTournamentId);
 
@@ -105,39 +107,43 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
     }
 
     /// <inheritdoc />
-    public async Task<BroadcastRound> GetRoundAsync(string broadcastTournamentSlug, string broadcastRoundSlug, string broadcastRoundId, CancellationToken cancellationToken = default)
+    public async Task<BroadcastRound> GetRoundAsync(string broadcastTournamentSlug, string broadcastRoundSlug,
+        string broadcastRoundId, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(broadcastTournamentSlug);
         ArgumentException.ThrowIfNullOrWhiteSpace(broadcastRoundSlug);
         ArgumentException.ThrowIfNullOrWhiteSpace(broadcastRoundId);
 
-        var endpoint = $"/api/broadcast/{Uri.EscapeDataString(broadcastTournamentSlug)}/{Uri.EscapeDataString(broadcastRoundSlug)}/{Uri.EscapeDataString(broadcastRoundId)}";
+        var endpoint =
+            $"/api/broadcast/{Uri.EscapeDataString(broadcastTournamentSlug)}/{Uri.EscapeDataString(broadcastRoundSlug)}/{Uri.EscapeDataString(broadcastRoundId)}";
         return await _httpClient.GetAsync<BroadcastRound>(endpoint, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc />
-    public async IAsyncEnumerable<BroadcastMyRound> StreamMyRoundsAsync(int? nb = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<BroadcastMyRound> StreamMyRoundsAsync(int? nb = null,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var endpoint = nb.HasValue ? $"/api/broadcast/my-rounds?nb={nb.Value}" : "/api/broadcast/my-rounds";
 
-        await foreach (var round in _httpClient.StreamNdjsonAsync<BroadcastMyRound>(endpoint, cancellationToken).ConfigureAwait(false))
-        {
-            yield return round;
-        }
+        await foreach (var round in _httpClient.StreamNdjsonAsync<BroadcastMyRound>(endpoint, cancellationToken)
+                           .ConfigureAwait(false)) yield return round;
     }
 
     /// <inheritdoc />
-    public async Task<BroadcastWithRounds> CreateTournamentAsync(BroadcastTournamentOptions options, CancellationToken cancellationToken = default)
+    public async Task<BroadcastWithRounds> CreateTournamentAsync(BroadcastTournamentOptions options,
+        CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentException.ThrowIfNullOrWhiteSpace(options.Name);
 
         var content = new FormUrlEncodedContent(BuildTournamentParameters(options));
-        return await _httpClient.PostAsync<BroadcastWithRounds>("/api/broadcast/new", content, cancellationToken).ConfigureAwait(false);
+        return await _httpClient.PostAsync<BroadcastWithRounds>("/api/broadcast/new", content, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <inheritdoc />
-    public async Task<BroadcastWithRounds> UpdateTournamentAsync(string broadcastTournamentId, BroadcastTournamentOptions options, CancellationToken cancellationToken = default)
+    public async Task<BroadcastWithRounds> UpdateTournamentAsync(string broadcastTournamentId,
+        BroadcastTournamentOptions options, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(broadcastTournamentId);
         ArgumentNullException.ThrowIfNull(options);
@@ -145,11 +151,13 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
 
         var content = new FormUrlEncodedContent(BuildTournamentParameters(options));
         var endpoint = $"/broadcast/{Uri.EscapeDataString(broadcastTournamentId)}/edit";
-        return await _httpClient.PostAsync<BroadcastWithRounds>(endpoint, content, cancellationToken).ConfigureAwait(false);
+        return await _httpClient.PostAsync<BroadcastWithRounds>(endpoint, content, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <inheritdoc />
-    public async Task<BroadcastRoundNew> CreateRoundAsync(string broadcastTournamentId, BroadcastRoundOptions options, CancellationToken cancellationToken = default)
+    public async Task<BroadcastRoundNew> CreateRoundAsync(string broadcastTournamentId, BroadcastRoundOptions options,
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(broadcastTournamentId);
         ArgumentNullException.ThrowIfNull(options);
@@ -157,11 +165,13 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
 
         var content = new FormUrlEncodedContent(BuildRoundParameters(options));
         var endpoint = $"/broadcast/{Uri.EscapeDataString(broadcastTournamentId)}/new";
-        return await _httpClient.PostAsync<BroadcastRoundNew>(endpoint, content, cancellationToken).ConfigureAwait(false);
+        return await _httpClient.PostAsync<BroadcastRoundNew>(endpoint, content, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <inheritdoc />
-    public async Task<BroadcastRoundNew> UpdateRoundAsync(string broadcastRoundId, BroadcastRoundOptions options, CancellationToken cancellationToken = default)
+    public async Task<BroadcastRoundNew> UpdateRoundAsync(string broadcastRoundId, BroadcastRoundOptions options,
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(broadcastRoundId);
         ArgumentNullException.ThrowIfNull(options);
@@ -169,7 +179,8 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
 
         var content = new FormUrlEncodedContent(BuildRoundParameters(options));
         var endpoint = $"/broadcast/round/{Uri.EscapeDataString(broadcastRoundId)}/edit";
-        return await _httpClient.PostAsync<BroadcastRoundNew>(endpoint, content, cancellationToken).ConfigureAwait(false);
+        return await _httpClient.PostAsync<BroadcastRoundNew>(endpoint, content, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <inheritdoc />
@@ -183,35 +194,42 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
     }
 
     /// <inheritdoc />
-    public async Task<BroadcastPgnPushResult> PushPgnAsync(string broadcastRoundId, string pgn, CancellationToken cancellationToken = default)
+    public async Task<BroadcastPgnPushResult> PushPgnAsync(string broadcastRoundId, string pgn,
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(broadcastRoundId);
         ArgumentException.ThrowIfNullOrWhiteSpace(pgn);
 
         var endpoint = $"/api/broadcast/round/{Uri.EscapeDataString(broadcastRoundId)}/push";
-        return await _httpClient.PostPlainTextAsync<BroadcastPgnPushResult>(endpoint, pgn, cancellationToken).ConfigureAwait(false);
+        return await _httpClient.PostPlainTextAsync<BroadcastPgnPushResult>(endpoint, pgn, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <inheritdoc />
-    public async Task<string> ExportRoundPgnAsync(string broadcastRoundId, CancellationToken cancellationToken = default)
+    public async Task<string> ExportRoundPgnAsync(string broadcastRoundId,
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(broadcastRoundId);
 
         var endpoint = $"/api/broadcast/round/{Uri.EscapeDataString(broadcastRoundId)}.pgn";
-        return await _httpClient.GetStringWithAcceptAsync(endpoint, "application/x-chess-pgn", cancellationToken).ConfigureAwait(false);
+        return await _httpClient.GetStringWithAcceptAsync(endpoint, "application/x-chess-pgn", cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <inheritdoc />
-    public async Task<string> ExportAllRoundsPgnAsync(string broadcastTournamentId, CancellationToken cancellationToken = default)
+    public async Task<string> ExportAllRoundsPgnAsync(string broadcastTournamentId,
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(broadcastTournamentId);
 
         var endpoint = $"/api/broadcast/{Uri.EscapeDataString(broadcastTournamentId)}.pgn";
-        return await _httpClient.GetStringWithAcceptAsync(endpoint, "application/x-chess-pgn", cancellationToken).ConfigureAwait(false);
+        return await _httpClient.GetStringWithAcceptAsync(endpoint, "application/x-chess-pgn", cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <inheritdoc />
-    public async IAsyncEnumerable<string> StreamRoundPgnAsync(string broadcastRoundId, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<string> StreamRoundPgnAsync(string broadcastRoundId,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(broadcastRoundId);
 
@@ -222,21 +240,25 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
 
         // For now, yield a single PGN export
         // A proper implementation would require streaming support for plain text
-        var pgn = await _httpClient.GetStringWithAcceptAsync(endpoint, "application/x-chess-pgn", cancellationToken).ConfigureAwait(false);
+        var pgn = await _httpClient.GetStringWithAcceptAsync(endpoint, "application/x-chess-pgn", cancellationToken)
+            .ConfigureAwait(false);
         yield return pgn;
     }
 
     /// <inheritdoc />
-    public async Task<IReadOnlyList<BroadcastPlayerEntry>> GetPlayersAsync(string tournamentId, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<BroadcastPlayerEntry>> GetPlayersAsync(string tournamentId,
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(tournamentId);
 
         var endpoint = $"/broadcast/{Uri.EscapeDataString(tournamentId)}/players";
-        return await _httpClient.GetAsync<List<BroadcastPlayerEntry>>(endpoint, cancellationToken).ConfigureAwait(false);
+        return await _httpClient.GetAsync<List<BroadcastPlayerEntry>>(endpoint, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <inheritdoc />
-    public async Task<BroadcastPlayerWithGames> GetPlayerAsync(string tournamentId, string playerId, CancellationToken cancellationToken = default)
+    public async Task<BroadcastPlayerWithGames> GetPlayerAsync(string tournamentId, string playerId,
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(tournamentId);
         ArgumentException.ThrowIfNullOrWhiteSpace(playerId);
@@ -253,64 +275,33 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
         };
 
         if (!string.IsNullOrWhiteSpace(options.ShortDescription))
-        {
             parameters.Add(new("shortDescription", options.ShortDescription));
-        }
 
         if (!string.IsNullOrWhiteSpace(options.FullDescription))
-        {
             parameters.Add(new("fullDescription", options.FullDescription));
-        }
 
         if (options.AutoLeaderboard.HasValue)
-        {
             parameters.Add(new("autoLeaderboard", options.AutoLeaderboard.Value.ToString().ToLowerInvariant()));
-        }
 
         if (options.TeamTable.HasValue)
-        {
             parameters.Add(new("teamTable", options.TeamTable.Value.ToString().ToLowerInvariant()));
-        }
 
-        if (!string.IsNullOrWhiteSpace(options.Players))
-        {
-            parameters.Add(new("players", options.Players));
-        }
+        if (!string.IsNullOrWhiteSpace(options.Players)) parameters.Add(new("players", options.Players));
 
-        if (!string.IsNullOrWhiteSpace(options.Website))
-        {
-            parameters.Add(new("info.website", options.Website));
-        }
+        if (!string.IsNullOrWhiteSpace(options.Website)) parameters.Add(new("info.website", options.Website));
 
-        if (!string.IsNullOrWhiteSpace(options.Standings))
-        {
-            parameters.Add(new("info.standings", options.Standings));
-        }
+        if (!string.IsNullOrWhiteSpace(options.Standings)) parameters.Add(new("info.standings", options.Standings));
 
-        if (!string.IsNullOrWhiteSpace(options.Location))
-        {
-            parameters.Add(new("info.location", options.Location));
-        }
+        if (!string.IsNullOrWhiteSpace(options.Location)) parameters.Add(new("info.location", options.Location));
 
-        if (!string.IsNullOrWhiteSpace(options.Format))
-        {
-            parameters.Add(new("info.format", options.Format));
-        }
+        if (!string.IsNullOrWhiteSpace(options.Format)) parameters.Add(new("info.format", options.Format));
 
-        if (!string.IsNullOrWhiteSpace(options.TimeControl))
-        {
-            parameters.Add(new("info.tc", options.TimeControl));
-        }
+        if (!string.IsNullOrWhiteSpace(options.TimeControl)) parameters.Add(new("info.tc", options.TimeControl));
 
         if (!string.IsNullOrWhiteSpace(options.FideTimeControl))
-        {
             parameters.Add(new("info.fideTc", options.FideTimeControl));
-        }
 
-        if (!string.IsNullOrWhiteSpace(options.TimeZone))
-        {
-            parameters.Add(new("info.timeZone", options.TimeZone));
-        }
+        if (!string.IsNullOrWhiteSpace(options.TimeZone)) parameters.Add(new("info.timeZone", options.TimeZone));
 
         return parameters;
     }
@@ -322,37 +313,19 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
             new("name", options.Name)
         };
 
-        if (!string.IsNullOrWhiteSpace(options.SyncUrl))
-        {
-            parameters.Add(new("syncUrl", options.SyncUrl));
-        }
+        if (!string.IsNullOrWhiteSpace(options.SyncUrl)) parameters.Add(new("syncUrl", options.SyncUrl));
 
-        if (options.StartsAt.HasValue)
-        {
-            parameters.Add(new("startsAt", options.StartsAt.Value.ToString()));
-        }
+        if (options.StartsAt.HasValue) parameters.Add(new("startsAt", options.StartsAt.Value.ToString()));
 
         if (options.StartsAfterPrevious.HasValue)
-        {
             parameters.Add(new("startsAfterPrevious", options.StartsAfterPrevious.Value.ToString().ToLowerInvariant()));
-        }
 
-        if (options.Rated.HasValue)
-        {
-            parameters.Add(new("rated", options.Rated.Value.ToString().ToLowerInvariant()));
-        }
+        if (options.Rated.HasValue) parameters.Add(new("rated", options.Rated.Value.ToString().ToLowerInvariant()));
 
-        if (options.Delay.HasValue)
-        {
-            parameters.Add(new("delay", options.Delay.Value.ToString()));
-        }
+        if (options.Delay.HasValue) parameters.Add(new("delay", options.Delay.Value.ToString()));
 
-        if (options.SyncPeriod.HasValue)
-        {
-            parameters.Add(new("period", options.SyncPeriod.Value.ToString()));
-        }
+        if (options.SyncPeriod.HasValue) parameters.Add(new("period", options.SyncPeriod.Value.ToString()));
 
         return parameters;
     }
-
 }

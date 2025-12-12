@@ -1,10 +1,11 @@
+using LichessSharp.Api.Contracts;
 using LichessSharp.Samples.Helpers;
 
 namespace LichessSharp.Samples.Scenarios;
 
 /// <summary>
-/// Sample 06: Chess Analysis
-/// Demonstrates cloud evaluations, opening explorer, and tablebase lookups.
+///     Sample 06: Chess Analysis
+///     Demonstrates cloud evaluations, opening explorer, and tablebase lookups.
 /// </summary>
 public static class ChessAnalysis
 {
@@ -23,14 +24,13 @@ public static class ChessAnalysis
         var startingFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
         Console.WriteLine("Querying cloud evaluation for starting position...");
 
-        var cloudEval = await client.Analysis.GetCloudEvaluationAsync(startingFen, multiPv: 3);
+        var cloudEval = await client.Analysis.GetCloudEvaluationAsync(startingFen, 3);
         if (cloudEval != null)
         {
             SampleRunner.PrintKeyValue("Depth", cloudEval.Depth);
             SampleRunner.PrintKeyValue("Nodes (thousands)", cloudEval.Knodes);
             Console.WriteLine("  Principal variations:");
             if (cloudEval.Pvs != null)
-            {
                 foreach (var pv in cloudEval.Pvs.Take(3))
                 {
                     var score = pv.Mate.HasValue
@@ -38,7 +38,6 @@ public static class ChessAnalysis
                         : $"{(pv.Cp ?? 0) / 100.0:+0.00;-0.00}";
                     Console.WriteLine($"    {score}: {pv.Moves}");
                 }
-            }
         }
         else
         {
@@ -71,24 +70,22 @@ public static class ChessAnalysis
         var mastersExplorer = await client.OpeningExplorer.GetMastersAsync(startingFen);
         if (mastersExplorer != null)
         {
-            Console.WriteLine($"  Total games: {mastersExplorer.White + mastersExplorer.Draws + mastersExplorer.Black:N0}");
-            Console.WriteLine($"  White wins: {mastersExplorer.White:N0}, Draws: {mastersExplorer.Draws:N0}, Black wins: {mastersExplorer.Black:N0}");
+            Console.WriteLine(
+                $"  Total games: {mastersExplorer.White + mastersExplorer.Draws + mastersExplorer.Black:N0}");
+            Console.WriteLine(
+                $"  White wins: {mastersExplorer.White:N0}, Draws: {mastersExplorer.Draws:N0}, Black wins: {mastersExplorer.Black:N0}");
 
             if (mastersExplorer.Opening != null)
-            {
                 Console.WriteLine($"  Opening: {mastersExplorer.Opening.Name} ({mastersExplorer.Opening.Eco})");
-            }
 
             Console.WriteLine("  Top moves:");
             if (mastersExplorer.Moves != null)
-            {
                 foreach (var move in mastersExplorer.Moves.Take(5))
                 {
                     var total = move.White + move.Draws + move.Black;
                     var whitePerc = total > 0 ? move.White * 100.0 / total : 0;
                     Console.WriteLine($"    {move.Uci,-6} ({move.San,-6}): {total:N0} games, White: {whitePerc:F1}%");
                 }
-            }
         }
 
         // =====================================================================
@@ -100,7 +97,7 @@ public static class ChessAnalysis
         var sicilianFen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2";
         Console.WriteLine("Querying Lichess database for Sicilian Defense...");
 
-        var lichessOptions = new LichessSharp.Api.Contracts.ExplorerOptions
+        var lichessOptions = new ExplorerOptions
         {
             Speeds = ["blitz", "rapid"],
             Ratings = [2000, 2200, 2500]
@@ -109,22 +106,19 @@ public static class ChessAnalysis
 
         if (lichessExplorer != null)
         {
-            Console.WriteLine($"  Total games: {lichessExplorer.White + lichessExplorer.Draws + lichessExplorer.Black:N0}");
+            Console.WriteLine(
+                $"  Total games: {lichessExplorer.White + lichessExplorer.Draws + lichessExplorer.Black:N0}");
 
             if (lichessExplorer.Opening != null)
-            {
                 Console.WriteLine($"  Opening: {lichessExplorer.Opening.Name} ({lichessExplorer.Opening.Eco})");
-            }
 
             Console.WriteLine("  Top moves:");
             if (lichessExplorer.Moves != null)
-            {
                 foreach (var move in lichessExplorer.Moves.Take(5))
                 {
                     var total = move.White + move.Draws + move.Black;
                     Console.WriteLine($"    {move.San,-6}: {total:N0} games");
                 }
-            }
         }
 
         // =====================================================================
@@ -134,7 +128,7 @@ public static class ChessAnalysis
 
         Console.WriteLine("Querying DrNykterstein's games from starting position...");
 
-        var playerOptions = new LichessSharp.Api.Contracts.ExplorerOptions
+        var playerOptions = new ExplorerOptions
         {
             Color = "white",
             Speeds = ["blitz", "rapid"]
@@ -148,13 +142,11 @@ public static class ChessAnalysis
 
             Console.WriteLine("  Favorite openings:");
             if (playerExplorer.Moves != null)
-            {
                 foreach (var move in playerExplorer.Moves.Take(5))
                 {
                     var moveTotal = move.White + move.Draws + move.Black;
                     Console.WriteLine($"    {move.San}: {moveTotal} games");
                 }
-            }
         }
 
         // =====================================================================
@@ -177,13 +169,11 @@ public static class ChessAnalysis
 
             Console.WriteLine("  Best moves:");
             if (tablebase.Moves != null)
-            {
                 foreach (var move in tablebase.Moves.Take(3))
                 {
                     var dtz = move.Dtz.HasValue ? $"dtz={move.Dtz}" : "";
                     Console.WriteLine($"    {move.San}: {move.Category} {dtz}");
                 }
-            }
         }
 
         // Queen vs Rook (trickier endgame)

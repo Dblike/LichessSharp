@@ -4,8 +4,8 @@ using Xunit;
 namespace LichessSharp.Tests.Integration.Authenticated;
 
 /// <summary>
-/// Authenticated integration tests for the Account API.
-/// Requires a token with email:read and preference:read scopes.
+///     Authenticated integration tests for the Account API.
+///     Requires a token with email:read and preference:read scopes.
 /// </summary>
 [AuthenticatedTest]
 [IntegrationTest]

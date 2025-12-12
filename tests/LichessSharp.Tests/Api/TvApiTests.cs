@@ -2,6 +2,7 @@ using FluentAssertions;
 using LichessSharp.Api;
 using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
+using LichessSharp.Models.Enums;
 using LichessSharp.Models.Games;
 using Moq;
 using Xunit;
@@ -18,6 +19,7 @@ public class TvApiTests
         _httpClientMock = new Mock<ILichessHttpClient>();
         _tvApi = new TvApi(_httpClientMock.Object);
     }
+
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -45,7 +47,8 @@ public class TvApiTests
         result.Should().NotBeNull();
         result.Best.Should().NotBeNull();
         result.Best!.GameId.Should().Be("bestgame");
-        _httpClientMock.Verify(x => x.GetAsync<TvChannels>("/api/tv/channels", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(x => x.GetAsync<TvChannels>("/api/tv/channels", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -99,16 +102,14 @@ public class TvApiTests
 
         // Act
         var results = new List<TvFeedEvent>();
-        await foreach (var evt in _tvApi.StreamCurrentGameAsync())
-        {
-            results.Add(evt);
-        }
+        await foreach (var evt in _tvApi.StreamCurrentGameAsync()) results.Add(evt);
 
         // Assert
         results.Should().HaveCount(2);
         results[0].Type.Should().Be("featured");
         results[1].Type.Should().Be("fen");
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<TvFeedEvent>("/api/tv/feed", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(x => x.StreamNdjsonAsync<TvFeedEvent>("/api/tv/feed", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -142,14 +143,13 @@ public class TvApiTests
 
         // Act
         var results = new List<TvFeedEvent>();
-        await foreach (var evt in _tvApi.StreamChannelAsync(channel))
-        {
-            results.Add(evt);
-        }
+        await foreach (var evt in _tvApi.StreamChannelAsync(channel)) results.Add(evt);
 
         // Assert
         results.Should().HaveCount(1);
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<TvFeedEvent>($"/api/tv/{channel}/feed", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<TvFeedEvent>($"/api/tv/{channel}/feed", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -183,7 +183,8 @@ public class TvApiTests
         var channel = "king of the hill";
         var events = new List<TvFeedEvent>();
         _httpClientMock
-            .Setup(x => x.StreamNdjsonAsync<TvFeedEvent>(It.Is<string>(s => s.Contains("king%20of%20the%20hill")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.StreamNdjsonAsync<TvFeedEvent>(It.Is<string>(s => s.Contains("king%20of%20the%20hill")),
+                It.IsAny<CancellationToken>()))
             .Returns(ToAsyncEnumerable(events));
 
         // Act
@@ -192,7 +193,9 @@ public class TvApiTests
         }
 
         // Assert
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<TvFeedEvent>(It.Is<string>(s => s.Contains("king%20of%20the%20hill")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<TvFeedEvent>(It.Is<string>(s => s.Contains("king%20of%20the%20hill")),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -227,15 +230,13 @@ public class TvApiTests
 
         // Act
         var results = new List<GameJson>();
-        await foreach (var game in _tvApi.StreamChannelGamesAsync(channel))
-        {
-            results.Add(game);
-        }
+        await foreach (var game in _tvApi.StreamChannelGamesAsync(channel)) results.Add(game);
 
         // Assert
         results.Should().HaveCount(1);
         results[0].Id.Should().Be("game1");
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<GameJson>($"/api/tv/{channel}", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(x => x.StreamNdjsonAsync<GameJson>($"/api/tv/{channel}", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -372,7 +373,8 @@ public class TvApiTests
         var channel = "racing kings";
         var games = new List<GameJson>();
         _httpClientMock
-            .Setup(x => x.StreamNdjsonAsync<GameJson>(It.Is<string>(s => s.Contains("racing%20kings")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.StreamNdjsonAsync<GameJson>(It.Is<string>(s => s.Contains("racing%20kings")),
+                It.IsAny<CancellationToken>()))
             .Returns(ToAsyncEnumerable(games));
 
         // Act
@@ -381,7 +383,9 @@ public class TvApiTests
         }
 
         // Assert
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<GameJson>(It.Is<string>(s => s.Contains("racing%20kings")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<GameJson>(It.Is<string>(s => s.Contains("racing%20kings")),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -404,96 +408,104 @@ public class TvApiTests
         _httpClientMock.Verify(x => x.StreamNdjsonAsync<GameJson>($"/api/tv/{channel}", cts.Token), Times.Once);
     }
 
-    private static TvChannels CreateTestTvChannels() => new()
+    private static TvChannels CreateTestTvChannels()
     {
-        Best = new TvGame
+        return new TvChannels
         {
-            GameId = "bestgame",
-            User = new TvUser { Id = "player1", Name = "Player1" },
-            Rating = 2500,
-            Color = "white"
-        },
-        Bullet = new TvGame
-        {
-            GameId = "bulletgame",
-            User = new TvUser { Id = "player2", Name = "Player2" },
-            Rating = 2400,
-            Color = "black"
-        },
-        Blitz = new TvGame
-        {
-            GameId = "blitzgame",
-            User = new TvUser { Id = "player3", Name = "Player3" },
-            Rating = 2300,
-            Color = "white"
-        },
-        Rapid = new TvGame
-        {
-            GameId = "rapidgame",
-            User = new TvUser { Id = "player4", Name = "Player4" },
-            Rating = 2200,
-            Color = "black"
-        }
-    };
-
-    private static TvFeedEvent CreateTestFeaturedEvent(string gameId) => new()
-    {
-        Type = "featured",
-        Data = new TvFeedData
-        {
-            Id = gameId,
-            Orientation = "white",
-            Fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-            Players = new List<TvFeedPlayer>
+            Best = new TvGame
             {
-                new()
+                GameId = "bestgame",
+                User = new TvUser { Id = "player1", Name = "Player1" },
+                Rating = 2500,
+                Color = "white"
+            },
+            Bullet = new TvGame
+            {
+                GameId = "bulletgame",
+                User = new TvUser { Id = "player2", Name = "Player2" },
+                Rating = 2400,
+                Color = "black"
+            },
+            Blitz = new TvGame
+            {
+                GameId = "blitzgame",
+                User = new TvUser { Id = "player3", Name = "Player3" },
+                Rating = 2300,
+                Color = "white"
+            },
+            Rapid = new TvGame
+            {
+                GameId = "rapidgame",
+                User = new TvUser { Id = "player4", Name = "Player4" },
+                Rating = 2200,
+                Color = "black"
+            }
+        };
+    }
+
+    private static TvFeedEvent CreateTestFeaturedEvent(string gameId)
+    {
+        return new TvFeedEvent
+        {
+            Type = "featured",
+            Data = new TvFeedData
+            {
+                Id = gameId,
+                Orientation = "white",
+                Fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+                Players = new List<TvFeedPlayer>
                 {
-                    Color = "white",
-                    User = new TvUser { Id = "player1", Name = "Player1" },
-                    Rating = 2500,
-                    Seconds = 180
-                },
-                new()
-                {
-                    Color = "black",
-                    User = new TvUser { Id = "player2", Name = "Player2" },
-                    Rating = 2400,
-                    Seconds = 180
+                    new()
+                    {
+                        Color = "white",
+                        User = new TvUser { Id = "player1", Name = "Player1" },
+                        Rating = 2500,
+                        Seconds = 180
+                    },
+                    new()
+                    {
+                        Color = "black",
+                        User = new TvUser { Id = "player2", Name = "Player2" },
+                        Rating = 2400,
+                        Seconds = 180
+                    }
                 }
             }
-        }
-    };
+        };
+    }
 
-    private static TvFeedEvent CreateTestFenEvent() => new()
+    private static TvFeedEvent CreateTestFenEvent()
     {
-        Type = "fen",
-        Data = new TvFeedData
+        return new TvFeedEvent
         {
-            Fen = "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1",
-            LastMove = "e2e4",
-            WhiteClock = 177,
-            BlackClock = 180
-        }
-    };
+            Type = "fen",
+            Data = new TvFeedData
+            {
+                Fen = "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1",
+                LastMove = "e2e4",
+                WhiteClock = 177,
+                BlackClock = 180
+            }
+        };
+    }
 
-    private static GameJson CreateTestGameJson(string id) => new()
+    private static GameJson CreateTestGameJson(string id)
     {
-        Id = id,
-        Rated = true,
-        Variant = Models.Enums.Variant.Standard,
-        Speed = Models.Enums.Speed.Blitz,
-        Perf = "blitz",
-        Status = Models.Enums.GameStatus.Started,
-        CreatedAt = DateTimeOffset.UtcNow
-    };
+        return new GameJson
+        {
+            Id = id,
+            Rated = true,
+            Variant = Variant.Standard,
+            Speed = Speed.Blitz,
+            Perf = "blitz",
+            Status = GameStatus.Started,
+            CreatedAt = DateTimeOffset.UtcNow
+        };
+    }
 
     private static async IAsyncEnumerable<T> ToAsyncEnumerable<T>(IEnumerable<T> items)
     {
-        foreach (var item in items)
-        {
-            yield return item;
-        }
+        foreach (var item in items) yield return item;
         await Task.CompletedTask;
     }
-
 }

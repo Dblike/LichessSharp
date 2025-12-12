@@ -11,8 +11,8 @@ namespace LichessSharp.Tests.Api;
 
 public class AccountApiTests
 {
-    private readonly Mock<ILichessHttpClient> _httpClientMock;
     private readonly AccountApi _accountApi;
+    private readonly Mock<ILichessHttpClient> _httpClientMock;
 
     public AccountApiTests()
     {
@@ -47,7 +47,8 @@ public class AccountApiTests
         result.Should().NotBeNull();
         result.Id.Should().Be(expectedUser.Id);
         result.Username.Should().Be(expectedUser.Username);
-        _httpClientMock.Verify(x => x.GetAsync<UserExtended>("/api/account", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(x => x.GetAsync<UserExtended>("/api/account", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -81,7 +82,8 @@ public class AccountApiTests
 
         // Assert
         result.Should().Be("test@example.com");
-        _httpClientMock.Verify(x => x.GetAsync<EmailResponse>("/api/account/email", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(x => x.GetAsync<EmailResponse>("/api/account/email", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -120,7 +122,8 @@ public class AccountApiTests
         result.Should().NotBeNull();
         result.Language.Should().Be("en-GB");
         result.Prefs?.Dark.Should().BeTrue();
-        _httpClientMock.Verify(x => x.GetAsync<AccountPreferences>("/api/account/preferences", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<AccountPreferences>("/api/account/preferences", It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -137,7 +140,8 @@ public class AccountApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.GetAsync<KidModeResponse>("/api/account/kid", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(x => x.GetAsync<KidModeResponse>("/api/account/kid", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -170,7 +174,8 @@ public class AccountApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>("/api/account/kid?v=true", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>("/api/account/kid?v=true", null, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -187,7 +192,8 @@ public class AccountApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>("/api/account/kid?v=false", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>("/api/account/kid?v=false", null, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -230,7 +236,7 @@ public class AccountApiTests
             .ReturnsAsync(new Timeline());
 
         // Act
-        await _accountApi.GetTimelineAsync(nb: 15);
+        await _accountApi.GetTimelineAsync(15);
 
         // Assert
         _httpClientMock.Verify(x => x.GetAsync<Timeline>(
@@ -256,12 +262,14 @@ public class AccountApiTests
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    private static UserExtended CreateTestUserExtended() => new()
+    private static UserExtended CreateTestUserExtended()
     {
-        Id = "testuser",
-        Username = "TestUser",
-        CreatedAt = DateTimeOffset.UtcNow.AddYears(-1),
-        Patron = true
-    };
-
+        return new UserExtended
+        {
+            Id = "testuser",
+            Username = "TestUser",
+            CreatedAt = DateTimeOffset.UtcNow.AddYears(-1),
+            Patron = true
+        };
+    }
 }

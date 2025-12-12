@@ -1,5 +1,4 @@
 using System.Text;
-
 using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
 using LichessSharp.Models.Account;
@@ -9,7 +8,7 @@ using LichessSharp.Models.Users;
 namespace LichessSharp.Api;
 
 /// <summary>
-/// Implementation of the Account API.
+///     Implementation of the Account API.
 /// </summary>
 internal sealed class AccountApi(ILichessHttpClient httpClient) : IAccountApi
 {
@@ -24,20 +23,23 @@ internal sealed class AccountApi(ILichessHttpClient httpClient) : IAccountApi
     /// <inheritdoc />
     public async Task<string> GetEmailAsync(CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetAsync<EmailResponse>("/api/account/email", cancellationToken).ConfigureAwait(false);
+        var response = await _httpClient.GetAsync<EmailResponse>("/api/account/email", cancellationToken)
+            .ConfigureAwait(false);
         return response.Email ?? string.Empty;
     }
 
     /// <inheritdoc />
     public async Task<AccountPreferences> GetPreferencesAsync(CancellationToken cancellationToken = default)
     {
-        return await _httpClient.GetAsync<AccountPreferences>("/api/account/preferences", cancellationToken).ConfigureAwait(false);
+        return await _httpClient.GetAsync<AccountPreferences>("/api/account/preferences", cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <inheritdoc />
     public async Task<bool> GetKidModeAsync(CancellationToken cancellationToken = default)
     {
-        var response = await _httpClient.GetAsync<KidModeResponse>("/api/account/kid", cancellationToken).ConfigureAwait(false);
+        var response = await _httpClient.GetAsync<KidModeResponse>("/api/account/kid", cancellationToken)
+            .ConfigureAwait(false);
         return response.Kid;
     }
 
@@ -50,7 +52,8 @@ internal sealed class AccountApi(ILichessHttpClient httpClient) : IAccountApi
     }
 
     /// <inheritdoc />
-    public async Task<Timeline> GetTimelineAsync(int? nb = null, DateTimeOffset? since = null, CancellationToken cancellationToken = default)
+    public async Task<Timeline> GetTimelineAsync(int? nb = null, DateTimeOffset? since = null,
+        CancellationToken cancellationToken = default)
     {
         var sb = new StringBuilder("/api/timeline");
         var hasQuery = false;
@@ -60,6 +63,7 @@ internal sealed class AccountApi(ILichessHttpClient httpClient) : IAccountApi
             sb.Append(hasQuery ? '&' : '?').Append($"nb={nb.Value}");
             hasQuery = true;
         }
+
         if (since.HasValue)
         {
             var timestamp = since.Value.ToUnixTimeMilliseconds();

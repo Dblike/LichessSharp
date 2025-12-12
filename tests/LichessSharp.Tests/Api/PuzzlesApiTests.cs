@@ -18,6 +18,7 @@ public class PuzzlesApiTests
         _httpClientMock = new Mock<ILichessHttpClient>();
         _puzzlesApi = new PuzzlesApi(_httpClientMock.Object);
     }
+
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -45,7 +46,8 @@ public class PuzzlesApiTests
         result.Should().NotBeNull();
         result.Puzzle.Should().NotBeNull();
         result.Puzzle!.Id.Should().Be("abc123");
-        _httpClientMock.Verify(x => x.GetAsync<PuzzleWithGame>("/api/puzzle/daily", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(x => x.GetAsync<PuzzleWithGame>("/api/puzzle/daily", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -81,7 +83,8 @@ public class PuzzlesApiTests
         // Assert
         result.Should().NotBeNull();
         result.Puzzle!.Id.Should().Be(puzzleId);
-        _httpClientMock.Verify(x => x.GetAsync<PuzzleWithGame>($"/api/puzzle/{puzzleId}", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<PuzzleWithGame>($"/api/puzzle/{puzzleId}", It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -111,14 +114,17 @@ public class PuzzlesApiTests
         var puzzleId = "puzzle id";
         var expectedPuzzle = CreateTestPuzzleWithGame(puzzleId);
         _httpClientMock
-            .Setup(x => x.GetAsync<PuzzleWithGame>(It.Is<string>(s => s.Contains("puzzle%20id")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<PuzzleWithGame>(It.Is<string>(s => s.Contains("puzzle%20id")),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedPuzzle);
 
         // Act
         await _puzzlesApi.GetAsync(puzzleId);
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<PuzzleWithGame>(It.Is<string>(s => s.Contains("puzzle%20id")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<PuzzleWithGame>(It.Is<string>(s => s.Contains("puzzle%20id")),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -135,7 +141,8 @@ public class PuzzlesApiTests
 
         // Assert
         result.Should().NotBeNull();
-        _httpClientMock.Verify(x => x.GetAsync<PuzzleWithGame>("/api/puzzle/next", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(x => x.GetAsync<PuzzleWithGame>("/api/puzzle/next", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -144,14 +151,17 @@ public class PuzzlesApiTests
         // Arrange
         var expectedPuzzle = CreateTestPuzzleWithGame("abc123");
         _httpClientMock
-            .Setup(x => x.GetAsync<PuzzleWithGame>(It.Is<string>(s => s.Contains("angle=mate")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<PuzzleWithGame>(It.Is<string>(s => s.Contains("angle=mate")),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedPuzzle);
 
         // Act
-        await _puzzlesApi.GetNextAsync(angle: "mate");
+        await _puzzlesApi.GetNextAsync("mate");
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<PuzzleWithGame>(It.Is<string>(s => s.Contains("angle=mate")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<PuzzleWithGame>(It.Is<string>(s => s.Contains("angle=mate")),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -160,14 +170,17 @@ public class PuzzlesApiTests
         // Arrange
         var expectedPuzzle = CreateTestPuzzleWithGame("abc123");
         _httpClientMock
-            .Setup(x => x.GetAsync<PuzzleWithGame>(It.Is<string>(s => s.Contains("difficulty=harder")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<PuzzleWithGame>(It.Is<string>(s => s.Contains("difficulty=harder")),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedPuzzle);
 
         // Act
         await _puzzlesApi.GetNextAsync(difficulty: "harder");
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<PuzzleWithGame>(It.Is<string>(s => s.Contains("difficulty=harder")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<PuzzleWithGame>(It.Is<string>(s => s.Contains("difficulty=harder")),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -182,7 +195,7 @@ public class PuzzlesApiTests
             .ReturnsAsync(expectedPuzzle);
 
         // Act
-        await _puzzlesApi.GetNextAsync(angle: "fork", difficulty: "easier");
+        await _puzzlesApi.GetNextAsync("fork", "easier");
 
         // Assert
         _httpClientMock.Verify(x => x.GetAsync<PuzzleWithGame>(It.Is<string>(s =>
@@ -196,14 +209,17 @@ public class PuzzlesApiTests
         // Arrange
         var expectedPuzzle = CreateTestPuzzleWithGame("abc123");
         _httpClientMock
-            .Setup(x => x.GetAsync<PuzzleWithGame>(It.Is<string>(s => s.Contains("angle=mate%20in%202")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<PuzzleWithGame>(It.Is<string>(s => s.Contains("angle=mate%20in%202")),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedPuzzle);
 
         // Act
-        await _puzzlesApi.GetNextAsync(angle: "mate in 2");
+        await _puzzlesApi.GetNextAsync("mate in 2");
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<PuzzleWithGame>(It.Is<string>(s => s.Contains("angle=mate%20in%202")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<PuzzleWithGame>(It.Is<string>(s => s.Contains("angle=mate%20in%202")),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -222,10 +238,7 @@ public class PuzzlesApiTests
 
         // Act
         var results = new List<PuzzleActivity>();
-        await foreach (var activity in _puzzlesApi.StreamActivityAsync())
-        {
-            results.Add(activity);
-        }
+        await foreach (var activity in _puzzlesApi.StreamActivityAsync()) results.Add(activity);
 
         // Assert
         results.Should().HaveCount(2);
@@ -240,16 +253,19 @@ public class PuzzlesApiTests
         var activities = new List<PuzzleActivity>();
 
         _httpClientMock
-            .Setup(x => x.StreamNdjsonAsync<PuzzleActivity>(It.Is<string>(s => s.Contains("max=10")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.StreamNdjsonAsync<PuzzleActivity>(It.Is<string>(s => s.Contains("max=10")),
+                It.IsAny<CancellationToken>()))
             .Returns(ToAsyncEnumerable(activities));
 
         // Act
-        await foreach (var _ in _puzzlesApi.StreamActivityAsync(max: 10))
+        await foreach (var _ in _puzzlesApi.StreamActivityAsync(10))
         {
         }
 
         // Assert
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<PuzzleActivity>(It.Is<string>(s => s.Contains("max=10")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<PuzzleActivity>(It.Is<string>(s => s.Contains("max=10")),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -260,7 +276,9 @@ public class PuzzlesApiTests
         var activities = new List<PuzzleActivity>();
 
         _httpClientMock
-            .Setup(x => x.StreamNdjsonAsync<PuzzleActivity>(It.Is<string>(s => s.Contains($"before={before.ToUnixTimeMilliseconds()}")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.StreamNdjsonAsync<PuzzleActivity>(
+                It.Is<string>(s => s.Contains($"before={before.ToUnixTimeMilliseconds()}")),
+                It.IsAny<CancellationToken>()))
             .Returns(ToAsyncEnumerable(activities));
 
         // Act
@@ -269,7 +287,9 @@ public class PuzzlesApiTests
         }
 
         // Assert
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<PuzzleActivity>(It.Is<string>(s => s.Contains("before=")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<PuzzleActivity>(It.Is<string>(s => s.Contains("before=")),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -286,7 +306,7 @@ public class PuzzlesApiTests
             .Returns(ToAsyncEnumerable(activities));
 
         // Act
-        await foreach (var _ in _puzzlesApi.StreamActivityAsync(max: 5, before: before))
+        await foreach (var _ in _puzzlesApi.StreamActivityAsync(5, before))
         {
         }
 
@@ -311,7 +331,8 @@ public class PuzzlesApiTests
         // Assert
         result.Should().NotBeNull();
         result.Days.Should().Be(30);
-        _httpClientMock.Verify(x => x.GetAsync<PuzzleDashboard>("/api/puzzle/dashboard/30", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<PuzzleDashboard>("/api/puzzle/dashboard/30", It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -324,11 +345,12 @@ public class PuzzlesApiTests
             .ReturnsAsync(expectedDashboard);
 
         // Act
-        var result = await _puzzlesApi.GetDashboardAsync(days: 7);
+        var result = await _puzzlesApi.GetDashboardAsync(7);
 
         // Assert
         result.Should().NotBeNull();
-        _httpClientMock.Verify(x => x.GetAsync<PuzzleDashboard>("/api/puzzle/dashboard/7", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<PuzzleDashboard>("/api/puzzle/dashboard/7", It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -346,7 +368,9 @@ public class PuzzlesApiTests
 
         // Assert
         result.Should().NotBeNull();
-        _httpClientMock.Verify(x => x.GetAsync<StormDashboard>($"/api/storm/dashboard/{username}", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<StormDashboard>($"/api/storm/dashboard/{username}", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -356,14 +380,17 @@ public class PuzzlesApiTests
         var username = "testuser";
         var expectedDashboard = CreateTestStormDashboard();
         _httpClientMock
-            .Setup(x => x.GetAsync<StormDashboard>(It.Is<string>(s => s.Contains("days=7")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<StormDashboard>(It.Is<string>(s => s.Contains("days=7")),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedDashboard);
 
         // Act
-        await _puzzlesApi.GetStormDashboardAsync(username, days: 7);
+        await _puzzlesApi.GetStormDashboardAsync(username, 7);
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<StormDashboard>(It.Is<string>(s => s.Contains("days=7")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<StormDashboard>(It.Is<string>(s => s.Contains("days=7")), It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -393,14 +420,17 @@ public class PuzzlesApiTests
         var username = "user name";
         var expectedDashboard = CreateTestStormDashboard();
         _httpClientMock
-            .Setup(x => x.GetAsync<StormDashboard>(It.Is<string>(s => s.Contains("user%20name")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<StormDashboard>(It.Is<string>(s => s.Contains("user%20name")),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedDashboard);
 
         // Act
         await _puzzlesApi.GetStormDashboardAsync(username);
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<StormDashboard>(It.Is<string>(s => s.Contains("user%20name")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<StormDashboard>(It.Is<string>(s => s.Contains("user%20name")),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -419,7 +449,8 @@ public class PuzzlesApiTests
         result.Should().NotBeNull();
         result.Id.Should().Be("race123");
         result.Url.Should().Be("https://lichess.org/racer/race123");
-        _httpClientMock.Verify(x => x.PostAsync<PuzzleRace>("/api/racer", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(x => x.PostAsync<PuzzleRace>("/api/racer", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -454,7 +485,8 @@ public class PuzzlesApiTests
         // Assert
         result.Should().NotBeNull();
         result.Puzzles.Should().NotBeNull();
-        _httpClientMock.Verify(x => x.GetAsync<PuzzleBatch>("/api/puzzle/batch/mix", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(x => x.GetAsync<PuzzleBatch>("/api/puzzle/batch/mix", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -467,10 +499,12 @@ public class PuzzlesApiTests
             .ReturnsAsync(expectedBatch);
 
         // Act
-        await _puzzlesApi.GetBatchAsync("mix", nb: 5);
+        await _puzzlesApi.GetBatchAsync("mix", 5);
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<PuzzleBatch>(It.Is<string>(s => s.Contains("nb=5")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<PuzzleBatch>(It.Is<string>(s => s.Contains("nb=5")), It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -479,14 +513,17 @@ public class PuzzlesApiTests
         // Arrange
         var expectedBatch = CreateTestPuzzleBatch();
         _httpClientMock
-            .Setup(x => x.GetAsync<PuzzleBatch>(It.Is<string>(s => s.Contains("difficulty=harder")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<PuzzleBatch>(It.Is<string>(s => s.Contains("difficulty=harder")),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedBatch);
 
         // Act
         await _puzzlesApi.GetBatchAsync("mix", difficulty: "harder");
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<PuzzleBatch>(It.Is<string>(s => s.Contains("difficulty=harder")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<PuzzleBatch>(It.Is<string>(s => s.Contains("difficulty=harder")),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -495,14 +532,17 @@ public class PuzzlesApiTests
         // Arrange
         var expectedBatch = CreateTestPuzzleBatch();
         _httpClientMock
-            .Setup(x => x.GetAsync<PuzzleBatch>(It.Is<string>(s => s.Contains("color=white")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<PuzzleBatch>(It.Is<string>(s => s.Contains("color=white")),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedBatch);
 
         // Act
         await _puzzlesApi.GetBatchAsync("mix", color: "white");
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<PuzzleBatch>(It.Is<string>(s => s.Contains("color=white")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<PuzzleBatch>(It.Is<string>(s => s.Contains("color=white")), It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -518,7 +558,7 @@ public class PuzzlesApiTests
             .ReturnsAsync(expectedBatch);
 
         // Act
-        await _puzzlesApi.GetBatchAsync("fork", nb: 3, difficulty: "easier", color: "black");
+        await _puzzlesApi.GetBatchAsync("fork", 3, "easier", "black");
 
         // Assert
         _httpClientMock.Verify(x => x.GetAsync<PuzzleBatch>(It.Is<string>(s =>
@@ -553,14 +593,17 @@ public class PuzzlesApiTests
         // Arrange
         var expectedBatch = CreateTestPuzzleBatch();
         _httpClientMock
-            .Setup(x => x.GetAsync<PuzzleBatch>(It.Is<string>(s => s.Contains("mate%20in%202")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<PuzzleBatch>(It.Is<string>(s => s.Contains("mate%20in%202")),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedBatch);
 
         // Act
         await _puzzlesApi.GetBatchAsync("mate in 2");
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<PuzzleBatch>(It.Is<string>(s => s.Contains("mate%20in%202")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<PuzzleBatch>(It.Is<string>(s => s.Contains("mate%20in%202")),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -606,7 +649,7 @@ public class PuzzlesApiTests
             .ReturnsAsync(expectedResult);
 
         // Act
-        await _puzzlesApi.SolveBatchAsync("mix", solutions, nb: 5);
+        await _puzzlesApi.SolveBatchAsync("mix", solutions, 5);
 
         // Assert
         _httpClientMock.Verify(x => x.PostAsync<PuzzleBatchResult>(
@@ -653,7 +696,8 @@ public class PuzzlesApiTests
         // Assert
         result.Should().NotBeNull();
         result.Replay.Should().NotBeNull();
-        _httpClientMock.Verify(x => x.GetAsync<PuzzleReplay>("/api/puzzle/replay/30/mix", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<PuzzleReplay>("/api/puzzle/replay/30/mix", It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -669,7 +713,8 @@ public class PuzzlesApiTests
         await _puzzlesApi.GetReplayAsync(7, "fork");
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<PuzzleReplay>("/api/puzzle/replay/7/fork", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<PuzzleReplay>("/api/puzzle/replay/7/fork", It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -698,14 +743,17 @@ public class PuzzlesApiTests
         // Arrange
         var expectedReplay = CreateTestPuzzleReplay();
         _httpClientMock
-            .Setup(x => x.GetAsync<PuzzleReplay>(It.Is<string>(s => s.Contains("mate%20in%202")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<PuzzleReplay>(It.Is<string>(s => s.Contains("mate%20in%202")),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedReplay);
 
         // Act
         await _puzzlesApi.GetReplayAsync(30, "mate in 2");
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<PuzzleReplay>(It.Is<string>(s => s.Contains("mate%20in%202")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<PuzzleReplay>(It.Is<string>(s => s.Contains("mate%20in%202")),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -724,7 +772,8 @@ public class PuzzlesApiTests
         result.Should().NotBeNull();
         result.Id.Should().Be("nkEw7");
         result.Players.Should().NotBeNull();
-        _httpClientMock.Verify(x => x.GetAsync<PuzzleRaceResults>("/api/racer/nkEw7", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(x => x.GetAsync<PuzzleRaceResults>("/api/racer/nkEw7", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -753,14 +802,17 @@ public class PuzzlesApiTests
         // Arrange
         var expectedResults = CreateTestPuzzleRaceResults();
         _httpClientMock
-            .Setup(x => x.GetAsync<PuzzleRaceResults>(It.Is<string>(s => s.Contains("race%20id")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<PuzzleRaceResults>(It.Is<string>(s => s.Contains("race%20id")),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResults);
 
         // Act
         await _puzzlesApi.GetRaceAsync("race id");
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<PuzzleRaceResults>(It.Is<string>(s => s.Contains("race%20id")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<PuzzleRaceResults>(It.Is<string>(s => s.Contains("race%20id")),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -780,129 +832,149 @@ public class PuzzlesApiTests
         _httpClientMock.Verify(x => x.GetAsync<PuzzleRaceResults>("/api/racer/test", cts.Token), Times.Once);
     }
 
-    private static PuzzleWithGame CreateTestPuzzleWithGame(string id) => new()
+    private static PuzzleWithGame CreateTestPuzzleWithGame(string id)
     {
-        Game = new PuzzleGame
+        return new PuzzleWithGame
         {
-            Id = "game123"
-        },
-        Puzzle = new Puzzle
-        {
-            Id = id,
-            Rating = 1500,
-            Plays = 1000,
-            Solution = ["e2e4", "e7e5"],
-            Themes = ["middlegame", "fork"]
-        }
-    };
+            Game = new PuzzleGame
+            {
+                Id = "game123"
+            },
+            Puzzle = new Puzzle
+            {
+                Id = id,
+                Rating = 1500,
+                Plays = 1000,
+                Solution = ["e2e4", "e7e5"],
+                Themes = ["middlegame", "fork"]
+            }
+        };
+    }
 
-    private static PuzzleActivity CreateTestPuzzleActivity(bool win) => new()
+    private static PuzzleActivity CreateTestPuzzleActivity(bool win)
     {
-        Date = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
-        Win = win,
-        Puzzle = new PuzzleActivityPuzzle
+        return new PuzzleActivity
         {
-            Id = "puzzle123",
-            Rating = 1500,
-            Plays = 100
-        }
-    };
+            Date = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
+            Win = win,
+            Puzzle = new PuzzleActivityPuzzle
+            {
+                Id = "puzzle123",
+                Rating = 1500,
+                Plays = 100
+            }
+        };
+    }
 
-    private static PuzzleDashboard CreateTestPuzzleDashboard(int days) => new()
+    private static PuzzleDashboard CreateTestPuzzleDashboard(int days)
     {
-        Days = days,
-        Global = new PuzzlePerformance
+        return new PuzzleDashboard
         {
-            Count = 100,
-            FirstWins = 80,
-            ReplayWins = 15,
-            PuzzleRatingAvg = 1600,
-            Performance = 1700
-        }
-    };
+            Days = days,
+            Global = new PuzzlePerformance
+            {
+                Count = 100,
+                FirstWins = 80,
+                ReplayWins = 15,
+                PuzzleRatingAvg = 1600,
+                Performance = 1700
+            }
+        };
+    }
 
-    private static StormDashboard CreateTestStormDashboard() => new()
+    private static StormDashboard CreateTestStormDashboard()
     {
-        High = new StormHigh
+        return new StormDashboard
         {
-            AllTime = 50,
-            Month = 45,
-            Week = 40,
-            Day = 35
-        },
-        Days = new List<StormDay>
-        {
-            new() { Id = "2023/6/15", Score = 35, Runs = 5, Time = 300 }
-        }
-    };
+            High = new StormHigh
+            {
+                AllTime = 50,
+                Month = 45,
+                Week = 40,
+                Day = 35
+            },
+            Days = new List<StormDay>
+            {
+                new() { Id = "2023/6/15", Score = 35, Runs = 5, Time = 300 }
+            }
+        };
+    }
 
-    private static PuzzleBatch CreateTestPuzzleBatch() => new()
+    private static PuzzleBatch CreateTestPuzzleBatch()
     {
-        Puzzles = new List<PuzzleWithGame>
+        return new PuzzleBatch
         {
-            CreateTestPuzzleWithGame("puzzle1"),
-            CreateTestPuzzleWithGame("puzzle2")
-        },
-        Glicko = new PuzzleGlicko
-        {
-            Rating = 1843,
-            Deviation = 45.82
-        }
-    };
+            Puzzles = new List<PuzzleWithGame>
+            {
+                CreateTestPuzzleWithGame("puzzle1"),
+                CreateTestPuzzleWithGame("puzzle2")
+            },
+            Glicko = new PuzzleGlicko
+            {
+                Rating = 1843,
+                Deviation = 45.82
+            }
+        };
+    }
 
-    private static PuzzleBatchResult CreateTestPuzzleBatchResult() => new()
+    private static PuzzleBatchResult CreateTestPuzzleBatchResult()
     {
-        Puzzles = new List<PuzzleWithGame>
+        return new PuzzleBatchResult
         {
-            CreateTestPuzzleWithGame("newPuzzle1")
-        },
-        Glicko = new PuzzleGlicko
-        {
-            Rating = 1850,
-            Deviation = 44.5
-        },
-        Rounds = new List<PuzzleRound>
-        {
-            new() { Id = "puzzle1", Win = true, RatingDiff = 5 },
-            new() { Id = "puzzle2", Win = false, RatingDiff = -3 }
-        }
-    };
+            Puzzles = new List<PuzzleWithGame>
+            {
+                CreateTestPuzzleWithGame("newPuzzle1")
+            },
+            Glicko = new PuzzleGlicko
+            {
+                Rating = 1850,
+                Deviation = 44.5
+            },
+            Rounds = new List<PuzzleRound>
+            {
+                new() { Id = "puzzle1", Win = true, RatingDiff = 5 },
+                new() { Id = "puzzle2", Win = false, RatingDiff = -3 }
+            }
+        };
+    }
 
-    private static PuzzleReplay CreateTestPuzzleReplay() => new()
+    private static PuzzleReplay CreateTestPuzzleReplay()
     {
-        Replay = new PuzzleReplayInfo
+        return new PuzzleReplay
         {
-            Days = 30,
-            Theme = "mix",
-            Nb = 5,
-            Remaining = new List<string> { "puzzle1", "puzzle2", "puzzle3" }
-        },
-        Angle = new PuzzleAngle
-        {
-            Key = "mix",
-            Name = "Healthy mix",
-            Desc = "A bit of everything"
-        }
-    };
+            Replay = new PuzzleReplayInfo
+            {
+                Days = 30,
+                Theme = "mix",
+                Nb = 5,
+                Remaining = new List<string> { "puzzle1", "puzzle2", "puzzle3" }
+            },
+            Angle = new PuzzleAngle
+            {
+                Key = "mix",
+                Name = "Healthy mix",
+                Desc = "A bit of everything"
+            }
+        };
+    }
 
-    private static PuzzleRaceResults CreateTestPuzzleRaceResults() => new()
+    private static PuzzleRaceResults CreateTestPuzzleRaceResults()
     {
-        Id = "nkEw7",
-        Owner = "lichess",
-        Players = new List<PuzzleRacePlayer>
+        return new PuzzleRaceResults
         {
-            new() { Name = "Player1", Id = "player1", Score = 62 },
-            new() { Name = "Player2", Id = "player2", Score = 41 }
-        }
-    };
+            Id = "nkEw7",
+            Owner = "lichess",
+            Players = new List<PuzzleRacePlayer>
+            {
+                new() { Name = "Player1", Id = "player1", Score = 62 },
+                new() { Name = "Player2", Id = "player2", Score = 41 }
+            }
+        };
+    }
 
     private static async IAsyncEnumerable<T> ToAsyncEnumerable<T>(IEnumerable<T> items)
     {
-        foreach (var item in items)
-        {
-            yield return item;
-        }
+        foreach (var item in items) yield return item;
         await Task.CompletedTask;
     }
-
 }

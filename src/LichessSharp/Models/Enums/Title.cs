@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 namespace LichessSharp.Models.Enums;
 
 /// <summary>
-/// Chess titles.
+///     Chess titles.
 /// </summary>
 [JsonConverter(typeof(JsonStringEnumConverter<Title>))]
 public enum Title

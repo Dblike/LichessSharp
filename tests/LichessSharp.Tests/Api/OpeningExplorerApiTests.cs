@@ -9,15 +9,16 @@ namespace LichessSharp.Tests.Api;
 
 public class OpeningExplorerApiTests
 {
-    private readonly Mock<ILichessHttpClient> _httpClientMock;
-    private readonly OpeningExplorerApi _explorerApi;
     private readonly Uri _baseAddress = new("https://explorer.lichess.ovh");
+    private readonly OpeningExplorerApi _explorerApi;
+    private readonly Mock<ILichessHttpClient> _httpClientMock;
 
     public OpeningExplorerApiTests()
     {
         _httpClientMock = new Mock<ILichessHttpClient>();
         _explorerApi = new OpeningExplorerApi(_httpClientMock.Object, _baseAddress);
     }
+
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -285,21 +286,23 @@ public class OpeningExplorerApiTests
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    private static ExplorerResult CreateTestExplorerResult() => new()
+    private static ExplorerResult CreateTestExplorerResult()
     {
-        White = 1000,
-        Draws = 500,
-        Black = 800,
-        Moves = new List<ExplorerMove>
+        return new ExplorerResult
         {
-            new() { Uci = "e2e4", San = "e4", White = 500, Draws = 200, Black = 300 },
-            new() { Uci = "d2d4", San = "d4", White = 400, Draws = 250, Black = 350 }
-        },
-        TopGames = new List<ExplorerGame>
-        {
-            new() { Id = "game1", Winner = "white", Year = 2023 }
-        },
-        Opening = new ExplorerOpening { Eco = "B00", Name = "King's Pawn Opening" }
-    };
-
+            White = 1000,
+            Draws = 500,
+            Black = 800,
+            Moves = new List<ExplorerMove>
+            {
+                new() { Uci = "e2e4", San = "e4", White = 500, Draws = 200, Black = 300 },
+                new() { Uci = "d2d4", San = "d4", White = 400, Draws = 250, Black = 350 }
+            },
+            TopGames = new List<ExplorerGame>
+            {
+                new() { Id = "game1", Winner = "white", Year = 2023 }
+            },
+            Opening = new ExplorerOpening { Eco = "B00", Name = "King's Pawn Opening" }
+        };
+    }
 }

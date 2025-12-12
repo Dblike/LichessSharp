@@ -1,109 +1,118 @@
 namespace LichessSharp.Http;
 
 /// <summary>
-/// Internal interface for making HTTP requests to the Lichess API.
-/// Handles authentication, rate limiting, and error handling.
+///     Internal interface for making HTTP requests to the Lichess API.
+///     Handles authentication, rate limiting, and error handling.
 /// </summary>
 internal interface ILichessHttpClient
 {
     /// <summary>
-    /// Sends a GET request to the specified endpoint.
+    ///     Sends a GET request to the specified endpoint.
     /// </summary>
     Task<T> GetAsync<T>(string endpoint, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Sends a GET request and returns the raw response content as a string.
+    ///     Sends a GET request and returns the raw response content as a string.
     /// </summary>
     Task<string> GetStringAsync(string endpoint, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Sends a GET request with a custom Accept header and returns the raw response content as a string.
+    ///     Sends a GET request with a custom Accept header and returns the raw response content as a string.
     /// </summary>
-    Task<string> GetStringWithAcceptAsync(string endpoint, string acceptHeader, CancellationToken cancellationToken = default);
+    Task<string> GetStringWithAcceptAsync(string endpoint, string acceptHeader,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Sends a POST request to the specified endpoint.
+    ///     Sends a POST request to the specified endpoint.
     /// </summary>
     Task<T> PostAsync<T>(string endpoint, HttpContent? content = null, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Sends a POST request and returns the raw response content as a string.
+    ///     Sends a POST request and returns the raw response content as a string.
     /// </summary>
-    Task<string> PostStringAsync(string endpoint, HttpContent? content = null, CancellationToken cancellationToken = default);
+    Task<string> PostStringAsync(string endpoint, HttpContent? content = null,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Sends a POST request with plain text body content.
+    ///     Sends a POST request with plain text body content.
     /// </summary>
     Task<T> PostPlainTextAsync<T>(string endpoint, string body, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Sends a POST request with form-urlencoded body content.
+    ///     Sends a POST request with form-urlencoded body content.
     /// </summary>
-    Task<T> PostFormAsync<T>(string endpoint, IDictionary<string, string> formData, CancellationToken cancellationToken = default);
+    Task<T> PostFormAsync<T>(string endpoint, IDictionary<string, string> formData,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Sends a DELETE request to the specified endpoint.
+    ///     Sends a DELETE request to the specified endpoint.
     /// </summary>
     Task<T> DeleteAsync<T>(string endpoint, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Sends a PUT request with JSON body content.
+    ///     Sends a PUT request with JSON body content.
     /// </summary>
     Task<T> PutJsonAsync<T>(string endpoint, object body, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Sends a POST request with JSON body content.
+    ///     Sends a POST request with JSON body content.
     /// </summary>
     Task<T> PostJsonAsync<T>(string endpoint, object body, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Sends a POST request and expects 204 No Content response.
+    ///     Sends a POST request and expects 204 No Content response.
     /// </summary>
-    Task PostNoContentAsync(string endpoint, HttpContent? content = null, CancellationToken cancellationToken = default);
+    Task PostNoContentAsync(string endpoint, HttpContent? content = null,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Sends a DELETE request and expects 204 No Content response.
+    ///     Sends a DELETE request and expects 204 No Content response.
     /// </summary>
     Task DeleteNoContentAsync(string endpoint, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Sends a GET request to a fully qualified URL (for external APIs like explorer.lichess.ovh).
+    ///     Sends a GET request to a fully qualified URL (for external APIs like explorer.lichess.ovh).
     /// </summary>
     Task<T> GetAbsoluteAsync<T>(Uri absoluteUrl, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Sends a GET request to a fully qualified URL and reads all NDJSON lines, returning the last line.
-    /// This is useful for progressive APIs that send partial updates followed by a final complete result.
+    ///     Sends a GET request to a fully qualified URL and reads all NDJSON lines, returning the last line.
+    ///     This is useful for progressive APIs that send partial updates followed by a final complete result.
     /// </summary>
     Task<T> GetAbsoluteNdjsonLastAsync<T>(Uri absoluteUrl, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Sends a GET request to a fully qualified URL with a custom Accept header and returns the raw response content as a string.
+    ///     Sends a GET request to a fully qualified URL with a custom Accept header and returns the raw response content as a
+    ///     string.
     /// </summary>
-    Task<string> GetAbsoluteStringAsync(Uri absoluteUrl, string acceptHeader, CancellationToken cancellationToken = default);
+    Task<string> GetAbsoluteStringAsync(Uri absoluteUrl, string acceptHeader,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Streams newline-delimited JSON from the specified endpoint.
+    ///     Streams newline-delimited JSON from the specified endpoint.
     /// </summary>
     IAsyncEnumerable<T> StreamNdjsonAsync<T>(string endpoint, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Streams newline-delimited JSON from the specified endpoint using POST.
+    ///     Streams newline-delimited JSON from the specified endpoint using POST.
     /// </summary>
-    IAsyncEnumerable<T> StreamNdjsonPostAsync<T>(string endpoint, HttpContent? content = null, CancellationToken cancellationToken = default);
+    IAsyncEnumerable<T> StreamNdjsonPostAsync<T>(string endpoint, HttpContent? content = null,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Sends a POST request with JSON body to a fully qualified URL (for external APIs like engine.lichess.ovh).
+    ///     Sends a POST request with JSON body to a fully qualified URL (for external APIs like engine.lichess.ovh).
     /// </summary>
     Task<T> PostAbsoluteJsonAsync<T>(Uri absoluteUrl, object body, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Streams newline-delimited JSON from a fully qualified URL using POST with JSON body.
+    ///     Streams newline-delimited JSON from a fully qualified URL using POST with JSON body.
     /// </summary>
-    IAsyncEnumerable<T> StreamAbsoluteNdjsonPostAsync<T>(Uri absoluteUrl, object body, CancellationToken cancellationToken = default);
+    IAsyncEnumerable<T> StreamAbsoluteNdjsonPostAsync<T>(Uri absoluteUrl, object body,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Sends a POST request with streaming plain text body to a fully qualified URL.
+    ///     Sends a POST request with streaming plain text body to a fully qualified URL.
     /// </summary>
-    Task PostAbsoluteStreamAsync(Uri absoluteUrl, IAsyncEnumerable<string> lines, CancellationToken cancellationToken = default);
+    Task PostAbsoluteStreamAsync(Uri absoluteUrl, IAsyncEnumerable<string> lines,
+        CancellationToken cancellationToken = default);
 }

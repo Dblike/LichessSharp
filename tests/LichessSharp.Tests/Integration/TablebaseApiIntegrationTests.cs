@@ -4,9 +4,9 @@ using Xunit;
 namespace LichessSharp.Tests.Integration;
 
 /// <summary>
-/// Integration tests for the Tablebase API.
-/// These tests use FEN positions from the OpenAPI spec examples.
-/// Endpoint: tablebase.lichess.ovh
+///     Integration tests for the Tablebase API.
+///     These tests use FEN positions from the OpenAPI spec examples.
+///     Endpoint: tablebase.lichess.ovh
 /// </summary>
 [IntegrationTest]
 [Trait("Category", "Integration")]
@@ -25,6 +25,7 @@ public class TablebaseApiIntegrationTests : IntegrationTestBase
 
     // KPK simple - White: Ke1, Pe2; Black: Ke8
     private const string SimpleKpkFen = "4k3/8/8/8/8/8/4P3/4K3 w - - 0 1";
+
     [Fact]
     public async Task LookupAsync_WithKqkEndgame_ReturnsWinningPosition()
     {
@@ -130,5 +131,4 @@ public class TablebaseApiIntegrationTests : IntegrationTestBase
         result.Should().NotBeNull();
         result.Category.Should().NotBeNullOrEmpty();
     }
-
 }

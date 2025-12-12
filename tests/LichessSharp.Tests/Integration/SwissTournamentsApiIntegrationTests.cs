@@ -1,15 +1,13 @@
 using FluentAssertions;
-
 using LichessSharp.Api.Contracts;
 using LichessSharp.Models.Games;
-
 using Xunit;
 
 namespace LichessSharp.Tests.Integration;
 
 /// <summary>
-/// Dedicated integration tests for the Swiss Tournaments API.
-/// These tests make real HTTP calls to Lichess.
+///     Dedicated integration tests for the Swiss Tournaments API.
+///     These tests make real HTTP calls to Lichess.
 /// </summary>
 [IntegrationTest]
 [Trait("Category", "Integration")]
@@ -17,21 +15,19 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
 {
     // Known team that hosts Swiss tournaments
     private const string TestTeamId = "lichess-swiss";
+
     [Fact]
     public async Task GetAsync_WithValidId_ReturnsTournament()
     {
         // First find a valid Swiss tournament
         SwissTournament? tournament = null;
-        await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, max: 1))
+        await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, 1))
         {
             tournament = t;
             break;
         }
 
-        if (tournament == null)
-        {
-            return; // Skip if no tournaments available
-        }
+        if (tournament == null) return; // Skip if no tournaments available
 
         // Act
         var result = await Client.SwissTournaments.GetAsync(tournament.Id);
@@ -47,16 +43,13 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
     {
         // Find a tournament
         SwissTournament? tournament = null;
-        await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, max: 1))
+        await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, 1))
         {
             tournament = t;
             break;
         }
 
-        if (tournament == null)
-        {
-            return;
-        }
+        if (tournament == null) return;
 
         // Act
         var result = await Client.SwissTournaments.GetAsync(tournament.Id);
@@ -73,7 +66,7 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
     {
         // Act
         var tournaments = new List<SwissTournament>();
-        await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, max: 5))
+        await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, 5))
         {
             tournaments.Add(t);
             if (tournaments.Count >= 5) break;
@@ -92,7 +85,7 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
     public async Task StreamTeamTournamentsAsync_TournamentsHaveValidStatus()
     {
         // Act
-        await foreach (var tournament in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, max: 10))
+        await foreach (var tournament in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, 10))
         {
             // Assert - Status should be one of the valid values
             tournament.Status.Should().BeOneOf("created", "started", "finished");
@@ -105,23 +98,18 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
     {
         // Find a finished tournament
         SwissTournament? finishedTournament = null;
-        await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, max: 20))
-        {
+        await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, 20))
             if (t.Status == "finished")
             {
                 finishedTournament = t;
                 break;
             }
-        }
 
-        if (finishedTournament == null)
-        {
-            return;
-        }
+        if (finishedTournament == null) return;
 
         // Act
         var results = new List<SwissPlayerResult>();
-        await foreach (var result in Client.SwissTournaments.StreamResultsAsync(finishedTournament.Id, nb: 10))
+        await foreach (var result in Client.SwissTournaments.StreamResultsAsync(finishedTournament.Id, 10))
         {
             results.Add(result);
             if (results.Count >= 10) break;
@@ -141,23 +129,18 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
     {
         // Find a finished tournament
         SwissTournament? finishedTournament = null;
-        await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, max: 20))
-        {
+        await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, 20))
             if (t.Status == "finished")
             {
                 finishedTournament = t;
                 break;
             }
-        }
 
-        if (finishedTournament == null)
-        {
-            return;
-        }
+        if (finishedTournament == null) return;
 
         // Act
         var results = new List<SwissPlayerResult>();
-        await foreach (var result in Client.SwissTournaments.StreamResultsAsync(finishedTournament.Id, nb: 10))
+        await foreach (var result in Client.SwissTournaments.StreamResultsAsync(finishedTournament.Id, 10))
         {
             results.Add(result);
             if (results.Count >= 10) break;
@@ -165,12 +148,8 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
 
         // Assert - Results should be ordered by rank
         if (results.Count > 1)
-        {
-            for (int i = 1; i < results.Count; i++)
-            {
+            for (var i = 1; i < results.Count; i++)
                 results[i].Rank.Should().BeGreaterThanOrEqualTo(results[i - 1].Rank);
-            }
-        }
     }
 
     [Fact]
@@ -178,19 +157,14 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
     {
         // Find a finished tournament
         SwissTournament? finishedTournament = null;
-        await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, max: 20))
-        {
+        await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, 20))
             if (t.Status == "finished" && t.NbOngoing == 0)
             {
                 finishedTournament = t;
                 break;
             }
-        }
 
-        if (finishedTournament == null)
-        {
-            return;
-        }
+        if (finishedTournament == null) return;
 
         // Act
         var games = new List<GameJson>();
@@ -202,10 +176,7 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
 
         // Assert
         games.Should().NotBeEmpty("Finished tournaments should have games");
-        games.Should().AllSatisfy(g =>
-        {
-            g.Id.Should().NotBeNullOrEmpty();
-        });
+        games.Should().AllSatisfy(g => { g.Id.Should().NotBeNullOrEmpty(); });
     }
 
     [Fact]
@@ -213,19 +184,14 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
     {
         // Find a finished tournament
         SwissTournament? finishedTournament = null;
-        await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, max: 20))
-        {
+        await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, 20))
             if (t.Status == "finished")
             {
                 finishedTournament = t;
                 break;
             }
-        }
 
-        if (finishedTournament == null)
-        {
-            return;
-        }
+        if (finishedTournament == null) return;
 
         // Act
         var trf = await Client.SwissTournaments.ExportTrfAsync(finishedTournament.Id);
@@ -258,19 +224,14 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
     {
         // Find a created (not started) tournament
         SwissTournament? createdTournament = null;
-        await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, max: 20))
-        {
+        await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, 20))
             if (t.Status == "created")
             {
                 createdTournament = t;
                 break;
             }
-        }
 
-        if (createdTournament == null)
-        {
-            return;
-        }
+        if (createdTournament == null) return;
 
         // Act & Assert
         await Assert.ThrowsAnyAsync<Exception>(async () =>
@@ -282,20 +243,16 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
     {
         // Find any tournament
         SwissTournament? tournament = null;
-        await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, max: 1))
+        await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, 1))
         {
             tournament = t;
             break;
         }
 
-        if (tournament == null)
-        {
-            return;
-        }
+        if (tournament == null) return;
 
         // Act & Assert
         await Assert.ThrowsAnyAsync<Exception>(async () =>
             await Client.SwissTournaments.PauseOrWithdrawAsync(tournament.Id));
     }
-
 }

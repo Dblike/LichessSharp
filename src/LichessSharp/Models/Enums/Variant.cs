@@ -3,19 +3,17 @@ using System.Text.Json.Serialization;
 namespace LichessSharp.Models.Enums;
 
 /// <summary>
-/// Chess variants supported by Lichess.
-/// Maps to the VariantKey schema in the Lichess API.
+///     Chess variants supported by Lichess.
+///     Maps to the VariantKey schema in the Lichess API.
 /// </summary>
 [JsonConverter(typeof(JsonStringEnumConverter<Variant>))]
 public enum Variant
 {
     /// <summary>Standard chess.</summary>
-    [JsonStringEnumMemberName("standard")]
-    Standard,
+    [JsonStringEnumMemberName("standard")] Standard,
 
     /// <summary>Chess960 (Fischer Random).</summary>
-    [JsonStringEnumMemberName("chess960")]
-    Chess960,
+    [JsonStringEnumMemberName("chess960")] Chess960,
 
     /// <summary>Crazyhouse variant.</summary>
     [JsonStringEnumMemberName("crazyhouse")]
@@ -26,12 +24,10 @@ public enum Variant
     Antichess,
 
     /// <summary>Atomic chess variant.</summary>
-    [JsonStringEnumMemberName("atomic")]
-    Atomic,
+    [JsonStringEnumMemberName("atomic")] Atomic,
 
     /// <summary>Horde variant.</summary>
-    [JsonStringEnumMemberName("horde")]
-    Horde,
+    [JsonStringEnumMemberName("horde")] Horde,
 
     /// <summary>King of the Hill variant.</summary>
     [JsonStringEnumMemberName("kingOfTheHill")]

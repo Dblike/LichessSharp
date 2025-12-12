@@ -9,14 +9,15 @@ namespace LichessSharp.Tests.Api;
 
 public class FideApiTests
 {
-    private readonly Mock<ILichessHttpClient> _httpClientMock;
     private readonly FideApi _fideApi;
+    private readonly Mock<ILichessHttpClient> _httpClientMock;
 
     public FideApiTests()
     {
         _httpClientMock = new Mock<ILichessHttpClient>();
         _fideApi = new FideApi(_httpClientMock.Object);
     }
+
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -252,20 +253,22 @@ public class FideApiTests
         _httpClientMock.Verify(x => x.GetAsync<List<FidePlayer>>(
             It.Is<string>(s =>
                 s.Contains("%C3%BC") && // ü encoded
-                s.Contains("%26")),     // & encoded
+                s.Contains("%26")), // & encoded
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
-    private static FidePlayer CreateTestFidePlayer(int id, string name) => new()
+    private static FidePlayer CreateTestFidePlayer(int id, string name)
     {
-        Id = id,
-        Name = name,
-        Title = "GM",
-        Federation = "NOR",
-        Year = 1990,
-        Standard = 2830,
-        Rapid = 2823,
-        Blitz = 2886
-    };
-
+        return new FidePlayer
+        {
+            Id = id,
+            Name = name,
+            Title = "GM",
+            Federation = "NOR",
+            Year = 1990,
+            Standard = 2830,
+            Rapid = 2823,
+            Blitz = 2886
+        };
+    }
 }

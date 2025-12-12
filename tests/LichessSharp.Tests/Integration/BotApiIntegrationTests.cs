@@ -1,15 +1,13 @@
 using FluentAssertions;
-
 using LichessSharp.Api.Contracts;
-
 using Xunit;
 
 namespace LichessSharp.Tests.Integration;
 
 /// <summary>
-/// Integration tests for the Bot API.
-/// These tests make real HTTP calls to Lichess.
-/// Note: Most Bot API endpoints require authentication.
+///     Integration tests for the Bot API.
+///     These tests make real HTTP calls to Lichess.
+///     Note: Most Bot API endpoints require authentication.
 /// </summary>
 [IntegrationTest]
 [Trait("Category", "Integration")]
@@ -22,13 +20,10 @@ public class BotApiIntegrationTests : IntegrationTestBase
         var bots = new List<BotUser>();
 
         // Act
-        await foreach (var bot in Client.Bot.GetOnlineBotsAsync(count: 10))
+        await foreach (var bot in Client.Bot.GetOnlineBotsAsync(10))
         {
             bots.Add(bot);
-            if (bots.Count >= 5)
-            {
-                break;
-            }
+            if (bots.Count >= 5) break;
         }
 
         // Assert
@@ -48,10 +43,7 @@ public class BotApiIntegrationTests : IntegrationTestBase
         await foreach (var bot in Client.Bot.GetOnlineBotsAsync())
         {
             bots.Add(bot);
-            if (bots.Count >= 20)
-            {
-                break;
-            }
+            if (bots.Count >= 20) break;
         }
 
         // Assert
@@ -65,7 +57,7 @@ public class BotApiIntegrationTests : IntegrationTestBase
         BotUser? firstBot = null;
 
         // Act
-        await foreach (var bot in Client.Bot.GetOnlineBotsAsync(count: 5))
+        await foreach (var bot in Client.Bot.GetOnlineBotsAsync(5))
         {
             firstBot = bot;
             break;
@@ -86,10 +78,7 @@ public class BotApiIntegrationTests : IntegrationTestBase
         var bots = new List<BotUser>();
 
         // Act
-        await foreach (var bot in Client.Bot.GetOnlineBotsAsync(count: 3))
-        {
-            bots.Add(bot);
-        }
+        await foreach (var bot in Client.Bot.GetOnlineBotsAsync(3)) bots.Add(bot);
 
         // Assert
         // We requested max 3, so we should get at most 3 (could be fewer if fewer bots online)

@@ -5,8 +5,8 @@ using Xunit;
 namespace LichessSharp.Tests.Integration;
 
 /// <summary>
-/// Integration tests for the Users API.
-/// These tests use real Lichess usernames from the OpenAPI spec examples.
+///     Integration tests for the Users API.
+///     These tests use real Lichess usernames from the OpenAPI spec examples.
 /// </summary>
 [IntegrationTest]
 [Trait("Category", "Integration")]
@@ -16,6 +16,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
     private const string ThibaultUsername = "thibault";
     private const string Maia1Username = "maia1";
     private const string Maia5Username = "maia5";
+
     [Fact]
     public async Task GetAsync_WithValidUsername_ReturnsUserProfile()
     {
@@ -95,8 +96,8 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         leaderboards.Should().NotBeEmpty();
         // Should contain common perf types
         leaderboards.Keys.Should().Contain(k => k.Contains("bullet", StringComparison.OrdinalIgnoreCase) ||
-                                                 k.Contains("blitz", StringComparison.OrdinalIgnoreCase) ||
-                                                 k.Contains("rapid", StringComparison.OrdinalIgnoreCase));
+                                                k.Contains("blitz", StringComparison.OrdinalIgnoreCase) ||
+                                                k.Contains("rapid", StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]
@@ -135,10 +136,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         // Assert
         history.Should().NotBeNull();
         history.Should().NotBeEmpty();
-        history.Should().AllSatisfy(h =>
-        {
-            h.Name.Should().NotBeNullOrEmpty();
-        });
+        history.Should().AllSatisfy(h => { h.Name.Should().NotBeNullOrEmpty(); });
     }
 
     [Fact]
@@ -217,7 +215,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
     public async Task GetCrosstableAsync_WithMatchupOption_ReturnsCrosstable()
     {
         // Act
-        var crosstable = await Client.Users.GetCrosstableAsync(ThibaultUsername, "DrNykterstein", matchup: true);
+        var crosstable = await Client.Users.GetCrosstableAsync(ThibaultUsername, "DrNykterstein", true);
 
         // Assert
         crosstable.Should().NotBeNull();
@@ -234,5 +232,4 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         streamers.Should().NotBeNull();
         // Streamers list might be empty if no one is streaming
     }
-
 }

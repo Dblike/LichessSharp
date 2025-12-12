@@ -11,7 +11,7 @@ using LichessSharp.Models.Users;
 namespace LichessSharp.Serialization;
 
 /// <summary>
-/// Source-generated JSON serialization context for AOT compatibility.
+///     Source-generated JSON serialization context for AOT compatibility.
 /// </summary>
 [JsonSourceGenerationOptions(
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,

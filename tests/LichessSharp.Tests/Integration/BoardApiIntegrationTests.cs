@@ -1,16 +1,14 @@
 using FluentAssertions;
-
 using LichessSharp.Api.Contracts;
 using LichessSharp.Exceptions;
-
 using Xunit;
 
 namespace LichessSharp.Tests.Integration;
 
 /// <summary>
-/// Integration tests for the Board API.
-/// These tests make real HTTP calls to Lichess.
-/// Note: All Board API endpoints require authentication.
+///     Integration tests for the Board API.
+///     These tests make real HTTP calls to Lichess.
+///     Note: All Board API endpoints require authentication.
 /// </summary>
 [IntegrationTest]
 [Trait("Category", "Integration")]
@@ -22,10 +20,7 @@ public class BoardApiIntegrationTests : IntegrationTestBase
         // Act & Assert
         var act = async () =>
         {
-            await foreach (var _ in Client.Board.StreamEventsAsync())
-            {
-                break;
-            }
+            await foreach (var _ in Client.Board.StreamEventsAsync()) break;
         };
 
         // Should throw authentication exception for unauthenticated requests
@@ -41,10 +36,7 @@ public class BoardApiIntegrationTests : IntegrationTestBase
         // Act & Assert
         var act = async () =>
         {
-            await foreach (var _ in Client.Board.StreamGameAsync(gameId))
-            {
-                break;
-            }
+            await foreach (var _ in Client.Board.StreamGameAsync(gameId)) break;
         };
 
         // Should throw 401 for unauthenticated requests
@@ -119,7 +111,7 @@ public class BoardApiIntegrationTests : IntegrationTestBase
         var gameId = "somegameid";
 
         // Act & Assert
-        var act = async () => await Client.Board.HandleDrawAsync(gameId, accept: true);
+        var act = async () => await Client.Board.HandleDrawAsync(gameId, true);
 
         await act.Should().ThrowAsync<LichessException>();
     }
@@ -131,7 +123,7 @@ public class BoardApiIntegrationTests : IntegrationTestBase
         var gameId = "somegameid";
 
         // Act & Assert
-        var act = async () => await Client.Board.HandleTakebackAsync(gameId, accept: true);
+        var act = async () => await Client.Board.HandleTakebackAsync(gameId, true);
 
         await act.Should().ThrowAsync<LichessException>();
     }
@@ -174,10 +166,7 @@ public class BoardApiIntegrationTests : IntegrationTestBase
         // Act & Assert
         var act = async () =>
         {
-            await foreach (var _ in Client.Board.SeekAsync(options))
-            {
-                break;
-            }
+            await foreach (var _ in Client.Board.SeekAsync(options)) break;
         };
 
         // Lichess may return auth error or validation error depending on endpoint behavior

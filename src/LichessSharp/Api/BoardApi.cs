@@ -1,6 +1,5 @@
 using System.Runtime.CompilerServices;
 using System.Text;
-
 using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
 using LichessSharp.Models.Common;
@@ -8,35 +7,35 @@ using LichessSharp.Models.Common;
 namespace LichessSharp.Api;
 
 /// <summary>
-/// Implementation of the Board API.
+///     Implementation of the Board API.
 /// </summary>
 internal sealed class BoardApi(ILichessHttpClient httpClient) : IBoardApi
 {
     private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
     /// <inheritdoc />
-    public async IAsyncEnumerable<BoardAccountEvent> StreamEventsAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<BoardAccountEvent> StreamEventsAsync(
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        await foreach (var evt in _httpClient.StreamNdjsonAsync<BoardAccountEvent>("/api/stream/event", cancellationToken).ConfigureAwait(false))
-        {
-            yield return evt;
-        }
+        await foreach (var evt in _httpClient
+                           .StreamNdjsonAsync<BoardAccountEvent>("/api/stream/event", cancellationToken)
+                           .ConfigureAwait(false)) yield return evt;
     }
 
     /// <inheritdoc />
-    public async IAsyncEnumerable<BoardGameEvent> StreamGameAsync(string gameId, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<BoardGameEvent> StreamGameAsync(string gameId,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(gameId);
 
         var endpoint = $"/api/board/game/stream/{Uri.EscapeDataString(gameId)}";
-        await foreach (var evt in _httpClient.StreamNdjsonAsync<BoardGameEvent>(endpoint, cancellationToken).ConfigureAwait(false))
-        {
-            yield return evt;
-        }
+        await foreach (var evt in _httpClient.StreamNdjsonAsync<BoardGameEvent>(endpoint, cancellationToken)
+                           .ConfigureAwait(false)) yield return evt;
     }
 
     /// <inheritdoc />
-    public async Task<bool> MakeMoveAsync(string gameId, string move, bool? offeringDraw = null, CancellationToken cancellationToken = default)
+    public async Task<bool> MakeMoveAsync(string gameId, string move, bool? offeringDraw = null,
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(gameId);
         ArgumentException.ThrowIfNullOrWhiteSpace(move);
@@ -58,7 +57,8 @@ internal sealed class BoardApi(ILichessHttpClient httpClient) : IBoardApi
     }
 
     /// <inheritdoc />
-    public async Task<IReadOnlyList<ChatMessage>> GetChatAsync(string gameId, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<ChatMessage>> GetChatAsync(string gameId,
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(gameId);
 
@@ -67,7 +67,8 @@ internal sealed class BoardApi(ILichessHttpClient httpClient) : IBoardApi
     }
 
     /// <inheritdoc />
-    public async Task<bool> WriteChatAsync(string gameId, ChatRoom room, string text, CancellationToken cancellationToken = default)
+    public async Task<bool> WriteChatAsync(string gameId, ChatRoom room, string text,
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(gameId);
         ArgumentException.ThrowIfNullOrWhiteSpace(text);
@@ -113,7 +114,8 @@ internal sealed class BoardApi(ILichessHttpClient httpClient) : IBoardApi
     }
 
     /// <inheritdoc />
-    public async Task<bool> HandleTakebackAsync(string gameId, bool accept, CancellationToken cancellationToken = default)
+    public async Task<bool> HandleTakebackAsync(string gameId, bool accept,
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(gameId);
 
@@ -153,16 +155,17 @@ internal sealed class BoardApi(ILichessHttpClient httpClient) : IBoardApi
     }
 
     /// <inheritdoc />
-    public async IAsyncEnumerable<SeekResult> SeekAsync(SeekOptions options, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<SeekResult> SeekAsync(SeekOptions options,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(options);
 
         var content = BuildSeekContent(options);
-        await foreach (var result in _httpClient.StreamNdjsonPostAsync<SeekResult>("/api/board/seek", content, cancellationToken).ConfigureAwait(false))
-        {
-            yield return result;
-        }
+        await foreach (var result in _httpClient
+                           .StreamNdjsonPostAsync<SeekResult>("/api/board/seek", content, cancellationToken)
+                           .ConfigureAwait(false)) yield return result;
     }
+
     private static FormUrlEncodedContent BuildSeekContent(SeekOptions options)
     {
         var parameters = new List<KeyValuePair<string, string>>
@@ -172,35 +175,23 @@ internal sealed class BoardApi(ILichessHttpClient httpClient) : IBoardApi
             new("increment", options.Increment.ToString())
         };
 
-        if (options.Days.HasValue)
-        {
-            parameters.Add(new("days", options.Days.Value.ToString()));
-        }
-        if (!string.IsNullOrEmpty(options.Variant))
-        {
-            parameters.Add(new("variant", options.Variant));
-        }
-        if (options.Color.HasValue)
-        {
-            parameters.Add(new("color", GetColorString(options.Color.Value)));
-        }
+        if (options.Days.HasValue) parameters.Add(new("days", options.Days.Value.ToString()));
+        if (!string.IsNullOrEmpty(options.Variant)) parameters.Add(new("variant", options.Variant));
+        if (options.Color.HasValue) parameters.Add(new("color", GetColorString(options.Color.Value)));
         if (options.RatingMin.HasValue)
-        {
             parameters.Add(new("ratingRange", $"{options.RatingMin.Value}-{options.RatingMax ?? 9999}"));
-        }
-        else if (options.RatingMax.HasValue)
-        {
-            parameters.Add(new("ratingRange", $"0-{options.RatingMax.Value}"));
-        }
+        else if (options.RatingMax.HasValue) parameters.Add(new("ratingRange", $"0-{options.RatingMax.Value}"));
 
         return new FormUrlEncodedContent(parameters);
     }
 
-    private static string GetColorString(ChallengeColor color) => color switch
+    private static string GetColorString(ChallengeColor color)
     {
-        ChallengeColor.White => "white",
-        ChallengeColor.Black => "black",
-        _ => "random"
-    };
-
+        return color switch
+        {
+            ChallengeColor.White => "white",
+            ChallengeColor.Black => "black",
+            _ => "random"
+        };
+    }
 }

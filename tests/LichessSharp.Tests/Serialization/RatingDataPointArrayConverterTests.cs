@@ -1,10 +1,7 @@
 using System.Text.Json;
-
 using FluentAssertions;
-
 using LichessSharp.Api.Contracts;
 using LichessSharp.Serialization.Converters;
-
 using Xunit;
 
 namespace LichessSharp.Tests.Serialization;
@@ -150,11 +147,11 @@ public class RatingHistoryDeserializationTests
     {
         // Arrange - this mimics the actual Lichess API response format
         var json = """
-        {
-            "name": "Bullet",
-            "points": [[2023, 0, 1, 2800], [2023, 5, 15, 2850]]
-        }
-        """;
+                   {
+                       "name": "Bullet",
+                       "points": [[2023, 0, 1, 2800], [2023, 5, 15, 2850]]
+                   }
+                   """;
 
         var options = new JsonSerializerOptions
         {
@@ -179,21 +176,21 @@ public class RatingHistoryDeserializationTests
     {
         // Arrange - this mimics the actual Lichess API response for rating-history endpoint
         var json = """
-        [
-            {
-                "name": "Bullet",
-                "points": [[2023, 0, 1, 2800]]
-            },
-            {
-                "name": "Blitz",
-                "points": [[2023, 0, 1, 2750], [2023, 1, 15, 2760]]
-            },
-            {
-                "name": "Rapid",
-                "points": []
-            }
-        ]
-        """;
+                   [
+                       {
+                           "name": "Bullet",
+                           "points": [[2023, 0, 1, 2800]]
+                       },
+                       {
+                           "name": "Blitz",
+                           "points": [[2023, 0, 1, 2750], [2023, 1, 15, 2760]]
+                       },
+                       {
+                           "name": "Rapid",
+                           "points": []
+                       }
+                   ]
+                   """;
 
         var options = new JsonSerializerOptions
         {

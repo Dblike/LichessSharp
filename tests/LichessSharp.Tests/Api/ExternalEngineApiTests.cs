@@ -1,26 +1,24 @@
 using FluentAssertions;
-
 using LichessSharp.Api;
 using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
-
 using Moq;
-
 using Xunit;
 
 namespace LichessSharp.Tests.Api;
 
 public class ExternalEngineApiTests
 {
-    private readonly Mock<ILichessHttpClient> _httpClientMock;
     private readonly ExternalEngineApi _api;
     private readonly Uri _engineBaseAddress = new("https://engine.lichess.ovh");
+    private readonly Mock<ILichessHttpClient> _httpClientMock;
 
     public ExternalEngineApiTests()
     {
         _httpClientMock = new Mock<ILichessHttpClient>();
         _api = new ExternalEngineApi(_httpClientMock.Object, _engineBaseAddress);
     }
+
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -74,7 +72,8 @@ public class ExternalEngineApiTests
         var expectedEngine = CreateTestEngine("new-engine");
 
         _httpClientMock
-            .Setup(x => x.PostJsonAsync<ExternalEngine>(It.IsAny<string>(), It.IsAny<object>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostJsonAsync<ExternalEngine>(It.IsAny<string>(), It.IsAny<object>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedEngine);
 
         // Act
@@ -227,7 +226,8 @@ public class ExternalEngineApiTests
         var expectedEngine = CreateTestEngine(engineId);
 
         _httpClientMock
-            .Setup(x => x.PutJsonAsync<ExternalEngine>(It.IsAny<string>(), It.IsAny<object>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PutJsonAsync<ExternalEngine>(It.IsAny<string>(), It.IsAny<object>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedEngine);
 
         // Act
@@ -374,33 +374,41 @@ public class ExternalEngineApiTests
         await act.Should().ThrowAsync<ArgumentNullException>();
     }
 
-    private static ExternalEngine CreateTestEngine(string id) => new()
+    private static ExternalEngine CreateTestEngine(string id)
     {
-        Id = id,
-        Name = "Test Engine",
-        ClientSecret = "test-client-secret",
-        UserId = "testuser",
-        MaxThreads = 8,
-        MaxHash = 2048,
-        Variants = ["chess"],
-        ProviderData = null
-    };
-
-    private static ExternalEngineRegistration CreateValidRegistration() => new()
-    {
-        Name = "Test Engine",
-        MaxThreads = 8,
-        MaxHash = 2048,
-        ProviderSecret = "this-is-a-long-enough-secret"
-    };
-
-    private static EngineAnalysisRequest CreateValidAnalysisRequest() => new()
-    {
-        ClientSecret = "test-client-secret",
-        Work = new EngineAnalysisWork
+        return new ExternalEngine
         {
-            InitialFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-        }
-    };
+            Id = id,
+            Name = "Test Engine",
+            ClientSecret = "test-client-secret",
+            UserId = "testuser",
+            MaxThreads = 8,
+            MaxHash = 2048,
+            Variants = ["chess"],
+            ProviderData = null
+        };
+    }
 
+    private static ExternalEngineRegistration CreateValidRegistration()
+    {
+        return new ExternalEngineRegistration
+        {
+            Name = "Test Engine",
+            MaxThreads = 8,
+            MaxHash = 2048,
+            ProviderSecret = "this-is-a-long-enough-secret"
+        };
+    }
+
+    private static EngineAnalysisRequest CreateValidAnalysisRequest()
+    {
+        return new EngineAnalysisRequest
+        {
+            ClientSecret = "test-client-secret",
+            Work = new EngineAnalysisWork
+            {
+                InitialFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+            }
+        };
+    }
 }

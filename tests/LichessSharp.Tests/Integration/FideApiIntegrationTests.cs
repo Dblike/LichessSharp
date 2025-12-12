@@ -4,8 +4,8 @@ using Xunit;
 namespace LichessSharp.Tests.Integration;
 
 /// <summary>
-/// Integration tests for the FIDE API.
-/// These tests use real FIDE player IDs from well-known players.
+///     Integration tests for the FIDE API.
+///     These tests use real FIDE player IDs from well-known players.
 /// </summary>
 [IntegrationTest]
 [Trait("Category", "Integration")]
@@ -14,6 +14,7 @@ public class FideApiIntegrationTests : IntegrationTestBase
     // Well-known FIDE player IDs
     private const int MagnusCarlsenFideId = 1503014;
     private const int FabianoCaruanaFideId = 2020009;
+
     [Fact]
     public async Task GetPlayerAsync_WithMagnusCarlsen_ReturnsPlayer()
     {
@@ -90,5 +91,4 @@ public class FideApiIntegrationTests : IntegrationTestBase
         players.Should().NotBeNull();
         players.Should().Contain(p => p.Id == MagnusCarlsenFideId);
     }
-
 }

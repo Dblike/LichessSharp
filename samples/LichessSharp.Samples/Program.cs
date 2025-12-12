@@ -21,6 +21,7 @@ else
     Console.WriteLine("[INFO] LICHESS_TEST_TOKEN not set - some samples will be limited");
     Console.WriteLine("       Set the environment variable to enable all features.");
 }
+
 Console.WriteLine();
 
 while (true)
@@ -46,15 +47,12 @@ while (true)
     {
         Console.WriteLine();
         Console.WriteLine($"[ERROR] Sample failed: {ex.Message}");
-        if (ex.InnerException != null)
-        {
-            Console.WriteLine($"        Inner: {ex.InnerException.Message}");
-        }
+        if (ex.InnerException != null) Console.WriteLine($"        Inner: {ex.InnerException.Message}");
     }
 
     Console.WriteLine();
     Console.WriteLine("Press any key to return to menu...");
-    Console.ReadKey(intercept: true);
+    Console.ReadKey(true);
     Console.Clear();
 }
 

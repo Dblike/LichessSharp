@@ -1,16 +1,14 @@
 using FluentAssertions;
-
 using LichessSharp.Api.Contracts;
 using LichessSharp.Exceptions;
 using LichessSharp.Models.Games;
-
 using Xunit;
 
 namespace LichessSharp.Tests.Integration;
 
 /// <summary>
-/// Dedicated integration tests for the Arena Tournaments API.
-/// These tests make real HTTP calls to Lichess.
+///     Dedicated integration tests for the Arena Tournaments API.
+///     These tests make real HTTP calls to Lichess.
 /// </summary>
 [IntegrationTest]
 [Trait("Category", "Integration")]
@@ -18,6 +16,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
 {
     // Known team that hosts tournaments
     private const string TestTeamId = "lichess-swiss";
+
     [Fact]
     public async Task GetCurrentAsync_ReturnsCurrentTournaments()
     {
@@ -39,8 +38,8 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
 
         // Assert
         var anyTournament = result.Started.FirstOrDefault()
-            ?? result.Created.FirstOrDefault()
-            ?? result.Finished.FirstOrDefault();
+                            ?? result.Created.FirstOrDefault()
+                            ?? result.Finished.FirstOrDefault();
 
         anyTournament.Should().NotBeNull();
         anyTournament!.Id.Should().NotBeNullOrWhiteSpace();
@@ -55,10 +54,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
 
         // Assert - Started tournaments have status 20 (integer)
         result.Started.Should().NotBeEmpty("Lichess should have ongoing tournaments");
-        foreach (var tournament in result.Started)
-        {
-            tournament.Status.Should().BeGreaterThan(0);
-        }
+        foreach (var tournament in result.Started) tournament.Status.Should().BeGreaterThan(0);
     }
 
     [Fact]
@@ -67,13 +63,10 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
         // First get current tournaments
         var current = await Client.ArenaTournaments.GetCurrentAsync();
         var anyTournament = current.Started.FirstOrDefault()
-            ?? current.Created.FirstOrDefault()
-            ?? current.Finished.FirstOrDefault();
+                            ?? current.Created.FirstOrDefault()
+                            ?? current.Finished.FirstOrDefault();
 
-        if (anyTournament == null)
-        {
-            return;
-        }
+        if (anyTournament == null) return;
 
         // Act
         var result = await Client.ArenaTournaments.GetAsync(anyTournament.Id);
@@ -91,10 +84,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
         var current = await Client.ArenaTournaments.GetCurrentAsync();
         var tournament = current.Started.FirstOrDefault() ?? current.Finished.FirstOrDefault();
 
-        if (tournament == null)
-        {
-            return;
-        }
+        if (tournament == null) return;
 
         // Act
         var result = await Client.ArenaTournaments.GetAsync(tournament.Id);
@@ -114,14 +104,11 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
         var current = await Client.ArenaTournaments.GetCurrentAsync();
         var finishedTournament = current.Finished.FirstOrDefault();
 
-        if (finishedTournament == null)
-        {
-            return;
-        }
+        if (finishedTournament == null) return;
 
         // Act
         var results = new List<ArenaPlayerResult>();
-        await foreach (var result in Client.ArenaTournaments.StreamResultsAsync(finishedTournament.Id, nb: 10))
+        await foreach (var result in Client.ArenaTournaments.StreamResultsAsync(finishedTournament.Id, 10))
         {
             results.Add(result);
             if (results.Count >= 10) break;
@@ -143,14 +130,11 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
         var current = await Client.ArenaTournaments.GetCurrentAsync();
         var finishedTournament = current.Finished.FirstOrDefault();
 
-        if (finishedTournament == null)
-        {
-            return;
-        }
+        if (finishedTournament == null) return;
 
         // Act
         var results = new List<ArenaPlayerResult>();
-        await foreach (var result in Client.ArenaTournaments.StreamResultsAsync(finishedTournament.Id, nb: 10))
+        await foreach (var result in Client.ArenaTournaments.StreamResultsAsync(finishedTournament.Id, 10))
         {
             results.Add(result);
             if (results.Count >= 10) break;
@@ -158,12 +142,8 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
 
         // Assert - Results should be ordered by rank
         if (results.Count > 1)
-        {
-            for (int i = 1; i < results.Count; i++)
-            {
+            for (var i = 1; i < results.Count; i++)
                 results[i].Rank.Should().BeGreaterThanOrEqualTo(results[i - 1].Rank);
-            }
-        }
     }
 
     [Fact]
@@ -173,14 +153,11 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
         var current = await Client.ArenaTournaments.GetCurrentAsync();
         var finishedTournament = current.Finished.FirstOrDefault();
 
-        if (finishedTournament == null)
-        {
-            return;
-        }
+        if (finishedTournament == null) return;
 
         // Act
         var results = new List<ArenaPlayerResult>();
-        await foreach (var result in Client.ArenaTournaments.StreamResultsAsync(finishedTournament.Id, nb: 5, sheet: true))
+        await foreach (var result in Client.ArenaTournaments.StreamResultsAsync(finishedTournament.Id, 5, true))
         {
             results.Add(result);
             if (results.Count >= 5) break;
@@ -197,10 +174,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
         var current = await Client.ArenaTournaments.GetCurrentAsync();
         var finishedTournament = current.Finished.FirstOrDefault();
 
-        if (finishedTournament == null)
-        {
-            return;
-        }
+        if (finishedTournament == null) return;
 
         // Act
         var games = new List<GameJson>();
@@ -212,10 +186,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
 
         // Assert
         games.Should().NotBeEmpty("Finished tournaments should have games");
-        games.Should().AllSatisfy(g =>
-        {
-            g.Id.Should().NotBeNullOrEmpty();
-        });
+        games.Should().AllSatisfy(g => { g.Id.Should().NotBeNullOrEmpty(); });
     }
 
     [Fact]
@@ -227,13 +198,11 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
 
         // Look for a team battle (has teamBattle property set)
         var teamBattle = current.Started.FirstOrDefault(t => t.TeamBattle != null)
-            ?? current.Finished.FirstOrDefault(t => t.TeamBattle != null);
+                         ?? current.Finished.FirstOrDefault(t => t.TeamBattle != null);
 
         if (teamBattle == null)
-        {
             // No team battle available - this is acceptable
             return;
-        }
 
         // Act
         var standing = await Client.ArenaTournaments.GetTeamStandingAsync(teamBattle.Id);
@@ -266,10 +235,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
         }
 
         // Assert
-        foreach (var tournament in tournaments)
-        {
-            tournament.Id.Should().NotBeNullOrEmpty();
-        }
+        foreach (var tournament in tournaments) tournament.Id.Should().NotBeNullOrEmpty();
     }
 
     [Fact]
@@ -281,7 +247,8 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
         var tournaments = new List<ArenaTournamentSummary>();
         try
         {
-            await foreach (var tournament in Client.ArenaTournaments.StreamCreatedByAsync(username, status: ArenaStatusFilter.Finished))
+            await foreach (var tournament in Client.ArenaTournaments.StreamCreatedByAsync(username,
+                               ArenaStatusFilter.Finished))
             {
                 tournaments.Add(tournament);
                 if (tournaments.Count >= 3) break;
@@ -307,7 +274,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
         var tournaments = new List<ArenaPlayedTournament>();
         try
         {
-            await foreach (var tournament in Client.ArenaTournaments.StreamPlayedByAsync(username, nb: 5))
+            await foreach (var tournament in Client.ArenaTournaments.StreamPlayedByAsync(username, 5))
             {
                 tournaments.Add(tournament);
                 if (tournaments.Count >= 5) break;
@@ -333,7 +300,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
         var tournaments = new List<ArenaTournamentSummary>();
         try
         {
-            await foreach (var tournament in Client.ArenaTournaments.StreamTeamTournamentsAsync(TestTeamId, max: 5))
+            await foreach (var tournament in Client.ArenaTournaments.StreamTeamTournamentsAsync(TestTeamId, 5))
             {
                 tournaments.Add(tournament);
                 if (tournaments.Count >= 5) break;
@@ -345,10 +312,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
         }
 
         // Assert
-        foreach (var tournament in tournaments)
-        {
-            tournament.Id.Should().NotBeNullOrEmpty();
-        }
+        foreach (var tournament in tournaments) tournament.Id.Should().NotBeNullOrEmpty();
     }
 
     [Fact]
@@ -374,10 +338,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
         var current = await Client.ArenaTournaments.GetCurrentAsync();
         var tournament = current.Created.FirstOrDefault() ?? current.Started.FirstOrDefault();
 
-        if (tournament == null)
-        {
-            return;
-        }
+        if (tournament == null) return;
 
         // Act & Assert
         await Assert.ThrowsAnyAsync<Exception>(async () =>
@@ -391,10 +352,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
         var current = await Client.ArenaTournaments.GetCurrentAsync();
         var tournament = current.Started.FirstOrDefault() ?? current.Created.FirstOrDefault();
 
-        if (tournament == null)
-        {
-            return;
-        }
+        if (tournament == null) return;
 
         // Act & Assert
         await Assert.ThrowsAnyAsync<Exception>(async () =>
@@ -408,14 +366,10 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
         var current = await Client.ArenaTournaments.GetCurrentAsync();
         var tournament = current.Started.FirstOrDefault();
 
-        if (tournament == null)
-        {
-            return;
-        }
+        if (tournament == null) return;
 
         // Act & Assert
         await Assert.ThrowsAnyAsync<Exception>(async () =>
             await Client.ArenaTournaments.TerminateAsync(tournament.Id));
     }
-
 }

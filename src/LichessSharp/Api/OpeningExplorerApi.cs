@@ -1,17 +1,18 @@
 using System.Text;
-
 using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
 
 namespace LichessSharp.Api;
 
 /// <summary>
-/// Implementation of the Opening Explorer API.
+///     Implementation of the Opening Explorer API.
 /// </summary>
 internal sealed class OpeningExplorerApi(ILichessHttpClient httpClient, Uri explorerBaseAddress) : IOpeningExplorerApi
 {
+    private readonly Uri _baseAddress =
+        explorerBaseAddress ?? throw new ArgumentNullException(nameof(explorerBaseAddress));
+
     private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-    private readonly Uri _baseAddress = explorerBaseAddress ?? throw new ArgumentNullException(nameof(explorerBaseAddress));
 
     /// <inheritdoc />
     public async Task<ExplorerResult> GetMastersAsync(
@@ -50,7 +51,8 @@ internal sealed class OpeningExplorerApi(ILichessHttpClient httpClient, Uri expl
         var url = BuildPlayerUrl(fen, player, options);
         // The player endpoint returns NDJSON with progressive updates.
         // We read all lines and return the last (most complete) result.
-        return await _httpClient.GetAbsoluteNdjsonLastAsync<ExplorerResult>(url, cancellationToken).ConfigureAwait(false);
+        return await _httpClient.GetAbsoluteNdjsonLastAsync<ExplorerResult>(url, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <inheritdoc />
@@ -59,7 +61,8 @@ internal sealed class OpeningExplorerApi(ILichessHttpClient httpClient, Uri expl
         ArgumentException.ThrowIfNullOrWhiteSpace(gameId);
 
         var url = new Uri($"{_baseAddress.ToString().TrimEnd('/')}/masters/pgn/{Uri.EscapeDataString(gameId)}");
-        return await _httpClient.GetAbsoluteStringAsync(url, "application/x-chess-pgn", cancellationToken).ConfigureAwait(false);
+        return await _httpClient.GetAbsoluteStringAsync(url, "application/x-chess-pgn", cancellationToken)
+            .ConfigureAwait(false);
     }
 
     private Uri BuildMastersUrl(string fen, ExplorerOptions? options)
@@ -109,10 +112,7 @@ internal sealed class OpeningExplorerApi(ILichessHttpClient httpClient, Uri expl
 
     private static void AppendCommonOptions(StringBuilder sb, ExplorerOptions? options)
     {
-        if (options == null)
-        {
-            return;
-        }
+        if (options == null) return;
 
         if (options.Moves.HasValue)
         {
@@ -135,10 +135,7 @@ internal sealed class OpeningExplorerApi(ILichessHttpClient httpClient, Uri expl
 
     private static void AppendMastersOptions(StringBuilder sb, ExplorerOptions? options)
     {
-        if (options == null)
-        {
-            return;
-        }
+        if (options == null) return;
 
         if (options.Since.HasValue)
         {
@@ -155,10 +152,7 @@ internal sealed class OpeningExplorerApi(ILichessHttpClient httpClient, Uri expl
 
     private static void AppendLichessOptions(StringBuilder sb, ExplorerOptions? options)
     {
-        if (options == null)
-        {
-            return;
-        }
+        if (options == null) return;
 
         if (!string.IsNullOrWhiteSpace(options.Variant))
         {

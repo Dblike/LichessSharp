@@ -11,14 +11,15 @@ namespace LichessSharp.Tests.Api;
 
 public class SwissTournamentsApiTests
 {
-    private readonly Mock<ILichessHttpClient> _httpClientMock;
     private readonly SwissTournamentsApi _api;
+    private readonly Mock<ILichessHttpClient> _httpClientMock;
 
     public SwissTournamentsApiTests()
     {
         _httpClientMock = new Mock<ILichessHttpClient>();
         _api = new SwissTournamentsApi(_httpClientMock.Object);
     }
+
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -44,7 +45,8 @@ public class SwissTournamentsApiTests
         // Assert
         result.Should().NotBeNull();
         result.Id.Should().Be(id);
-        _httpClientMock.Verify(x => x.GetAsync<SwissTournament>($"/api/swiss/{id}", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(x => x.GetAsync<SwissTournament>($"/api/swiss/{id}", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -68,14 +70,17 @@ public class SwissTournamentsApiTests
         var id = "swiss with spaces";
         var expectedResult = CreateTestTournament(id);
         _httpClientMock
-            .Setup(x => x.GetAsync<SwissTournament>(It.Is<string>(s => s.Contains("swiss%20with%20spaces")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<SwissTournament>(It.Is<string>(s => s.Contains("swiss%20with%20spaces")),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
         // Act
         await _api.GetAsync(id);
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<SwissTournament>(It.Is<string>(s => s.Contains("swiss%20with%20spaces")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<SwissTournament>(It.Is<string>(s => s.Contains("swiss%20with%20spaces")),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -92,7 +97,8 @@ public class SwissTournamentsApiTests
         };
         var expectedResult = CreateTestTournament("newSwiss");
         _httpClientMock
-            .Setup(x => x.PostAsync<SwissTournament>($"/api/swiss/new/{teamId}", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<SwissTournament>($"/api/swiss/new/{teamId}", It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
         // Act
@@ -100,7 +106,9 @@ public class SwissTournamentsApiTests
 
         // Assert
         result.Should().NotBeNull();
-        _httpClientMock.Verify(x => x.PostAsync<SwissTournament>($"/api/swiss/new/{teamId}", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<SwissTournament>($"/api/swiss/new/{teamId}", It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -126,7 +134,8 @@ public class SwissTournamentsApiTests
         var options = new SwissUpdateOptions { Name = "Updated Name" };
         var expectedResult = CreateTestTournament(id);
         _httpClientMock
-            .Setup(x => x.PostAsync<SwissTournament>($"/api/swiss/{id}/edit", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<SwissTournament>($"/api/swiss/{id}/edit", It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
         // Act
@@ -134,7 +143,9 @@ public class SwissTournamentsApiTests
 
         // Assert
         result.Should().NotBeNull();
-        _httpClientMock.Verify(x => x.PostAsync<SwissTournament>($"/api/swiss/{id}/edit", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<SwissTournament>($"/api/swiss/{id}/edit", It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -158,7 +169,8 @@ public class SwissTournamentsApiTests
         var id = "testSwiss";
         var date = DateTimeOffset.UtcNow.AddHours(1).ToUnixTimeMilliseconds();
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/api/swiss/{id}/schedule-next-round", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/api/swiss/{id}/schedule-next-round", It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
@@ -166,7 +178,9 @@ public class SwissTournamentsApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/swiss/{id}/schedule-next-round", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/swiss/{id}/schedule-next-round", It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -190,7 +204,8 @@ public class SwissTournamentsApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/swiss/{id}/join", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/swiss/{id}/join", null, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -199,15 +214,18 @@ public class SwissTournamentsApiTests
         // Arrange
         var id = "testSwiss";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/api/swiss/{id}/join", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/api/swiss/{id}/join", It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
-        var result = await _api.JoinAsync(id, password: "secret");
+        var result = await _api.JoinAsync(id, "secret");
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/swiss/{id}/join", It.Is<HttpContent>(c => c != null), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/swiss/{id}/join", It.Is<HttpContent>(c => c != null),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -231,7 +249,8 @@ public class SwissTournamentsApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/swiss/{id}/withdraw", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/swiss/{id}/withdraw", null, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -255,7 +274,9 @@ public class SwissTournamentsApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/swiss/{id}/terminate", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/swiss/{id}/terminate", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -302,14 +323,12 @@ public class SwissTournamentsApiTests
 
         // Act
         var results = new List<GameJson>();
-        await foreach (var game in _api.StreamGamesAsync(id))
-        {
-            results.Add(game);
-        }
+        await foreach (var game in _api.StreamGamesAsync(id)) results.Add(game);
 
         // Assert
         results.Should().HaveCount(1);
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<GameJson>($"/api/swiss/{id}/games", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<GameJson>($"/api/swiss/{id}/games", It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -320,14 +339,21 @@ public class SwissTournamentsApiTests
         var options = new SwissGamesExportOptions { Moves = true, Clocks = true };
         var games = new List<GameJson>();
         _httpClientMock
-            .Setup(x => x.StreamNdjsonAsync<GameJson>(It.Is<string>(s => s.Contains("moves=true") && s.Contains("clocks=true")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.StreamNdjsonAsync<GameJson>(
+                It.Is<string>(s => s.Contains("moves=true") && s.Contains("clocks=true")),
+                It.IsAny<CancellationToken>()))
             .Returns(games.ToAsyncEnumerable());
 
         // Act
-        await foreach (var _ in _api.StreamGamesAsync(id, options)) { }
+        await foreach (var _ in _api.StreamGamesAsync(id, options))
+        {
+        }
 
         // Assert
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<GameJson>(It.Is<string>(s => s.Contains("moves=true") && s.Contains("clocks=true")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<GameJson>(
+                It.Is<string>(s => s.Contains("moves=true") && s.Contains("clocks=true")),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -335,7 +361,9 @@ public class SwissTournamentsApiTests
     {
         await Assert.ThrowsAsync<ArgumentNullException>(async () =>
         {
-            await foreach (var _ in _api.StreamGamesAsync(null!)) { }
+            await foreach (var _ in _api.StreamGamesAsync(null!))
+            {
+            }
         });
     }
 
@@ -346,19 +374,19 @@ public class SwissTournamentsApiTests
         var id = "testSwiss";
         var results = new List<SwissPlayerResult> { new() { Username = "player1", Rank = 1 } };
         _httpClientMock
-            .Setup(x => x.StreamNdjsonAsync<SwissPlayerResult>($"/api/swiss/{id}/results", It.IsAny<CancellationToken>()))
+            .Setup(x => x.StreamNdjsonAsync<SwissPlayerResult>($"/api/swiss/{id}/results",
+                It.IsAny<CancellationToken>()))
             .Returns(results.ToAsyncEnumerable());
 
         // Act
         var actualResults = new List<SwissPlayerResult>();
-        await foreach (var result in _api.StreamResultsAsync(id))
-        {
-            actualResults.Add(result);
-        }
+        await foreach (var result in _api.StreamResultsAsync(id)) actualResults.Add(result);
 
         // Assert
         actualResults.Should().HaveCount(1);
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<SwissPlayerResult>($"/api/swiss/{id}/results", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<SwissPlayerResult>($"/api/swiss/{id}/results", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -368,14 +396,19 @@ public class SwissTournamentsApiTests
         var id = "testSwiss";
         var results = new List<SwissPlayerResult>();
         _httpClientMock
-            .Setup(x => x.StreamNdjsonAsync<SwissPlayerResult>($"/api/swiss/{id}/results?nb=10", It.IsAny<CancellationToken>()))
+            .Setup(x => x.StreamNdjsonAsync<SwissPlayerResult>($"/api/swiss/{id}/results?nb=10",
+                It.IsAny<CancellationToken>()))
             .Returns(results.ToAsyncEnumerable());
 
         // Act
-        await foreach (var _ in _api.StreamResultsAsync(id, nb: 10)) { }
+        await foreach (var _ in _api.StreamResultsAsync(id, 10))
+        {
+        }
 
         // Assert
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<SwissPlayerResult>($"/api/swiss/{id}/results?nb=10", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<SwissPlayerResult>($"/api/swiss/{id}/results?nb=10",
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -383,7 +416,9 @@ public class SwissTournamentsApiTests
     {
         await Assert.ThrowsAsync<ArgumentNullException>(async () =>
         {
-            await foreach (var _ in _api.StreamResultsAsync(null!)) { }
+            await foreach (var _ in _api.StreamResultsAsync(null!))
+            {
+            }
         });
     }
 
@@ -394,19 +429,19 @@ public class SwissTournamentsApiTests
         var teamId = "testteam";
         var tournaments = new List<SwissTournament> { CreateTestTournament("swiss1") };
         _httpClientMock
-            .Setup(x => x.StreamNdjsonAsync<SwissTournament>($"/api/team/{teamId}/swiss", It.IsAny<CancellationToken>()))
+            .Setup(x => x.StreamNdjsonAsync<SwissTournament>($"/api/team/{teamId}/swiss",
+                It.IsAny<CancellationToken>()))
             .Returns(tournaments.ToAsyncEnumerable());
 
         // Act
         var results = new List<SwissTournament>();
-        await foreach (var tournament in _api.StreamTeamTournamentsAsync(teamId))
-        {
-            results.Add(tournament);
-        }
+        await foreach (var tournament in _api.StreamTeamTournamentsAsync(teamId)) results.Add(tournament);
 
         // Assert
         results.Should().HaveCount(1);
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<SwissTournament>($"/api/team/{teamId}/swiss", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<SwissTournament>($"/api/team/{teamId}/swiss", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -416,14 +451,19 @@ public class SwissTournamentsApiTests
         var teamId = "testteam";
         var tournaments = new List<SwissTournament>();
         _httpClientMock
-            .Setup(x => x.StreamNdjsonAsync<SwissTournament>($"/api/team/{teamId}/swiss?max=50", It.IsAny<CancellationToken>()))
+            .Setup(x => x.StreamNdjsonAsync<SwissTournament>($"/api/team/{teamId}/swiss?max=50",
+                It.IsAny<CancellationToken>()))
             .Returns(tournaments.ToAsyncEnumerable());
 
         // Act
-        await foreach (var _ in _api.StreamTeamTournamentsAsync(teamId, max: 50)) { }
+        await foreach (var _ in _api.StreamTeamTournamentsAsync(teamId, 50))
+        {
+        }
 
         // Assert
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<SwissTournament>($"/api/team/{teamId}/swiss?max=50", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<SwissTournament>($"/api/team/{teamId}/swiss?max=50",
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -431,23 +471,27 @@ public class SwissTournamentsApiTests
     {
         await Assert.ThrowsAsync<ArgumentNullException>(async () =>
         {
-            await foreach (var _ in _api.StreamTeamTournamentsAsync(null!)) { }
+            await foreach (var _ in _api.StreamTeamTournamentsAsync(null!))
+            {
+            }
         });
     }
 
-    private static SwissTournament CreateTestTournament(string id) => new()
+    private static SwissTournament CreateTestTournament(string id)
     {
-        Id = id,
-        CreatedBy = "testuser",
-        Name = "Test Swiss",
-        Variant = "standard",
-        Round = 1,
-        NbRounds = 5,
-        NbPlayers = 10,
-        NbOngoing = 5,
-        Status = "started",
-        Rated = true,
-        StartsAt = DateTimeOffset.UtcNow.ToString("O")
-    };
-
+        return new SwissTournament
+        {
+            Id = id,
+            CreatedBy = "testuser",
+            Name = "Test Swiss",
+            Variant = "standard",
+            Round = 1,
+            NbRounds = 5,
+            NbPlayers = 10,
+            NbOngoing = 5,
+            Status = "started",
+            Rated = true,
+            StartsAt = DateTimeOffset.UtcNow.ToString("O")
+        };
+    }
 }

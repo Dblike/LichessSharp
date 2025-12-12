@@ -1,10 +1,11 @@
+using LichessSharp.Api.Options;
 using LichessSharp.Samples.Helpers;
 
 namespace LichessSharp.Samples.Scenarios;
 
 /// <summary>
-/// Sample 03: Game Export
-/// Demonstrates how to export and stream games from Lichess.
+///     Sample 03: Game Export
+///     Demonstrates how to export and stream games from Lichess.
 /// </summary>
 public static class GameExport
 {
@@ -76,12 +77,14 @@ public static class GameExport
         Console.WriteLine("Streaming recent games for DrNykterstein (limit 5)...");
 
         var gameCount = 0;
-        var streamOptions = new LichessSharp.Api.Options.ExportUserGamesOptions { Max = 5 };
+        var streamOptions = new ExportUserGamesOptions { Max = 5 };
         await foreach (var userGame in client.Games.StreamUserGamesAsync("DrNykterstein", streamOptions))
         {
             gameCount++;
-            Console.WriteLine($"  Game {gameCount}: {userGame.Id} - {userGame.Variant} {userGame.Speed} ({userGame.Status})");
+            Console.WriteLine(
+                $"  Game {gameCount}: {userGame.Id} - {userGame.Variant} {userGame.Speed} ({userGame.Status})");
         }
+
         Console.WriteLine($"Streamed {gameCount} games.");
 
         // =====================================================================
@@ -93,7 +96,7 @@ public static class GameExport
 
         var oneMonthAgo = DateTimeOffset.UtcNow.AddMonths(-1);
         gameCount = 0;
-        var filteredOptions = new LichessSharp.Api.Options.ExportUserGamesOptions
+        var filteredOptions = new ExportUserGamesOptions
         {
             Rated = true,
             PerfType = "blitz",
@@ -108,6 +111,7 @@ public static class GameExport
                 : filteredGame.Players?.Black?.User?.Name;
             Console.WriteLine($"  {gameCount}. vs {opponent ?? "Unknown"} - {filteredGame.Status}");
         }
+
         Console.WriteLine($"Found {gameCount} matching games.");
 
         // =====================================================================
@@ -125,6 +129,7 @@ public static class GameExport
             gameCount++;
             Console.WriteLine($"  {multiGame.Id}: {multiGame.Variant} - {multiGame.Status}");
         }
+
         Console.WriteLine($"Retrieved {gameCount} games.");
 
         // =====================================================================
@@ -172,9 +177,7 @@ public static class GameExport
                 {
                     Console.WriteLine($"You have {ongoingGames.Count} ongoing game(s):");
                     foreach (var ongoing in ongoingGames)
-                    {
                         Console.WriteLine($"  - {ongoing.GameId}: vs {ongoing.Opponent?.Username ?? "Unknown"}");
-                    }
                 }
                 else
                 {

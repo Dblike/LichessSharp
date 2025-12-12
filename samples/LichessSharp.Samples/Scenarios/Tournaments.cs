@@ -3,8 +3,8 @@ using LichessSharp.Samples.Helpers;
 namespace LichessSharp.Samples.Scenarios;
 
 /// <summary>
-/// Sample 07: Tournaments
-/// Demonstrates how to access arena and Swiss tournament data.
+///     Sample 07: Tournaments
+///     Demonstrates how to access arena and Swiss tournament data.
 /// </summary>
 public static class Tournaments
 {
@@ -23,33 +23,24 @@ public static class Tournaments
 
         Console.WriteLine("Started tournaments:");
         if (currentTournaments.Started != null)
-        {
             foreach (var tournament in currentTournaments.Started.Take(5))
             {
                 Console.WriteLine($"  - {tournament.FullName}");
-                Console.WriteLine($"      ID: {tournament.Id}, Players: {tournament.NbPlayers}, Minutes: {tournament.Minutes}");
+                Console.WriteLine(
+                    $"      ID: {tournament.Id}, Players: {tournament.NbPlayers}, Minutes: {tournament.Minutes}");
             }
-        }
 
         Console.WriteLine();
         Console.WriteLine("Created (upcoming) tournaments:");
         if (currentTournaments.Created != null)
-        {
             foreach (var tournament in currentTournaments.Created.Take(3))
-            {
                 Console.WriteLine($"  - {tournament.FullName} (starts: {tournament.StartsAt})");
-            }
-        }
 
         Console.WriteLine();
         Console.WriteLine("Finished tournaments:");
         if (currentTournaments.Finished != null)
-        {
             foreach (var tournament in currentTournaments.Finished.Take(3))
-            {
                 Console.WriteLine($"  - {tournament.FullName}");
-            }
-        }
 
         // =====================================================================
         // Get Tournament Details
@@ -58,7 +49,7 @@ public static class Tournaments
 
         // Get details for a current tournament
         var tournamentId = currentTournaments.Started?.FirstOrDefault()?.Id
-            ?? currentTournaments.Finished?.FirstOrDefault()?.Id;
+                           ?? currentTournaments.Finished?.FirstOrDefault()?.Id;
 
         if (tournamentId != null)
         {
@@ -74,9 +65,7 @@ public static class Tournaments
             SampleRunner.PrintKeyValue("Created by", tournament.CreatedBy);
 
             if (tournament.Clock != null)
-            {
                 Console.WriteLine($"  Time control: {tournament.Clock.Limit / 60}+{tournament.Clock.Increment}");
-            }
         }
         else
         {
@@ -93,7 +82,7 @@ public static class Tournaments
             Console.WriteLine($"Top 10 players in tournament {tournamentId}:");
 
             var rank = 0;
-            await foreach (var result in client.ArenaTournaments.StreamResultsAsync(tournamentId, nb: 10))
+            await foreach (var result in client.ArenaTournaments.StreamResultsAsync(tournamentId, 10))
             {
                 rank++;
                 var performance = result.Performance > 0 ? $"perf: {result.Performance}" : "";
@@ -131,7 +120,7 @@ public static class Tournaments
         Console.WriteLine("Tournaments played by DrNykterstein (last 5)...");
 
         var count = 0;
-        await foreach (var played in client.ArenaTournaments.StreamPlayedByAsync("DrNykterstein", nb: 5))
+        await foreach (var played in client.ArenaTournaments.StreamPlayedByAsync("DrNykterstein", 5))
         {
             count++;
             if (played.Tournament != null)
@@ -150,16 +139,13 @@ public static class Tournaments
 
         // Stream Swiss tournaments for a team
         var swissCount = 0;
-        await foreach (var swiss in client.SwissTournaments.StreamTeamTournamentsAsync("lichess-swiss", max: 3))
+        await foreach (var swiss in client.SwissTournaments.StreamTeamTournamentsAsync("lichess-swiss", 3))
         {
             swissCount++;
             Console.WriteLine($"  {swissCount}. {swiss.Name} - Rounds: {swiss.NbRounds}, Players: {swiss.NbPlayers}");
         }
 
-        if (swissCount == 0)
-        {
-            Console.WriteLine("  No Swiss tournaments found for this team.");
-        }
+        if (swissCount == 0) Console.WriteLine("  No Swiss tournaments found for this team.");
 
         // =====================================================================
         // Team Battles
@@ -168,7 +154,6 @@ public static class Tournaments
 
         // Team battles are special arena tournaments between teams
         if (tournamentId != null)
-        {
             try
             {
                 var teamStanding = await client.ArenaTournaments.GetTeamStandingAsync(tournamentId);
@@ -191,7 +176,6 @@ public static class Tournaments
             {
                 Console.WriteLine("Team standings not available (not a team battle).");
             }
-        }
 
         // =====================================================================
         // Tournament Management (Authenticated)
@@ -227,33 +211,24 @@ public static class Tournaments
         {
             Console.WriteLine("  Pending:");
             foreach (var simul in simuls.Pending.Take(3))
-            {
                 Console.WriteLine($"    - {simul.Name} by {simul.Host?.Name}");
-            }
         }
 
         if (simuls.Started?.Count > 0)
         {
             Console.WriteLine("  In progress:");
             foreach (var simul in simuls.Started.Take(3))
-            {
                 Console.WriteLine($"    - {simul.Name} by {simul.Host?.Name}");
-            }
         }
 
         if (simuls.Finished?.Count > 0)
         {
             Console.WriteLine("  Recently finished:");
-            foreach (var simul in simuls.Finished.Take(3))
-            {
-                Console.WriteLine($"    - {simul.Name}");
-            }
+            foreach (var simul in simuls.Finished.Take(3)) Console.WriteLine($"    - {simul.Name}");
         }
 
         if ((simuls.Pending?.Count ?? 0) + (simuls.Started?.Count ?? 0) + (simuls.Finished?.Count ?? 0) == 0)
-        {
             Console.WriteLine("  No simuls currently available.");
-        }
 
         SampleRunner.PrintSuccess("Tournaments sample completed!");
     }

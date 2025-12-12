@@ -9,14 +9,15 @@ namespace LichessSharp.Tests.Api;
 
 public class BroadcastsApiTests
 {
-    private readonly Mock<ILichessHttpClient> _httpClientMock;
     private readonly BroadcastsApi _broadcastsApi;
+    private readonly Mock<ILichessHttpClient> _httpClientMock;
 
     public BroadcastsApiTests()
     {
         _httpClientMock = new Mock<ILichessHttpClient>();
         _broadcastsApi = new BroadcastsApi(_httpClientMock.Object);
     }
+
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -43,10 +44,7 @@ public class BroadcastsApiTests
 
         // Act
         var result = new List<BroadcastWithRounds>();
-        await foreach (var broadcast in _broadcastsApi.StreamOfficialBroadcastsAsync())
-        {
-            result.Add(broadcast);
-        }
+        await foreach (var broadcast in _broadcastsApi.StreamOfficialBroadcastsAsync()) result.Add(broadcast);
 
         // Assert
         result.Should().HaveCount(2);
@@ -58,16 +56,19 @@ public class BroadcastsApiTests
         // Arrange
         var broadcasts = new List<BroadcastWithRounds>();
         _httpClientMock
-            .Setup(x => x.StreamNdjsonAsync<BroadcastWithRounds>(It.Is<string>(s => s.Contains("nb=10")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.StreamNdjsonAsync<BroadcastWithRounds>(It.Is<string>(s => s.Contains("nb=10")),
+                It.IsAny<CancellationToken>()))
             .Returns(broadcasts.ToAsyncEnumerable());
 
         // Act
-        await foreach (var _ in _broadcastsApi.StreamOfficialBroadcastsAsync(nb: 10))
+        await foreach (var _ in _broadcastsApi.StreamOfficialBroadcastsAsync(10))
         {
         }
 
         // Assert
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<BroadcastWithRounds>(It.Is<string>(s => s.Contains("nb=10")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<BroadcastWithRounds>(It.Is<string>(s => s.Contains("nb=10")),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -76,7 +77,8 @@ public class BroadcastsApiTests
         // Arrange
         var broadcasts = new List<BroadcastWithRounds>();
         _httpClientMock
-            .Setup(x => x.StreamNdjsonAsync<BroadcastWithRounds>(It.Is<string>(s => s.Contains("html=true")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.StreamNdjsonAsync<BroadcastWithRounds>(It.Is<string>(s => s.Contains("html=true")),
+                It.IsAny<CancellationToken>()))
             .Returns(broadcasts.ToAsyncEnumerable());
 
         // Act
@@ -85,7 +87,9 @@ public class BroadcastsApiTests
         }
 
         // Assert
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<BroadcastWithRounds>(It.Is<string>(s => s.Contains("html=true")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<BroadcastWithRounds>(It.Is<string>(s => s.Contains("html=true")),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -102,7 +106,8 @@ public class BroadcastsApiTests
 
         // Assert
         result.Should().NotBeNull();
-        _httpClientMock.Verify(x => x.GetAsync<BroadcastTopPage>("/api/broadcast/top", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(x => x.GetAsync<BroadcastTopPage>("/api/broadcast/top", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -115,11 +120,12 @@ public class BroadcastsApiTests
             .ReturnsAsync(expectedResult);
 
         // Act
-        var result = await _broadcastsApi.GetTopBroadcastsAsync(page: 2);
+        var result = await _broadcastsApi.GetTopBroadcastsAsync(2);
 
         // Assert
         result.Should().NotBeNull();
-        _httpClientMock.Verify(x => x.GetAsync<BroadcastTopPage>("/api/broadcast/top?page=2", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<BroadcastTopPage>("/api/broadcast/top?page=2", It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -132,15 +138,13 @@ public class BroadcastsApiTests
             new() { Tour = CreateTestTour("tour1") }
         };
         _httpClientMock
-            .Setup(x => x.StreamNdjsonAsync<BroadcastByUser>($"/api/broadcast/by/{username}", It.IsAny<CancellationToken>()))
+            .Setup(x => x.StreamNdjsonAsync<BroadcastByUser>($"/api/broadcast/by/{username}",
+                It.IsAny<CancellationToken>()))
             .Returns(broadcasts.ToAsyncEnumerable());
 
         // Act
         var result = new List<BroadcastByUser>();
-        await foreach (var broadcast in _broadcastsApi.StreamUserBroadcastsAsync(username))
-        {
-            result.Add(broadcast);
-        }
+        await foreach (var broadcast in _broadcastsApi.StreamUserBroadcastsAsync(username)) result.Add(broadcast);
 
         // Assert
         result.Should().HaveCount(1);
@@ -165,7 +169,8 @@ public class BroadcastsApiTests
         var query = "chess";
         var expectedResult = new BroadcastSearchPage();
         _httpClientMock
-            .Setup(x => x.GetAsync<BroadcastSearchPage>(It.Is<string>(s => s.Contains("/api/broadcast/search?q=chess")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<BroadcastSearchPage>(It.Is<string>(s => s.Contains("/api/broadcast/search?q=chess")),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
         // Act
@@ -181,11 +186,12 @@ public class BroadcastsApiTests
         // Arrange
         var expectedResult = new BroadcastSearchPage();
         _httpClientMock
-            .Setup(x => x.GetAsync<BroadcastSearchPage>(It.Is<string>(s => s.Contains("page=3")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<BroadcastSearchPage>(It.Is<string>(s => s.Contains("page=3")),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
         // Act
-        var result = await _broadcastsApi.SearchBroadcastsAsync("test", page: 3);
+        var result = await _broadcastsApi.SearchBroadcastsAsync("test", 3);
 
         // Assert
         result.Should().NotBeNull();
@@ -208,7 +214,8 @@ public class BroadcastsApiTests
         var tournamentId = "tour123";
         var expectedResult = CreateTestBroadcast(tournamentId);
         _httpClientMock
-            .Setup(x => x.GetAsync<BroadcastWithRounds>($"/api/broadcast/{tournamentId}", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<BroadcastWithRounds>($"/api/broadcast/{tournamentId}",
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
         // Act
@@ -216,7 +223,9 @@ public class BroadcastsApiTests
 
         // Assert
         result.Should().NotBeNull();
-        _httpClientMock.Verify(x => x.GetAsync<BroadcastWithRounds>($"/api/broadcast/{tournamentId}", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<BroadcastWithRounds>($"/api/broadcast/{tournamentId}", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -226,11 +235,12 @@ public class BroadcastsApiTests
         var tournamentId = "tour123";
         var expectedResult = CreateTestBroadcast(tournamentId);
         _httpClientMock
-            .Setup(x => x.GetAsync<BroadcastWithRounds>($"/api/broadcast/{tournamentId}?html=1", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<BroadcastWithRounds>($"/api/broadcast/{tournamentId}?html=1",
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
         // Act
-        var result = await _broadcastsApi.GetTournamentAsync(tournamentId, html: true);
+        var result = await _broadcastsApi.GetTournamentAsync(tournamentId, true);
 
         // Assert
         result.Should().NotBeNull();
@@ -255,7 +265,8 @@ public class BroadcastsApiTests
         var roundId = "round123";
         var expectedResult = CreateTestRound(roundId);
         _httpClientMock
-            .Setup(x => x.GetAsync<BroadcastRound>($"/api/broadcast/{tournamentSlug}/{roundSlug}/{roundId}", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<BroadcastRound>($"/api/broadcast/{tournamentSlug}/{roundSlug}/{roundId}",
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
         // Act
@@ -304,15 +315,13 @@ public class BroadcastsApiTests
             CreateTestMyRound("round1")
         };
         _httpClientMock
-            .Setup(x => x.StreamNdjsonAsync<BroadcastMyRound>("/api/broadcast/my-rounds", It.IsAny<CancellationToken>()))
+            .Setup(x => x.StreamNdjsonAsync<BroadcastMyRound>("/api/broadcast/my-rounds",
+                It.IsAny<CancellationToken>()))
             .Returns(rounds.ToAsyncEnumerable());
 
         // Act
         var result = new List<BroadcastMyRound>();
-        await foreach (var round in _broadcastsApi.StreamMyRoundsAsync())
-        {
-            result.Add(round);
-        }
+        await foreach (var round in _broadcastsApi.StreamMyRoundsAsync()) result.Add(round);
 
         // Assert
         result.Should().HaveCount(1);
@@ -324,16 +333,19 @@ public class BroadcastsApiTests
         // Arrange
         var rounds = new List<BroadcastMyRound>();
         _httpClientMock
-            .Setup(x => x.StreamNdjsonAsync<BroadcastMyRound>("/api/broadcast/my-rounds?nb=5", It.IsAny<CancellationToken>()))
+            .Setup(x => x.StreamNdjsonAsync<BroadcastMyRound>("/api/broadcast/my-rounds?nb=5",
+                It.IsAny<CancellationToken>()))
             .Returns(rounds.ToAsyncEnumerable());
 
         // Act
-        await foreach (var _ in _broadcastsApi.StreamMyRoundsAsync(nb: 5))
+        await foreach (var _ in _broadcastsApi.StreamMyRoundsAsync(5))
         {
         }
 
         // Assert
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<BroadcastMyRound>("/api/broadcast/my-rounds?nb=5", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<BroadcastMyRound>("/api/broadcast/my-rounds?nb=5", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -343,7 +355,8 @@ public class BroadcastsApiTests
         var options = new BroadcastTournamentOptions { Name = "Test Tournament" };
         var expectedResult = CreateTestBroadcast("tour123");
         _httpClientMock
-            .Setup(x => x.PostAsync<BroadcastWithRounds>("/api/broadcast/new", It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<BroadcastWithRounds>("/api/broadcast/new", It.IsAny<FormUrlEncodedContent>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
         // Act
@@ -351,7 +364,9 @@ public class BroadcastsApiTests
 
         // Assert
         result.Should().NotBeNull();
-        _httpClientMock.Verify(x => x.PostAsync<BroadcastWithRounds>("/api/broadcast/new", It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<BroadcastWithRounds>("/api/broadcast/new", It.IsAny<FormUrlEncodedContent>(),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -385,7 +400,8 @@ public class BroadcastsApiTests
         var options = new BroadcastTournamentOptions { Name = "Updated Tournament" };
         var expectedResult = CreateTestBroadcast(tournamentId);
         _httpClientMock
-            .Setup(x => x.PostAsync<BroadcastWithRounds>($"/broadcast/{tournamentId}/edit", It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<BroadcastWithRounds>($"/broadcast/{tournamentId}/edit",
+                It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
         // Act
@@ -416,7 +432,8 @@ public class BroadcastsApiTests
         var options = new BroadcastRoundOptions { Name = "Round 1" };
         var expectedResult = CreateTestRoundNew("round1");
         _httpClientMock
-            .Setup(x => x.PostAsync<BroadcastRoundNew>($"/broadcast/{tournamentId}/new", It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<BroadcastRoundNew>($"/broadcast/{tournamentId}/new",
+                It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
         // Act
@@ -447,7 +464,8 @@ public class BroadcastsApiTests
         var options = new BroadcastRoundOptions { Name = "Updated Round" };
         var expectedResult = CreateTestRoundNew(roundId);
         _httpClientMock
-            .Setup(x => x.PostAsync<BroadcastRoundNew>($"/broadcast/round/{roundId}/edit", It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<BroadcastRoundNew>($"/broadcast/round/{roundId}/edit",
+                It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
         // Act
@@ -476,7 +494,8 @@ public class BroadcastsApiTests
         // Arrange
         var roundId = "round123";
         _httpClientMock
-            .Setup(x => x.PostNoContentAsync($"/api/broadcast/round/{roundId}/reset", null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostNoContentAsync($"/api/broadcast/round/{roundId}/reset", null,
+                It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
 
         // Act
@@ -484,7 +503,9 @@ public class BroadcastsApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostNoContentAsync($"/api/broadcast/round/{roundId}/reset", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostNoContentAsync($"/api/broadcast/round/{roundId}/reset", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -505,7 +526,8 @@ public class BroadcastsApiTests
         var pgn = "1. e4 e5 *";
         var expectedResult = new BroadcastPgnPushResult();
         _httpClientMock
-            .Setup(x => x.PostPlainTextAsync<BroadcastPgnPushResult>($"/api/broadcast/round/{roundId}/push", pgn, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostPlainTextAsync<BroadcastPgnPushResult>($"/api/broadcast/round/{roundId}/push", pgn,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
         // Act
@@ -513,7 +535,9 @@ public class BroadcastsApiTests
 
         // Assert
         result.Should().NotBeNull();
-        _httpClientMock.Verify(x => x.PostPlainTextAsync<BroadcastPgnPushResult>($"/api/broadcast/round/{roundId}/push", pgn, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostPlainTextAsync<BroadcastPgnPushResult>($"/api/broadcast/round/{roundId}/push", pgn,
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -543,7 +567,8 @@ public class BroadcastsApiTests
         var roundId = "round123";
         var expectedPgn = "[Event \"Test\"]\n1. e4 e5 *";
         _httpClientMock
-            .Setup(x => x.GetStringWithAcceptAsync($"/api/broadcast/round/{roundId}.pgn", "application/x-chess-pgn", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetStringWithAcceptAsync($"/api/broadcast/round/{roundId}.pgn", "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedPgn);
 
         // Act
@@ -570,7 +595,8 @@ public class BroadcastsApiTests
         var tournamentId = "tour123";
         var expectedPgn = "[Event \"Test\"]\n1. e4 e5 *";
         _httpClientMock
-            .Setup(x => x.GetStringWithAcceptAsync($"/api/broadcast/{tournamentId}.pgn", "application/x-chess-pgn", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetStringWithAcceptAsync($"/api/broadcast/{tournamentId}.pgn", "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedPgn);
 
         // Act
@@ -601,7 +627,8 @@ public class BroadcastsApiTests
             new() { Name = "Player 2", Rating = 2650 }
         };
         _httpClientMock
-            .Setup(x => x.GetAsync<List<BroadcastPlayerEntry>>($"/broadcast/{tournamentId}/players", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<List<BroadcastPlayerEntry>>($"/broadcast/{tournamentId}/players",
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(players);
 
         // Act
@@ -609,7 +636,9 @@ public class BroadcastsApiTests
 
         // Assert
         result.Should().HaveCount(2);
-        _httpClientMock.Verify(x => x.GetAsync<List<BroadcastPlayerEntry>>($"/broadcast/{tournamentId}/players", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<List<BroadcastPlayerEntry>>($"/broadcast/{tournamentId}/players",
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -635,7 +664,8 @@ public class BroadcastsApiTests
             Games = new List<BroadcastPlayerGame>()
         };
         _httpClientMock
-            .Setup(x => x.GetAsync<BroadcastPlayerWithGames>($"/broadcast/{tournamentId}/players/{playerId}", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<BroadcastPlayerWithGames>($"/broadcast/{tournamentId}/players/{playerId}",
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(player);
 
         // Act
@@ -644,7 +674,9 @@ public class BroadcastsApiTests
         // Assert
         result.Should().NotBeNull();
         result.Name.Should().Be("Test Player");
-        _httpClientMock.Verify(x => x.GetAsync<BroadcastPlayerWithGames>($"/broadcast/{tournamentId}/players/{playerId}", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<BroadcastPlayerWithGames>($"/broadcast/{tournamentId}/players/{playerId}",
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -674,15 +706,13 @@ public class BroadcastsApiTests
         const string roundId = "round123";
         const string expectedPgn = "[Event \"Test\"]\n1. e4 e5 *";
         _httpClientMock
-            .Setup(x => x.GetStringWithAcceptAsync($"/api/stream/broadcast/round/{roundId}.pgn", "application/x-chess-pgn", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetStringWithAcceptAsync($"/api/stream/broadcast/round/{roundId}.pgn",
+                "application/x-chess-pgn", It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedPgn);
 
         // Act
         var result = new List<string>();
-        await foreach (var pgn in _broadcastsApi.StreamRoundPgnAsync(roundId))
-        {
-            result.Add(pgn);
-        }
+        await foreach (var pgn in _broadcastsApi.StreamRoundPgnAsync(roundId)) result.Add(pgn);
 
         // Assert
         result.Should().HaveCount(1);
@@ -798,5 +828,4 @@ public class BroadcastsApiTests
             Study = CreateTestStudyInfo()
         };
     }
-
 }

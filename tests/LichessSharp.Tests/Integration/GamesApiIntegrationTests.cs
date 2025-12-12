@@ -6,8 +6,8 @@ using Xunit;
 namespace LichessSharp.Tests.Integration;
 
 /// <summary>
-/// Integration tests for the Games API.
-/// These tests use real game IDs from the OpenAPI spec examples.
+///     Integration tests for the Games API.
+///     These tests use real game IDs from the OpenAPI spec examples.
 /// </summary>
 [IntegrationTest]
 [Trait("Category", "Integration")]
@@ -17,6 +17,7 @@ public class GamesApiIntegrationTests : IntegrationTestBase
     private const string GameId1 = "q7ZvsdUF";
     private const string GameId2 = "TJxUmbWK";
     private const string ThibaultUsername = "thibault";
+
     [Fact]
     public async Task GetAsync_WithValidGameId_ReturnsGame()
     {
@@ -84,7 +85,7 @@ public class GamesApiIntegrationTests : IntegrationTestBase
         // Arrange
         var options = new ExportUserGamesOptions
         {
-            Max = 3  // Limit to 3 games for test speed
+            Max = 3 // Limit to 3 games for test speed
         };
 
         // Act
@@ -97,10 +98,7 @@ public class GamesApiIntegrationTests : IntegrationTestBase
 
         // Assert
         games.Should().NotBeEmpty();
-        games.Should().AllSatisfy(g =>
-        {
-            g.Id.Should().NotBeNullOrEmpty();
-        });
+        games.Should().AllSatisfy(g => { g.Id.Should().NotBeNullOrEmpty(); });
     }
 
     [Fact]
@@ -115,10 +113,7 @@ public class GamesApiIntegrationTests : IntegrationTestBase
 
         // Act
         var games = new List<GameJson>();
-        await foreach (var game in Client.Games.StreamUserGamesAsync(ThibaultUsername, options))
-        {
-            games.Add(game);
-        }
+        await foreach (var game in Client.Games.StreamUserGamesAsync(ThibaultUsername, options)) games.Add(game);
 
         // Assert - May be empty if user has no blitz games, but shouldn't throw
         games.Should().NotBeNull();
@@ -132,10 +127,7 @@ public class GamesApiIntegrationTests : IntegrationTestBase
 
         // Act
         var games = new List<GameJson>();
-        await foreach (var game in Client.Games.StreamByIdsAsync(gameIds))
-        {
-            games.Add(game);
-        }
+        await foreach (var game in Client.Games.StreamByIdsAsync(gameIds)) games.Add(game);
 
         // Assert
         games.Should().NotBeEmpty();
@@ -155,10 +147,7 @@ public class GamesApiIntegrationTests : IntegrationTestBase
 
         // Act
         var games = new List<GameJson>();
-        await foreach (var game in Client.Games.StreamByIdsAsync(gameIds, options))
-        {
-            games.Add(game);
-        }
+        await foreach (var game in Client.Games.StreamByIdsAsync(gameIds, options)) games.Add(game);
 
         // Assert
         games.Should().NotBeEmpty();
@@ -189,11 +178,9 @@ public class GamesApiIntegrationTests : IntegrationTestBase
         // Assert - Either we got an event or the stream timed out (both are valid for completed games)
         // For completed games, we expect at least the initial event with game state
         if (events.Count > 0)
-        {
             // The first event should have FEN position data
             // Note: Id may or may not be present depending on the API response
             events[0].Fen.Should().NotBeNullOrEmpty();
-        }
     }
 
     [Fact]
@@ -222,10 +209,6 @@ public class GamesApiIntegrationTests : IntegrationTestBase
         }
 
         // Assert - We should get events for the completed games
-        if (events.Count > 0)
-        {
-            events.Should().AllSatisfy(e => e.Id.Should().NotBeNullOrEmpty());
-        }
+        if (events.Count > 0) events.Should().AllSatisfy(e => e.Id.Should().NotBeNullOrEmpty());
     }
-
 }

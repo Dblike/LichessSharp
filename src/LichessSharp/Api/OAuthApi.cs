@@ -1,19 +1,19 @@
 using System.Text.Json;
-
 using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
 
 namespace LichessSharp.Api;
 
 /// <summary>
-/// Implementation of the OAuth API.
+///     Implementation of the OAuth API.
 /// </summary>
 internal sealed class OAuthApi(ILichessHttpClient httpClient) : IOAuthApi
 {
     private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
     /// <inheritdoc />
-    public async Task<OAuthToken> GetTokenAsync(OAuthTokenRequest request, CancellationToken cancellationToken = default)
+    public async Task<OAuthToken> GetTokenAsync(OAuthTokenRequest request,
+        CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
         ArgumentException.ThrowIfNullOrWhiteSpace(request.Code);
@@ -30,7 +30,8 @@ internal sealed class OAuthApi(ILichessHttpClient httpClient) : IOAuthApi
             ["client_id"] = request.ClientId
         };
 
-        return await _httpClient.PostFormAsync<OAuthToken>("/api/token", formData, cancellationToken).ConfigureAwait(false);
+        return await _httpClient.PostFormAsync<OAuthToken>("/api/token", formData, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <inheritdoc />
@@ -47,32 +48,22 @@ internal sealed class OAuthApi(ILichessHttpClient httpClient) : IOAuthApi
         ArgumentNullException.ThrowIfNull(tokens);
 
         var tokenList = tokens.ToList();
-        if (tokenList.Count == 0)
-        {
-            return new Dictionary<string, OAuthTokenInfo?>();
-        }
+        if (tokenList.Count == 0) return new Dictionary<string, OAuthTokenInfo?>();
 
         if (tokenList.Count > 1000)
-        {
             throw new ArgumentException("Cannot test more than 1000 tokens at once.", nameof(tokens));
-        }
 
         var body = string.Join(",", tokenList);
-        var responseJson = await _httpClient.PostPlainTextAsync<JsonElement>("/api/token/test", body, cancellationToken).ConfigureAwait(false);
+        var responseJson = await _httpClient.PostPlainTextAsync<JsonElement>("/api/token/test", body, cancellationToken)
+            .ConfigureAwait(false);
 
         var result = new Dictionary<string, OAuthTokenInfo?>();
 
         foreach (var property in responseJson.EnumerateObject())
-        {
             if (property.Value.ValueKind == JsonValueKind.Null)
-            {
                 result[property.Name] = null;
-            }
             else
-            {
                 result[property.Name] = JsonSerializer.Deserialize<OAuthTokenInfo>(property.Value.GetRawText());
-            }
-        }
 
         return result;
     }

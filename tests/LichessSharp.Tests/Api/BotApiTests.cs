@@ -10,14 +10,15 @@ namespace LichessSharp.Tests.Api;
 
 public class BotApiTests
 {
-    private readonly Mock<ILichessHttpClient> _httpClientMock;
     private readonly BotApi _botApi;
+    private readonly Mock<ILichessHttpClient> _httpClientMock;
 
     public BotApiTests()
     {
         _httpClientMock = new Mock<ILichessHttpClient>();
         _botApi = new BotApi(_httpClientMock.Object);
     }
+
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -42,7 +43,8 @@ public class BotApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>("/api/bot/account/upgrade", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>("/api/bot/account/upgrade", null, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -60,16 +62,14 @@ public class BotApiTests
 
         // Act
         var results = new List<BotAccountEvent>();
-        await foreach (var evt in _botApi.StreamEventsAsync())
-        {
-            results.Add(evt);
-        }
+        await foreach (var evt in _botApi.StreamEventsAsync()) results.Add(evt);
 
         // Assert
         results.Should().HaveCount(2);
         results[0].Type.Should().Be("gameStart");
         results[1].Type.Should().Be("challenge");
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<BotAccountEvent>("/api/stream/event", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<BotAccountEvent>("/api/stream/event", It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -83,19 +83,19 @@ public class BotApiTests
             new() { Type = "gameState" }
         };
         _httpClientMock
-            .Setup(x => x.StreamNdjsonAsync<BotGameEvent>($"/api/bot/game/stream/{gameId}", It.IsAny<CancellationToken>()))
+            .Setup(x => x.StreamNdjsonAsync<BotGameEvent>($"/api/bot/game/stream/{gameId}",
+                It.IsAny<CancellationToken>()))
             .Returns(ToAsyncEnumerable(events));
 
         // Act
         var results = new List<BotGameEvent>();
-        await foreach (var evt in _botApi.StreamGameAsync(gameId))
-        {
-            results.Add(evt);
-        }
+        await foreach (var evt in _botApi.StreamGameAsync(gameId)) results.Add(evt);
 
         // Assert
         results.Should().HaveCount(2);
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<BotGameEvent>($"/api/bot/game/stream/{gameId}", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<BotGameEvent>($"/api/bot/game/stream/{gameId}", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -104,7 +104,9 @@ public class BotApiTests
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentNullException>(async () =>
         {
-            await foreach (var _ in _botApi.StreamGameAsync(null!)) { }
+            await foreach (var _ in _botApi.StreamGameAsync(null!))
+            {
+            }
         });
     }
 
@@ -115,7 +117,8 @@ public class BotApiTests
         var gameId = "game123";
         var move = "e2e4";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/move/{move}", null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/move/{move}", null,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
@@ -123,7 +126,9 @@ public class BotApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/move/{move}", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/move/{move}", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -133,15 +138,18 @@ public class BotApiTests
         var gameId = "game123";
         var move = "e2e4";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>(It.Is<string>(s => s.Contains("offeringDraw=true")), null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>(It.Is<string>(s => s.Contains("offeringDraw=true")), null,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
-        var result = await _botApi.MakeMoveAsync(gameId, move, offeringDraw: true);
+        var result = await _botApi.MakeMoveAsync(gameId, move, true);
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>(It.Is<string>(s => s.Contains("offeringDraw=true")), null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>(It.Is<string>(s => s.Contains("offeringDraw=true")), null,
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -179,7 +187,9 @@ public class BotApiTests
 
         // Assert
         result.Should().HaveCount(2);
-        _httpClientMock.Verify(x => x.GetAsync<List<ChatMessage>>($"/api/bot/game/{gameId}/chat", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<List<ChatMessage>>($"/api/bot/game/{gameId}/chat", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -188,7 +198,8 @@ public class BotApiTests
         // Arrange
         var gameId = "game123";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/chat", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/chat", It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
@@ -196,7 +207,9 @@ public class BotApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/chat", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/chat", It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -213,7 +226,9 @@ public class BotApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/abort", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/abort", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -230,7 +245,9 @@ public class BotApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/resign", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/resign", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -239,15 +256,18 @@ public class BotApiTests
         // Arrange
         var gameId = "game123";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/draw/yes", null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/draw/yes", null,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
-        var result = await _botApi.HandleDrawAsync(gameId, accept: true);
+        var result = await _botApi.HandleDrawAsync(gameId, true);
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/draw/yes", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/draw/yes", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -260,11 +280,13 @@ public class BotApiTests
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
-        var result = await _botApi.HandleDrawAsync(gameId, accept: false);
+        var result = await _botApi.HandleDrawAsync(gameId, false);
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/draw/no", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/draw/no", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -273,15 +295,18 @@ public class BotApiTests
         // Arrange
         var gameId = "game123";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/takeback/yes", null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/takeback/yes", null,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
-        var result = await _botApi.HandleTakebackAsync(gameId, accept: true);
+        var result = await _botApi.HandleTakebackAsync(gameId, true);
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/takeback/yes", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/takeback/yes", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -290,7 +315,8 @@ public class BotApiTests
         // Arrange
         var gameId = "game123";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/claim-draw", null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/claim-draw", null,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
@@ -298,7 +324,9 @@ public class BotApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/claim-draw", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/bot/game/{gameId}/claim-draw", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -324,14 +352,12 @@ public class BotApiTests
 
         // Act
         var results = new List<BotUser>();
-        await foreach (var bot in _botApi.GetOnlineBotsAsync())
-        {
-            results.Add(bot);
-        }
+        await foreach (var bot in _botApi.GetOnlineBotsAsync()) results.Add(bot);
 
         // Assert
         results.Should().HaveCount(2);
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<BotUser>("/api/bot/online", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(x => x.StreamNdjsonAsync<BotUser>("/api/bot/online", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -344,10 +370,13 @@ public class BotApiTests
             .Returns(ToAsyncEnumerable(bots));
 
         // Act
-        await foreach (var _ in _botApi.GetOnlineBotsAsync(count: 50)) { }
+        await foreach (var _ in _botApi.GetOnlineBotsAsync(50))
+        {
+        }
 
         // Assert
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<BotUser>("/api/bot/online?nb=50", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<BotUser>("/api/bot/online?nb=50", It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -356,7 +385,9 @@ public class BotApiTests
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
         {
-            await foreach (var _ in _botApi.GetOnlineBotsAsync(count: 0)) { }
+            await foreach (var _ in _botApi.GetOnlineBotsAsync(0))
+            {
+            }
         });
     }
 
@@ -366,17 +397,15 @@ public class BotApiTests
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
         {
-            await foreach (var _ in _botApi.GetOnlineBotsAsync(count: 301)) { }
+            await foreach (var _ in _botApi.GetOnlineBotsAsync(301))
+            {
+            }
         });
     }
 
     private static async IAsyncEnumerable<T> ToAsyncEnumerable<T>(IEnumerable<T> items)
     {
-        foreach (var item in items)
-        {
-            yield return item;
-        }
+        foreach (var item in items) yield return item;
         await Task.CompletedTask;
     }
-
 }

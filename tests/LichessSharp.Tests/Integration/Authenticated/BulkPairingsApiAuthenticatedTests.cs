@@ -6,12 +6,12 @@ using Xunit;
 namespace LichessSharp.Tests.Integration.Authenticated;
 
 /// <summary>
-/// Authenticated integration tests for the Bulk Pairings API.
-/// Requires a token with challenge:bulk scope.
+///     Authenticated integration tests for the Bulk Pairings API.
+///     Requires a token with challenge:bulk scope.
 /// </summary>
 /// <remarks>
-/// Note: Creating actual bulk pairings requires valid player tokens,
-/// so most tests verify read operations and error handling.
+///     Note: Creating actual bulk pairings requires valid player tokens,
+///     so most tests verify read operations and error handling.
 /// </remarks>
 [AuthenticatedTest]
 [IntegrationTest]

@@ -1,15 +1,13 @@
 using FluentAssertions;
-
 using LichessSharp.Api.Contracts;
 using LichessSharp.Exceptions;
-
 using Xunit;
 
 namespace LichessSharp.Tests.Integration;
 
 /// <summary>
-/// Integration tests for Arena and Swiss Tournaments APIs.
-/// These tests require network access to Lichess.
+///     Integration tests for Arena and Swiss Tournaments APIs.
+///     These tests require network access to Lichess.
 /// </summary>
 [IntegrationTest]
 [Trait("Category", "Integration")]
@@ -22,6 +20,7 @@ public class TournamentsIntegrationTests : IDisposable
         _client.Dispose();
         GC.SuppressFinalize(this);
     }
+
     [Fact]
     public async Task ArenaTournaments_GetCurrentAsync_ReturnsCurrentTournaments()
     {
@@ -40,13 +39,12 @@ public class TournamentsIntegrationTests : IDisposable
     {
         // First get current tournaments to find a valid ID
         var current = await _client.ArenaTournaments.GetCurrentAsync();
-        var anyTournament = current.Started.FirstOrDefault() ?? current.Created.FirstOrDefault() ?? current.Finished.FirstOrDefault();
+        var anyTournament = current.Started.FirstOrDefault() ??
+                            current.Created.FirstOrDefault() ?? current.Finished.FirstOrDefault();
 
         if (anyTournament == null)
-        {
             // Skip if no tournaments available (very unlikely)
             return;
-        }
 
         // Act
         var result = await _client.ArenaTournaments.GetAsync(anyTournament.Id);
@@ -65,14 +63,12 @@ public class TournamentsIntegrationTests : IDisposable
         var finishedTournament = current.Finished.FirstOrDefault();
 
         if (finishedTournament == null)
-        {
             // Skip if no finished tournaments available
             return;
-        }
 
         // Act
         var results = new List<ArenaPlayerResult>();
-        await foreach (var result in _client.ArenaTournaments.StreamResultsAsync(finishedTournament.Id, nb: 5))
+        await foreach (var result in _client.ArenaTournaments.StreamResultsAsync(finishedTournament.Id, 5))
         {
             results.Add(result);
             if (results.Count >= 5) break;
@@ -110,10 +106,7 @@ public class TournamentsIntegrationTests : IDisposable
         }
 
         // Assert - If we got results, verify they're valid
-        foreach (var tournament in tournaments)
-        {
-            tournament.Id.Should().NotBeNullOrWhiteSpace();
-        }
+        foreach (var tournament in tournaments) tournament.Id.Should().NotBeNullOrWhiteSpace();
     }
 
     [Fact]
@@ -126,7 +119,7 @@ public class TournamentsIntegrationTests : IDisposable
         var tournaments = new List<ArenaTournamentSummary>();
         try
         {
-            await foreach (var tournament in _client.ArenaTournaments.StreamTeamTournamentsAsync(teamId, max: 5))
+            await foreach (var tournament in _client.ArenaTournaments.StreamTeamTournamentsAsync(teamId, 5))
             {
                 tournaments.Add(tournament);
                 if (tournaments.Count >= 5) break;
@@ -139,10 +132,7 @@ public class TournamentsIntegrationTests : IDisposable
         }
 
         // Assert - If we got results, verify they're valid (empty is also acceptable)
-        foreach (var tournament in tournaments)
-        {
-            tournament.Id.Should().NotBeNullOrWhiteSpace();
-        }
+        foreach (var tournament in tournaments) tournament.Id.Should().NotBeNullOrWhiteSpace();
     }
 
     [Fact]
@@ -181,17 +171,15 @@ public class TournamentsIntegrationTests : IDisposable
         // Use a known Swiss tournament ID from a team
         // First get Swiss tournaments from lichess-swiss team
         var tournaments = new List<SwissTournament>();
-        await foreach (var t in _client.SwissTournaments.StreamTeamTournamentsAsync("lichess-swiss", max: 1))
+        await foreach (var t in _client.SwissTournaments.StreamTeamTournamentsAsync("lichess-swiss", 1))
         {
             tournaments.Add(t);
             break;
         }
 
         if (tournaments.Count == 0)
-        {
             // Skip if no tournaments available
             return;
-        }
 
         // Act
         var result = await _client.SwissTournaments.GetAsync(tournaments[0].Id);
@@ -210,7 +198,7 @@ public class TournamentsIntegrationTests : IDisposable
 
         // Act
         var tournaments = new List<SwissTournament>();
-        await foreach (var tournament in _client.SwissTournaments.StreamTeamTournamentsAsync(teamId, max: 5))
+        await foreach (var tournament in _client.SwissTournaments.StreamTeamTournamentsAsync(teamId, 5))
         {
             tournaments.Add(tournament);
             if (tournaments.Count >= 5) break;
@@ -230,24 +218,20 @@ public class TournamentsIntegrationTests : IDisposable
     {
         // Get a finished Swiss tournament
         var tournaments = new List<SwissTournament>();
-        await foreach (var t in _client.SwissTournaments.StreamTeamTournamentsAsync("lichess-swiss", max: 10))
-        {
+        await foreach (var t in _client.SwissTournaments.StreamTeamTournamentsAsync("lichess-swiss", 10))
             if (t.Status == "finished")
             {
                 tournaments.Add(t);
                 break;
             }
-        }
 
         if (tournaments.Count == 0)
-        {
             // Skip if no finished tournaments
             return;
-        }
 
         // Act
         var results = new List<SwissPlayerResult>();
-        await foreach (var result in _client.SwissTournaments.StreamResultsAsync(tournaments[0].Id, nb: 5))
+        await foreach (var result in _client.SwissTournaments.StreamResultsAsync(tournaments[0].Id, 5))
         {
             results.Add(result);
             if (results.Count >= 5) break;
@@ -284,14 +268,12 @@ public class TournamentsIntegrationTests : IDisposable
     {
         // Get a tournament ID first
         var tournaments = new List<SwissTournament>();
-        await foreach (var t in _client.SwissTournaments.StreamTeamTournamentsAsync("lichess-swiss", max: 1))
-        {
+        await foreach (var t in _client.SwissTournaments.StreamTeamTournamentsAsync("lichess-swiss", 1))
             if (t.Status == "created")
             {
                 tournaments.Add(t);
                 break;
             }
-        }
 
         if (tournaments.Count == 0) return;
 
@@ -299,5 +281,4 @@ public class TournamentsIntegrationTests : IDisposable
         await Assert.ThrowsAnyAsync<Exception>(async () =>
             await _client.SwissTournaments.JoinAsync(tournaments[0].Id));
     }
-
 }

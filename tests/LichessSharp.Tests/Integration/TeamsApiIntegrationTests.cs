@@ -1,15 +1,13 @@
 using FluentAssertions;
-
 using LichessSharp.Api.Contracts;
 using LichessSharp.Exceptions;
-
 using Xunit;
 
 namespace LichessSharp.Tests.Integration;
 
 /// <summary>
-/// Integration tests for the Teams API.
-/// These tests make real HTTP calls to Lichess.
+///     Integration tests for the Teams API.
+///     These tests make real HTTP calls to Lichess.
 /// </summary>
 [IntegrationTest]
 [Trait("Category", "Integration")]
@@ -61,8 +59,8 @@ public class TeamsApiIntegrationTests : IntegrationTestBase
     public async Task GetPopularAsync_WithPage2_ReturnsDifferentTeams()
     {
         // Act
-        var page1 = await Client.Teams.GetPopularAsync(page: 1);
-        var page2 = await Client.Teams.GetPopularAsync(page: 2);
+        var page1 = await Client.Teams.GetPopularAsync(1);
+        var page2 = await Client.Teams.GetPopularAsync(2);
 
         // Assert
         page1.Should().NotBeNull();
@@ -71,9 +69,7 @@ public class TeamsApiIntegrationTests : IntegrationTestBase
 
         // The teams should be different (unless there are very few total teams)
         if (page1.NbPages > 1)
-        {
             page1.CurrentPageResults!.First().Id.Should().NotBe(page2.CurrentPageResults!.First().Id);
-        }
     }
 
     [Fact]
@@ -126,7 +122,7 @@ public class TeamsApiIntegrationTests : IntegrationTestBase
         var searchTerm = "chess";
 
         // Act
-        var result = await Client.Teams.SearchAsync(searchTerm, page: 2);
+        var result = await Client.Teams.SearchAsync(searchTerm, 2);
 
         // Assert
         result.Should().NotBeNull();
@@ -144,10 +140,7 @@ public class TeamsApiIntegrationTests : IntegrationTestBase
         await foreach (var member in Client.Teams.StreamMembersAsync(teamId))
         {
             members.Add(member);
-            if (members.Count >= 5)
-            {
-                break; // Just get a few members for the test
-            }
+            if (members.Count >= 5) break; // Just get a few members for the test
         }
 
         // Assert

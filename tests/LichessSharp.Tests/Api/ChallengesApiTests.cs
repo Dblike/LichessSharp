@@ -10,14 +10,15 @@ namespace LichessSharp.Tests.Api;
 
 public class ChallengesApiTests
 {
-    private readonly Mock<ILichessHttpClient> _httpClientMock;
     private readonly ChallengesApi _challengesApi;
+    private readonly Mock<ILichessHttpClient> _httpClientMock;
 
     public ChallengesApiTests()
     {
         _httpClientMock = new Mock<ILichessHttpClient>();
         _challengesApi = new ChallengesApi(_httpClientMock.Object);
     }
+
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -49,7 +50,8 @@ public class ChallengesApiTests
         result.Should().NotBeNull();
         result.In.Should().HaveCount(1);
         result.Out.Should().HaveCount(1);
-        _httpClientMock.Verify(x => x.GetAsync<ChallengeList>("/api/challenge", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(x => x.GetAsync<ChallengeList>("/api/challenge", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -68,7 +70,9 @@ public class ChallengesApiTests
         // Assert
         result.Should().NotBeNull();
         result.Id.Should().Be(challengeId);
-        _httpClientMock.Verify(x => x.GetAsync<ChallengeJson>($"/api/challenge/{challengeId}/show", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<ChallengeJson>($"/api/challenge/{challengeId}/show", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -94,7 +98,8 @@ public class ChallengesApiTests
         var username = "opponent";
         var expectedResult = CreateTestChallenge("newchallenge");
         _httpClientMock
-            .Setup(x => x.PostAsync<ChallengeJson>($"/api/challenge/{username}", It.IsAny<HttpContent?>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<ChallengeJson>($"/api/challenge/{username}", It.IsAny<HttpContent?>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
         // Act
@@ -102,7 +107,9 @@ public class ChallengesApiTests
 
         // Assert
         result.Should().NotBeNull();
-        _httpClientMock.Verify(x => x.PostAsync<ChallengeJson>($"/api/challenge/{username}", It.IsAny<HttpContent?>(), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<ChallengeJson>($"/api/challenge/{username}", It.IsAny<HttpContent?>(),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -120,14 +127,17 @@ public class ChallengesApiTests
         var username = "user name";
         var expectedResult = CreateTestChallenge("newchallenge");
         _httpClientMock
-            .Setup(x => x.PostAsync<ChallengeJson>(It.Is<string>(s => s.Contains("user%20name")), It.IsAny<HttpContent?>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<ChallengeJson>(It.Is<string>(s => s.Contains("user%20name")),
+                It.IsAny<HttpContent?>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
         // Act
         await _challengesApi.CreateAsync(username);
 
         // Assert
-        _httpClientMock.Verify(x => x.PostAsync<ChallengeJson>(It.Is<string>(s => s.Contains("user%20name")), It.IsAny<HttpContent?>(), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<ChallengeJson>(It.Is<string>(s => s.Contains("user%20name")), It.IsAny<HttpContent?>(),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -136,7 +146,8 @@ public class ChallengesApiTests
         // Arrange
         var challengeId = "abc123";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/api/challenge/{challengeId}/accept", null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/api/challenge/{challengeId}/accept", null,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
@@ -144,7 +155,9 @@ public class ChallengesApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/challenge/{challengeId}/accept", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/challenge/{challengeId}/accept", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -161,7 +174,8 @@ public class ChallengesApiTests
         // Arrange
         var challengeId = "abc123";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/api/challenge/{challengeId}/decline", null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/api/challenge/{challengeId}/decline", null,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
@@ -169,7 +183,9 @@ public class ChallengesApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/challenge/{challengeId}/decline", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/challenge/{challengeId}/decline", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -178,7 +194,8 @@ public class ChallengesApiTests
         // Arrange
         var challengeId = "abc123";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/api/challenge/{challengeId}/decline", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/api/challenge/{challengeId}/decline", It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
@@ -186,7 +203,9 @@ public class ChallengesApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/challenge/{challengeId}/decline", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/challenge/{challengeId}/decline", It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -203,7 +222,8 @@ public class ChallengesApiTests
         // Arrange
         var challengeId = "abc123";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/api/challenge/{challengeId}/cancel", null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/api/challenge/{challengeId}/cancel", null,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
@@ -211,7 +231,9 @@ public class ChallengesApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/challenge/{challengeId}/cancel", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/challenge/{challengeId}/cancel", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -221,7 +243,8 @@ public class ChallengesApiTests
         var challengeId = "abc123";
         var opponentToken = "token123";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>(It.Is<string>(s => s.Contains("opponentToken=token123")), null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>(It.Is<string>(s => s.Contains("opponentToken=token123")), null,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
@@ -229,7 +252,9 @@ public class ChallengesApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>(It.Is<string>(s => s.Contains("opponentToken=token123")), null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>(It.Is<string>(s => s.Contains("opponentToken=token123")), null,
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -239,7 +264,8 @@ public class ChallengesApiTests
         var options = new ChallengeAiOptions { Level = 5 };
         var expectedResult = new ChallengeAiResponse { Id = "aigame123" };
         _httpClientMock
-            .Setup(x => x.PostAsync<ChallengeAiResponse>("/api/challenge/ai", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<ChallengeAiResponse>("/api/challenge/ai", It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
         // Act
@@ -248,7 +274,9 @@ public class ChallengesApiTests
         // Assert
         result.Should().NotBeNull();
         result.Id.Should().Be("aigame123");
-        _httpClientMock.Verify(x => x.PostAsync<ChallengeAiResponse>("/api/challenge/ai", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<ChallengeAiResponse>("/api/challenge/ai", It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -285,9 +313,11 @@ public class ChallengesApiTests
     public async Task CreateOpenAsync_CallsCorrectEndpoint()
     {
         // Arrange
-        var expectedResult = new ChallengeOpenJson { Id = "open123", Url = "https://lichess.org/open123", Status = "created", Rated = false };
+        var expectedResult = new ChallengeOpenJson
+            { Id = "open123", Url = "https://lichess.org/open123", Status = "created", Rated = false };
         _httpClientMock
-            .Setup(x => x.PostAsync<ChallengeOpenJson>("/api/challenge/open", It.IsAny<HttpContent?>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<ChallengeOpenJson>("/api/challenge/open", It.IsAny<HttpContent?>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
         // Act
@@ -296,7 +326,9 @@ public class ChallengesApiTests
         // Assert
         result.Should().NotBeNull();
         result.Id.Should().Be("open123");
-        _httpClientMock.Verify(x => x.PostAsync<ChallengeOpenJson>("/api/challenge/open", It.IsAny<HttpContent?>(), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<ChallengeOpenJson>("/api/challenge/open", It.IsAny<HttpContent?>(),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -305,7 +337,8 @@ public class ChallengesApiTests
         // Arrange
         var gameId = "game123";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/api/challenge/{gameId}/start-clocks", null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/api/challenge/{gameId}/start-clocks", null,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
@@ -313,7 +346,9 @@ public class ChallengesApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/challenge/{gameId}/start-clocks", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/challenge/{gameId}/start-clocks", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -322,7 +357,8 @@ public class ChallengesApiTests
         // Arrange
         var gameId = "game123";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>(It.Is<string>(s => s.Contains("token1=t1") && s.Contains("token2=t2")), null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>(It.Is<string>(s => s.Contains("token1=t1") && s.Contains("token2=t2")),
+                null, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
@@ -330,7 +366,9 @@ public class ChallengesApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>(It.Is<string>(s => s.Contains("token1=t1") && s.Contains("token2=t2")), null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>(It.Is<string>(s => s.Contains("token1=t1") && s.Contains("token2=t2")), null,
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -340,7 +378,8 @@ public class ChallengesApiTests
         var gameId = "game123";
         var seconds = 15;
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/api/round/{gameId}/add-time/{seconds}", null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/api/round/{gameId}/add-time/{seconds}", null,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
@@ -348,7 +387,9 @@ public class ChallengesApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/round/{gameId}/add-time/{seconds}", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/round/{gameId}/add-time/{seconds}", null,
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -367,12 +408,14 @@ public class ChallengesApiTests
             await _challengesApi.AddTimeAsync("game123", 61));
     }
 
-    private static ChallengeJson CreateTestChallenge(string id) => new()
+    private static ChallengeJson CreateTestChallenge(string id)
     {
-        Id = id,
-        Url = $"https://lichess.org/{id}",
-        Status = "created",
-        Rated = false
-    };
-
+        return new ChallengeJson
+        {
+            Id = id,
+            Url = $"https://lichess.org/{id}",
+            Status = "created",
+            Rated = false
+        };
+    }
 }

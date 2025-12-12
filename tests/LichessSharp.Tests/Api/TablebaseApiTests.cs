@@ -9,15 +9,16 @@ namespace LichessSharp.Tests.Api;
 
 public class TablebaseApiTests
 {
+    private readonly Uri _baseAddress = new("https://tablebase.lichess.ovh");
     private readonly Mock<ILichessHttpClient> _httpClientMock;
     private readonly TablebaseApi _tablebaseApi;
-    private readonly Uri _baseAddress = new("https://tablebase.lichess.ovh");
 
     public TablebaseApiTests()
     {
         _httpClientMock = new Mock<ILichessHttpClient>();
         _tablebaseApi = new TablebaseApi(_httpClientMock.Object, _baseAddress);
     }
+
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -218,40 +219,42 @@ public class TablebaseApiTests
             cts.Token), Times.Once);
     }
 
-    private static TablebaseResult CreateTestTablebaseResult() => new()
+    private static TablebaseResult CreateTestTablebaseResult()
     {
-        Category = "win",
-        Dtz = 1,
-        PreciseDtz = 1,
-        Dtm = 17,
-        Checkmate = false,
-        Stalemate = false,
-        InsufficientMaterial = false,
-        Moves = new List<TablebaseMove>
+        return new TablebaseResult
         {
-            new()
+            Category = "win",
+            Dtz = 1,
+            PreciseDtz = 1,
+            Dtm = 17,
+            Checkmate = false,
+            Stalemate = false,
+            InsufficientMaterial = false,
+            Moves = new List<TablebaseMove>
             {
-                Uci = "h7h8q",
-                San = "h8=Q+",
-                Category = "loss",
-                Dtz = -2,
-                PreciseDtz = -2,
-                Dtm = -16,
-                Zeroing = true,
-                Checkmate = false,
-                Stalemate = false
-            },
-            new()
-            {
-                Uci = "g7g8",
-                San = "Kg8",
-                Category = "draw",
-                Dtz = 0,
-                Zeroing = false,
-                Checkmate = false,
-                Stalemate = false
+                new()
+                {
+                    Uci = "h7h8q",
+                    San = "h8=Q+",
+                    Category = "loss",
+                    Dtz = -2,
+                    PreciseDtz = -2,
+                    Dtm = -16,
+                    Zeroing = true,
+                    Checkmate = false,
+                    Stalemate = false
+                },
+                new()
+                {
+                    Uci = "g7g8",
+                    San = "Kg8",
+                    Category = "draw",
+                    Dtz = 0,
+                    Zeroing = false,
+                    Checkmate = false,
+                    Stalemate = false
+                }
             }
-        }
-    };
-
+        };
+    }
 }

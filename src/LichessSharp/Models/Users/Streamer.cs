@@ -3,126 +3,126 @@ using System.Text.Json.Serialization;
 namespace LichessSharp.Models.Users;
 
 /// <summary>
-/// A live streamer on Lichess.
+///     A live streamer on Lichess.
 /// </summary>
 public class Streamer
 {
     /// <summary>
-    /// The user's unique identifier.
+    ///     The user's unique identifier.
     /// </summary>
     [JsonPropertyName("id")]
     public required string Id { get; init; }
 
     /// <summary>
-    /// The user's display name.
+    ///     The user's display name.
     /// </summary>
     [JsonPropertyName("name")]
     public required string Name { get; init; }
 
     /// <summary>
-    /// The user's title, if any.
+    ///     The user's title, if any.
     /// </summary>
     [JsonPropertyName("title")]
     public string? Title { get; init; }
 
     /// <summary>
-    /// Whether the user is online.
+    ///     Whether the user is online.
     /// </summary>
     [JsonPropertyName("online")]
     public bool? Online { get; init; }
 
     /// <summary>
-    /// Whether the user is a patron.
+    ///     Whether the user is a patron.
     /// </summary>
     [JsonPropertyName("patron")]
     public bool? Patron { get; init; }
 
     /// <summary>
-    /// Stream information.
+    ///     Stream information.
     /// </summary>
     [JsonPropertyName("stream")]
     public StreamInfo? Stream { get; init; }
 
     /// <summary>
-    /// Streamer-specific information.
+    ///     Streamer-specific information.
     /// </summary>
     [JsonPropertyName("streamer")]
     public StreamerInfo? StreamerDetails { get; init; }
 }
 
 /// <summary>
-/// Stream information.
+///     Stream information.
 /// </summary>
 public class StreamInfo
 {
     /// <summary>
-    /// Streaming service (twitch, youtube).
+    ///     Streaming service (twitch, youtube).
     /// </summary>
     [JsonPropertyName("service")]
     public string? Service { get; init; }
 
     /// <summary>
-    /// Stream status.
+    ///     Stream status.
     /// </summary>
     [JsonPropertyName("status")]
     public string? Status { get; init; }
 
     /// <summary>
-    /// Stream language.
+    ///     Stream language.
     /// </summary>
     [JsonPropertyName("lang")]
     public string? Lang { get; init; }
 }
 
 /// <summary>
-/// Streamer-specific information.
+///     Streamer-specific information.
 /// </summary>
 public class StreamerInfo
 {
     /// <summary>
-    /// Streamer name.
+    ///     Streamer name.
     /// </summary>
     [JsonPropertyName("name")]
     public string? Name { get; init; }
 
     /// <summary>
-    /// Streamer headline.
+    ///     Streamer headline.
     /// </summary>
     [JsonPropertyName("headline")]
     public string? Headline { get; init; }
 
     /// <summary>
-    /// Streamer description.
+    ///     Streamer description.
     /// </summary>
     [JsonPropertyName("description")]
     public string? Description { get; init; }
 
     /// <summary>
-    /// Twitch channel URL.
+    ///     Twitch channel URL.
     /// </summary>
     [JsonPropertyName("twitch")]
     public string? Twitch { get; init; }
 
     /// <summary>
-    /// YouTube channel URL.
+    ///     YouTube channel URL.
     /// </summary>
     [JsonPropertyName("youTube")]
     public string? YouTube { get; init; }
 
     /// <summary>
-    /// Stream image URL.
+    ///     Stream image URL.
     /// </summary>
     [JsonPropertyName("image")]
     public string? Image { get; init; }
 }
 
 /// <summary>
-/// Stream channel information.
+///     Stream channel information.
 /// </summary>
 public class StreamChannel
 {
     /// <summary>
-    /// Channel name/ID.
+    ///     Channel name/ID.
     /// </summary>
     [JsonPropertyName("channel")]
     public string? Channel { get; init; }

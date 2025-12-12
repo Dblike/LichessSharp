@@ -5,47 +5,39 @@ using Xunit;
 namespace LichessSharp.Tests.Integration.Manual;
 
 /// <summary>
-/// Manual integration tests for the OAuth API.
-/// These tests require specific setup and are intended to be run manually.
-///
-/// OAuth Flow Testing Requirements:
-///
-/// 1. GetTokenAsync (Authorization Code Flow):
-///    - Cannot be fully automated as it requires user browser interaction
-///    - Steps to test manually:
-///      a. Register an OAuth app or use client_id for public apps
-///      b. Redirect user to: https://lichess.org/oauth?response_type=code&amp;client_id=YOUR_ID&amp;redirect_uri=YOUR_URI&amp;code_challenge=CHALLENGE&amp;code_challenge_method=S256
-///      c. User authorizes the app
-///      d. Exchange the code using GetTokenAsync
-///
-/// 2. RevokeTokenAsync:
-///    - Requires a valid access token
-///    - WARNING: This will invalidate your test token!
-///
-/// 3. TestTokensAsync:
-///    - Can test with personal access tokens
-///    - Does not require full OAuth flow
-///
-/// To run token tests:
-/// 1. Create a personal access token at https://lichess.org/account/oauth/token
-/// 2. Set the LICHESS_TEST_TOKEN environment variable
-/// 3. Run: dotnet test --filter "Category=Manual"
+///     Manual integration tests for the OAuth API.
+///     These tests require specific setup and are intended to be run manually.
+///     OAuth Flow Testing Requirements:
+///     1. GetTokenAsync (Authorization Code Flow):
+///     - Cannot be fully automated as it requires user browser interaction
+///     - Steps to test manually:
+///     a. Register an OAuth app or use client_id for public apps
+///     b. Redirect user to: https://lichess.org/oauth?response_type=code&amp;client_id=YOUR_ID&amp;redirect_uri=YOUR_URI
+///     &amp;code_challenge=CHALLENGE&amp;code_challenge_method=S256
+///     c. User authorizes the app
+///     d. Exchange the code using GetTokenAsync
+///     2. RevokeTokenAsync:
+///     - Requires a valid access token
+///     - WARNING: This will invalidate your test token!
+///     3. TestTokensAsync:
+///     - Can test with personal access tokens
+///     - Does not require full OAuth flow
+///     To run token tests:
+///     1. Create a personal access token at https://lichess.org/account/oauth/token
+///     2. Set the LICHESS_TEST_TOKEN environment variable
+///     3. Run: dotnet test --filter "Category=Manual"
 /// </summary>
 [IntegrationTest]
 [Trait("Category", "Integration")]
 [Trait("Category", "Manual")]
 public class OAuthApiManualTests : AuthenticatedTestBase
 {
-
     [Fact]
     public async Task TestTokensAsync_WithValidToken_ReturnsTokenInfo()
     {
         // Arrange - get the current token from TestConfiguration
         var token = TestConfiguration.LichessToken;
-        if (string.IsNullOrWhiteSpace(token))
-        {
-            return;
-        }
+        if (string.IsNullOrWhiteSpace(token)) return;
 
         // Act
         var results = await Client.OAuth.TestTokensAsync([token]);
@@ -77,10 +69,7 @@ public class OAuthApiManualTests : AuthenticatedTestBase
     {
         // Arrange
         var validToken = TestConfiguration.LichessToken;
-        if (string.IsNullOrWhiteSpace(validToken))
-        {
-            return;
-        }
+        if (string.IsNullOrWhiteSpace(validToken)) return;
 
         const string invalidToken = "lip_invalid_token_12345678";
 
@@ -98,10 +87,7 @@ public class OAuthApiManualTests : AuthenticatedTestBase
     {
         // Arrange
         var token = TestConfiguration.LichessToken;
-        if (string.IsNullOrWhiteSpace(token))
-        {
-            return;
-        }
+        if (string.IsNullOrWhiteSpace(token)) return;
 
         // Act
         var results = await Client.OAuth.TestTokensAsync([token]);
@@ -116,9 +102,9 @@ public class OAuthApiManualTests : AuthenticatedTestBase
     }
 
     /// <summary>
-    /// WARNING: This test will revoke your current token!
-    /// Only run if you want to test token revocation.
-    /// You will need to create a new token afterward.
+    ///     WARNING: This test will revoke your current token!
+    ///     Only run if you want to test token revocation.
+    ///     You will need to create a new token afterward.
     /// </summary>
     [Fact(Skip = "This will revoke your token - run manually only")]
     public async Task RevokeTokenAsync_WithValidToken_RevokesToken()
@@ -133,15 +119,14 @@ public class OAuthApiManualTests : AuthenticatedTestBase
     }
 
     /// <summary>
-    /// This test demonstrates the structure of GetTokenAsync but cannot be fully automated
-    /// because it requires browser interaction for the OAuth authorization flow.
-    ///
-    /// To test manually:
-    /// 1. Generate a code verifier: random 43-128 character string
-    /// 2. Generate code challenge: Base64Url(SHA256(code_verifier))
-    /// 3. Redirect user to authorization URL
-    /// 4. Capture the authorization code from redirect
-    /// 5. Call GetTokenAsync with the code
+    ///     This test demonstrates the structure of GetTokenAsync but cannot be fully automated
+    ///     because it requires browser interaction for the OAuth authorization flow.
+    ///     To test manually:
+    ///     1. Generate a code verifier: random 43-128 character string
+    ///     2. Generate code challenge: Base64Url(SHA256(code_verifier))
+    ///     3. Redirect user to authorization URL
+    ///     4. Capture the authorization code from redirect
+    ///     5. Call GetTokenAsync with the code
     /// </summary>
     [Fact(Skip = "Requires browser OAuth flow - run manually only")]
     public async Task GetTokenAsync_WithValidCode_ReturnsAccessToken()
@@ -166,11 +151,10 @@ public class OAuthApiManualTests : AuthenticatedTestBase
         token.AccessToken.Should().NotBeNullOrWhiteSpace();
         token.TokenType.Should().Be("Bearer");
     }
-
 }
 
 /// <summary>
-/// Unauthenticated tests for OAuth API.
+///     Unauthenticated tests for OAuth API.
 /// </summary>
 [IntegrationTest]
 [Trait("Category", "Integration")]
@@ -217,10 +201,7 @@ public class OAuthApiIntegrationTests : IntegrationTestBase
 
         // Assert
         results.Should().HaveCount(3);
-        foreach (var token in invalidTokens)
-        {
-            results[token].Should().BeNull();
-        }
+        foreach (var token in invalidTokens) results[token].Should().BeNull();
     }
 
     [Fact]

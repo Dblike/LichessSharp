@@ -20,6 +20,7 @@ public class UsersApiTests
         _httpClientMock = new Mock<ILichessHttpClient>();
         _usersApi = new UsersApi(_httpClientMock.Object);
     }
+
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -45,7 +46,8 @@ public class UsersApiTests
 
         // Assert
         result.Should().BeEquivalentTo(expectedUser);
-        _httpClientMock.Verify(x => x.GetAsync<UserExtended>("/api/user/DrNykterstein", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(x => x.GetAsync<UserExtended>("/api/user/DrNykterstein", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -108,7 +110,8 @@ public class UsersApiTests
             CreateTestUser("user3")
         };
         _httpClientMock
-            .Setup(x => x.PostPlainTextAsync<List<User>>("/api/users", "user1,user2,user3", It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostPlainTextAsync<List<User>>("/api/users", "user1,user2,user3",
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedUsers);
 
         // Act
@@ -116,7 +119,9 @@ public class UsersApiTests
 
         // Assert
         result.Should().HaveCount(3);
-        _httpClientMock.Verify(x => x.PostPlainTextAsync<List<User>>("/api/users", "user1,user2,user3", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostPlainTextAsync<List<User>>("/api/users", "user1,user2,user3", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -127,7 +132,9 @@ public class UsersApiTests
 
         // Assert
         result.Should().BeEmpty();
-        _httpClientMock.Verify(x => x.PostPlainTextAsync<List<User>>(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        _httpClientMock.Verify(
+            x => x.PostPlainTextAsync<List<User>>(It.IsAny<string>(), It.IsAny<string>(),
+                It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
@@ -248,7 +255,8 @@ public class UsersApiTests
         // Assert
         result.Should().ContainKey("bullet");
         result.Should().ContainKey("blitz");
-        _httpClientMock.Verify(x => x.GetAsync<Dictionary<string, List<User>>>("/api/player", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<Dictionary<string, List<User>>>("/api/player", It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -265,7 +273,9 @@ public class UsersApiTests
 
         // Assert
         result.Should().HaveCount(1);
-        _httpClientMock.Verify(x => x.GetAsync<LeaderboardResponse>("/api/player/top/100/bullet", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<LeaderboardResponse>("/api/player/top/100/bullet", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -280,7 +290,9 @@ public class UsersApiTests
         await _usersApi.GetLeaderboardAsync("blitz", 50);
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<LeaderboardResponse>("/api/player/top/50/blitz", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<LeaderboardResponse>("/api/player/top/50/blitz", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -322,7 +334,8 @@ public class UsersApiTests
             new() { Name = "Bullet", Points = new List<RatingDataPoint>() }
         };
         _httpClientMock
-            .Setup(x => x.GetAsync<List<RatingHistory>>("/api/user/DrNykterstein/rating-history", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<List<RatingHistory>>("/api/user/DrNykterstein/rating-history",
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedHistory);
 
         // Act
@@ -331,7 +344,9 @@ public class UsersApiTests
         // Assert
         result.Should().HaveCount(1);
         result[0].Name.Should().Be("Bullet");
-        _httpClientMock.Verify(x => x.GetAsync<List<RatingHistory>>("/api/user/DrNykterstein/rating-history", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<List<RatingHistory>>("/api/user/DrNykterstein/rating-history",
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -358,7 +373,9 @@ public class UsersApiTests
 
         // Assert
         result.Rank.Should().Be(100);
-        _httpClientMock.Verify(x => x.GetAsync<UserPerformance>("/api/user/thibault/perf/bullet", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<UserPerformance>("/api/user/thibault/perf/bullet", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -389,7 +406,9 @@ public class UsersApiTests
 
         // Assert
         result.Should().HaveCount(1);
-        _httpClientMock.Verify(x => x.GetAsync<List<UserActivity>>("/api/user/thibault/activity", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<List<UserActivity>>("/api/user/thibault/activity", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -446,7 +465,8 @@ public class UsersApiTests
     public async Task AutocompletePlayersAsync_WithValidTerm_CallsCorrectEndpoint()
     {
         // Arrange
-        var expected = new AutocompleteResponse { Result = new List<AutocompletePlayer> { new() { Id = "thibault", Name = "Thibault" } } };
+        var expected = new AutocompleteResponse
+            { Result = new List<AutocompletePlayer> { new() { Id = "thibault", Name = "Thibault" } } };
         _httpClientMock
             .Setup(x => x.GetAsync<AutocompleteResponse>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(expected);
@@ -475,7 +495,8 @@ public class UsersApiTests
 
         // Assert
         result.NbGames.Should().Be(10);
-        _httpClientMock.Verify(x => x.GetAsync<Crosstable>("/api/crosstable/user1/user2", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<Crosstable>("/api/crosstable/user1/user2", It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -487,10 +508,12 @@ public class UsersApiTests
             .ReturnsAsync(new Crosstable());
 
         // Act
-        await _usersApi.GetCrosstableAsync("user1", "user2", matchup: true);
+        await _usersApi.GetCrosstableAsync("user1", "user2", true);
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<Crosstable>("/api/crosstable/user1/user2?matchup=true", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<Crosstable>("/api/crosstable/user1/user2?matchup=true", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -521,7 +544,8 @@ public class UsersApiTests
 
         // Assert
         result.Should().HaveCount(1);
-        _httpClientMock.Verify(x => x.GetAsync<List<Streamer>>("/api/streamer/live", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(x => x.GetAsync<List<Streamer>>("/api/streamer/live", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -538,7 +562,8 @@ public class UsersApiTests
 
         // Assert
         result.Should().Be("Test note");
-        _httpClientMock.Verify(x => x.GetAsync<NoteResponse>("/api/user/thibault/note", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(x => x.GetAsync<NoteResponse>("/api/user/thibault/note", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -580,17 +605,22 @@ public class UsersApiTests
         await act.Should().ThrowAsync<ArgumentNullException>();
     }
 
-    private static User CreateTestUser(string username) => new()
+    private static User CreateTestUser(string username)
     {
-        Id = username.ToLowerInvariant(),
-        Username = username
-    };
+        return new User
+        {
+            Id = username.ToLowerInvariant(),
+            Username = username
+        };
+    }
 
-    private static UserExtended CreateTestUserExtended(string username) => new()
+    private static UserExtended CreateTestUserExtended(string username)
     {
-        Id = username.ToLowerInvariant(),
-        Username = username,
-        CreatedAt = DateTimeOffset.UtcNow
-    };
-
+        return new UserExtended
+        {
+            Id = username.ToLowerInvariant(),
+            Username = username,
+            CreatedAt = DateTimeOffset.UtcNow
+        };
+    }
 }

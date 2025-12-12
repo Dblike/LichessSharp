@@ -18,6 +18,7 @@ public class TeamsApiTests
         _httpClientMock = new Mock<ILichessHttpClient>();
         _teamsApi = new TeamsApi(_httpClientMock.Object);
     }
+
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -71,14 +72,17 @@ public class TeamsApiTests
         var teamId = "team with spaces";
         var expectedTeam = CreateTestTeam(teamId);
         _httpClientMock
-            .Setup(x => x.GetAsync<Team>(It.Is<string>(s => s.Contains("team%20with%20spaces")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<Team>(It.Is<string>(s => s.Contains("team%20with%20spaces")),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedTeam);
 
         // Act
         await _teamsApi.GetAsync(teamId);
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<Team>(It.Is<string>(s => s.Contains("team%20with%20spaces")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<Team>(It.Is<string>(s => s.Contains("team%20with%20spaces")),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -95,7 +99,8 @@ public class TeamsApiTests
 
         // Assert
         result.Should().NotBeNull();
-        _httpClientMock.Verify(x => x.GetAsync<TeamPaginator>("/api/team/all", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(x => x.GetAsync<TeamPaginator>("/api/team/all", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -108,11 +113,12 @@ public class TeamsApiTests
             .ReturnsAsync(expectedResult);
 
         // Act
-        var result = await _teamsApi.GetPopularAsync(page: 3);
+        var result = await _teamsApi.GetPopularAsync(3);
 
         // Assert
         result.Should().NotBeNull();
-        _httpClientMock.Verify(x => x.GetAsync<TeamPaginator>("/api/team/all?page=3", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(x => x.GetAsync<TeamPaginator>("/api/team/all?page=3", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -120,7 +126,7 @@ public class TeamsApiTests
     {
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
-            await _teamsApi.GetPopularAsync(page: 0));
+            await _teamsApi.GetPopularAsync(0));
     }
 
     [Fact]
@@ -138,7 +144,8 @@ public class TeamsApiTests
 
         // Assert
         result.Should().HaveCount(2);
-        _httpClientMock.Verify(x => x.GetAsync<List<Team>>($"/api/team/of/{username}", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(x => x.GetAsync<List<Team>>($"/api/team/of/{username}", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -156,7 +163,8 @@ public class TeamsApiTests
         var searchText = "chess";
         var expectedResult = CreateTestPaginator();
         _httpClientMock
-            .Setup(x => x.GetAsync<TeamPaginator>(It.Is<string>(s => s.Contains("/api/team/search?text=chess")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<TeamPaginator>(It.Is<string>(s => s.Contains("/api/team/search?text=chess")),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
         // Act
@@ -164,7 +172,9 @@ public class TeamsApiTests
 
         // Assert
         result.Should().NotBeNull();
-        _httpClientMock.Verify(x => x.GetAsync<TeamPaginator>(It.Is<string>(s => s.Contains("/api/team/search?text=chess")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<TeamPaginator>(It.Is<string>(s => s.Contains("/api/team/search?text=chess")),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -173,14 +183,17 @@ public class TeamsApiTests
         // Arrange
         var expectedResult = CreateTestPaginator();
         _httpClientMock
-            .Setup(x => x.GetAsync<TeamPaginator>(It.Is<string>(s => s.Contains("text=test") && s.Contains("page=2")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<TeamPaginator>(It.Is<string>(s => s.Contains("text=test") && s.Contains("page=2")),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
         // Act
-        await _teamsApi.SearchAsync("test", page: 2);
+        await _teamsApi.SearchAsync("test", 2);
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<TeamPaginator>(It.Is<string>(s => s.Contains("text=test") && s.Contains("page=2")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<TeamPaginator>(It.Is<string>(s => s.Contains("text=test") && s.Contains("page=2")),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -196,7 +209,7 @@ public class TeamsApiTests
     {
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
-            await _teamsApi.SearchAsync("test", page: 0));
+            await _teamsApi.SearchAsync("test", 0));
     }
 
     [Fact]
@@ -206,14 +219,17 @@ public class TeamsApiTests
         var searchText = "chess club";
         var expectedResult = CreateTestPaginator();
         _httpClientMock
-            .Setup(x => x.GetAsync<TeamPaginator>(It.Is<string>(s => s.Contains("chess%20club")), It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<TeamPaginator>(It.Is<string>(s => s.Contains("chess%20club")),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
         // Act
         await _teamsApi.SearchAsync(searchText);
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<TeamPaginator>(It.Is<string>(s => s.Contains("chess%20club")), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<TeamPaginator>(It.Is<string>(s => s.Contains("chess%20club")),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -232,14 +248,13 @@ public class TeamsApiTests
 
         // Act
         var results = new List<TeamMember>();
-        await foreach (var member in _teamsApi.StreamMembersAsync(teamId))
-        {
-            results.Add(member);
-        }
+        await foreach (var member in _teamsApi.StreamMembersAsync(teamId)) results.Add(member);
 
         // Assert
         results.Should().HaveCount(2);
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<TeamMember>($"/api/team/{teamId}/users", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<TeamMember>($"/api/team/{teamId}/users", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -249,14 +264,19 @@ public class TeamsApiTests
         var teamId = "lichess-swiss";
         var members = new List<TeamMember>();
         _httpClientMock
-            .Setup(x => x.StreamNdjsonAsync<TeamMember>($"/api/team/{teamId}/users?full=true", It.IsAny<CancellationToken>()))
+            .Setup(x => x.StreamNdjsonAsync<TeamMember>($"/api/team/{teamId}/users?full=true",
+                It.IsAny<CancellationToken>()))
             .Returns(ToAsyncEnumerable(members));
 
         // Act
-        await foreach (var _ in _teamsApi.StreamMembersAsync(teamId, full: true)) { }
+        await foreach (var _ in _teamsApi.StreamMembersAsync(teamId, true))
+        {
+        }
 
         // Assert
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<TeamMember>($"/api/team/{teamId}/users?full=true", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<TeamMember>($"/api/team/{teamId}/users?full=true", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -265,7 +285,9 @@ public class TeamsApiTests
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentNullException>(async () =>
         {
-            await foreach (var _ in _teamsApi.StreamMembersAsync(null!)) { }
+            await foreach (var _ in _teamsApi.StreamMembersAsync(null!))
+            {
+            }
         });
     }
 
@@ -283,7 +305,8 @@ public class TeamsApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/team/{teamId}/join", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/team/{teamId}/join", null, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -292,15 +315,18 @@ public class TeamsApiTests
         // Arrange
         var teamId = "lichess-swiss";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/team/{teamId}/join", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/team/{teamId}/join", It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
-        var result = await _teamsApi.JoinAsync(teamId, message: "I would like to join!");
+        var result = await _teamsApi.JoinAsync(teamId, "I would like to join!");
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/team/{teamId}/join", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/team/{teamId}/join", It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -325,7 +351,8 @@ public class TeamsApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/team/{teamId}/quit", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/team/{teamId}/quit", null, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -343,7 +370,8 @@ public class TeamsApiTests
         var teamId = "my-team";
         var expectedRequests = new List<TeamRequestWithUser>();
         _httpClientMock
-            .Setup(x => x.GetAsync<List<TeamRequestWithUser>>($"/api/team/{teamId}/requests", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<List<TeamRequestWithUser>>($"/api/team/{teamId}/requests",
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedRequests);
 
         // Act
@@ -351,7 +379,9 @@ public class TeamsApiTests
 
         // Assert
         result.Should().NotBeNull();
-        _httpClientMock.Verify(x => x.GetAsync<List<TeamRequestWithUser>>($"/api/team/{teamId}/requests", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<List<TeamRequestWithUser>>($"/api/team/{teamId}/requests", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -361,14 +391,17 @@ public class TeamsApiTests
         var teamId = "my-team";
         var expectedRequests = new List<TeamRequestWithUser>();
         _httpClientMock
-            .Setup(x => x.GetAsync<List<TeamRequestWithUser>>($"/api/team/{teamId}/requests?declined=true", It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetAsync<List<TeamRequestWithUser>>($"/api/team/{teamId}/requests?declined=true",
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedRequests);
 
         // Act
-        await _teamsApi.GetJoinRequestsAsync(teamId, declined: true);
+        await _teamsApi.GetJoinRequestsAsync(teamId, true);
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<List<TeamRequestWithUser>>($"/api/team/{teamId}/requests?declined=true", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.GetAsync<List<TeamRequestWithUser>>($"/api/team/{teamId}/requests?declined=true",
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -378,7 +411,8 @@ public class TeamsApiTests
         var teamId = "my-team";
         var userId = "newuser";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/api/team/{teamId}/request/{userId}/accept", null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/api/team/{teamId}/request/{userId}/accept", null,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
@@ -386,7 +420,9 @@ public class TeamsApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/team/{teamId}/request/{userId}/accept", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/team/{teamId}/request/{userId}/accept", null,
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -412,7 +448,8 @@ public class TeamsApiTests
         var teamId = "my-team";
         var userId = "newuser";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/api/team/{teamId}/request/{userId}/decline", null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/api/team/{teamId}/request/{userId}/decline", null,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
@@ -420,7 +457,9 @@ public class TeamsApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/team/{teamId}/request/{userId}/decline", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/team/{teamId}/request/{userId}/decline", null,
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -430,7 +469,8 @@ public class TeamsApiTests
         var teamId = "my-team";
         var userId = "troublemaker";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/api/team/{teamId}/kick/{userId}", null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/api/team/{teamId}/kick/{userId}", null,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
@@ -438,7 +478,9 @@ public class TeamsApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/team/{teamId}/kick/{userId}", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/team/{teamId}/kick/{userId}", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -464,7 +506,8 @@ public class TeamsApiTests
         var teamId = "my-team";
         var message = "Hello everyone!";
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>($"/team/{teamId}/pm-all", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>($"/team/{teamId}/pm-all", It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
@@ -472,7 +515,9 @@ public class TeamsApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/team/{teamId}/pm-all", It.IsAny<HttpContent>(), It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/team/{teamId}/pm-all", It.IsAny<HttpContent>(),
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -491,31 +536,33 @@ public class TeamsApiTests
             await _teamsApi.MessageAllMembersAsync("team", null!));
     }
 
-    private static Team CreateTestTeam(string id) => new()
+    private static Team CreateTestTeam(string id)
     {
-        Id = id,
-        Name = $"Team {id}",
-        Description = "A test team",
-        NbMembers = 100,
-        Open = true
-    };
+        return new Team
+        {
+            Id = id,
+            Name = $"Team {id}",
+            Description = "A test team",
+            NbMembers = 100,
+            Open = true
+        };
+    }
 
-    private static TeamPaginator CreateTestPaginator() => new()
+    private static TeamPaginator CreateTestPaginator()
     {
-        CurrentPage = 1,
-        MaxPerPage = 15,
-        CurrentPageResults = [CreateTestTeam("team1"), CreateTestTeam("team2")],
-        NbResults = 100,
-        NbPages = 7
-    };
+        return new TeamPaginator
+        {
+            CurrentPage = 1,
+            MaxPerPage = 15,
+            CurrentPageResults = [CreateTestTeam("team1"), CreateTestTeam("team2")],
+            NbResults = 100,
+            NbPages = 7
+        };
+    }
 
     private static async IAsyncEnumerable<T> ToAsyncEnumerable<T>(IEnumerable<T> items)
     {
-        foreach (var item in items)
-        {
-            yield return item;
-        }
+        foreach (var item in items) yield return item;
         await Task.CompletedTask;
     }
-
 }

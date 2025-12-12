@@ -1,6 +1,5 @@
 using System.Runtime.CompilerServices;
 using System.Text;
-
 using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
 using LichessSharp.Models.Common;
@@ -8,7 +7,7 @@ using LichessSharp.Models.Common;
 namespace LichessSharp.Api;
 
 /// <summary>
-/// Implementation of the Bot API.
+///     Implementation of the Bot API.
 /// </summary>
 internal sealed class BotApi(ILichessHttpClient httpClient) : IBotApi
 {
@@ -17,33 +16,33 @@ internal sealed class BotApi(ILichessHttpClient httpClient) : IBotApi
     /// <inheritdoc />
     public async Task<bool> UpgradeAccountAsync(CancellationToken cancellationToken = default)
     {
-        await _httpClient.PostAsync<OkResponse>("/api/bot/account/upgrade", null, cancellationToken).ConfigureAwait(false);
+        await _httpClient.PostAsync<OkResponse>("/api/bot/account/upgrade", null, cancellationToken)
+            .ConfigureAwait(false);
         return true;
     }
 
     /// <inheritdoc />
-    public async IAsyncEnumerable<BotAccountEvent> StreamEventsAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<BotAccountEvent> StreamEventsAsync(
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        await foreach (var evt in _httpClient.StreamNdjsonAsync<BotAccountEvent>("/api/stream/event", cancellationToken).ConfigureAwait(false))
-        {
-            yield return evt;
-        }
+        await foreach (var evt in _httpClient.StreamNdjsonAsync<BotAccountEvent>("/api/stream/event", cancellationToken)
+                           .ConfigureAwait(false)) yield return evt;
     }
 
     /// <inheritdoc />
-    public async IAsyncEnumerable<BotGameEvent> StreamGameAsync(string gameId, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<BotGameEvent> StreamGameAsync(string gameId,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(gameId);
 
         var endpoint = $"/api/bot/game/stream/{Uri.EscapeDataString(gameId)}";
-        await foreach (var evt in _httpClient.StreamNdjsonAsync<BotGameEvent>(endpoint, cancellationToken).ConfigureAwait(false))
-        {
-            yield return evt;
-        }
+        await foreach (var evt in _httpClient.StreamNdjsonAsync<BotGameEvent>(endpoint, cancellationToken)
+                           .ConfigureAwait(false)) yield return evt;
     }
 
     /// <inheritdoc />
-    public async Task<bool> MakeMoveAsync(string gameId, string move, bool? offeringDraw = null, CancellationToken cancellationToken = default)
+    public async Task<bool> MakeMoveAsync(string gameId, string move, bool? offeringDraw = null,
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(gameId);
         ArgumentException.ThrowIfNullOrWhiteSpace(move);
@@ -65,7 +64,8 @@ internal sealed class BotApi(ILichessHttpClient httpClient) : IBotApi
     }
 
     /// <inheritdoc />
-    public async Task<IReadOnlyList<ChatMessage>> GetChatAsync(string gameId, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<ChatMessage>> GetChatAsync(string gameId,
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(gameId);
 
@@ -74,7 +74,8 @@ internal sealed class BotApi(ILichessHttpClient httpClient) : IBotApi
     }
 
     /// <inheritdoc />
-    public async Task<bool> WriteChatAsync(string gameId, ChatRoom room, string text, CancellationToken cancellationToken = default)
+    public async Task<bool> WriteChatAsync(string gameId, ChatRoom room, string text,
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(gameId);
         ArgumentException.ThrowIfNullOrWhiteSpace(text);
@@ -120,7 +121,8 @@ internal sealed class BotApi(ILichessHttpClient httpClient) : IBotApi
     }
 
     /// <inheritdoc />
-    public async Task<bool> HandleTakebackAsync(string gameId, bool accept, CancellationToken cancellationToken = default)
+    public async Task<bool> HandleTakebackAsync(string gameId, bool accept,
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(gameId);
 
@@ -140,22 +142,16 @@ internal sealed class BotApi(ILichessHttpClient httpClient) : IBotApi
     }
 
     /// <inheritdoc />
-    public async IAsyncEnumerable<BotUser> GetOnlineBotsAsync(int? count = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<BotUser> GetOnlineBotsAsync(int? count = null,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         if (count is < 1 or > 300)
-        {
             throw new ArgumentOutOfRangeException(nameof(count), "Count must be between 1 and 300.");
-        }
 
         var endpoint = "/api/bot/online";
-        if (count.HasValue)
-        {
-            endpoint += $"?nb={count.Value}";
-        }
+        if (count.HasValue) endpoint += $"?nb={count.Value}";
 
-        await foreach (var bot in _httpClient.StreamNdjsonAsync<BotUser>(endpoint, cancellationToken).ConfigureAwait(false))
-        {
-            yield return bot;
-        }
+        await foreach (var bot in _httpClient.StreamNdjsonAsync<BotUser>(endpoint, cancellationToken)
+                           .ConfigureAwait(false)) yield return bot;
     }
 }

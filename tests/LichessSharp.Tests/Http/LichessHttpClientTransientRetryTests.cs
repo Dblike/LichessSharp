@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Sockets;
 using FluentAssertions;
 using LichessSharp.Http;
@@ -11,7 +12,7 @@ using Xunit;
 namespace LichessSharp.Tests.Http;
 
 /// <summary>
-/// Tests for the transient retry behavior in LichessHttpClient.
+///     Tests for the transient retry behavior in LichessHttpClient.
 /// </summary>
 public class LichessHttpClientTransientRetryTests
 {
@@ -39,7 +40,7 @@ public class LichessHttpClientTransientRetryTests
     }
 
     /// <summary>
-    /// Creates an HttpRequestException with a specific HttpRequestError.
+    ///     Creates an HttpRequestException with a specific HttpRequestError.
     /// </summary>
     private static HttpRequestException CreateHttpRequestException(HttpRequestError error, string? message = null)
     {
@@ -73,10 +74,7 @@ public class LichessHttpClientTransientRetryTests
             .ReturnsAsync(() =>
             {
                 callCount++;
-                if (callCount < 3)
-                {
-                    throw CreateHttpRequestException(HttpRequestError.NameResolutionError);
-                }
+                if (callCount < 3) throw CreateHttpRequestException(HttpRequestError.NameResolutionError);
                 return new HttpResponseMessage(HttpStatusCode.OK)
                 {
                     Content = new StringContent("{\"ok\":true}")
@@ -179,9 +177,8 @@ public class LichessHttpClientTransientRetryTests
             {
                 callCount++;
                 if (callCount < 2)
-                {
-                    throw new HttpRequestException("Network error", new SocketException((int)SocketError.HostUnreachable));
-                }
+                    throw new HttpRequestException("Network error",
+                        new SocketException((int)SocketError.HostUnreachable));
                 return new HttpResponseMessage(HttpStatusCode.OK)
                 {
                     Content = new StringContent("{\"ok\":true}")
@@ -244,10 +241,7 @@ public class LichessHttpClientTransientRetryTests
             .ReturnsAsync(() =>
             {
                 callCount++;
-                if (callCount == 1)
-                {
-                    throw CreateHttpRequestException(HttpRequestError.NameResolutionError);
-                }
+                if (callCount == 1) throw CreateHttpRequestException(HttpRequestError.NameResolutionError);
                 // Cancel after first failure
                 cts.Cancel();
                 throw CreateHttpRequestException(HttpRequestError.NameResolutionError);
@@ -283,7 +277,7 @@ public class LichessHttpClientTransientRetryTests
                     1 => throw CreateHttpRequestException(HttpRequestError.NameResolutionError),
                     2 => new HttpResponseMessage(HttpStatusCode.TooManyRequests)
                     {
-                        Headers = { RetryAfter = new System.Net.Http.Headers.RetryConditionHeaderValue(TimeSpan.FromMilliseconds(10)) }
+                        Headers = { RetryAfter = new RetryConditionHeaderValue(TimeSpan.FromMilliseconds(10)) }
                     },
                     _ => new HttpResponseMessage(HttpStatusCode.OK)
                     {

@@ -18,6 +18,7 @@ public class RelationsApiTests
         _httpClientMock = new Mock<ILichessHttpClient>();
         _relationsApi = new RelationsApi(_httpClientMock.Object);
     }
+
     [Fact]
     public void Constructor_WithNullHttpClient_ThrowsArgumentNullException()
     {
@@ -44,7 +45,9 @@ public class RelationsApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/rel/follow/{username}", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/rel/follow/{username}", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -74,14 +77,17 @@ public class RelationsApiTests
         var username = "user name";
         var expectedResponse = new OkResponse { Ok = true };
         _httpClientMock
-            .Setup(x => x.PostAsync<OkResponse>(It.Is<string>(s => s.Contains("user%20name")), null, It.IsAny<CancellationToken>()))
+            .Setup(x => x.PostAsync<OkResponse>(It.Is<string>(s => s.Contains("user%20name")), null,
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResponse);
 
         // Act
         await _relationsApi.FollowUserAsync(username);
 
         // Assert
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>(It.Is<string>(s => s.Contains("user%20name")), null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>(It.Is<string>(s => s.Contains("user%20name")), null,
+                It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -99,7 +105,9 @@ public class RelationsApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/rel/unfollow/{username}", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/rel/unfollow/{username}", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -127,7 +135,9 @@ public class RelationsApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/rel/block/{username}", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/rel/block/{username}", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -155,7 +165,9 @@ public class RelationsApiTests
 
         // Assert
         result.Should().BeTrue();
-        _httpClientMock.Verify(x => x.PostAsync<OkResponse>($"/api/rel/unblock/{username}", null, It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/api/rel/unblock/{username}", null, It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
@@ -184,16 +196,14 @@ public class RelationsApiTests
 
         // Act
         var results = new List<UserExtended>();
-        await foreach (var user in _relationsApi.StreamFollowingUsersAsync())
-        {
-            results.Add(user);
-        }
+        await foreach (var user in _relationsApi.StreamFollowingUsersAsync()) results.Add(user);
 
         // Assert
         results.Should().HaveCount(2);
         results[0].Id.Should().Be("user1");
         results[1].Id.Should().Be("user2");
-        _httpClientMock.Verify(x => x.StreamNdjsonAsync<UserExtended>("/api/rel/following", It.IsAny<CancellationToken>()), Times.Once);
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<UserExtended>("/api/rel/following", It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -233,20 +243,19 @@ public class RelationsApiTests
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>(It.IsAny<string>(), null, cts.Token), Times.Once);
     }
 
-    private static UserExtended CreateTestUserExtended(string id, string username) => new()
+    private static UserExtended CreateTestUserExtended(string id, string username)
     {
-        Id = id,
-        Username = username,
-        CreatedAt = DateTimeOffset.UtcNow.AddYears(-1)
-    };
+        return new UserExtended
+        {
+            Id = id,
+            Username = username,
+            CreatedAt = DateTimeOffset.UtcNow.AddYears(-1)
+        };
+    }
 
     private static async IAsyncEnumerable<T> ToAsyncEnumerable<T>(IEnumerable<T> items)
     {
-        foreach (var item in items)
-        {
-            yield return item;
-        }
+        foreach (var item in items) yield return item;
         await Task.CompletedTask;
     }
-
 }
