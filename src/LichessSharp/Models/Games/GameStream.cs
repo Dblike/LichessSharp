@@ -29,13 +29,6 @@ public class MoveStreamEvent
     public Speed? Speed { get; init; }
 
     /// <summary>
-    ///     Performance type (first event only).
-    /// </summary>
-    /// TODO: Check if this is any different from Variant/Speed
-    [JsonPropertyName("perf")]
-    public string? Perf { get; init; }
-
-    /// <summary>
     ///     Whether the game is rated (first event only).
     /// </summary>
     [JsonPropertyName("rated")]
@@ -150,13 +143,6 @@ public class GameStreamEvent
     /// </summary>
     [JsonPropertyName("speed")]
     public Speed? Speed { get; init; }
-
-    /// <summary>
-    ///     Performance type.
-    /// </summary>
-    /// TODO: Check if this is any different from Variant/Speed
-    [JsonPropertyName("perf")]
-    public string? Perf { get; init; }
 
     /// <summary>
     ///     Timestamp when the game was created.

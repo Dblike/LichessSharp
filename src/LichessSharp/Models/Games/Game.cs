@@ -35,13 +35,6 @@ public class Game
     public Speed Speed { get; init; }
 
     /// <summary>
-    ///     The performance type (game mode).
-    /// </summary>
-    /// TODO: Check if this is any different from Variant/Speed
-    [JsonPropertyName("perf")]
-    public string? Perf { get; init; }
-
-    /// <summary>
     ///     When the game was created.
     /// </summary>
     [JsonPropertyName("createdAt")]

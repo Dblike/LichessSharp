@@ -76,12 +76,6 @@ public class OngoingGame
     public Speed Speed { get; init; }
 
     /// <summary>
-    ///     Performance type.
-    /// </summary>
-    [JsonPropertyName("perf")]
-    public string? Perf { get; init; }
-
-    /// <summary>
     ///     Whether the game is rated.
     /// </summary>
     [JsonPropertyName("rated")]

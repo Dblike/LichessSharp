@@ -497,7 +497,6 @@ public class TvApiTests
             Rated = true,
             Variant = Variant.Standard,
             Speed = Speed.Blitz,
-            Perf = "blitz",
             Status = GameStatus.Started,
             CreatedAt = DateTimeOffset.UtcNow
         };
