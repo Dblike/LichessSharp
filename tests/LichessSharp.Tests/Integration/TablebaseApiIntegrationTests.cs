@@ -9,6 +9,7 @@ namespace LichessSharp.Tests.Integration;
 ///     Endpoint: tablebase.lichess.ovh
 /// </summary>
 [IntegrationTest]
+[LongRunningTest]
 [Trait("Category", "Integration")]
 public class TablebaseApiIntegrationTests : IntegrationTestBase
 {

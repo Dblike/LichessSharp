@@ -9,7 +9,9 @@ namespace LichessSharp.Tests.Integration;
 ///     These tests use real Lichess usernames from the OpenAPI spec examples.
 /// </summary>
 [IntegrationTest]
+[LongRunningTest]
 [Trait("Category", "Integration")]
+[Trait("Category", "LongRunning")]
 public class UsersApiIntegrationTests : IntegrationTestBase
 {
     // Well-known usernames from OpenAPI spec examples

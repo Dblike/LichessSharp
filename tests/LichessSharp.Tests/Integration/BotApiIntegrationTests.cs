@@ -10,6 +10,7 @@ namespace LichessSharp.Tests.Integration;
 ///     Note: Most Bot API endpoints require authentication.
 /// </summary>
 [IntegrationTest]
+[LongRunningTest]
 [Trait("Category", "Integration")]
 public class BotApiIntegrationTests : IntegrationTestBase
 {

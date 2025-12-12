@@ -16,8 +16,10 @@ namespace LichessSharp.Tests.Integration.Manual;
 ///     WARNING: The External Engine API is in alpha and subject to change.
 /// </summary>
 [IntegrationTest]
+[LongRunningTest]
 [Trait("Category", "Integration")]
 [Trait("Category", "Manual")]
+[Trait("Category", "LongRunning")]
 [RequiresScope("engine:read", "engine:write")]
 public class ExternalEngineApiManualTests : AuthenticatedTestBase
 {
@@ -221,7 +223,9 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
 ///     Unauthenticated tests for External Engine API - verifies auth is required.
 /// </summary>
 [IntegrationTest]
+[LongRunningTest]
 [Trait("Category", "Integration")]
+[Trait("Category", "LongRunning")]
 public class ExternalEngineApiAuthRequiredTests : IntegrationTestBase
 {
     [Fact]

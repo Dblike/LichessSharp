@@ -351,8 +351,27 @@ public class ActivityPost
     public string? TopicName { get; init; }
 
     /// <summary>
-    ///     Post URLs.
+    ///     Posts in the topic.
     /// </summary>
     [JsonPropertyName("posts")]
-    public IReadOnlyList<string>? Posts { get; init; }
+    public IReadOnlyList<ActivityPostEntry>? Posts { get; init; }
+}
+
+/// <summary>
+///     Individual post entry in activity.
+/// </summary>
+[ResponseOnly]
+public class ActivityPostEntry
+{
+    /// <summary>
+    ///     URL of the post.
+    /// </summary>
+    [JsonPropertyName("url")]
+    public string? Url { get; init; }
+
+    /// <summary>
+    ///     Text content of the post.
+    /// </summary>
+    [JsonPropertyName("text")]
+    public string? Text { get; init; }
 }

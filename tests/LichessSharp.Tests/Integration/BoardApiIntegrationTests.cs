@@ -11,6 +11,7 @@ namespace LichessSharp.Tests.Integration;
 ///     Note: All Board API endpoints require authentication.
 /// </summary>
 [IntegrationTest]
+[LongRunningTest]
 [Trait("Category", "Integration")]
 public class BoardApiIntegrationTests : IntegrationTestBase
 {

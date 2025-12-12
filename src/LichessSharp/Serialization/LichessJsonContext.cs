@@ -74,6 +74,7 @@ namespace LichessSharp.Serialization;
 [JsonSerializable(typeof(ActivityStudy))]
 [JsonSerializable(typeof(ActivityTeam))]
 [JsonSerializable(typeof(ActivityPost))]
+[JsonSerializable(typeof(ActivityPostEntry))]
 // User Social types
 [JsonSerializable(typeof(Crosstable))]
 [JsonSerializable(typeof(CrosstableMatchup))]

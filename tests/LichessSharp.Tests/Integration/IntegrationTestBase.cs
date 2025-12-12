@@ -1,3 +1,4 @@
+using LichessSharp.Exceptions;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
@@ -9,14 +10,80 @@ namespace LichessSharp.Tests.Integration;
 /// </summary>
 public abstract class IntegrationTestBase : IDisposable
 {
-    protected LichessClient Client { get; } = new();
+    /// <summary>
+    ///     Default number of retry attempts for rate-limited requests.
+    /// </summary>
+    protected const int DefaultMaxRetries = 3;
 
-    // Create client without authentication for public API tests
+    /// <summary>
+    ///     Default base delay in milliseconds for exponential backoff.
+    /// </summary>
+    protected const int DefaultBaseDelayMs = 1000;
+
+    protected LichessClient Client { get; } = new();
 
     public void Dispose()
     {
         Client.Dispose();
         GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    ///     Executes an async action with retry logic for rate limiting.
+    ///     Uses exponential backoff when a <see cref="LichessRateLimitException" /> is thrown.
+    /// </summary>
+    /// <typeparam name="T">The return type of the action.</typeparam>
+    /// <param name="action">The async action to execute.</param>
+    /// <param name="maxRetries">Maximum number of retry attempts (default: 3).</param>
+    /// <param name="baseDelayMs">Base delay in milliseconds for exponential backoff (default: 1000).</param>
+    /// <returns>The result of the action.</returns>
+    protected static async Task<T> WithRetryAsync<T>(
+        Func<Task<T>> action,
+        int maxRetries = DefaultMaxRetries,
+        int baseDelayMs = DefaultBaseDelayMs)
+    {
+        var attempt = 0;
+        while (true)
+        {
+            try
+            {
+                return await action();
+            }
+            catch (LichessRateLimitException ex)
+            {
+                attempt++;
+                if (attempt > maxRetries)
+                    throw;
+
+                // Use RetryAfter if provided, otherwise use exponential backoff
+                var delay = ex.RetryAfter ?? TimeSpan.FromMilliseconds(baseDelayMs * Math.Pow(2, attempt - 1));
+
+                // Cap the delay at 60 seconds
+                if (delay > TimeSpan.FromSeconds(60))
+                    delay = TimeSpan.FromSeconds(60);
+
+                await Task.Delay(delay);
+            }
+        }
+    }
+
+    /// <summary>
+    ///     Executes an async action with retry logic for rate limiting.
+    ///     Uses exponential backoff when a <see cref="LichessRateLimitException" /> is thrown.
+    /// </summary>
+    /// <param name="action">The async action to execute.</param>
+    /// <param name="maxRetries">Maximum number of retry attempts (default: 3).</param>
+    /// <param name="baseDelayMs">Base delay in milliseconds for exponential backoff (default: 1000).</param>
+    protected static async Task WithRetryAsync(
+        Func<Task> action,
+        int maxRetries = DefaultMaxRetries,
+        int baseDelayMs = DefaultBaseDelayMs)
+    {
+        await WithRetryAsync(async () =>
+        {
+            await action();
+            return true;
+        }, maxRetries, baseDelayMs);
     }
 }
 
@@ -25,6 +92,7 @@ public abstract class IntegrationTestBase : IDisposable
 ///     Use: dotnet test --filter "Category=Integration"
 ///     Skip: dotnet test --filter "Category!=Integration"
 /// </summary>
+[TraitDiscoverer("LichessSharp.Tests.Integration.IntegrationTestDiscoverer", "LichessSharp.Tests")]
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public sealed class IntegrationTestAttribute : Attribute, ITraitAttribute
 {
@@ -39,5 +107,28 @@ public class IntegrationTestDiscoverer : ITraitDiscoverer
     public IEnumerable<KeyValuePair<string, string>> GetTraits(IAttributeInfo traitAttribute)
     {
         yield return new KeyValuePair<string, string>("Category", IntegrationTestAttribute.Category);
+    }
+}
+
+/// <summary>
+///     Trait to mark tests as long-running.
+///     Use: dotnet test --filter "Category=LongRunning"
+///     Skip: dotnet test --filter "Category!=LongRunning"
+/// </summary>
+[TraitDiscoverer("LichessSharp.Tests.Integration.LongRunningTestDiscoverer", "LichessSharp.Tests")]
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+public sealed class LongRunningTestAttribute : Attribute, ITraitAttribute
+{
+    public const string Category = "LongRunning";
+}
+
+/// <summary>
+///     Trait discoverer for long-running tests.
+/// </summary>
+public class LongRunningTestDiscoverer : ITraitDiscoverer
+{
+    public IEnumerable<KeyValuePair<string, string>> GetTraits(IAttributeInfo traitAttribute)
+    {
+        yield return new KeyValuePair<string, string>("Category", LongRunningTestAttribute.Category);
     }
 }

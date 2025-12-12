@@ -28,8 +28,10 @@ namespace LichessSharp.Tests.Integration.Manual;
 ///     3. Run: dotnet test --filter "Category=Manual"
 /// </summary>
 [IntegrationTest]
+[LongRunningTest]
 [Trait("Category", "Integration")]
 [Trait("Category", "Manual")]
+[Trait("Category", "LongRunning")]
 public class OAuthApiManualTests : AuthenticatedTestBase
 {
     [Fact]
@@ -157,7 +159,9 @@ public class OAuthApiManualTests : AuthenticatedTestBase
 ///     Unauthenticated tests for OAuth API.
 /// </summary>
 [IntegrationTest]
+[LongRunningTest]
 [Trait("Category", "Integration")]
+[Trait("Category", "LongRunning")]
 public class OAuthApiIntegrationTests : IntegrationTestBase
 {
     [Fact]

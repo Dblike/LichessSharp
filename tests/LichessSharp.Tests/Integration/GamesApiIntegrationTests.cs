@@ -10,7 +10,9 @@ namespace LichessSharp.Tests.Integration;
 ///     These tests use real game IDs from the OpenAPI spec examples.
 /// </summary>
 [IntegrationTest]
+[LongRunningTest]
 [Trait("Category", "Integration")]
+[Trait("Category", "LongRunning")]
 public class GamesApiIntegrationTests : IntegrationTestBase
 {
     // Well-known game IDs from OpenAPI spec examples

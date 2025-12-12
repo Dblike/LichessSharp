@@ -14,8 +14,10 @@ namespace LichessSharp.Tests.Integration.Authenticated;
 /// </remarks>
 [AuthenticatedTest]
 [IntegrationTest]
+[LongRunningTest]
 [Trait("Category", "Integration")]
 [Trait("Category", "Authenticated")]
+[Trait("Category", "LongRunning")]
 public class MessagingApiAuthenticatedTests : AuthenticatedTestBase
 {
     [RequiresAuthentication]

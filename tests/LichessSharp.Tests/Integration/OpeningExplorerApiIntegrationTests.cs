@@ -10,7 +10,9 @@ namespace LichessSharp.Tests.Integration;
 ///     Endpoint: explorer.lichess.ovh
 /// </summary>
 [IntegrationTest]
+[LongRunningTest]
 [Trait("Category", "Integration")]
+[Trait("Category", "LongRunning")]
 public class OpeningExplorerApiIntegrationTests : IntegrationTestBase
 {
     // Starting position FEN

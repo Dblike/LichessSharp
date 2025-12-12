@@ -10,7 +10,9 @@ namespace LichessSharp.Tests.Integration;
 ///     These tests require network access to Lichess.
 /// </summary>
 [IntegrationTest]
+[LongRunningTest]
 [Trait("Category", "Integration")]
+[Trait("Category", "LongRunning")]
 public class TournamentsIntegrationTests : IDisposable
 {
     private readonly LichessClient _client = new();

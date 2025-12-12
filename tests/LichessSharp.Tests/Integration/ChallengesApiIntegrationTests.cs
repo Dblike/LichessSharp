@@ -11,6 +11,7 @@ namespace LichessSharp.Tests.Integration;
 ///     Note: Most Challenges API endpoints require authentication.
 /// </summary>
 [IntegrationTest]
+[LongRunningTest]
 [Trait("Category", "Integration")]
 public class ChallengesApiIntegrationTests : IntegrationTestBase
 {

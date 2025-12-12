@@ -10,8 +10,10 @@ namespace LichessSharp.Tests.Integration.Authenticated;
 /// </summary>
 [IntegrationTest]
 [AuthenticatedTest]
+[LongRunningTest]
 [Trait("Category", "Integration")]
 [Trait("Category", "Authenticated")]
+[Trait("Category", "LongRunning")]
 [RequiresScope("study:read")]
 public class StudiesApiAuthenticatedTests : AuthenticatedTestBase
 {
@@ -161,7 +163,9 @@ public class StudiesApiAuthenticatedTests : AuthenticatedTestBase
 ///     Tests public endpoints that don't require authentication.
 /// </summary>
 [IntegrationTest]
+[LongRunningTest]
 [Trait("Category", "Integration")]
+[Trait("Category", "LongRunning")]
 public class StudiesApiIntegrationTests : IntegrationTestBase
 {
     [Fact]

@@ -8,6 +8,7 @@ namespace LichessSharp.Tests.Integration;
 ///     These tests make real HTTP calls to Lichess.
 /// </summary>
 [IntegrationTest]
+[LongRunningTest]
 [Trait("Category", "Integration")]
 public class SimulsApiIntegrationTests : IntegrationTestBase
 {
