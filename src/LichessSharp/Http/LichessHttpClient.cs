@@ -320,6 +320,7 @@ internal sealed class LichessHttpClient : ILichessHttpClient
     {
         var rateLimitRetryCount = 0;
         var transientRetryCount = 0;
+        var unlimitedRateLimitRetries = _options.AutoRetryOnRateLimit && _options.UnlimitedRateLimitRetries;
         var maxRateLimitRetries = _options.AutoRetryOnRateLimit ? _options.MaxRateLimitRetries : 0;
         // Transient retry is only safe for requests without content (GET, etc.)
         // Content cannot be resent after the first attempt as the stream is consumed
@@ -363,7 +364,7 @@ internal sealed class LichessHttpClient : ILichessHttpClient
             // However, we skip rate limit retry for requests with content to avoid this issue.
             if (response.StatusCode == HttpStatusCode.TooManyRequests &&
                 content == null &&
-                rateLimitRetryCount < maxRateLimitRetries)
+                (unlimitedRateLimitRetries || rateLimitRetryCount < maxRateLimitRetries))
             {
                 rateLimitRetryCount++;
                 var retryAfter = GetRetryAfter(response);
@@ -372,7 +373,7 @@ internal sealed class LichessHttpClient : ILichessHttpClient
                     "Rate limited. Waiting {RetryAfter} before retry {RetryCount}/{MaxRetries}",
                     retryAfter,
                     rateLimitRetryCount,
-                    maxRateLimitRetries);
+                    unlimitedRateLimitRetries ? "unlimited" : maxRateLimitRetries);
 
                 await Task.Delay(retryAfter, cancellationToken).ConfigureAwait(false);
                 continue;
@@ -392,6 +393,7 @@ internal sealed class LichessHttpClient : ILichessHttpClient
     {
         var rateLimitRetryCount = 0;
         var transientRetryCount = 0;
+        var unlimitedRateLimitRetries = _options.AutoRetryOnRateLimit && _options.UnlimitedRateLimitRetries;
         var maxRateLimitRetries = _options.AutoRetryOnRateLimit ? _options.MaxRateLimitRetries : 0;
         // Transient retry is only safe for requests without content (GET, etc.)
         // Content cannot be resent after the first attempt as the stream is consumed
@@ -437,7 +439,7 @@ internal sealed class LichessHttpClient : ILichessHttpClient
             // Skip rate limit retry for requests with content as the content stream is consumed
             if (response.StatusCode == HttpStatusCode.TooManyRequests &&
                 content == null &&
-                rateLimitRetryCount < maxRateLimitRetries)
+                (unlimitedRateLimitRetries || rateLimitRetryCount < maxRateLimitRetries))
             {
                 rateLimitRetryCount++;
                 var retryAfter = GetRetryAfter(response);
@@ -446,7 +448,7 @@ internal sealed class LichessHttpClient : ILichessHttpClient
                     "Rate limited. Waiting {RetryAfter} before retry {RetryCount}/{MaxRetries}",
                     retryAfter,
                     rateLimitRetryCount,
-                    maxRateLimitRetries);
+                    unlimitedRateLimitRetries ? "unlimited" : maxRateLimitRetries);
 
                 await Task.Delay(retryAfter, cancellationToken).ConfigureAwait(false);
                 continue;
@@ -465,6 +467,7 @@ internal sealed class LichessHttpClient : ILichessHttpClient
     {
         var rateLimitRetryCount = 0;
         var transientRetryCount = 0;
+        var unlimitedRateLimitRetries = _options.AutoRetryOnRateLimit && _options.UnlimitedRateLimitRetries;
         var maxRateLimitRetries = _options.AutoRetryOnRateLimit ? _options.MaxRateLimitRetries : 0;
         // Transient retry is only safe for requests without content (GET, etc.)
         // Content cannot be resent after the first attempt as the stream is consumed
@@ -509,7 +512,7 @@ internal sealed class LichessHttpClient : ILichessHttpClient
             // Skip rate limit retry for requests with content as the content stream is consumed
             if (response.StatusCode == HttpStatusCode.TooManyRequests &&
                 content == null &&
-                rateLimitRetryCount < maxRateLimitRetries)
+                (unlimitedRateLimitRetries || rateLimitRetryCount < maxRateLimitRetries))
             {
                 rateLimitRetryCount++;
                 var retryAfter = GetRetryAfter(response);
@@ -518,7 +521,7 @@ internal sealed class LichessHttpClient : ILichessHttpClient
                     "Rate limited. Waiting {RetryAfter} before retry {RetryCount}/{MaxRetries}",
                     retryAfter,
                     rateLimitRetryCount,
-                    maxRateLimitRetries);
+                    unlimitedRateLimitRetries ? "unlimited" : maxRateLimitRetries);
 
                 await Task.Delay(retryAfter, cancellationToken).ConfigureAwait(false);
                 continue;

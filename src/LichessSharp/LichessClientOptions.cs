@@ -31,9 +31,21 @@ public sealed class LichessClientOptions
 
     /// <summary>
     ///     Maximum number of retries when rate limited.
-    ///     Defaults to 3.
+    ///     Defaults to 3. Ignored when <see cref="UnlimitedRateLimitRetries" /> is true.
     /// </summary>
     public int MaxRateLimitRetries { get; set; } = 3;
+
+    /// <summary>
+    ///     Whether to retry indefinitely when rate limited, respecting the Retry-After header.
+    ///     This is useful for integration tests that need to wait for rate limits to clear.
+    ///     Defaults to false. When true, <see cref="MaxRateLimitRetries" /> is ignored.
+    /// </summary>
+    /// <remarks>
+    ///     When enabled, the client will continue retrying 429 responses until the request succeeds
+    ///     or the cancellation token is triggered. The Retry-After header from Lichess is always
+    ///     respected to avoid premature retry attempts.
+    /// </remarks>
+    public bool UnlimitedRateLimitRetries { get; set; }
 
     /// <summary>
     ///     Whether to automatically retry on transient network failures (DNS errors, connection timeouts, etc.).

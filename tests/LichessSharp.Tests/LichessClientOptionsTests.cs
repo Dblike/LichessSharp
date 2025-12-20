@@ -17,6 +17,7 @@ public class LichessClientOptionsTests
         options.StreamingTimeout.Should().Be(Timeout.InfiniteTimeSpan);
         options.AutoRetryOnRateLimit.Should().BeTrue();
         options.MaxRateLimitRetries.Should().Be(3);
+        options.UnlimitedRateLimitRetries.Should().BeFalse();
         options.EnableTransientRetry.Should().BeTrue();
         options.MaxTransientRetries.Should().Be(3);
         options.TransientRetryBaseDelay.Should().Be(TimeSpan.FromSeconds(1));
@@ -33,6 +34,7 @@ public class LichessClientOptionsTests
             DefaultTimeout = TimeSpan.FromMinutes(1),
             AutoRetryOnRateLimit = false,
             MaxRateLimitRetries = 5,
+            UnlimitedRateLimitRetries = true,
             EnableTransientRetry = false,
             MaxTransientRetries = 5,
             TransientRetryBaseDelay = TimeSpan.FromMilliseconds(500),
@@ -44,6 +46,7 @@ public class LichessClientOptionsTests
         options.DefaultTimeout.Should().Be(TimeSpan.FromMinutes(1));
         options.AutoRetryOnRateLimit.Should().BeFalse();
         options.MaxRateLimitRetries.Should().Be(5);
+        options.UnlimitedRateLimitRetries.Should().BeTrue();
         options.EnableTransientRetry.Should().BeFalse();
         options.MaxTransientRetries.Should().Be(5);
         options.TransientRetryBaseDelay.Should().Be(TimeSpan.FromMilliseconds(500));

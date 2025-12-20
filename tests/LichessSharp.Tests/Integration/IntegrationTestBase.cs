@@ -1,4 +1,3 @@
-using LichessSharp.Exceptions;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
@@ -8,92 +7,30 @@ namespace LichessSharp.Tests.Integration;
 ///     Base class for integration tests that make real HTTP calls to Lichess.
 ///     These tests verify that the API client works correctly against the live API.
 /// </summary>
+/// <remarks>
+///     The client is configured with <see cref="LichessClientOptions.UnlimitedRateLimitRetries" /> enabled,
+///     which means it will automatically wait and retry when rate limited by Lichess.
+///     This ensures tests eventually complete rather than failing due to rate limits.
+/// </remarks>
 public abstract class IntegrationTestBase : IDisposable
 {
     /// <summary>
-    ///     Default number of retry attempts for rate-limited requests.
-    /// </summary>
-    protected const int DefaultMaxRetries = 3;
-
-    /// <summary>
-    ///     Default base delay in milliseconds for exponential backoff.
-    /// </summary>
-    protected const int DefaultBaseDelayMs = 1000;
-
-    /// <summary>
-    ///     Creates the LichessClient with a longer timeout suitable for integration tests.
-    ///     The timeout is increased to 2 minutes to accommodate rate limit retry delays
-    ///     (Lichess API can request up to 60 second waits).
+    ///     Creates the LichessClient configured for integration testing.
+    ///     The client has unlimited rate limit retries and an extended timeout to handle
+    ///     long waits when Lichess rate limits requests (up to 60 seconds per retry).
     /// </summary>
     protected LichessClient Client { get; } = new(
         new HttpClient(),
         new LichessClientOptions
         {
-            DefaultTimeout = TimeSpan.FromMinutes(2)
+            DefaultTimeout = TimeSpan.FromMinutes(10),
+            UnlimitedRateLimitRetries = true
         });
 
     public void Dispose()
     {
         Client.Dispose();
         GC.SuppressFinalize(this);
-    }
-
-    /// <summary>
-    ///     Executes an async action with retry logic for rate limiting.
-    ///     Uses exponential backoff when a <see cref="LichessRateLimitException" /> is thrown.
-    /// </summary>
-    /// <typeparam name="T">The return type of the action.</typeparam>
-    /// <param name="action">The async action to execute.</param>
-    /// <param name="maxRetries">Maximum number of retry attempts (default: 3).</param>
-    /// <param name="baseDelayMs">Base delay in milliseconds for exponential backoff (default: 1000).</param>
-    /// <returns>The result of the action.</returns>
-    protected static async Task<T> WithRetryAsync<T>(
-        Func<Task<T>> action,
-        int maxRetries = DefaultMaxRetries,
-        int baseDelayMs = DefaultBaseDelayMs)
-    {
-        var attempt = 0;
-        while (true)
-        {
-            try
-            {
-                return await action();
-            }
-            catch (LichessRateLimitException ex)
-            {
-                attempt++;
-                if (attempt > maxRetries)
-                    throw;
-
-                // Use RetryAfter if provided, otherwise use exponential backoff
-                var delay = ex.RetryAfter ?? TimeSpan.FromMilliseconds(baseDelayMs * Math.Pow(2, attempt - 1));
-
-                // Cap the delay at 60 seconds
-                if (delay > TimeSpan.FromSeconds(60))
-                    delay = TimeSpan.FromSeconds(60);
-
-                await Task.Delay(delay);
-            }
-        }
-    }
-
-    /// <summary>
-    ///     Executes an async action with retry logic for rate limiting.
-    ///     Uses exponential backoff when a <see cref="LichessRateLimitException" /> is thrown.
-    /// </summary>
-    /// <param name="action">The async action to execute.</param>
-    /// <param name="maxRetries">Maximum number of retry attempts (default: 3).</param>
-    /// <param name="baseDelayMs">Base delay in milliseconds for exponential backoff (default: 1000).</param>
-    protected static async Task WithRetryAsync(
-        Func<Task> action,
-        int maxRetries = DefaultMaxRetries,
-        int baseDelayMs = DefaultBaseDelayMs)
-    {
-        await WithRetryAsync(async () =>
-        {
-            await action();
-            return true;
-        }, maxRetries, baseDelayMs);
     }
 }
 

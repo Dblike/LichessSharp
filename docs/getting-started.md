@@ -58,6 +58,28 @@ var options = new LichessClientOptions
 using var client = new LichessClient(new HttpClient(), options);
 ```
 
+### Configuration for Integration Testing
+
+When running integration tests against the live Lichess API, you may encounter rate limits.
+Enable unlimited rate limit retries to ensure tests wait and complete rather than failing:
+
+```csharp
+var options = new LichessClientOptions
+{
+    AccessToken = "your-token",
+    DefaultTimeout = TimeSpan.FromMinutes(10), // Extended timeout for long waits
+
+    // Enable unlimited retries for rate limits (respects Retry-After header)
+    AutoRetryOnRateLimit = true,
+    UnlimitedRateLimitRetries = true
+};
+
+using var client = new LichessClient(new HttpClient(), options);
+```
+
+This configuration will automatically wait and retry when Lichess returns HTTP 429 (Too Many Requests),
+respecting the `Retry-After` header. Use a cancellation token to stop waiting if needed.
+
 ### Using with Dependency Injection
 
 For ASP.NET Core or other DI-enabled applications:
