@@ -64,7 +64,3 @@ Thumbs.db
 packages/
 project.lock.json
 project.fragment.lock.json
-
-# Reference assemblies
-LichessNET-master/
-lichess-api-1.json

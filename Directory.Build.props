@@ -10,9 +10,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Authors>LichessNet Contributors</Authors>
-    <Company>LichessNet</Company>
-    <Copyright>Copyright (c) LichessNet Contributors</Copyright>
+    <Authors>LichessSharp Contributors</Authors>
+    <Company>LichessSharp</Company>
+    <Copyright>Copyright (c) LichessSharp Contributors</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/your-org/lichess-net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/your-org/lichess-net</RepositoryUrl>
