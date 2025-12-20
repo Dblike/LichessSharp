@@ -10,12 +10,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Authors>LichessSharp Contributors</Authors>
-    <Company>LichessSharp</Company>
-    <Copyright>Copyright (c) LichessSharp Contributors</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/your-org/lichess-net</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/your-org/lichess-net</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Dblike/LichessSharp</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Dblike/LichessSharp.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 

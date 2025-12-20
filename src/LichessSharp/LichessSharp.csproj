@@ -9,9 +9,21 @@
     <!-- Package metadata -->
     <PackageId>LichessSharp</PackageId>
     <Version>0.1.0</Version>
-    <Description>A fully-featured .NET client library for the Lichess API. Supports all Lichess API endpoints including streaming, Board API, Bot API, and more.</Description>
-    <PackageTags>lichess;chess;api;client;games;puzzles;tournaments</PackageTags>
+    <Authors>Dan Blike</Authors>
+    <Description>A fully-featured .NET client library for the Lichess API.</Description>
+    <PackageTags>lichess;chess;api;client;games;puzzles;tournaments;streaming;bot;board</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/Dblike/LichessSharp</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Dblike/LichessSharp.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>See https://github.com/Dblike/LichessSharp/blob/main/CHANGELOG.md for release notes.</PackageReleaseNotes>
+
+    <!-- Source Link for debugging -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
     <!-- AOT compatibility analysis - disabled for scaffold, will be enabled incrementally -->
     <IsAotCompatible>false</IsAotCompatible>
@@ -25,10 +37,12 @@
     <PackageReference Include="Microsoft.Extensions.Http" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.Options" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
