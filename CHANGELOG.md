@@ -5,6 +5,37 @@ All notable changes to LichessSharp will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2025-12-19
+
+### Added
+
+- **OpenAPI schema validation testing** — Comprehensive test infrastructure to validate C# models against the Lichess OpenAPI specification
+  - `OpenApiSchemaReader` for parsing and resolving OpenAPI schemas
+  - `ModelReflector` for extracting JSON property metadata from C# types
+  - Automated detection of missing or mismatched `[JsonPropertyName]` attributes
+
+- **Fixture-based serialization tests** — Real API responses captured as test fixtures
+  - 35+ JSON fixtures covering Users, Games, Puzzles, Tournaments, Teams, Broadcasts, and more
+  - Round-trip serialization tests ensuring data preservation
+  - Field coverage tests detecting unmapped JSON properties
+
+- **Model property additions**
+  - `GameJson`: Added `Source`, `InitialFen`, `DaysPerTurn`, `Tournament`, `Swiss`, `Division`
+  - `GameDivision`: New class for middle game/endgame ply markers
+  - `UserExtended`: Added `Playing`, `Streaming`, `Streamer`, `Followable`, `Following`, `Blocking`
+  - `User`, `LightUser`: Added `PatronColor`
+  - `UserActivity`: Added `Storm`, `Racer`, `Streak`, `Simuls`, `Patron`
+  - `ActivityStorm`, `ActivityRacer`, `ActivityStreak`, `ActivitySimul`: New activity types
+  - `PuzzleRaceResults`: Added `Puzzles`, `StartsAt`, `FinishesAt`
+
+### Changed
+
+- **BREAKING**: `StreamerInfo.Twitch` and `StreamerInfo.YouTube` changed from `string?` to `StreamChannel?` to match actual API response structure
+
+### Fixed
+
+- `StreamerInfo` deserialization now correctly handles nested Twitch/YouTube channel objects
+
 ## [0.1.0] - 2025-12-19
 
 ### Added
@@ -39,4 +70,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Targets .NET 10.0
 - Uses `System.Text.Json` with AOT preparation (reflection enabled by default)
 
+[0.2.0]: https://github.com/Dblike/lichess-net/releases/tag/v0.2.0
 [0.1.0]: https://github.com/Dblike/lichess-net/releases/tag/v0.1.0

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
@@ -8,7 +8,7 @@
 
     <!-- Package metadata -->
     <PackageId>LichessSharp</PackageId>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Authors>Dan Blike</Authors>
     <Copyright>Copyright (c) 2025 Dan Blike. All rights reserved.</Copyright>
     <Description>A fully-featured .NET client library for the Lichess API.</Description>
