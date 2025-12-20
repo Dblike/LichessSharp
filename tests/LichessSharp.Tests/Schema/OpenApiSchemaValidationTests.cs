@@ -14,6 +14,20 @@ public class OpenApiSchemaValidationTests : IDisposable
     private readonly ITestOutputHelper _output;
     private static readonly string OpenApiPath = GetOpenApiPath();
 
+    /// <summary>
+    /// Known schema discrepancies that are intentional or due to OpenAPI spec errors.
+    /// Format: "TypeName:propertyName" for properties that should be skipped in validation.
+    /// </summary>
+    private static readonly HashSet<string> AcceptedDiscrepancies = new(StringComparer.OrdinalIgnoreCase)
+    {
+        // GameJson intentionally uses variant/speed instead of perf
+        "GameJson:perf",
+
+        // Clock: OpenAPI says "limit" is required, but actual API returns "initial"
+        // This is an OpenAPI spec error - the C# model correctly uses "initial"
+        "Clock:limit",
+    };
+
     public OpenApiSchemaValidationTests(ITestOutputHelper output)
     {
         _output = output;
@@ -97,8 +111,11 @@ public class OpenApiSchemaValidationTests : IDisposable
             _output.WriteLine($"[{typeName}] Extra in C# model (not in schema): {string.Join(", ", extraInCSharp)}");
         }
 
-        // Assert - only fail on required fields missing
-        var missingRequired = missingInCSharp.Where(f => f.Contains("(REQUIRED)")).ToList();
+        // Assert - only fail on required fields missing (excluding accepted discrepancies)
+        var missingRequired = missingInCSharp
+            .Where(f => f.Contains("(REQUIRED)"))
+            .Where(f => !IsAcceptedDiscrepancy(typeName, f))
+            .ToList();
         missingRequired.Should().BeEmpty(
             $"Type '{typeName}' is missing REQUIRED schema properties: {string.Join(", ", missingRequired)}");
     }
@@ -238,6 +255,17 @@ public class OpenApiSchemaValidationTests : IDisposable
         throw new FileNotFoundException(
             "Could not find openapi/lichess.openapi.json. " +
             "Make sure you're running tests from within the repository.");
+    }
+
+    /// <summary>
+    /// Checks if a missing property is an accepted/known discrepancy.
+    /// </summary>
+    private static bool IsAcceptedDiscrepancy(string typeName, string propertyDescription)
+    {
+        // Extract the property name from the description (e.g., "perf (REQUIRED)" -> "perf")
+        var propertyName = propertyDescription.Split(' ')[0];
+        var key = $"{typeName}:{propertyName}";
+        return AcceptedDiscrepancies.Contains(key);
     }
 
     public void Dispose() => _schemaReader.Dispose();

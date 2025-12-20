@@ -33,11 +33,20 @@ public class FixtureDeserializationTests
     }
 
     /// <summary>
-    /// Provides all available game fixture paths for parameterized testing.
+    /// Provides game fixture paths for parameterized testing.
+    /// Only includes actual game JSON files, not other API responses like TV channels or tablebase.
     /// </summary>
     public static IEnumerable<object[]> GetGameFixtures()
     {
-        foreach (var fixture in FixtureLoader.GetFixturesInDirectory("Games"))
+        // Only include actual game fixtures, not TV channels, tablebase, or cloud eval
+        var gameOnlyFiles = new[]
+        {
+            "Games/game_json_full.json",
+            "Games/game_with_analysis.json",
+            "Games/game_mini.json"
+        };
+
+        foreach (var fixture in gameOnlyFiles)
         {
             yield return new object[] { fixture };
         }

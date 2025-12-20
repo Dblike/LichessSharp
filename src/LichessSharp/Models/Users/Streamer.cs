@@ -101,16 +101,16 @@ public class StreamerInfo
     public string? Description { get; init; }
 
     /// <summary>
-    ///     Twitch channel URL.
+    ///     Twitch channel information.
     /// </summary>
     [JsonPropertyName("twitch")]
-    public string? Twitch { get; init; }
+    public StreamChannel? Twitch { get; init; }
 
     /// <summary>
-    ///     YouTube channel URL.
+    ///     YouTube channel information.
     /// </summary>
     [JsonPropertyName("youTube")]
-    public string? YouTube { get; init; }
+    public StreamChannel? YouTube { get; init; }
 
     /// <summary>
     ///     Stream image URL.
