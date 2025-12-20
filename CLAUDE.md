@@ -17,7 +17,7 @@ Goals:
 - Reach feature parity with mature Python/JavaScript clients
 - Minimize third-party dependencies
 - Keep the library easy to understand, well-documented, and extremely well-tested
-- Support all current .NET LTS versions (**.NET 8 and .NET 10**), and remain easy to extend as Lichess evolves
+- Support **.NET 10** (current target), and remain easy to extend as Lichess evolves
 
 Your responsibilities:
 
@@ -51,7 +51,7 @@ Then you must:
 - Identify architectural constraints and patterns (naming, async, error handling, modeling)  
 - Check how the corresponding endpoint is implemented in other language clients when relevant  
 - **Identify which parts of the public API and documentation (/docs, README, samples) are affected**
-- Lichess Open API spec is in the file lichess-openapi.json
+- Lichess OpenAPI spec is in the file `openapi/lichess.openapi.json`
 
 ---
 
@@ -94,7 +94,7 @@ After approval:
 
 Always:
 
-- Build the solution for **all target frameworks (.NET 8 and .NET 10)**  
+- Build the solution for **.NET 10**
 - Run all unit tests (skip integration tests--these are too long running)  
 - Ensure no API compatibility warnings are introduced (if API analyzer is configured)  
 - Verify async/streaming flows handle cancellation tokens correctly  

@@ -191,5 +191,4 @@ catch (LichessException ex)
 ## Next Steps
 
 - [Authentication Guide](authentication.md)
-- [Streaming Guide](streaming.md)
 - [API Coverage](api-coverage.md)
