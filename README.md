@@ -78,12 +78,12 @@ await foreach (var evt in client.Tv.StreamCurrentGameAsync())
 
 All 23 Lichess API areas are fully implemented (176 endpoints):
 
-**Core:** Account, Users, Relations, Games, TV, Puzzles
-**Analysis:** Cloud Evaluation, Opening Explorer, Tablebase
-**Play:** Challenges, Board API, Bot API
-**Competition:** Arena Tournaments, Swiss Tournaments, Simuls, Bulk Pairings
-**Content:** Studies, Broadcasts, Messaging
-**Other:** Teams, FIDE, OAuth, External Engine
+- **Core:** Account, Users, Relations, Games, TV, Puzzles
+- **Analysis:** Cloud Evaluation, Opening Explorer, Tablebase
+- **Play:** Challenges, Board API, Bot API
+- **Competition:** Arena Tournaments, Swiss Tournaments, Simuls, Bulk Pairings
+- **Content:** Studies, Broadcasts, Messaging
+- **Other:** Teams, FIDE, OAuth, External Engine
 
 See [docs/api-coverage.md](docs/api-coverage.md) for detailed endpoint-level coverage.
 
