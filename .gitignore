@@ -25,7 +25,8 @@ bld/
 # Rider
 .idea/
 
-# Build
+# Build artifacts
+artifacts/
 *.nupkg
 *.snupkg
 
