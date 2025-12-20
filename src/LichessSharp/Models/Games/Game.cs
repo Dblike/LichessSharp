@@ -109,6 +109,61 @@ public class GameJson : Game
     /// </summary>
     [JsonPropertyName("analysis")]
     public Analysis[]? Analysis { get; init; }
+
+    /// <summary>
+    ///     The source of the game (e.g., "pool", "friend", "ai", "arena", "swiss").
+    /// </summary>
+    [JsonPropertyName("source")]
+    public string? Source { get; init; }
+
+    /// <summary>
+    ///     The initial FEN position, if not the standard starting position.
+    /// </summary>
+    [JsonPropertyName("initialFen")]
+    public string? InitialFen { get; init; }
+
+    /// <summary>
+    ///     Days per turn for correspondence games.
+    /// </summary>
+    [JsonPropertyName("daysPerTurn")]
+    public int? DaysPerTurn { get; init; }
+
+    /// <summary>
+    ///     The tournament ID if this game is part of an arena tournament.
+    /// </summary>
+    [JsonPropertyName("tournament")]
+    public string? Tournament { get; init; }
+
+    /// <summary>
+    ///     The Swiss tournament ID if this game is part of a Swiss tournament.
+    /// </summary>
+    [JsonPropertyName("swiss")]
+    public string? Swiss { get; init; }
+
+    /// <summary>
+    ///     Game division information (middle game and endgame ply markers).
+    /// </summary>
+    [JsonPropertyName("division")]
+    public GameDivision? Division { get; init; }
+}
+
+/// <summary>
+///     Game division information indicating where middle game and endgame begin.
+/// </summary>
+[ResponseOnly]
+public class GameDivision
+{
+    /// <summary>
+    ///     The ply at which the middle game starts.
+    /// </summary>
+    [JsonPropertyName("middle")]
+    public int? Middle { get; init; }
+
+    /// <summary>
+    ///     The ply at which the endgame starts.
+    /// </summary>
+    [JsonPropertyName("end")]
+    public int? End { get; init; }
 }
 
 /// <summary>

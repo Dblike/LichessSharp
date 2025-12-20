@@ -43,6 +43,12 @@ public class User
     /// </summary>
     [JsonPropertyName("flair")]
     public string? Flair { get; init; }
+
+    /// <summary>
+    ///     The patron's wing color (1-10) if they are a patron.
+    /// </summary>
+    [JsonPropertyName("patronColor")]
+    public int? PatronColor { get; init; }
 }
 
 /// <summary>
@@ -124,6 +130,42 @@ public class UserExtended : User
     /// </summary>
     [JsonPropertyName("url")]
     public string? Url { get; init; }
+
+    /// <summary>
+    ///     Whether the user is currently playing a game.
+    /// </summary>
+    [JsonPropertyName("playing")]
+    public string? Playing { get; init; }
+
+    /// <summary>
+    ///     Whether the user is currently streaming.
+    /// </summary>
+    [JsonPropertyName("streaming")]
+    public bool? Streaming { get; init; }
+
+    /// <summary>
+    ///     Streamer information if the user is a streamer.
+    /// </summary>
+    [JsonPropertyName("streamer")]
+    public StreamerInfo? Streamer { get; init; }
+
+    /// <summary>
+    ///     Whether the authenticated user can follow this user.
+    /// </summary>
+    [JsonPropertyName("followable")]
+    public bool? Followable { get; init; }
+
+    /// <summary>
+    ///     Whether the authenticated user is following this user.
+    /// </summary>
+    [JsonPropertyName("following")]
+    public bool? Following { get; init; }
+
+    /// <summary>
+    ///     Whether the authenticated user is blocking this user.
+    /// </summary>
+    [JsonPropertyName("blocking")]
+    public bool? Blocking { get; init; }
 }
 
 /// <summary>

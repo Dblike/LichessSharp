@@ -44,4 +44,10 @@ public class LightUser
     /// </summary>
     [JsonPropertyName("flair")]
     public string? Flair { get; init; }
+
+    /// <summary>
+    ///     The patron's wing color (1-10) if they are a patron.
+    /// </summary>
+    [JsonPropertyName("patronColor")]
+    public int? PatronColor { get; init; }
 }

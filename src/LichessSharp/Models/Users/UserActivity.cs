@@ -80,6 +80,36 @@ public class UserActivity
     /// </summary>
     [JsonPropertyName("stream")]
     public bool? Stream { get; init; }
+
+    /// <summary>
+    ///     Puzzle Storm activity.
+    /// </summary>
+    [JsonPropertyName("storm")]
+    public ActivityStorm? Storm { get; init; }
+
+    /// <summary>
+    ///     Puzzle Racer activity.
+    /// </summary>
+    [JsonPropertyName("racer")]
+    public ActivityRacer? Racer { get; init; }
+
+    /// <summary>
+    ///     Puzzle Streak activity.
+    /// </summary>
+    [JsonPropertyName("streak")]
+    public ActivityStreak? Streak { get; init; }
+
+    /// <summary>
+    ///     Simultaneous exhibitions activity.
+    /// </summary>
+    [JsonPropertyName("simuls")]
+    public IReadOnlyList<ActivitySimul>? Simuls { get; init; }
+
+    /// <summary>
+    ///     Patron status changed during this period.
+    /// </summary>
+    [JsonPropertyName("patron")]
+    public int? Patron { get; init; }
 }
 
 /// <summary>
@@ -374,4 +404,86 @@ public class ActivityPostEntry
     /// </summary>
     [JsonPropertyName("text")]
     public string? Text { get; init; }
+}
+
+/// <summary>
+///     Puzzle Storm activity.
+/// </summary>
+[ResponseOnly]
+public class ActivityStorm
+{
+    /// <summary>
+    ///     Number of storm runs.
+    /// </summary>
+    [JsonPropertyName("runs")]
+    public int Runs { get; init; }
+
+    /// <summary>
+    ///     Best score achieved.
+    /// </summary>
+    [JsonPropertyName("score")]
+    public int Score { get; init; }
+}
+
+/// <summary>
+///     Puzzle Racer activity.
+/// </summary>
+[ResponseOnly]
+public class ActivityRacer
+{
+    /// <summary>
+    ///     Number of racer runs.
+    /// </summary>
+    [JsonPropertyName("runs")]
+    public int Runs { get; init; }
+
+    /// <summary>
+    ///     Best score achieved.
+    /// </summary>
+    [JsonPropertyName("score")]
+    public int Score { get; init; }
+}
+
+/// <summary>
+///     Puzzle Streak activity.
+/// </summary>
+[ResponseOnly]
+public class ActivityStreak
+{
+    /// <summary>
+    ///     Number of streak runs.
+    /// </summary>
+    [JsonPropertyName("runs")]
+    public int Runs { get; init; }
+
+    /// <summary>
+    ///     Best score achieved.
+    /// </summary>
+    [JsonPropertyName("score")]
+    public int Score { get; init; }
+}
+
+/// <summary>
+///     Simul activity entry.
+/// </summary>
+[ResponseOnly]
+public class ActivitySimul
+{
+    /// <summary>
+    ///     Simul ID.
+    /// </summary>
+    [JsonPropertyName("id")]
+    public string? Id { get; init; }
+
+    /// <summary>
+    ///     Simul name.
+    /// </summary>
+    [JsonPropertyName("name")]
+    public string? Name { get; init; }
+
+    /// <summary>
+    ///     Whether the user was the host.
+    /// </summary>
+    [JsonPropertyName("isHost")]
+    public bool? IsHost { get; init; }
 }

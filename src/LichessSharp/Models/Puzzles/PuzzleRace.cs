@@ -131,4 +131,22 @@ public class PuzzleRaceResults
     /// </summary>
     [JsonPropertyName("players")]
     public IReadOnlyList<PuzzleRacePlayer>? Players { get; init; }
+
+    /// <summary>
+    ///     The puzzle IDs in this race.
+    /// </summary>
+    [JsonPropertyName("puzzles")]
+    public IReadOnlyList<string>? Puzzles { get; init; }
+
+    /// <summary>
+    ///     When the race starts (Unix timestamp in milliseconds).
+    /// </summary>
+    [JsonPropertyName("startsAt")]
+    public long? StartsAt { get; init; }
+
+    /// <summary>
+    ///     When the race finishes (Unix timestamp in milliseconds).
+    /// </summary>
+    [JsonPropertyName("finishesAt")]
+    public long? FinishesAt { get; init; }
 }
