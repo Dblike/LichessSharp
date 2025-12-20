@@ -70,5 +70,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Targets .NET 10.0
 - Uses `System.Text.Json` with AOT preparation (reflection enabled by default)
 
-[0.2.0]: https://github.com/Dblike/lichess-net/releases/tag/v0.2.0
-[0.1.0]: https://github.com/Dblike/lichess-net/releases/tag/v0.1.0
+[0.2.0]: https://github.com/Dblike/LichessSharp/releases/tag/v0.2.0
+[0.1.0]: https://github.com/Dblike/LichessSharp/releases/tag/v0.1.0
