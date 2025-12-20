@@ -51,6 +51,9 @@ Thumbs.db
 .env.local
 *.env
 
+# Claude Code local settings (user-specific)
+.claude/settings.local.json
+
 # User-specific files
 *.rsuser
 *.user
