@@ -68,7 +68,7 @@ try {
     # Test
     if (-not $SkipTests) {
         Write-Host "[3/4] Running unit tests..." -ForegroundColor Yellow
-        $testArgs = @("test", "--configuration", "Release", "--filter", "Category!=Integration", "--no-build")
+        $testArgs = @("test", "--configuration", "Release", "--filter", "Category!=Integration")
         & dotnet @testArgs
         if ($LASTEXITCODE -ne 0) {
             throw "Tests failed with exit code $LASTEXITCODE"
