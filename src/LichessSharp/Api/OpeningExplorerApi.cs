@@ -60,7 +60,7 @@ internal sealed class OpeningExplorerApi(ILichessHttpClient httpClient, Uri expl
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(gameId);
 
-        var url = new Uri($"{_baseAddress.ToString().TrimEnd('/')}/masters/pgn/{Uri.EscapeDataString(gameId)}");
+        var url = new Uri($"{_baseAddress.ToString().TrimEnd('/')}/master/pgn/{Uri.EscapeDataString(gameId)}");
         return await _httpClient.GetAbsoluteStringAsync(url, "application/x-chess-pgn", cancellationToken)
             .ConfigureAwait(false);
     }

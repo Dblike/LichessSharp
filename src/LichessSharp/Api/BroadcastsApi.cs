@@ -137,7 +137,7 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
         ArgumentException.ThrowIfNullOrWhiteSpace(options.Name);
 
         var content = new FormUrlEncodedContent(BuildTournamentParameters(options));
-        return await _httpClient.PostAsync<BroadcastWithRounds>("/api/broadcast/new", content, cancellationToken)
+        return await _httpClient.PostAsync<BroadcastWithRounds>("/broadcast/new", content, cancellationToken)
             .ConfigureAwait(false);
     }
 

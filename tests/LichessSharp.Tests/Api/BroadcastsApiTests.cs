@@ -355,7 +355,7 @@ public class BroadcastsApiTests
         var options = new BroadcastTournamentOptions { Name = "Test Tournament" };
         var expectedResult = CreateTestBroadcast("tour123");
         _httpClientMock
-            .Setup(x => x.PostAsync<BroadcastWithRounds>("/api/broadcast/new", It.IsAny<FormUrlEncodedContent>(),
+            .Setup(x => x.PostAsync<BroadcastWithRounds>("/broadcast/new", It.IsAny<FormUrlEncodedContent>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
@@ -365,7 +365,7 @@ public class BroadcastsApiTests
         // Assert
         result.Should().NotBeNull();
         _httpClientMock.Verify(
-            x => x.PostAsync<BroadcastWithRounds>("/api/broadcast/new", It.IsAny<FormUrlEncodedContent>(),
+            x => x.PostAsync<BroadcastWithRounds>("/broadcast/new", It.IsAny<FormUrlEncodedContent>(),
                 It.IsAny<CancellationToken>()), Times.Once);
     }
 

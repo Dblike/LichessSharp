@@ -231,7 +231,7 @@ public class OpeningExplorerApiTests
         var expectedPgn = "[Event \"World Championship\"]\n1. e4 e5 2. Nf3 Nc6 *";
         _httpClientMock
             .Setup(x => x.GetAbsoluteStringAsync(
-                It.Is<Uri>(u => u.ToString().Contains("/masters/pgn/aAbBcCdD")),
+                It.Is<Uri>(u => u.ToString().Contains("/master/pgn/aAbBcCdD")),
                 "application/x-chess-pgn",
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedPgn);
@@ -242,7 +242,7 @@ public class OpeningExplorerApiTests
         // Assert
         result.Should().Be(expectedPgn);
         _httpClientMock.Verify(x => x.GetAbsoluteStringAsync(
-            It.Is<Uri>(u => u.ToString() == "https://explorer.lichess.ovh/masters/pgn/aAbBcCdD"),
+            It.Is<Uri>(u => u.ToString() == "https://explorer.lichess.ovh/master/pgn/aAbBcCdD"),
             "application/x-chess-pgn",
             It.IsAny<CancellationToken>()), Times.Once);
     }
