@@ -164,13 +164,17 @@ internal sealed class LichessHttpClient : ILichessHttpClient
     public async Task<string> GetAbsoluteStringAsync(Uri absoluteUrl, string acceptHeader,
         CancellationToken cancellationToken = default)
     {
-        using var request = new HttpRequestMessage(HttpMethod.Get, absoluteUrl);
-        request.Headers.Accept.Clear();
-        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptHeader));
+        var response = await SendAbsoluteStreamingRequestAsync(
+            HttpMethod.Get,
+            absoluteUrl,
+            null,
+            acceptHeader,
+            cancellationToken).ConfigureAwait(false);
 
-        var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
-        await EnsureSuccessStatusCodeAsync(response, cancellationToken).ConfigureAwait(false);
-        return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+        using (response)
+        {
+            return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+        }
     }
 
     public async IAsyncEnumerable<T> StreamNdjsonAsync<T>(string endpoint,
@@ -203,41 +207,42 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         var json = JsonSerializer.Serialize(body, _jsonOptions);
         using var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        using var request = new HttpRequestMessage(HttpMethod.Post, absoluteUrl);
-        request.Headers.Accept.Clear();
-        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-ndjson"));
-        request.Content = content;
-
-        using var response = await _httpClient.SendAsync(
-            request,
-            HttpCompletionOption.ResponseHeadersRead,
+        // Note: POST with content cannot be retried (content is consumed), so we pass null for content
+        // to the retry logic and handle content separately. The retry will only work for rate limits
+        // when the content has not been sent yet (i.e., the rate limit happens before the request is sent).
+        var response = await SendAbsoluteStreamingRequestAsync(
+            HttpMethod.Post,
+            absoluteUrl,
+            content,
+            "application/x-ndjson",
             cancellationToken).ConfigureAwait(false);
 
-        await EnsureSuccessStatusCodeAsync(response, cancellationToken).ConfigureAwait(false);
-
-        await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
-        using var reader = new StreamReader(stream);
-
-        while (!cancellationToken.IsCancellationRequested)
+        using (response)
         {
-            var line = await reader.ReadLineAsync(cancellationToken).ConfigureAwait(false);
+            await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+            using var reader = new StreamReader(stream);
 
-            if (line == null) break;
-
-            if (string.IsNullOrWhiteSpace(line)) continue;
-
-            T? item;
-            try
+            while (!cancellationToken.IsCancellationRequested)
             {
-                item = JsonSerializer.Deserialize<T>(line, _jsonOptions);
-            }
-            catch (JsonException ex)
-            {
-                _logger.LogWarning(ex, "Failed to deserialize ndjson line: {Line}", line);
-                continue;
-            }
+                var line = await reader.ReadLineAsync(cancellationToken).ConfigureAwait(false);
 
-            if (item != null) yield return item;
+                if (line == null) break;
+
+                if (string.IsNullOrWhiteSpace(line)) continue;
+
+                T? item;
+                try
+                {
+                    item = JsonSerializer.Deserialize<T>(line, _jsonOptions);
+                }
+                catch (JsonException ex)
+                {
+                    _logger.LogWarning(ex, "Failed to deserialize ndjson line: {Line}", line);
+                    continue;
+                }
+
+                if (item != null) yield return item;
+            }
         }
     }
 
@@ -245,14 +250,14 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         CancellationToken cancellationToken = default)
     {
         // Create a pipe for streaming content
+        // Note: This request cannot be retried because the content stream is consumed on the first attempt.
+        // Rate limit retry logic will not apply here since content is not null.
         using var pipeContent = new StreamContent(new AsyncEnumerableStream(lines, cancellationToken));
         pipeContent.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
 
-        using var request = new HttpRequestMessage(HttpMethod.Post, absoluteUrl);
-        request.Content = pipeContent;
-
-        using var response = await _httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
-        await EnsureSuccessStatusCodeAsync(response, cancellationToken).ConfigureAwait(false);
+        var response = await SendAbsoluteRequestAsync(HttpMethod.Post, absoluteUrl, pipeContent, cancellationToken)
+            .ConfigureAwait(false);
+        response.Dispose();
     }
 
     private void ConfigureHttpClient()
@@ -272,43 +277,40 @@ internal sealed class LichessHttpClient : ILichessHttpClient
         HttpContent? content,
         [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        using var request = new HttpRequestMessage(method, endpoint);
-        request.Headers.Accept.Clear();
-        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-ndjson"));
-
-        if (content != null) request.Content = content;
-
-        using var response = await _httpClient.SendAsync(
-            request,
-            HttpCompletionOption.ResponseHeadersRead,
+        var response = await SendStreamingRequestAsync(
+            method,
+            endpoint,
+            content,
+            "application/x-ndjson",
             cancellationToken).ConfigureAwait(false);
 
-        await EnsureSuccessStatusCodeAsync(response, cancellationToken).ConfigureAwait(false);
-
-        await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
-        using var reader = new StreamReader(stream);
-
-        while (!cancellationToken.IsCancellationRequested)
+        using (response)
         {
-            var line = await reader.ReadLineAsync(cancellationToken).ConfigureAwait(false);
+            await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+            using var reader = new StreamReader(stream);
 
-            // ReadLineAsync returns null at end of stream
-            if (line == null) break;
-
-            if (string.IsNullOrWhiteSpace(line)) continue;
-
-            T? item;
-            try
+            while (!cancellationToken.IsCancellationRequested)
             {
-                item = JsonSerializer.Deserialize<T>(line, _jsonOptions);
-            }
-            catch (JsonException ex)
-            {
-                _logger.LogWarning(ex, "Failed to deserialize ndjson line: {Line}", line);
-                continue;
-            }
+                var line = await reader.ReadLineAsync(cancellationToken).ConfigureAwait(false);
 
-            if (item != null) yield return item;
+                // ReadLineAsync returns null at end of stream
+                if (line == null) break;
+
+                if (string.IsNullOrWhiteSpace(line)) continue;
+
+                T? item;
+                try
+                {
+                    item = JsonSerializer.Deserialize<T>(line, _jsonOptions);
+                }
+                catch (JsonException ex)
+                {
+                    _logger.LogWarning(ex, "Failed to deserialize ndjson line: {Line}", line);
+                    continue;
+                }
+
+                if (item != null) yield return item;
+            }
         }
     }
 
@@ -523,6 +525,174 @@ internal sealed class LichessHttpClient : ILichessHttpClient
                     rateLimitRetryCount,
                     unlimitedRateLimitRetries ? "unlimited" : maxRateLimitRetries);
 
+                await Task.Delay(retryAfter, cancellationToken).ConfigureAwait(false);
+                continue;
+            }
+
+            await EnsureSuccessStatusCodeAsync(response, cancellationToken).ConfigureAwait(false);
+            return response;
+        }
+    }
+
+    /// <summary>
+    ///     Sends a streaming request with rate limit retry support.
+    ///     This method is used for ndjson streaming endpoints where the response is consumed progressively.
+    /// </summary>
+    /// <remarks>
+    ///     Unlike regular requests, streaming requests use ResponseHeadersRead to start reading
+    ///     before the full response is received. The caller is responsible for disposing the response.
+    /// </remarks>
+    private async Task<HttpResponseMessage> SendStreamingRequestAsync(
+        HttpMethod method,
+        string endpoint,
+        HttpContent? content,
+        string acceptHeader,
+        CancellationToken cancellationToken)
+    {
+        var rateLimitRetryCount = 0;
+        var transientRetryCount = 0;
+        var unlimitedRateLimitRetries = _options.AutoRetryOnRateLimit && _options.UnlimitedRateLimitRetries;
+        var maxRateLimitRetries = _options.AutoRetryOnRateLimit ? _options.MaxRateLimitRetries : 0;
+        // Transient retry is only safe for requests without content (GET, etc.)
+        // Content cannot be resent after the first attempt as the stream is consumed
+        var maxTransientRetries = content == null && _options.EnableTransientRetry ? _options.MaxTransientRetries : 0;
+
+        while (true)
+        {
+            HttpResponseMessage response;
+
+            try
+            {
+                using var request = new HttpRequestMessage(method, endpoint);
+                request.Headers.Accept.Clear();
+                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptHeader));
+
+                if (content != null) request.Content = content;
+
+                _logger.LogDebug("Sending streaming {Method} request to {Endpoint} with Accept: {Accept}",
+                    method, endpoint, acceptHeader);
+
+                response = await _httpClient.SendAsync(
+                    request,
+                    HttpCompletionOption.ResponseHeadersRead,
+                    cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex) when (!cancellationToken.IsCancellationRequested &&
+                                       transientRetryCount < maxTransientRetries &&
+                                       IsTransientException(ex))
+            {
+                transientRetryCount++;
+                var delay = CalculateTransientRetryDelay(transientRetryCount);
+
+                _logger.LogWarning(
+                    ex,
+                    "Transient failure on streaming {Method} {Endpoint}. Waiting {Delay} before retry {RetryCount}/{MaxRetries}",
+                    method,
+                    endpoint,
+                    delay,
+                    transientRetryCount,
+                    maxTransientRetries);
+
+                await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
+                continue;
+            }
+
+            // Rate limit retry for streaming requests
+            if (response.StatusCode == HttpStatusCode.TooManyRequests &&
+                content == null &&
+                (unlimitedRateLimitRetries || rateLimitRetryCount < maxRateLimitRetries))
+            {
+                rateLimitRetryCount++;
+                var retryAfter = GetRetryAfter(response);
+
+                _logger.LogWarning(
+                    "Rate limited on streaming request. Waiting {RetryAfter} before retry {RetryCount}/{MaxRetries}",
+                    retryAfter,
+                    rateLimitRetryCount,
+                    unlimitedRateLimitRetries ? "unlimited" : maxRateLimitRetries);
+
+                response.Dispose();
+                await Task.Delay(retryAfter, cancellationToken).ConfigureAwait(false);
+                continue;
+            }
+
+            await EnsureSuccessStatusCodeAsync(response, cancellationToken).ConfigureAwait(false);
+            return response;
+        }
+    }
+
+    /// <summary>
+    ///     Sends a streaming request to an absolute URL with rate limit retry support.
+    /// </summary>
+    private async Task<HttpResponseMessage> SendAbsoluteStreamingRequestAsync(
+        HttpMethod method,
+        Uri absoluteUrl,
+        HttpContent? content,
+        string acceptHeader,
+        CancellationToken cancellationToken)
+    {
+        var rateLimitRetryCount = 0;
+        var transientRetryCount = 0;
+        var unlimitedRateLimitRetries = _options.AutoRetryOnRateLimit && _options.UnlimitedRateLimitRetries;
+        var maxRateLimitRetries = _options.AutoRetryOnRateLimit ? _options.MaxRateLimitRetries : 0;
+        // Transient retry is only safe for requests without content (GET, etc.)
+        var maxTransientRetries = content == null && _options.EnableTransientRetry ? _options.MaxTransientRetries : 0;
+
+        while (true)
+        {
+            HttpResponseMessage response;
+
+            try
+            {
+                using var request = new HttpRequestMessage(method, absoluteUrl);
+                request.Headers.Accept.Clear();
+                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(acceptHeader));
+
+                if (content != null) request.Content = content;
+
+                _logger.LogDebug("Sending streaming {Method} request to {Url} with Accept: {Accept}",
+                    method, absoluteUrl, acceptHeader);
+
+                response = await _httpClient.SendAsync(
+                    request,
+                    HttpCompletionOption.ResponseHeadersRead,
+                    cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex) when (!cancellationToken.IsCancellationRequested &&
+                                       transientRetryCount < maxTransientRetries &&
+                                       IsTransientException(ex))
+            {
+                transientRetryCount++;
+                var delay = CalculateTransientRetryDelay(transientRetryCount);
+
+                _logger.LogWarning(
+                    ex,
+                    "Transient failure on streaming {Method} {Url}. Waiting {Delay} before retry {RetryCount}/{MaxRetries}",
+                    method,
+                    absoluteUrl,
+                    delay,
+                    transientRetryCount,
+                    maxTransientRetries);
+
+                await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
+                continue;
+            }
+
+            // Rate limit retry for streaming requests
+            if (response.StatusCode == HttpStatusCode.TooManyRequests &&
+                content == null &&
+                (unlimitedRateLimitRetries || rateLimitRetryCount < maxRateLimitRetries))
+            {
+                rateLimitRetryCount++;
+                var retryAfter = GetRetryAfter(response);
+
+                _logger.LogWarning(
+                    "Rate limited on streaming request. Waiting {RetryAfter} before retry {RetryCount}/{MaxRetries}",
+                    retryAfter,
+                    rateLimitRetryCount,
+                    unlimitedRateLimitRetries ? "unlimited" : maxRateLimitRetries);
+
+                response.Dispose();
                 await Task.Delay(retryAfter, cancellationToken).ConfigureAwait(false);
                 continue;
             }

@@ -390,4 +390,95 @@ public class LichessHttpClientRateLimitRetryTests
         await act.Should().ThrowAsync<LichessRateLimitException>();
         callCount.Should().Be(1);
     }
+
+    [Fact]
+    public async Task StreamNdjsonAsync_WithRateLimit_RetriesAndSucceeds()
+    {
+        // Arrange
+        var handlerMock = new Mock<HttpMessageHandler>();
+        var callCount = 0;
+
+        handlerMock
+            .Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(() =>
+            {
+                callCount++;
+                if (callCount < 2)
+                    return new HttpResponseMessage(HttpStatusCode.TooManyRequests)
+                    {
+                        Headers = { RetryAfter = new RetryConditionHeaderValue(TimeSpan.FromMilliseconds(10)) }
+                    };
+                // Return empty content to avoid JSON deserialization issues with test types
+                return new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent("", System.Text.Encoding.UTF8, "application/x-ndjson")
+                };
+            });
+
+        var options = new LichessClientOptions
+        {
+            AutoRetryOnRateLimit = true,
+            MaxRateLimitRetries = 3
+        };
+        var client = CreateClient(handlerMock, options);
+
+        // Act - enumerate the stream (will be empty but that's ok, we're testing retry behavior)
+        await foreach (var _ in client.StreamNdjsonAsync<object>("/api/test"))
+        {
+            // No items expected
+        }
+
+        // Assert - verify the retry happened
+        callCount.Should().Be(2); // 1 rate limit + 1 success
+    }
+
+    [Fact]
+    public async Task StreamNdjsonAsync_WithUnlimitedRetries_RetriesIndefinitely()
+    {
+        // Arrange
+        var handlerMock = new Mock<HttpMessageHandler>();
+        var callCount = 0;
+        const int rateLimitResponses = 5;
+
+        handlerMock
+            .Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(() =>
+            {
+                callCount++;
+                if (callCount <= rateLimitResponses)
+                    return new HttpResponseMessage(HttpStatusCode.TooManyRequests)
+                    {
+                        Headers = { RetryAfter = new RetryConditionHeaderValue(TimeSpan.FromMilliseconds(1)) }
+                    };
+                // Return empty content to avoid JSON deserialization issues with test types
+                return new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent("", System.Text.Encoding.UTF8, "application/x-ndjson")
+                };
+            });
+
+        var options = new LichessClientOptions
+        {
+            AutoRetryOnRateLimit = true,
+            UnlimitedRateLimitRetries = true
+        };
+        var client = CreateClient(handlerMock, options);
+
+        // Act - enumerate the stream (will be empty but that's ok, we're testing retry behavior)
+        await foreach (var _ in client.StreamNdjsonAsync<object>("/api/test"))
+        {
+            // No items expected
+        }
+
+        // Assert - verify all retries happened
+        callCount.Should().Be(rateLimitResponses + 1);
+    }
 }
