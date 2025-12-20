@@ -129,7 +129,7 @@ catch (LichessAuthorizationException ex)
 
 ## Contributing
 
-Contributions are welcome! Please read the [CLAUDE.md](CLAUDE.md) file for development guidelines.
+Contributions are welcome! Please read the [CONTRIBUTING.md](CONTRIBUTING.md) file for development guidelines.
 
 ## License
 
