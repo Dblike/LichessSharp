@@ -1,8 +1,7 @@
 {
   "name": "lichess-mcp",
-  "openapi": "openapi/lichess.openapi.json",
-  "openapiSnapshotsDir": "openapi/snapshots",
+  "openapi": "docs/openapi/lichess.openapi.json",
+  "openapiSnapshotsDir": "docs/openapi/snapshots",
   "implementedEndpoints": "src/LichessSharp/Coverage/ImplementedEndpoints.cs",
-  "coverageReport": "docs/api-coverage.md",
   "coverageScript": "scripts/generate-endpoint-coverage.ps1"
 }
