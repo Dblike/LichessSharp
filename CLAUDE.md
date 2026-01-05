@@ -251,18 +251,35 @@ Whenever code behavior changes:
 
 When tasks impact design or public API, always ask:
 
-- Should this be an extension or a method on the main client?  
-- What naming and structure best fits the existing API surface?  
-- Is backward compatibility more important than strict Lichess parity here?  
-- Do we want this exposed as a single method, or a more granular set?  
-- How should this be documented for contributors and users?  
+- Should this be an extension or a method on the main client?
+- What naming and structure best fits the existing API surface?
+- Is backward compatibility more important than strict Lichess parity here?
+- Do we want this exposed as a single method, or a more granular set?
+- How should this be documented for contributors and users?
 - Does this change merit a new sample or update to existing ones?
 
 High-level features require a plan and explicit approval before implementation.
 
 ---
 
-# 10. Final Principle
+# 10. Plans & Reference Materials
+
+## Plans Workflow
+All implementation plans follow this lifecycle:
+
+1. **Create**: `.claude/plans/<description>-<YYYYMMDD>.md`
+2. **Execute**: Update task checkboxes as work progresses
+3. **Complete**: Add completion summary
+4. **Archive**: Move to `.claude/plans/archive/`
+
+## Reference Materials
+When implementing features, consult:
+- `reference/` — Design docs, architecture diagrams
+- `docs/openapi/` — Lichess OpenAPI specification
+
+---
+
+# 11. Final Principle
 
 Correctness, API clarity, maintainability, and test coverage take priority over convenience.
 
@@ -277,3 +294,22 @@ This Lichess .NET API wrapper must remain:
 - **Safe and pleasant to use in any .NET application**
 
 Claude must prioritize these above all else.
+---
+
+## CRITICAL: File Editing on Windows
+
+### ⚠️ MANDATORY: Always Use Backslashes on Windows for File Paths
+
+**When using Edit or MultiEdit tools on Windows, you MUST use backslashes (`\`) in file paths, NOT forward slashes (`/`).**
+
+#### ❌ WRONG - Will cause errors:
+```
+Edit(file_path: "D:/repos/project/file.tsx", ...)
+MultiEdit(file_path: "D:/repos/project/file.tsx", ...)
+```
+
+#### ✅ CORRECT - Always works:
+```
+Edit(file_path: "D:\repos\project\file.tsx", ...)
+MultiEdit(file_path: "D:\repos\project\file.tsx", ...)
+```
