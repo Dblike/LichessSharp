@@ -68,3 +68,6 @@ Thumbs.db
 packages/
 project.lock.json
 project.fragment.lock.json
+
+# Wiki is maintained as separate git repo
+wiki/
