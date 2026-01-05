@@ -1,0 +1,11 @@
+{
+  "template": "dotnet-library",
+  "projectFile": "LichessSharp.sln",
+  "testProject": "LichessSharp.Tests",
+  "commands": {
+    "mcp": {
+      "description": "Start the Lichess MCP server",
+      "script": "python mcp/lichess-mcp/server.py"
+    }
+  }
+}
