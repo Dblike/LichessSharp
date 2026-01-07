@@ -22,6 +22,6 @@ Full-featured .NET Lichess API wrapper implementing the official HTTP & streamin
 ## Commands
 
 ```bash
-dotnet build LichessSharp.sln
-dotnet test LichessSharp.sln
+dotnet build LichessSharp.slnx
+dotnet test LichessSharp.slnx
 ```

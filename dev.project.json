@@ -1,6 +1,6 @@
 {
   "template": "dotnet-library",
-  "projectFile": "LichessSharp.sln",
+  "projectFile": "LichessSharp.slnx",
   "testProject": "LichessSharp.Tests",
   "commands": {
     "mcp": {

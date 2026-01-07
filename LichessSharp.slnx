@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/LichessSharp/LichessSharp.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/LichessSharp.Tests/LichessSharp.Tests.csproj" />
+  </Folder>
+  <Folder Name="/samples/">
+    <Project Path="samples/LichessSharp.Samples/LichessSharp.Samples.csproj" />
+  </Folder>
+</Solution>
