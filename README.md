@@ -44,7 +44,7 @@ var puzzle = await client.Puzzles.GetDailyAsync();
 
 - [Getting Started](../../wiki/Getting-Started) - Installation, configuration, basic usage
 - [Authentication](../../wiki/Authentication) - OAuth tokens, scopes, security
-- [API Reference](../../wiki/API-Reference) - Complete endpoint coverage
+- [Quick Reference](../../wiki/Quick-Reference) - Code snippets for all API areas
 
 ## Samples
 
