@@ -338,6 +338,10 @@ namespace LichessSharp.Serialization;
 [JsonSerializable(typeof(List<BulkPairingGame>))]
 // Messaging API types
 [JsonSerializable(typeof(MessageSentResponse))]
+// OAuth API types
+[JsonSerializable(typeof(OAuthToken))]
+[JsonSerializable(typeof(OAuthTokenInfo))]
+[JsonSerializable(typeof(List<OAuthTokenInfo>))]
 internal partial class LichessJsonContext : JsonSerializerContext
 {
 }
