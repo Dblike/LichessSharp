@@ -242,10 +242,10 @@ public class OpenApiSchemaValidationTests : IDisposable
     {
         var dir = Directory.GetCurrentDirectory();
 
-        // Walk up to find the repository root (where openapi folder is)
+        // Walk up to find the repository root (where docs/openapi folder is)
         while (dir != null)
         {
-            var openApiPath = Path.Combine(dir, "openapi", "lichess.openapi.json");
+            var openApiPath = Path.Combine(dir, "docs", "openapi", "lichess.openapi.json");
             if (File.Exists(openApiPath))
                 return openApiPath;
 
@@ -253,7 +253,7 @@ public class OpenApiSchemaValidationTests : IDisposable
         }
 
         throw new FileNotFoundException(
-            "Could not find openapi/lichess.openapi.json. " +
+            "Could not find docs/openapi/lichess.openapi.json. " +
             "Make sure you're running tests from within the repository.");
     }
 
