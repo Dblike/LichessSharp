@@ -10,5 +10,8 @@
     <Project Path="samples/LichessSharp.SimpleBot/LichessSharp.SimpleBot.csproj" />
     <Project Path="samples/LichessSharp.PuzzleSolver/LichessSharp.PuzzleSolver.csproj" />
     <Project Path="samples/LichessSharp.GameArchiver/LichessSharp.GameArchiver.csproj" />
+    <Project Path="samples/LichessSharp.TvViewer/LichessSharp.TvViewer.csproj" />
+    <Project Path="samples/LichessSharp.UserStats/LichessSharp.UserStats.csproj" />
+    <Project Path="samples/LichessSharp.PositionAnalyzer/LichessSharp.PositionAnalyzer.csproj" />
   </Folder>
 </Solution>
