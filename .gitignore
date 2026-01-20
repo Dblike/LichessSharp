@@ -54,6 +54,7 @@ Thumbs.db
 
 # Claude Code local settings (user-specific)
 .claude/settings.local.json
+.claude/plans/
 dev.project.json
 
 # User-specific files
