@@ -8,7 +8,7 @@
 
     <!-- Package metadata -->
     <PackageId>LichessSharp</PackageId>
-    <Version>0.3.0</Version>
+    <Version>0.3.1</Version>
     <Authors>Dan Blike</Authors>
     <Copyright>Copyright (c) 2025 Dan Blike. All rights reserved.</Copyright>
     <Description>A fully-featured .NET client library for the Lichess API.</Description>

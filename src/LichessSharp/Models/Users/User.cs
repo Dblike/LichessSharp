@@ -147,7 +147,7 @@ public class UserExtended : User
     ///     Streamer information if the user is a streamer.
     /// </summary>
     [JsonPropertyName("streamer")]
-    public StreamerInfo? Streamer { get; init; }
+    public UserStreamer? Streamer { get; init; }
 
     /// <summary>
     ///     Whether the authenticated user can follow this user.

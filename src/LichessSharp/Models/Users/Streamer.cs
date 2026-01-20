@@ -118,3 +118,36 @@ public class StreamerInfo
     [JsonPropertyName("image")]
     public string? Image { get; init; }
 }
+
+/// <summary>
+///     Streamer information for a user profile (UserExtended.Streamer).
+///     Uses nested StreamChannel objects for Twitch/YouTube.
+/// </summary>
+[ResponseOnly]
+public class UserStreamer
+{
+    /// <summary>
+    ///     Twitch channel information.
+    /// </summary>
+    [JsonPropertyName("twitch")]
+    public StreamChannel? Twitch { get; init; }
+
+    /// <summary>
+    ///     YouTube channel information.
+    /// </summary>
+    [JsonPropertyName("youTube")]
+    public StreamChannel? YouTube { get; init; }
+}
+
+/// <summary>
+///     A streaming channel with a URL.
+/// </summary>
+[ResponseOnly]
+public class StreamChannel
+{
+    /// <summary>
+    ///     The channel URL.
+    /// </summary>
+    [JsonPropertyName("channel")]
+    public string? Channel { get; init; }
+}

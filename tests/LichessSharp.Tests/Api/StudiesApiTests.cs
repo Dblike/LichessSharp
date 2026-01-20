@@ -168,7 +168,9 @@ public class StudiesApiTests
         var username = "testuser";
         var expectedPgn = "[Event \"Test\"]\n1. e4 e5 *";
         _httpClientMock
-            .Setup(x => x.GetStringWithAcceptAsync($"/study/by/{username}/export.pgn", "application/x-chess-pgn",
+            .Setup(x => x.GetStringWithAcceptAsync(
+                It.Is<string>(s => s.StartsWith($"/api/study/by/{username}/export.pgn") && s.Contains("order=newest")),
+                "application/x-chess-pgn",
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedPgn);
 
@@ -178,7 +180,9 @@ public class StudiesApiTests
         // Assert
         result.Should().Be(expectedPgn);
         _httpClientMock.Verify(
-            x => x.GetStringWithAcceptAsync($"/study/by/{username}/export.pgn", "application/x-chess-pgn",
+            x => x.GetStringWithAcceptAsync(
+                It.Is<string>(s => s.StartsWith($"/api/study/by/{username}/export.pgn") && s.Contains("order=newest")),
+                "application/x-chess-pgn",
                 It.IsAny<CancellationToken>()), Times.Once);
     }
 

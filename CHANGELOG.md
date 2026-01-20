@@ -5,6 +5,16 @@ All notable changes to LichessSharp will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2026-01-20
+
+### Fixed
+
+- **UserExtended.Streamer type** — Changed `UserExtended.Streamer` from `StreamerInfo?` to new `UserStreamer?` type. The Lichess API uses different schemas: `StreamerInfo` (string URLs) for `/api/streamer/live`, and `UserStreamer` (nested `StreamChannel` objects) for user profiles. This fixes deserialization of `UserExtended` responses.
+
+### Added
+
+- **UserStreamer and StreamChannel types** — New types to correctly model the nested streamer structure in user profiles per OpenAPI spec
+
 ## [0.3.0] - 2026-01-20
 
 ### Added
@@ -113,6 +123,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Targets .NET 10.0
 - Uses `System.Text.Json` with AOT preparation (reflection enabled by default)
 
+[0.3.1]: https://github.com/Dblike/LichessSharp/releases/tag/v0.3.1
 [0.3.0]: https://github.com/Dblike/LichessSharp/releases/tag/v0.3.0
 [0.2.1]: https://github.com/Dblike/LichessSharp/releases/tag/v0.2.1
 [0.2.0]: https://github.com/Dblike/LichessSharp/releases/tag/v0.2.0
