@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "version": "2.0.110",
+    "version": "2.0.112",
     "title": "Lichess.org API reference",
     "contact": {
       "name": "Lichess.org API",
@@ -15,7 +15,7 @@
       "name": "AGPL-3.0-or-later",
       "url": "https://www.gnu.org/licenses/agpl-3.0.txt"
     },
-    "description": "# Introduction\nWelcome to the reference for the Lichess API! Lichess is free/libre,\nopen-source chess server powered by volunteers and donations.\n- Get help in the [Lichess Discord channel](https://discord.gg/lichess)\n- API demo app with OAuth2 login and gameplay: [source](https://github.com/lichess-org/api-demo) / [demo](https://lichess-org.github.io/api-demo/)\n- API UI app with OAuth2 login and endpoint forms: [source](https://github.com/lichess-org/api-ui) / [website](https://lichess.org/api/ui)\n- [Contribute to this documentation on Github](https://github.com/lichess-org/api)\n- Check out [Lichess widgets to embed in your website](https://lichess.org/developers)\n- [Download all Lichess rated games](https://database.lichess.org/)\n- [Download all Lichess puzzles with themes, ratings and votes](https://database.lichess.org/#puzzles)\n- [Download all evaluated positions](https://database.lichess.org/#evals)\n\n## Endpoint\nAll requests go to `https://lichess.org` (unless otherwise specified).\n\n## Clients\n- [Python general API](https://github.com/lichess-org/berserk)\n- [MicroPython general API](https://github.com/mkomon/uberserk)\n- [Python general API - async](https://pypi.org/project/async-lichess-sdk)\n- [Python Lichess Bot](https://github.com/lichess-bot-devs/lichess-bot)\n- [Python Board API for Certabo](https://github.com/haklein/certabo-lichess)\n- [Java general API](https://github.com/tors42/chariot)\n- [JavaScript & TypeScript general API](https://github.com/devjiwonchoi/equine)\n- [LichessNET - C# API Wrapper](https://github.com/Rabergsel/LichessNET)\n\n## Rate limiting\nAll requests are rate limited using various strategies,\nto ensure the API remains responsive for everyone.\nOnly make one request at a time.\nIf you receive an HTTP response with a [429 status](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#429),\nplease wait a full minute before resuming API usage.\n\n## Streaming with ND-JSON\nSome API endpoints stream their responses as [Newline Delimited JSON a.k.a. **nd-json**](https://github.com/ndjson/ndjson-spec), with one JSON object per line.\n\nHere's a [JavaScript utility function](https://gist.github.com/ornicar/a097406810939cf7be1df8ea30e94f3e) to help reading NDJSON streamed responses.\n\n## Authentication\n### Which authentication method is right for me?\n[Read about the Lichess API authentication methods and code examples](https://github.com/lichess-org/api/blob/master/example/README.md)\n\n### Personal Access Token\nPersonal API access tokens allow you to quickly interact with Lichess API without going through an OAuth flow.\n- [Generate a personal access token](https://lichess.org/account/oauth/token)\n- `curl https://lichess.org/api/account -H \"Authorization: Bearer {token}\"`\n- [NodeJS example](https://github.com/lichess-org/api/tree/master/example/oauth-personal-token)\n\n### Token Security\n- Keep your tokens secret. Do not share them in public repositories or public forums.\n- Your tokens can be used to make your account perform arbitrary actions (within the limits of the tokens' scope). You remain responsible for all activities on your account.\n- Do not hardcode tokens in your application's code. Use environment variables or a secure storage and ensure they are not shipped/exposed to users. Be especially careful that they are not included in frontend bundles or apps that are shipped to users.\n- If you suspect a token has been compromised, revoke it immediately.\n\nTo see your active tokens or revoke them, see [your Personal API access tokens](https://lichess.org/account/oauth/token).\n\n### Authorization Code Flow with PKCE\nThe authorization code flow with PKCE allows your users to **login with Lichess**.\nLichess supports unregistered and public clients (no client authentication, choose any unique client id).\nThe only accepted code challenge method is `S256`.\nAccess tokens are long-lived (expect one year), unless they are revoked.\nRefresh tokens are not supported.\n\nSee the [documentation for the OAuth endpoints](#tag/OAuth) or\nthe [PKCE RFC](https://datatracker.ietf.org/doc/html/rfc7636#section-4) for a precise protocol description.\n\n- [Demo app](https://lichess-org.github.io/api-demo/)\n- [Minimal client-side example](https://github.com/lichess-org/api/tree/master/example/oauth-app)\n- [Flask/Python example](https://github.com/lakinwecker/lichess-oauth-flask)\n- [Java example](https://github.com/tors42/lichess-oauth-pkce-app)\n- [NodeJS Passport strategy to login with Lichess OAuth2](https://www.npmjs.com/package/passport-lichess)\n\n#### Real life examples\n- [PyChess](https://github.com/gbtami/pychess-variants) ([source code](https://github.com/gbtami/pychess-variants))\n- [Lichess4545](https://www.lichess4545.com/) ([source code](https://github.com/cyanfish/heltour))\n- [English Chess Federation](https://ecf.octoknight.com/)\n- [Rotherham Online Chess](https://rotherhamonlinechess.azurewebsites.net/tournaments)\n\n### Token format\nAccess tokens and authorization codes match `^[A-Za-z0-9_]+$`.\nThe length of tokens can be increased without notice. Make sure your application can handle at least 512 characters.\nBy convention tokens have a recognizable prefix, but do not rely on this.\n"
+    "description": "# Introduction\nWelcome to the reference for the Lichess API! Lichess is free/libre,\nopen-source chess server powered by volunteers and donations.\n- Get help in the [Lichess Discord channel](https://discord.gg/lichess)\n- API demo app with OAuth2 login and gameplay: [source](https://github.com/lichess-org/api-demo) / [demo](https://lichess-org.github.io/api-demo/)\n- API UI app with OAuth2 login and endpoint forms: [source](https://github.com/lichess-org/api-ui) / [website](https://lichess.org/api/ui)\n- [Contribute to this documentation on Github](https://github.com/lichess-org/api)\n- Check out [Lichess widgets to embed in your website](https://lichess.org/developers)\n- [Download all Lichess rated games](https://database.lichess.org/)\n- [Download all Lichess puzzles with themes, ratings and votes](https://database.lichess.org/#puzzles)\n- [Download all evaluated positions](https://database.lichess.org/#evals)\n\n## Endpoint\nAll requests go to `https://lichess.org` (unless otherwise specified).\n\n## Clients\n- [Python general API](https://github.com/lichess-org/berserk)\n- [MicroPython general API](https://github.com/mkomon/uberserk)\n- [Python general API - async](https://pypi.org/project/async-lichess-sdk)\n- [Python Lichess Bot](https://github.com/lichess-bot-devs/lichess-bot)\n- [Python Board API for Certabo](https://github.com/haklein/certabo-lichess)\n- [Java general API](https://github.com/tors42/chariot)\n- [JavaScript & TypeScript general API](https://github.com/devjiwonchoi/equine)\n- [LichessNET - C# API Wrapper](https://github.com/Rabergsel/LichessNET)\n- [.NET general API](https://github.com/Dblike/LichessSharp)\n\n## Rate limiting\nAll requests are rate limited using various strategies,\nto ensure the API remains responsive for everyone.\nOnly make one request at a time.\nIf you receive an HTTP response with a [429 status](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#429),\nplease wait a full minute before resuming API usage.\n\n## Streaming with ND-JSON\nSome API endpoints stream their responses as [Newline Delimited JSON a.k.a. **nd-json**](https://github.com/ndjson/ndjson-spec), with one JSON object per line.\n\nHere's a [JavaScript utility function](https://gist.github.com/ornicar/a097406810939cf7be1df8ea30e94f3e) to help reading NDJSON streamed responses.\n\n## Authentication\n### Which authentication method is right for me?\n[Read about the Lichess API authentication methods and code examples](https://github.com/lichess-org/api/blob/master/example/README.md)\n\n### Personal Access Token\nPersonal API access tokens allow you to quickly interact with Lichess API without going through an OAuth flow.\n- [Generate a personal access token](https://lichess.org/account/oauth/token)\n- `curl https://lichess.org/api/account -H \"Authorization: Bearer {token}\"`\n- [NodeJS example](https://github.com/lichess-org/api/tree/master/example/oauth-personal-token)\n\n### Token Security\n- Keep your tokens secret. Do not share them in public repositories or public forums.\n- Your tokens can be used to make your account perform arbitrary actions (within the limits of the tokens' scope). You remain responsible for all activities on your account.\n- Do not hardcode tokens in your application's code. Use environment variables or a secure storage and ensure they are not shipped/exposed to users. Be especially careful that they are not included in frontend bundles or apps that are shipped to users.\n- If you suspect a token has been compromised, revoke it immediately.\n\nTo see your active tokens or revoke them, see [your Personal API access tokens](https://lichess.org/account/oauth/token).\n\n### Authorization Code Flow with PKCE\nThe authorization code flow with PKCE allows your users to **login with Lichess**.\nLichess supports unregistered and public clients (no client authentication, choose any unique client id).\nThe only accepted code challenge method is `S256`.\nAccess tokens are long-lived (expect one year), unless they are revoked.\nRefresh tokens are not supported.\n\nSee the [documentation for the OAuth endpoints](#tag/OAuth) or\nthe [PKCE RFC](https://datatracker.ietf.org/doc/html/rfc7636#section-4) for a precise protocol description.\n\n- [Demo app](https://lichess-org.github.io/api-demo/)\n- [Minimal client-side example](https://github.com/lichess-org/api/tree/master/example/oauth-app)\n- [Flask/Python example](https://github.com/lakinwecker/lichess-oauth-flask)\n- [Java example](https://github.com/tors42/lichess-oauth-pkce-app)\n- [NodeJS Passport strategy to login with Lichess OAuth2](https://www.npmjs.com/package/passport-lichess)\n\n#### Real life examples\n- [PyChess](https://github.com/gbtami/pychess-variants) ([source code](https://github.com/gbtami/pychess-variants))\n- [Lichess4545](https://www.lichess4545.com/) ([source code](https://github.com/cyanfish/heltour))\n- [English Chess Federation](https://ecf.octoknight.com/)\n- [Rotherham Online Chess](https://rotherhamonlinechess.azurewebsites.net/tournaments)\n\n### Token format\nAccess tokens and authorization codes match `^[A-Za-z0-9_]+$`.\nThe length of tokens can be increased without notice. Make sure your application can handle at least 512 characters.\nBy convention tokens have a recognizable prefix, but do not rely on this.\n"
   },
   "servers": [
     {
@@ -42,28 +42,8 @@
       "description": "Read and write account information and preferences.\n<https://lichess.org/account/preferences/game-display>\n"
     },
     {
-      "name": "Users",
-      "description": "Access registered users on Lichess.\n<https://lichess.org/player>\n\n- Each user blog exposes an atom (RSS) feed, like <https://lichess.org/@/thibault/blog.atom>\n- User blogs mashup feed: https://lichess.org/blog/community.atom\n- User blogs mashup feed for a language: https://lichess.org/blog/community/fr.atom\n"
-    },
-    {
-      "name": "Relations",
-      "description": "Access relations between users.\n"
-    },
-    {
-      "name": "Games",
-      "description": "Access games played on Lichess.\n<https://lichess.org/games>\n"
-    },
-    {
-      "name": "TV",
-      "description": "Access Lichess TV channels and games.\n<https://lichess.org/tv> & <https://lichess.org/games>\n"
-    },
-    {
-      "name": "Puzzles",
-      "description": "Access Lichess [puzzle history and dashboard](https://lichess.org/training).\n\nOur collection of puzzles is in the public domain, you can [download it here](https://database.lichess.org/#puzzles).\nFor a list of our puzzle themes with their description, check out the [theme translation file](https://github.com/ornicar/lila/blob/master/translation/source/puzzleTheme.xml).\nThe daily puzzle can be [posted in your slack workspace](https://lichess.org/daily-puzzle-slack).\n"
-    },
-    {
-      "name": "Teams",
-      "description": "Access and manage Lichess teams and their members.\n<https://lichess.org/team>\n"
+      "name": "Analysis",
+      "description": "Access Lichess cloud evaluations database.\n<https://lichess.org/analysis>\n"
     },
     {
       "name": "Board",
@@ -74,20 +54,44 @@
       "description": "Play on Lichess as a bot. Allows engine play.\nRead the [blog post announcement of lichess bots](https://lichess.org/blog/WvDNticAAMu_mHKP/welcome-lichess-bots).\n\nOnly works with [Bot accounts](#tag/bot/post/apibotaccountupgrade).\n\n### Features\n- [Stream incoming chess moves](#tag/bot/get/apibotgamestreamgameid)\n- [Play chess moves](#tag/bot/post/apibotgamegameidmovemove)\n- [Read](#tag/bot/get/apibotgamestreamgameid) and [write](#tag/bot/post/apibotgamegameidchat) in the player and spectator chats\n- [Receive](#tag/bot/get/apistreamevent), [create](#tag/challenges/post/apichallengeusername) and [accept](#tag/challenges/post/apichallengechallengeidaccept) (or [decline](#tag/challenges/post/apichallengechallengeiddecline)) challenges\n- [Abort](#tag/bot/post/apibotgamegameidabort) and [resign](#tag/bot/post/apibotgamegameidresign) games\n- Engine assistance is [allowed](https://lichess.org/page/fair-play)\n### Restrictions\n- Bots can only play challenge games:  pools and tournaments are off-limits\n- Bots cannot play UltraBullet (¼+0) because it requires making too many requests. But 0+1 and ½+0 are allowed.\n- Bots must follow [Lichess TOS](https://lichess.org/terms-of-service) specifically Sandbagging, Constant Aborting, Boosting, etc\n- Bot devs are advised to make their Bots play casual only when testing their Bots logic and to avoid breaking Lichess TOS.\n### Integrations\n- [Python3 lichess-bot](https://github.com/lichess-bot-devs/lichess-bot) (official)\n- [Python3 lichess UCI bot](https://github.com/Torom/BotLi)\n- [JavaScript bot-o-tron](https://github.com/tailuge/bot-o-tron)\n- [Golang lichess-bot](https://github.com/dolegi/lichess-bot)\n- [Electronic Chessboard](http://www.oliviermercier.com/res/projects/chessboard/)\n- Yours? Please make [an issue or pull request](https://github.com/lichess-org/api).\n### Links\n- [Announcement](https://lichess.org/blog/WvDNticAAMu_mHKP/welcome-lichess-bots)\n- Join the [Lichess Bots team](https://lichess.org/team/lichess-bots) with your bot account\n- [Get help in the discord channel](https://discord.gg/quwueFd)\n- Watch [Lichess Bot TV](https://lichess.org/tv/bot)\n"
     },
     {
-      "name": "Challenges",
-      "description": "Send and receive challenges to play.\n\nTo create a lot of challenges, consider [bulk pairing](#tag/bulk-pairings/post/apibulk-pairing) instead.\n"
+      "name": "Broadcasts",
+      "description": "Relay chess events on Lichess.\n[Official broadcasts](https://lichess.org/broadcast) are maintained by Lichess,\nbut you can [create your own broadcasts](https://lichess.org/broadcast/new) to cover any live game or chess event.\nYou will need to publish PGN on a public URL so that Lichess can pull updates from it.\nAlternatively, you can push PGN updates to Lichess using [this API endpoint](#tag/Broadcasts/operation/broadcastPush).\n\nBroadcasts are organized in tournaments, which have several rounds, which have several games.\nYou must first create a tournament, then you can add rounds to them.\n"
     },
     {
       "name": "Bulk pairings",
       "description": "Create many games for other players.\n\nThese endpoints are intended for tournament organisers.\n"
     },
     {
-      "name": "Arena tournaments",
-      "description": "Access Arena tournaments played on Lichess.\n[Official Arena tournaments](https://lichess.org/tournament) are maintained by Lichess,\nbut you can [create your own Arena tournaments](https://lichess.org/tournament/new) as well.\n"
+      "name": "Challenges",
+      "description": "Send and receive challenges to play.\n\nTo create a lot of challenges, consider [bulk pairing](#tag/bulk-pairings/post/apibulk-pairing) instead.\n"
     },
     {
-      "name": "Swiss tournaments",
-      "description": "Access Swiss tournaments played on Lichess.\n[Read more about Swiss tournaments.](https://lichess.org/swiss).\n"
+      "name": "External engine",
+      "description": "**This API is in alpha and subject to change.**\n\nUse or provide external engine analysis.\n\nExternal engines can provide analysis on pages like the\n[analysis board](https://lichess.org/analysis), running as a service\noutside of the browser, or even on a different machine.\n"
+    },
+    {
+      "name": "FIDE",
+      "description": "FIDE players and federations from [their public download](https://ratings.fide.com/download_lists.phtml).\n\n<https://lichess.org/fide>\n"
+    },
+    {
+      "name": "Games",
+      "description": "Access games played on Lichess.\n<https://lichess.org/games>\n"
+    },
+    {
+      "name": "Messaging",
+      "description": "Private messages with other players.\n<https://lichess.org/inbox>\n"
+    },
+    {
+      "name": "Opening Explorer",
+      "description": "Lookup positions from the [Lichess opening explorer](https://lichess.org/analysis#explorer).\n\nRuns <https://github.com/lichess-org/lila-openingexplorer>.\n\n**The endpoint hostname is not lichess.org but explorer.lichess.ovh.**\n"
+    },
+    {
+      "name": "Puzzles",
+      "description": "Fetch and solve [puzzles](https://lichess.org/training), view your puzzle history and dashboard.\n\nOur collection of puzzles is in the public domain, you can [download it here](https://database.lichess.org/#puzzles).\nFor a list of our [puzzle themes](https://lichess.org/training/themes) with their description, check out the [theme translation file](https://github.com/ornicar/lila/blob/master/translation/source/puzzleTheme.xml).\nThe daily puzzle can be [posted in your slack workspace](https://lichess.org/daily-puzzle-slack).\n"
+    },
+    {
+      "name": "Relations",
+      "description": "Access relations between users.\n"
     },
     {
       "name": "Simuls",
@@ -98,32 +102,28 @@
       "description": "Access Lichess studies.\n<https://lichess.org/study>\n"
     },
     {
-      "name": "Messaging",
-      "description": "Private messages with other players.\n<https://lichess.org/inbox>\n"
-    },
-    {
-      "name": "Broadcasts",
-      "description": "Relay chess events on Lichess.\n[Official broadcasts](https://lichess.org/broadcast) are maintained by Lichess,\nbut you can [create your own broadcasts](https://lichess.org/broadcast/new) to cover any live game or chess event.\nYou will need to publish PGN on a public URL so that Lichess can pull updates from it.\nAlternatively, you can push PGN updates to Lichess using [this API endpoint](#tag/Broadcasts/operation/broadcastPush).\n\nBroadcasts are organized in tournaments, which have several rounds, which have several games.\nYou must first create a tournament, then you can add rounds to them.\n"
-    },
-    {
-      "name": "FIDE",
-      "description": "FIDE players and federations from [their public download](https://ratings.fide.com/download_lists.phtml).\n\n<https://lichess.org/fide>\n"
-    },
-    {
-      "name": "Analysis",
-      "description": "Access Lichess cloud evaluations database.\n<https://lichess.org/analysis>\n"
-    },
-    {
-      "name": "External engine",
-      "description": "**This API is in alpha and subject to change.**\n\nUse or provide external engine analysis.\n\nExternal engines can provide analysis on pages like the\n[analysis board](https://lichess.org/analysis), running as a service\noutside of the browser, or even on a different machine.\n"
-    },
-    {
-      "name": "Opening Explorer",
-      "description": "Lookup positions from the [Lichess opening explorer](https://lichess.org/analysis#explorer).\n\nRuns <https://github.com/lichess-org/lila-openingexplorer>.\n\n**The endpoint hostname is not lichess.org but explorer.lichess.ovh.**\n"
-    },
-    {
       "name": "Tablebase",
       "description": "Lookup positions from the [Lichess tablebase server](https://lichess.org/blog/W3WeMyQAACQAdfAL/7-piece-syzygy-tablebases-are-complete).\n\n**The endpoint hostname is not lichess.org but tablebase.lichess.ovh.**\n"
+    },
+    {
+      "name": "Teams",
+      "description": "Access and manage Lichess teams and their members.\n<https://lichess.org/team>\n"
+    },
+    {
+      "name": "Tournaments (Arena)",
+      "description": "Access Arena tournaments played on Lichess.\n[Official Arena tournaments](https://lichess.org/tournament) are maintained by Lichess,\nbut you can [create your own Arena tournaments](https://lichess.org/tournament/new) as well.\n"
+    },
+    {
+      "name": "Tournaments (Swiss)",
+      "description": "Access Swiss tournaments played on Lichess.\n[Read more about Swiss tournaments.](https://lichess.org/swiss).\n"
+    },
+    {
+      "name": "TV",
+      "description": "Access Lichess TV channels and games.\n<https://lichess.org/tv> & <https://lichess.org/games>\n"
+    },
+    {
+      "name": "Users",
+      "description": "Access registered users on Lichess.\n<https://lichess.org/player>\n\n- Each user blog exposes an atom (RSS) feed, like <https://lichess.org/@/thibault/blog.atom>\n- User blogs mashup feed: https://lichess.org/blog/community.atom\n- User blogs mashup feed for a language: https://lichess.org/blog/community/fr.atom\n"
     },
     {
       "name": "OAuth",
@@ -1644,7 +1644,7 @@
       "get": {
         "operationId": "gamePgn",
         "summary": "Export one game",
-        "description": "Download one game in either PGN or JSON format.\nOngoing games are delayed by a few seconds ranging from 3 to 60 depending on the time control, as to prevent cheat bots from using this API.\n",
+        "description": "Download one game in either PGN or JSON format.\nOngoing games are delayed by 3 moves, as to prevent cheat bots from using this API.\n",
         "tags": [
           "Games"
         ],
@@ -1796,7 +1796,7 @@
       "get": {
         "operationId": "apiUserCurrentGame",
         "summary": "Export ongoing game of a user",
-        "description": "Download the ongoing game, or the last game played, of a user.\nAvailable in either PGN or JSON format.\nOngoing games are delayed by a few seconds ranging from 3 to 60 depending on the time control, as to prevent cheat bots from using this API.\n",
+        "description": "Download the ongoing game, or the last game played, of a user.\nAvailable in either PGN or JSON format.\nOngoing games are delayed by 3 moves, as to prevent cheat bots from using this API.\n",
         "tags": [
           "Games"
         ],
@@ -2191,7 +2191,7 @@
       "post": {
         "operationId": "gamesExportIds",
         "summary": "Export games by IDs",
-        "description": "Download games by IDs in PGN or [ndjson](#description/streaming-with-nd-json) format, depending on the request `Accept` header.\nGames are sorted by reverse chronological order (most recent first)\nThe method is `POST` so a longer list of IDs can be sent in the request body.\n300 IDs can be submitted.\nOngoing games are delayed by a few seconds ranging from 3 to 60 depending on the time control, as to prevent cheat bots from using this API.\n",
+        "description": "Download games by IDs in PGN or [ndjson](#description/streaming-with-nd-json) format, depending on the request `Accept` header.\nGames are sorted by reverse chronological order (most recent first)\nThe method is `POST` so a longer list of IDs can be sent in the request body.\n300 IDs can be submitted.\nOngoing games are delayed by 3 moves, as to prevent cheat bots from using this API.\n",
         "tags": [
           "Games"
         ],
@@ -2673,7 +2673,7 @@
       "get": {
         "operationId": "streamGame",
         "summary": "Stream moves of a game",
-        "description": "Stream positions and moves of any ongoing game, in [ndjson](#description/streaming-with-nd-json).\nA description of the game is sent as a first message.\nThen a message is sent each time a move is played.\nFinally, a description of the game is sent when it finishes, and the stream is closed.\nOngoing games are delayed by a few seconds ranging from 3 to 60 depending on the time control, as to prevent cheat bots from using this API.\nNo more than 8 game streams can be opened at the same time from the same IP address.\n",
+        "description": "Stream positions and moves of any ongoing game, in [ndjson](#description/streaming-with-nd-json).\nA description of the game is sent as a first message.\nThen a message is sent each time a move is played.\nFinally, a description of the game is sent when it finishes, and the stream is closed.\nOngoing games are delayed by 3 moves, as to prevent cheat bots from using this API.\nNo more than 8 game streams can be opened at the same time from the same IP address.\n",
         "tags": [
           "Games"
         ],
@@ -3287,7 +3287,7 @@
         "summary": "Get current tournaments",
         "description": "Get recently active and finished tournaments.\nThis API is used to display the [Lichess tournament schedule](https://lichess.org/tournament).\n",
         "tags": [
-          "Arena tournaments"
+          "Tournaments (Arena)"
         ],
         "security": [],
         "responses": {
@@ -3321,7 +3321,7 @@
         "summary": "Create a new Arena tournament",
         "description": "Create a public or private Arena tournament.\nThis endpoint mirrors the form on <https://lichess.org/tournament/new>.\nYou can create up to 12 public tournaments per day, or 24 private tournaments.\nA team battle can be created by specifying the `teamBattleByTeam` argument.\nAdditional restrictions:\n  - clockTime + clockIncrement > 0\n  - 15s and 0+1 variant tournaments cannot be rated\n  - Clock time in comparison to tournament length must be reasonable: 3 <= (minutes * 60) / (96 * clockTime + 48 * clockIncrement + 15) <= 150\n",
         "tags": [
-          "Arena tournaments"
+          "Tournaments (Arena)"
         ],
         "security": [
           {
@@ -3646,7 +3646,7 @@
         "summary": "Get info about an Arena tournament",
         "description": "Get detailed info about recently finished, current, or upcoming tournament's duels, player standings, and other info.\n",
         "tags": [
-          "Arena tournaments"
+          "Tournaments (Arena)"
         ],
         "security": [],
         "parameters": [
@@ -3694,7 +3694,7 @@
         "summary": "Update an Arena tournament",
         "description": "Update an Arena tournament.\nBe mindful not to make important changes to ongoing tournaments.\nCan be used to update a team battle.\nAdditional restrictions:\n  - clockTime + clockIncrement > 0\n  - 15s and 0+1 variant tournaments cannot be rated\n  - Clock time in comparison to tournament length must be reasonable: 3 <= (minutes * 60) / (96 * clockTime + 48 * clockIncrement + 15) <= 150\n",
         "tags": [
-          "Arena tournaments"
+          "Tournaments (Arena)"
         ],
         "security": [
           {
@@ -4000,7 +4000,7 @@
         "summary": "Join an Arena tournament",
         "description": "Join an Arena tournament, possibly with a password and/or a team.\nAlso unpauses if you had previously [paused](#tag/arena-tournaments/post/apitournamentidwithdraw) the tournament.\n",
         "tags": [
-          "Arena tournaments"
+          "Tournaments (Arena)"
         ],
         "security": [
           {
@@ -4084,7 +4084,7 @@
         "summary": "Pause or leave an Arena tournament",
         "description": "Leave a future Arena tournament, or take a break on an ongoing Arena tournament.\nIt's possible to join again later. Points and streaks are preserved.\n",
         "tags": [
-          "Arena tournaments"
+          "Tournaments (Arena)"
         ],
         "security": [
           {
@@ -4143,7 +4143,7 @@
         "summary": "Terminate an Arena tournament",
         "description": "Terminate an Arena tournament\n",
         "tags": [
-          "Arena tournaments"
+          "Tournaments (Arena)"
         ],
         "security": [
           {
@@ -4202,7 +4202,7 @@
         "summary": "Update a team battle",
         "description": "Set the teams and number of leaders of a team battle.\nTo update the other attributes of a team battle, use the [tournament update endpoint](#tag/arena-tournaments/post/apitournamentid).\n",
         "tags": [
-          "Arena tournaments"
+          "Tournaments (Arena)"
         ],
         "security": [
           {
@@ -4286,7 +4286,7 @@
         "summary": "Export games of an Arena tournament",
         "description": "Download games of a tournament in PGN or [ndjson](#description/streaming-with-nd-json) format.\nGames are sorted by reverse chronological order (most recent first).\nThe game stream is throttled, depending on who is making the request:\n  - Anonymous request: 20 games per second\n  - [OAuth2 authenticated](/#description/authentication) request: 30 games per second\n",
         "tags": [
-          "Arena tournaments"
+          "Tournaments (Arena)"
         ],
         "security": [],
         "parameters": [
@@ -4416,7 +4416,7 @@
         "summary": "Get results of an Arena tournament",
         "description": "Players of an Arena tournament, with their score and performance, sorted by rank (best first).\n**Players are streamed as [ndjson](#description/streaming-with-nd-json)**, i.e. one JSON object per line.\nIf called on an ongoing tournament, results can be inconsistent\ndue to ranking changes while the players are being streamed.\nUse on finished tournaments for guaranteed consistency.\n",
         "tags": [
-          "Arena tournaments"
+          "Tournaments (Arena)"
         ],
         "security": [],
         "parameters": [
@@ -4520,7 +4520,7 @@
         "summary": "Get team standing of a team battle",
         "description": "Teams of a team battle tournament, with top players, sorted by rank (best first).\n",
         "tags": [
-          "Arena tournaments"
+          "Tournaments (Arena)"
         ],
         "security": [],
         "parameters": [
@@ -4616,7 +4616,7 @@
         "summary": "Get tournaments created by a user",
         "description": "Get all tournaments created by a given user.\nTournaments are sorted by reverse chronological order of start date (last starting first).\nTournaments are streamed as [ndjson](#description/streaming-with-nd-json).\nThe stream is throttled, depending on who is making the request:\n  - Anonymous request: 20 tournaments per second\n  - [OAuth2 authenticated](/#description/authentication) request: 30 tournaments per second\n  - Authenticated, downloading your own tournaments: 50 tournaments per second\n",
         "tags": [
-          "Arena tournaments"
+          "Tournaments (Arena)"
         ],
         "security": [
           {
@@ -4689,7 +4689,7 @@
         "summary": "Get tournaments played by a user",
         "description": "Get all tournaments played by a given user.\nTournaments are sorted by reverse chronological order of start date (last played first).\nTournaments are streamed as [ndjson](#description/streaming-with-nd-json).\nThe stream is throttled, depending on who is making the request:\n  - Anonymous request: 20 tournaments per second\n  - [OAuth2 authenticated](/#description/authentication) request: 30 tournaments per second\n  - Authenticated, downloading your own tournaments: 50 tournaments per second\n",
         "tags": [
-          "Arena tournaments"
+          "Tournaments (Arena)"
         ],
         "security": [
           {
@@ -4758,7 +4758,7 @@
         "summary": "Create a new Swiss tournament",
         "description": "Create a Swiss tournament for your team.\nThis endpoint mirrors the Swiss tournament form from your team pagee.\nYou can create up to 12 tournaments per day.\nAdditional restrictions:\n  - clock.limit + clock.increment > 0\n  - 15s and 0+1 variant tournaments cannot be rated\n",
         "tags": [
-          "Swiss tournaments"
+          "Tournaments (Swiss)"
         ],
         "security": [
           {
@@ -5032,7 +5032,7 @@
         "summary": "Get info about a Swiss tournament",
         "description": "Get detailed info about a Swiss tournament.\n",
         "tags": [
-          "Swiss tournaments"
+          "Tournaments (Swiss)"
         ],
         "security": [],
         "responses": {
@@ -5063,7 +5063,7 @@
         "summary": "Update a Swiss tournament",
         "description": "Update a Swiss tournament.\nBe mindful not to make important changes to ongoing tournaments.\nAdditional restrictions:\n  - clock.limit + clock.increment > 0\n  - 15s and 0+1 variant tournaments cannot be rated\n",
         "tags": [
-          "Swiss tournaments"
+          "Tournaments (Swiss)"
         ],
         "security": [
           {
@@ -5337,7 +5337,7 @@
         "summary": "Manually schedule the next round",
         "description": "Manually schedule the next round date and time of a Swiss tournament.\nThis sets the `roundInterval` field to `99999999`, i.e. manual scheduling.\nAll further rounds will need to be manually scheduled, unless the `roundInterval` field is changed back to automatic scheduling.\n",
         "tags": [
-          "Swiss tournaments"
+          "Tournaments (Swiss)"
         ],
         "security": [
           {
@@ -5417,7 +5417,7 @@
         "summary": "Join a Swiss tournament",
         "description": "Join a Swiss tournament, possibly with a password.\n",
         "tags": [
-          "Swiss tournaments"
+          "Tournaments (Swiss)"
         ],
         "security": [
           {
@@ -5492,7 +5492,7 @@
         "summary": "Pause or leave a swiss tournament",
         "description": "Leave a future Swiss tournament, or take a break on an ongoing Swiss tournament.\nIt's possible to join again later. Points are preserved.\n",
         "tags": [
-          "Swiss tournaments"
+          "Tournaments (Swiss)"
         ],
         "security": [
           {
@@ -5541,7 +5541,7 @@
         "summary": "Terminate a Swiss tournament",
         "description": "Terminate a Swiss tournament\n",
         "tags": [
-          "Swiss tournaments"
+          "Tournaments (Swiss)"
         ],
         "security": [
           {
@@ -5600,7 +5600,7 @@
         "summary": "Export TRF of a Swiss tournament",
         "description": "Download a tournament in the Tournament Report File format, the FIDE standard.\nDocumentation: <https://www.fide.com/FIDE/handbook/C04Annex2_TRF16.pdf>\nExample: <https://lichess.org/swiss/j8rtJ5GL.trf>\n",
         "tags": [
-          "Swiss tournaments"
+          "Tournaments (Swiss)"
         ],
         "security": [],
         "parameters": [
@@ -5642,7 +5642,7 @@
         "summary": "Export games of a Swiss tournament",
         "description": "Download games of a swiss tournament in PGN or [ndjson](#description/streaming-with-nd-json) format.\nGames are sorted by chronological order.\nThe game stream is throttled, depending on who is making the request:\n  - Anonymous request: 20 games per second\n  - [OAuth2 authenticated](/#description/authentication) request: 30 games per second\n",
         "tags": [
-          "Swiss tournaments"
+          "Tournaments (Swiss)"
         ],
         "security": [],
         "parameters": [
@@ -5772,7 +5772,7 @@
         "summary": "Get results of a swiss tournament",
         "description": "Players of a swiss tournament, with their score and performance, sorted by rank (best first).\nPlayers are streamed as [ndjson](#description/streaming-with-nd-json).\nIf called on an ongoing tournament, results can be inconsistent\ndue to ranking changes while the players are being streamed.\nUse on finished tournaments for guaranteed consistency.\n",
         "tags": [
-          "Swiss tournaments"
+          "Tournaments (Swiss)"
         ],
         "security": [],
         "parameters": [
@@ -5867,7 +5867,7 @@
         "description": "Get all swiss tournaments of a team.\nTournaments are sorted by reverse chronological order of start date (last starting first).\nTournaments are streamed as [ndjson](#description/streaming-with-nd-json).\n",
         "tags": [
           "Teams",
-          "Swiss tournaments"
+          "Tournaments (Swiss)"
         ],
         "security": [],
         "parameters": [
@@ -6343,7 +6343,7 @@
         }
       }
     },
-    "/study/by/{username}/export.pgn": {
+    "/api/study/by/{username}/export.pgn": {
       "get": {
         "operationId": "studyExportAllPgn",
         "summary": "Export all studies of a user",
@@ -8136,7 +8136,7 @@
         "description": "Get all Arena tournaments relevant to a team.\nTournaments are sorted by reverse chronological order of start date (last starting first).\nTournaments are streamed as [ndjson](#description/streaming-with-nd-json).\n",
         "tags": [
           "Teams",
-          "Arena tournaments"
+          "Tournaments (Arena)"
         ],
         "security": [],
         "parameters": [
@@ -19642,12 +19642,12 @@
           },
           "showScores": {
             "type": "boolean",
-            "default": true,
+            "default": false,
             "description": "Show players scores based on game results\n"
           },
           "showRatingDiffs": {
             "type": "boolean",
-            "default": true,
+            "default": false,
             "description": "Show player's rating diffs\n"
           },
           "teamTable": {

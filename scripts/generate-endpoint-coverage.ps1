@@ -21,7 +21,7 @@
 #>
 
 param(
-    [string]$OpenApiPath = "openapi/lichess.openapi.json",
+    [string]$OpenApiPath = "docs/openapi/lichess.openapi.json",
     [string]$ImplementedPath = "src/LichessSharp/Coverage/ImplementedEndpoints.cs"
 )
 

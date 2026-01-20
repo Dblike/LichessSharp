@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json.Serialization;
 
 namespace LichessSharp.Api.Contracts;
@@ -127,4 +129,130 @@ public class OAuthError
     /// </summary>
     [JsonPropertyName("error_description")]
     public string? ErrorDescription { get; init; }
+}
+
+/// <summary>
+///     PKCE (Proof Key for Code Exchange) values for OAuth2 authorization.
+/// </summary>
+/// <param name="CodeVerifier">The code verifier to store and use when exchanging the authorization code.</param>
+/// <param name="CodeChallenge">The code challenge to send in the authorization request.</param>
+public readonly record struct PkceValues(string CodeVerifier, string CodeChallenge);
+
+/// <summary>
+///     Helper class for OAuth2 PKCE flow with Lichess.
+/// </summary>
+public static class OAuthHelper
+{
+    private const string AuthorizeUrl = "https://lichess.org/oauth";
+
+    /// <summary>
+    ///     Generates cryptographically secure PKCE values for OAuth2 authorization.
+    /// </summary>
+    /// <returns>A tuple containing the code verifier (to store) and code challenge (to send).</returns>
+    public static PkceValues GeneratePkceValues()
+    {
+        var codeVerifier = GenerateCodeVerifier();
+        var codeChallenge = GenerateCodeChallenge(codeVerifier);
+        return new PkceValues(codeVerifier, codeChallenge);
+    }
+
+    /// <summary>
+    ///     Creates the authorization URL to redirect the user to for OAuth2 login.
+    /// </summary>
+    /// <param name="clientId">Your application's client ID (arbitrary unique identifier).</param>
+    /// <param name="redirectUri">The URL to redirect back to after authorization.</param>
+    /// <param name="codeChallenge">The PKCE code challenge (from <see cref="GeneratePkceValues"/>).</param>
+    /// <param name="scopes">Optional OAuth scopes to request (e.g., "preference:read", "challenge:write").</param>
+    /// <param name="state">Optional state parameter for CSRF protection.</param>
+    /// <param name="username">Optional hint for which Lichess account to use.</param>
+    /// <returns>The authorization URL to redirect the user to.</returns>
+    public static string CreateAuthorizationUrl(
+        string clientId,
+        string redirectUri,
+        string codeChallenge,
+        IEnumerable<string>? scopes = null,
+        string? state = null,
+        string? username = null)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(clientId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(redirectUri);
+        ArgumentException.ThrowIfNullOrWhiteSpace(codeChallenge);
+
+        var queryParams = new List<string>
+        {
+            $"response_type=code",
+            $"client_id={Uri.EscapeDataString(clientId)}",
+            $"redirect_uri={Uri.EscapeDataString(redirectUri)}",
+            $"code_challenge_method=S256",
+            $"code_challenge={Uri.EscapeDataString(codeChallenge)}"
+        };
+
+        if (scopes != null)
+        {
+            var scopeString = string.Join(" ", scopes);
+            if (!string.IsNullOrWhiteSpace(scopeString))
+                queryParams.Add($"scope={Uri.EscapeDataString(scopeString)}");
+        }
+
+        if (!string.IsNullOrWhiteSpace(state))
+            queryParams.Add($"state={Uri.EscapeDataString(state)}");
+
+        if (!string.IsNullOrWhiteSpace(username))
+            queryParams.Add($"username={Uri.EscapeDataString(username)}");
+
+        return $"{AuthorizeUrl}?{string.Join("&", queryParams)}";
+    }
+
+    /// <summary>
+    ///     Convenience method that generates PKCE values and creates the authorization URL in one call.
+    /// </summary>
+    /// <param name="clientId">Your application's client ID.</param>
+    /// <param name="redirectUri">The URL to redirect back to after authorization.</param>
+    /// <param name="scopes">Optional OAuth scopes to request.</param>
+    /// <param name="state">Optional state parameter for CSRF protection.</param>
+    /// <param name="username">Optional hint for which Lichess account to use.</param>
+    /// <returns>A tuple containing the authorization URL and the code verifier to store.</returns>
+    public static (string AuthorizationUrl, string CodeVerifier) CreateAuthorizationRequest(
+        string clientId,
+        string redirectUri,
+        IEnumerable<string>? scopes = null,
+        string? state = null,
+        string? username = null)
+    {
+        var pkce = GeneratePkceValues();
+        var url = CreateAuthorizationUrl(clientId, redirectUri, pkce.CodeChallenge, scopes, state, username);
+        return (url, pkce.CodeVerifier);
+    }
+
+    /// <summary>
+    ///     Generates a cryptographically secure random state parameter for CSRF protection.
+    /// </summary>
+    /// <returns>A random state string.</returns>
+    public static string GenerateState()
+    {
+        var bytes = new byte[32];
+        RandomNumberGenerator.Fill(bytes);
+        return Base64UrlEncode(bytes);
+    }
+
+    private static string GenerateCodeVerifier()
+    {
+        var bytes = new byte[32];
+        RandomNumberGenerator.Fill(bytes);
+        return Base64UrlEncode(bytes);
+    }
+
+    private static string GenerateCodeChallenge(string codeVerifier)
+    {
+        var challengeBytes = SHA256.HashData(Encoding.ASCII.GetBytes(codeVerifier));
+        return Base64UrlEncode(challengeBytes);
+    }
+
+    private static string Base64UrlEncode(byte[] bytes)
+    {
+        return Convert.ToBase64String(bytes)
+            .TrimEnd('=')
+            .Replace('+', '-')
+            .Replace('/', '_');
+    }
 }

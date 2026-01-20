@@ -124,6 +124,15 @@ public interface IBotApi
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>True if successful.</returns>
     Task<bool> ClaimDrawAsync(string gameId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    ///     Claim victory when the opponent has left the game.
+    ///     Requires OAuth scope: bot:play
+    /// </summary>
+    /// <param name="gameId">The game ID.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>True if successful.</returns>
+    Task<bool> ClaimVictoryAsync(string gameId, CancellationToken cancellationToken = default);
 }
 
 /// <summary>
