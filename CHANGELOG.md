@@ -5,6 +5,14 @@ All notable changes to LichessSharp will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2026-01-19
+
+### Fixed
+
+- **Bot/Board API polymorphic deserialization** — `StreamGameAsync()` now correctly deserializes events to their proper types (`BotGameFullEvent`, `BotGameStateEvent`, `BotChatLineEvent`, `BotOpponentGoneEvent` for Bot API; `GameFullEvent`, `GameStateEvent`, `ChatLineEvent`, `OpponentGoneEvent` for Board API). Previously all events were returned as the base class, losing subclass-specific properties. ([#3](https://github.com/Dblike/LichessSharp/issues/3))
+
+- **OpenAPI schema test path** — Fixed test file path for relocated OpenAPI schema (`docs/openapi/`)
+
 ## [0.2.0] - 2025-12-19
 
 ### Added
@@ -70,5 +78,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Targets .NET 10.0
 - Uses `System.Text.Json` with AOT preparation (reflection enabled by default)
 
+[0.2.1]: https://github.com/Dblike/LichessSharp/releases/tag/v0.2.1
 [0.2.0]: https://github.com/Dblike/LichessSharp/releases/tag/v0.2.0
 [0.1.0]: https://github.com/Dblike/LichessSharp/releases/tag/v0.1.0

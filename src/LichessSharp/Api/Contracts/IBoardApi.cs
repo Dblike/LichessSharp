@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using LichessSharp.Serialization.Converters;
 
 namespace LichessSharp.Api.Contracts;
 
@@ -389,6 +390,7 @@ public class BoardCompat
 /// <summary>
 ///     Event from the board game stream.
 /// </summary>
+[JsonConverter(typeof(BoardGameEventConverter))]
 public class BoardGameEvent
 {
     /// <summary>

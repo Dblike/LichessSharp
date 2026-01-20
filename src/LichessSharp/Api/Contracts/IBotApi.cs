@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using LichessSharp.Serialization.Converters;
 
 namespace LichessSharp.Api.Contracts;
 
@@ -362,6 +363,7 @@ public class BotCompat
 /// <summary>
 ///     Event from the bot game stream.
 /// </summary>
+[JsonConverter(typeof(BotGameEventConverter))]
 public class BotGameEvent
 {
     /// <summary>
