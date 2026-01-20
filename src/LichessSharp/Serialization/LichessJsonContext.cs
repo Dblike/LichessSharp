@@ -82,7 +82,6 @@ namespace LichessSharp.Serialization;
 [JsonSerializable(typeof(List<Streamer>))]
 [JsonSerializable(typeof(StreamInfo))]
 [JsonSerializable(typeof(StreamerInfo))]
-[JsonSerializable(typeof(StreamChannel))]
 [JsonSerializable(typeof(Timeline))]
 [JsonSerializable(typeof(TimelineEntry))]
 [JsonSerializable(typeof(TimelineData))]

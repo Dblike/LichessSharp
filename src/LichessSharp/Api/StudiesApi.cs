@@ -43,7 +43,7 @@ internal sealed class StudiesApi(ILichessHttpClient httpClient) : IStudiesApi
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username);
 
-        var endpoint = BuildExportEndpoint($"/study/by/{Uri.EscapeDataString(username)}/export.pgn", options);
+        var endpoint = BuildExportEndpoint($"/api/study/by/{Uri.EscapeDataString(username)}/export.pgn", options, requiresOrder: true);
         return await _httpClient.GetStringWithAcceptAsync(endpoint, "application/x-chess-pgn", cancellationToken)
             .ConfigureAwait(false);
     }
@@ -118,23 +118,30 @@ internal sealed class StudiesApi(ILichessHttpClient httpClient) : IStudiesApi
         return true;
     }
 
-    private static string BuildExportEndpoint(string baseEndpoint, StudyExportOptions? options)
+    private static string BuildExportEndpoint(string baseEndpoint, StudyExportOptions? options, bool requiresOrder = false)
     {
-        if (options == null) return baseEndpoint;
-
         var sb = new StringBuilder(baseEndpoint);
         var hasParams = false;
 
-        AppendParam("clocks", options.Clocks);
-        AppendParam("comments", options.Comments);
-        AppendParam("variations", options.Variations);
-        AppendParam("opening", options.Opening);
-        AppendParam("source", options.Source);
-        AppendParam("orientation", options.Orientation);
+        // Order is required for user studies export
+        if (requiresOrder || options?.Order != null)
+        {
+            AppendStringParam("order", options?.Order ?? "newest");
+        }
+
+        if (options != null)
+        {
+            AppendBoolParam("clocks", options.Clocks);
+            AppendBoolParam("comments", options.Comments);
+            AppendBoolParam("variations", options.Variations);
+            AppendBoolParam("opening", options.Opening);
+            AppendBoolParam("source", options.Source);
+            AppendBoolParam("orientation", options.Orientation);
+        }
 
         return sb.ToString();
 
-        void AppendParam(string name, bool? value)
+        void AppendBoolParam(string name, bool? value)
         {
             if (value.HasValue)
             {
@@ -144,6 +151,15 @@ internal sealed class StudiesApi(ILichessHttpClient httpClient) : IStudiesApi
                 sb.Append(value.Value.ToString().ToLowerInvariant());
                 hasParams = true;
             }
+        }
+
+        void AppendStringParam(string name, string value)
+        {
+            sb.Append(hasParams ? '&' : '?');
+            sb.Append(name);
+            sb.Append('=');
+            sb.Append(Uri.EscapeDataString(value));
+            hasParams = true;
         }
     }
 }

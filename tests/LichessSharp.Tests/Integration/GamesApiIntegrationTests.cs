@@ -168,8 +168,9 @@ public class GamesApiIntegrationTests : IntegrationTestBase
             await foreach (var evt in Client.Games.StreamGameMovesAsync(GameId1).WithCancellation(cts.Token))
             {
                 events.Add(evt);
-                // Just get the first event (initial game state) and break
-                break;
+                // Get a few events to capture both game info and FEN data
+                if (events.Count >= 2)
+                    break;
             }
         }
         catch (OperationCanceledException)
@@ -177,12 +178,19 @@ public class GamesApiIntegrationTests : IntegrationTestBase
             // Timeout is acceptable - completed games might not stream
         }
 
-        // Assert - Either we got an event or the stream timed out (both are valid for completed games)
-        // For completed games, we expect at least the initial event with game state
+        // Assert - Either we got events or the stream timed out (both are valid for completed games)
+        // First event is game metadata (has Id), second event has FEN
         if (events.Count > 0)
-            // The first event should have FEN position data
-            // Note: Id may or may not be present depending on the API response
-            events[0].Fen.Should().NotBeNullOrEmpty();
+        {
+            // First event should have game ID (metadata event)
+            events[0].Id.Should().NotBeNullOrEmpty();
+        }
+
+        if (events.Count > 1)
+        {
+            // Second event should have FEN position data
+            events[1].Fen.Should().NotBeNullOrEmpty();
+        }
     }
 
     [Fact]

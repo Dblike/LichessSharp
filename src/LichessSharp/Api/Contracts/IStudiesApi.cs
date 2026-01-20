@@ -107,6 +107,13 @@ public interface IStudiesApi
 public class StudyExportOptions
 {
     /// <summary>
+    ///     Order of studies when exporting user studies.
+    ///     Valid values: hot, newest, oldest, updated, popular, alphabetical, mine, relevant.
+    ///     Defaults to "newest" if not specified.
+    /// </summary>
+    public string? Order { get; set; }
+
+    /// <summary>
     ///     Include clock comments in the PGN moves.
     ///     Example: 2. Nf3 { [%clk 1:59:01] }
     /// </summary>
