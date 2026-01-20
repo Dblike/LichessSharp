@@ -138,25 +138,6 @@ public static class LiveTV
                 break;
         }
 
-        // =====================================================================
-        // Tips for Live TV Integration
-        // =====================================================================
-        SampleRunner.PrintSubHeader("Integration Tips");
-
-        Console.WriteLine("When building a live TV feature:");
-        Console.WriteLine();
-        Console.WriteLine("1. Use StreamCurrentGameAsync() for the main featured game");
-        Console.WriteLine("2. Use GetCurrentGamesAsync() to show all channels");
-        Console.WriteLine("3. Use StreamChannelAsync() for specific variant channels");
-        Console.WriteLine("4. Always handle cancellation for long-running streams");
-        Console.WriteLine("5. The FEN string can be rendered using any chess board library");
-        Console.WriteLine("6. Use the LastMove field to highlight the most recent move");
-        Console.WriteLine();
-        Console.WriteLine("Available TV channels:");
-        Console.WriteLine("  bullet, blitz, rapid, classical, ultraBullet,");
-        Console.WriteLine("  chess960, crazyhouse, antichess, atomic, horde,");
-        Console.WriteLine("  kingOfTheHill, racingKings, threeCheck, computer, bot");
-
         SampleRunner.PrintSuccess("Live TV sample completed!");
     }
 

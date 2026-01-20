@@ -82,23 +82,9 @@ public static class ErrorHandling
         SampleRunner.PrintSubHeader("Authorization Errors (403)");
 
         Console.WriteLine("Authorization errors occur when your token lacks required scopes.");
+        Console.WriteLine("Common scenarios: Board API without 'board:play', Bot API without 'bot:play'");
         Console.WriteLine();
-        Console.WriteLine("Example scenarios:");
-        Console.WriteLine("  - Trying to use Board API without 'board:play' scope");
-        Console.WriteLine("  - Trying to use Bot API without 'bot:play' scope");
-        Console.WriteLine("  - Trying to create a tournament without 'tournament:write' scope");
-        Console.WriteLine();
-        Console.WriteLine("Handle with LichessAuthorizationException:");
-        Console.WriteLine();
-        Console.WriteLine("  try");
-        Console.WriteLine("  {");
-        Console.WriteLine("      await client.Board.MakeMoveAsync(gameId, \"e2e4\");");
-        Console.WriteLine("  }");
-        Console.WriteLine("  catch (LichessAuthorizationException ex)");
-        Console.WriteLine("  {");
-        Console.WriteLine("      Console.WriteLine($\"Missing scope: {ex.RequiredScope}\");");
-        Console.WriteLine("      // Prompt user to re-authenticate with required scope");
-        Console.WriteLine("  }");
+        Console.WriteLine("Handle with LichessAuthorizationException (has RequiredScope property).");
 
         // =====================================================================
         // Rate Limiting
@@ -106,28 +92,8 @@ public static class ErrorHandling
         SampleRunner.PrintSubHeader("Rate Limiting (429)");
 
         Console.WriteLine("Rate limits protect the API from abuse.");
-        Console.WriteLine();
-        Console.WriteLine("Built-in retry handling:");
-        Console.WriteLine();
-        Console.WriteLine("  var options = new LichessClientOptions");
-        Console.WriteLine("  {");
-        Console.WriteLine("      AutoRetryOnRateLimit = true,  // Enable automatic retry");
-        Console.WriteLine("      MaxRateLimitRetries = 5       // Retry up to 5 times");
-        Console.WriteLine("  };");
-        Console.WriteLine();
-        Console.WriteLine("Manual handling:");
-        Console.WriteLine();
-        Console.WriteLine("  try");
-        Console.WriteLine("  {");
-        Console.WriteLine("      await client.Users.GetAsync(\"DrNykterstein\");");
-        Console.WriteLine("  }");
-        Console.WriteLine("  catch (LichessRateLimitException ex)");
-        Console.WriteLine("  {");
-        Console.WriteLine("      Console.WriteLine($\"Rate limited! Retry after: {ex.RetryAfter}\");");
-        Console.WriteLine("      if (ex.RetryAfter.HasValue)");
-        Console.WriteLine("          await Task.Delay(ex.RetryAfter.Value);");
-        Console.WriteLine("      // Then retry the request");
-        Console.WriteLine("  }");
+        Console.WriteLine("Use LichessClientOptions.AutoRetryOnRateLimit = true for automatic handling.");
+        Console.WriteLine("Or catch LichessRateLimitException and use its RetryAfter property.");
 
         // =====================================================================
         // Cancellation
@@ -198,64 +164,8 @@ public static class ErrorHandling
         SampleRunner.PrintSubHeader("Transient Error Handling");
 
         Console.WriteLine("Transient errors include network issues, DNS failures, etc.");
-        Console.WriteLine();
-        Console.WriteLine("Built-in retry handling:");
-        Console.WriteLine();
-        Console.WriteLine("  var options = new LichessClientOptions");
-        Console.WriteLine("  {");
-        Console.WriteLine("      EnableTransientRetry = true,");
-        Console.WriteLine("      MaxTransientRetries = 3,");
-        Console.WriteLine("      TransientRetryBaseDelay = TimeSpan.FromSeconds(1),");
-        Console.WriteLine("      TransientRetryMaxDelay = TimeSpan.FromSeconds(30)");
-        Console.WriteLine("  };");
-        Console.WriteLine();
-        Console.WriteLine("This uses exponential backoff with jitter.");
-
-        // =====================================================================
-        // Generic API Errors
-        // =====================================================================
-        SampleRunner.PrintSubHeader("Generic API Errors");
-
-        Console.WriteLine("For any other API errors, catch LichessException:");
-        Console.WriteLine();
-        Console.WriteLine("  try");
-        Console.WriteLine("  {");
-        Console.WriteLine("      await client.SomeApi.SomeMethodAsync();");
-        Console.WriteLine("  }");
-        Console.WriteLine("  catch (LichessNotFoundException) { /* Handle 404 */ }");
-        Console.WriteLine("  catch (LichessRateLimitException) { /* Handle 429 */ }");
-        Console.WriteLine("  catch (LichessAuthenticationException) { /* Handle 401 */ }");
-        Console.WriteLine("  catch (LichessAuthorizationException) { /* Handle 403 */ }");
-        Console.WriteLine("  catch (LichessException ex)");
-        Console.WriteLine("  {");
-        Console.WriteLine("      // Handle any other API error");
-        Console.WriteLine("      Console.WriteLine($\"API Error: {ex.LichessError}\");");
-        Console.WriteLine("      Console.WriteLine($\"Status Code: {ex.StatusCode}\");");
-        Console.WriteLine("  }");
-
-        // =====================================================================
-        // Best Practices
-        // =====================================================================
-        SampleRunner.PrintSubHeader("Error Handling Best Practices");
-
-        Console.WriteLine("1. ENABLE AUTOMATIC RETRIES");
-        Console.WriteLine("   Set AutoRetryOnRateLimit and EnableTransientRetry for production");
-        Console.WriteLine();
-        Console.WriteLine("2. USE SPECIFIC EXCEPTION TYPES");
-        Console.WriteLine("   Catch specific exceptions before the generic LichessException");
-        Console.WriteLine();
-        Console.WriteLine("3. RESPECT RETRY-AFTER");
-        Console.WriteLine("   When rate limited, use the RetryAfter value from the exception");
-        Console.WriteLine();
-        Console.WriteLine("4. IMPLEMENT CIRCUIT BREAKER");
-        Console.WriteLine("   For high-volume apps, consider Polly for circuit breaker patterns");
-        Console.WriteLine();
-        Console.WriteLine("5. LOG ERRORS APPROPRIATELY");
-        Console.WriteLine("   Log LichessError and StatusCode for debugging");
-        Console.WriteLine();
-        Console.WriteLine("6. HANDLE STREAMING DISCONNECTIONS");
-        Console.WriteLine("   Streaming connections can drop - implement reconnection logic");
-        Console.WriteLine();
+        Console.WriteLine("Use LichessClientOptions.EnableTransientRetry = true for automatic handling.");
+        Console.WriteLine("Retries use exponential backoff with jitter.");
 
         // =====================================================================
         // Exception Hierarchy

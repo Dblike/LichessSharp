@@ -190,18 +190,13 @@ public static class ChessAnalysis
         }
 
         // =====================================================================
-        // Atomic Tablebase
+        // Variant Tablebases
         // =====================================================================
         SampleRunner.PrintSubHeader("Variant Tablebases");
 
-        Console.WriteLine("Tablebase lookups are also available for variants:");
-        Console.WriteLine("  - Tablebase.LookupAtomicAsync() - Atomic chess");
-        Console.WriteLine("  - Tablebase.LookupAntichessAsync() - Antichess");
-
-        // Quick atomic example
+        // Atomic tablebase
         var atomicFen = "8/8/8/3k4/8/8/8/4K2R w - - 0 1";
-        Console.WriteLine();
-        Console.WriteLine("Atomic tablebase query (same position)...");
+        Console.WriteLine("Atomic chess tablebase (same position)...");
 
         var atomicTablebase = await client.Tablebase.LookupAtomicAsync(atomicFen);
         if (atomicTablebase != null)
@@ -210,28 +205,17 @@ public static class ChessAnalysis
             Console.WriteLine($"  Best move: {atomicTablebase.Moves?.FirstOrDefault()?.San}");
         }
 
-        // =====================================================================
-        // Integration Tips
-        // =====================================================================
-        SampleRunner.PrintSubHeader("Integration Tips");
+        // Antichess tablebase
+        var antichessFen = "8/8/8/3k4/8/8/8/4K2R w - - 0 1";
+        Console.WriteLine();
+        Console.WriteLine("Antichess tablebase...");
 
-        Console.WriteLine("Building a chess analysis tool:");
-        Console.WriteLine();
-        Console.WriteLine("1. Cloud Evaluations");
-        Console.WriteLine("   - Use multiPv parameter for multiple lines");
-        Console.WriteLine("   - Evaluations are cached; popular positions are available");
-        Console.WriteLine("   - Returns null if position not in cloud database");
-        Console.WriteLine();
-        Console.WriteLine("2. Opening Explorer");
-        Console.WriteLine("   - Masters: OTB games from titled players");
-        Console.WriteLine("   - Lichess: Online games, filterable by rating/speed");
-        Console.WriteLine("   - Player: Specific player's games");
-        Console.WriteLine();
-        Console.WriteLine("3. Tablebases");
-        Console.WriteLine("   - Up to 7 pieces (including kings)");
-        Console.WriteLine("   - DTZ = Distance To Zeroing (50-move rule reset)");
-        Console.WriteLine("   - DTM = Distance To Mate (if available)");
-        Console.WriteLine("   - Categories: win, draw, loss, maybe-win, maybe-loss");
+        var antichessTablebase = await client.Tablebase.LookupAntichessAsync(antichessFen);
+        if (antichessTablebase != null)
+        {
+            Console.WriteLine($"  Category: {antichessTablebase.Category}");
+            Console.WriteLine($"  Best move: {antichessTablebase.Moves?.FirstOrDefault()?.San}");
+        }
 
         SampleRunner.PrintSuccess("Chess Analysis sample completed!");
     }

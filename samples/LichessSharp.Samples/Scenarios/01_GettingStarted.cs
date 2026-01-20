@@ -92,53 +92,40 @@ public static class GettingStarted
         }
 
         // =====================================================================
-        // Available API Surface
+        // Quick API Demos
         // =====================================================================
-        SampleRunner.PrintSubHeader("Available APIs");
+        SampleRunner.PrintSubHeader("Quick API Demos");
 
-        Console.WriteLine("The LichessClient exposes the following API areas:");
-        Console.WriteLine();
-        Console.WriteLine("  Public (No Auth Required):");
-        Console.WriteLine("    - Users        : User profiles, status, leaderboards");
-        Console.WriteLine("    - Games        : Export and stream games");
-        Console.WriteLine("    - Tv           : Live TV channels");
-        Console.WriteLine("    - Puzzles      : Daily puzzle, dashboard");
-        Console.WriteLine("    - Analysis     : Cloud evaluations");
-        Console.WriteLine("    - OpeningExplorer : Position lookups");
-        Console.WriteLine("    - Tablebase    : Endgame tablebases");
-        Console.WriteLine("    - ArenaTournaments : Tournament data");
-        Console.WriteLine("    - SwissTournaments : Swiss tournament data");
-        Console.WriteLine("    - Broadcasts   : Live event broadcasts");
-        Console.WriteLine("    - Fide         : FIDE player data");
-        Console.WriteLine();
-        Console.WriteLine("  Authenticated:");
-        Console.WriteLine("    - Account      : Your profile, email, preferences");
-        Console.WriteLine("    - Relations    : Follow/block users");
-        Console.WriteLine("    - Board        : Play games with physical boards");
-        Console.WriteLine("    - Bot          : Bot account operations");
-        Console.WriteLine("    - Challenges   : Send and receive challenges");
-        Console.WriteLine("    - Teams        : Team management");
-        Console.WriteLine("    - Studies      : Lichess studies");
-        Console.WriteLine("    - Messaging    : Private messages");
-        Console.WriteLine("    - BulkPairings : Tournament organizer tools");
+        using (var client = new LichessClient())
+        {
+            Console.WriteLine("Demonstrating various public APIs:");
+            Console.WriteLine();
 
-        // =====================================================================
-        // Best Practices
-        // =====================================================================
-        SampleRunner.PrintSubHeader("Best Practices");
+            // Users API
+            var leaderboard = await client.Users.GetLeaderboardAsync("bullet", 3);
+            Console.WriteLine($"  Users API - Top 3 bullet: {string.Join(", ", leaderboard.Select(u => u.Username))}");
 
-        Console.WriteLine("1. Always dispose the client when done:");
-        Console.WriteLine("   using var client = new LichessClient();");
-        Console.WriteLine();
-        Console.WriteLine("2. Use environment variables for tokens:");
-        Console.WriteLine("   var token = Environment.GetEnvironmentVariable(\"LICHESS_TOKEN\");");
-        Console.WriteLine();
-        Console.WriteLine("3. Handle cancellation for long-running operations:");
-        Console.WriteLine("   using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));");
-        Console.WriteLine("   await client.Games.StreamUserGamesAsync(\"user\", cts.Token);");
-        Console.WriteLine();
-        Console.WriteLine("4. Enable rate limit retry for production apps:");
-        Console.WriteLine("   options.AutoRetryOnRateLimit = true;");
+            // Puzzles API
+            var daily = await client.Puzzles.GetDailyAsync();
+            Console.WriteLine($"  Puzzles API - Daily puzzle: {daily.Puzzle?.Id} (rating {daily.Puzzle?.Rating})");
+
+            // TV API
+            var tvGames = await client.Tv.GetCurrentGamesAsync();
+            Console.WriteLine($"  TV API - Blitz TV: {tvGames.Blitz?.User?.Name ?? "N/A"}");
+
+            // Analysis API
+            var eval = await client.Analysis.GetCloudEvaluationAsync("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+            Console.WriteLine($"  Analysis API - Starting position depth: {eval?.Depth ?? 0}");
+
+            // Tablebase API
+            var tablebase = await client.Tablebase.LookupAsync("8/8/8/4k3/8/8/8/4K2R w - - 0 1");
+            Console.WriteLine($"  Tablebase API - K+R vs K: {tablebase.Category}");
+
+            // Tournaments API
+            var tournaments = await client.ArenaTournaments.GetCurrentAsync();
+            var activeCount = tournaments.Started?.Count ?? 0;
+            Console.WriteLine($"  Tournaments API - Active arenas: {activeCount}");
+        }
 
         SampleRunner.PrintSuccess("Getting Started sample completed!");
     }

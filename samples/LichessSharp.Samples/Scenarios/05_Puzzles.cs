@@ -196,26 +196,17 @@ public static class Puzzles
         }
 
         // =====================================================================
-        // Puzzle Themes
+        // Puzzle Storm (Public - any user)
         // =====================================================================
-        SampleRunner.PrintSubHeader("Common Puzzle Themes");
+        SampleRunner.PrintSubHeader("Storm Stats (Public User)");
 
-        Console.WriteLine("Common puzzle themes you can filter by:");
-        Console.WriteLine();
-        Console.WriteLine("  Tactical:");
-        Console.WriteLine("    fork, pin, skewer, discoveredAttack, doubleCheck");
-        Console.WriteLine("    sacrifice, deflection, decoy, interference");
-        Console.WriteLine();
-        Console.WriteLine("  Mating Patterns:");
-        Console.WriteLine("    mate, mateIn1, mateIn2, mateIn3, mateIn4, mateIn5");
-        Console.WriteLine("    backRankMate, smotheredMate, anastasiaMate, arabianMate");
-        Console.WriteLine();
-        Console.WriteLine("  Endgame:");
-        Console.WriteLine("    endgame, pawnEndgame, rookEndgame, bishopEndgame");
-        Console.WriteLine("    knightEndgame, queenEndgame, queenRookEndgame");
-        Console.WriteLine();
-        Console.WriteLine("  Game Phase:");
-        Console.WriteLine("    opening, middlegame, endgame, veryLong, long, short");
+        Console.WriteLine("Fetching DrNykterstein's Puzzle Storm stats...");
+        var publicStorm = await client.Puzzles.GetStormDashboardAsync("DrNykterstein", 30);
+        if (publicStorm.High != null)
+        {
+            SampleRunner.PrintKeyValue("All-time high", publicStorm.High.AllTime);
+            SampleRunner.PrintKeyValue("Month high", publicStorm.High.Month);
+        }
 
         SampleRunner.PrintSuccess("Puzzles sample completed!");
     }
