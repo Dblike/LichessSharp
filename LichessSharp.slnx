@@ -7,5 +7,6 @@
   </Folder>
   <Folder Name="/samples/">
     <Project Path="samples/LichessSharp.Samples/LichessSharp.Samples.csproj" />
+    <Project Path="samples/LichessSharp.SimpleBot/LichessSharp.SimpleBot.csproj" />
   </Folder>
 </Solution>
