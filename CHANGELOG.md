@@ -5,6 +5,41 @@ All notable changes to LichessSharp will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-01-20
+
+### Added
+
+- **OAuth API enhancements** — Added `GetAuthorizationUrlAsync()` and `GetAuthorizationUrl()` methods to `IOAuthApi` for streamlined PKCE authorization flows
+
+- **New Bot API endpoint** — Added `GetOnlineBotUsersAsync()` to retrieve currently online bot accounts
+
+- **6 new sample projects** demonstrating real-world usage patterns:
+  - `LichessSharp.SimpleBot` — Bot API integration with move generation
+  - `LichessSharp.PuzzleSolver` — Interactive puzzle solving with the Puzzles API
+  - `LichessSharp.GameArchiver` — Export and archive games to PGN files
+  - `LichessSharp.TvViewer` — Live TV channel streaming
+  - `LichessSharp.UserStats` — User profile and statistics display
+  - `LichessSharp.PositionAnalyzer` — Cloud evaluation and opening explorer
+
+- **OAuth types registered for AOT** — Added `OAuthToken`, `OAuthTokenInfo`, and `List<OAuthTokenInfo>` to source-generated JSON context
+
+### Changed
+
+- **BREAKING**: `StreamerInfo.Twitch` and `StreamerInfo.YouTube` reverted from `StreamChannel?` back to `string?` to match current Lichess API response format (API changed since 0.2.0)
+
+- **Studies API** — `ExportUserStudiesAsync()` now requires `order` parameter (defaults to "newest") per Lichess API requirements
+
+### Fixed
+
+- **Studies API 404 errors** — Fixed endpoint path to use correct `/api/study/by/` prefix
+
+- **Games API streaming test** — Fixed `StreamGameMovesAsync` test expectations (first event contains game metadata with `Id`, subsequent events contain `Fen`)
+
+### Documentation
+
+- Consolidated README with wiki documentation
+- Updated sample scenarios to favor runnable code over printed examples
+
 ## [0.2.1] - 2026-01-19
 
 ### Fixed
@@ -78,6 +113,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Targets .NET 10.0
 - Uses `System.Text.Json` with AOT preparation (reflection enabled by default)
 
+[0.3.0]: https://github.com/Dblike/LichessSharp/releases/tag/v0.3.0
 [0.2.1]: https://github.com/Dblike/LichessSharp/releases/tag/v0.2.1
 [0.2.0]: https://github.com/Dblike/LichessSharp/releases/tag/v0.2.0
 [0.1.0]: https://github.com/Dblike/LichessSharp/releases/tag/v0.1.0
