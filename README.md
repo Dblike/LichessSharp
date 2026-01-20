@@ -48,26 +48,17 @@ var puzzle = await client.Puzzles.GetDailyAsync();
 
 ## Samples
 
-Run the interactive samples to explore common usage patterns:
+The repository includes [sample applications](../../wiki/Home#samples) for common use cases:
 
-```bash
-cd samples/LichessSharp.Samples
-dotnet run
-```
-
-Includes examples for client setup, streaming, Board API, bot development, and error handling.
-
-## Error Handling
-
-```csharp
-try
-{
-    var user = await client.Users.GetAsync("nonexistent");
-}
-catch (LichessNotFoundException) { /* User not found */ }
-catch (LichessRateLimitException ex) { /* Retry after ex.RetryAfter */ }
-catch (LichessAuthorizationException ex) { /* Missing scope: ex.RequiredScope */ }
-```
+| Sample | Description |
+|--------|-------------|
+| [LichessSharp.Samples](samples/LichessSharp.Samples) | Interactive demos covering all API areas |
+| [LichessSharp.SimpleBot](samples/LichessSharp.SimpleBot) | Complete bot implementation |
+| [LichessSharp.PuzzleSolver](samples/LichessSharp.PuzzleSolver) | Puzzle dashboard and solver CLI |
+| [LichessSharp.GameArchiver](samples/LichessSharp.GameArchiver) | Export games to PGN files |
+| [LichessSharp.TvViewer](samples/LichessSharp.TvViewer) | Live TV streaming viewer |
+| [LichessSharp.UserStats](samples/LichessSharp.UserStats) | Player statistics tool |
+| [LichessSharp.PositionAnalyzer](samples/LichessSharp.PositionAnalyzer) | Position analysis with cloud eval, opening explorer, tablebase |
 
 ## Contributing
 
