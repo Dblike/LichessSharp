@@ -40,15 +40,12 @@ var puzzle = await client.Puzzles.GetDailyAsync();
 
 ## Documentation
 
-**[Full Documentation](../../wiki)** - Complete guides and API reference
+**[Full Documentation](../../wiki/Getting-Started)** - Installation, configuration, and usage guides
 
-- [Getting Started](../../wiki/Getting-Started) - Installation, configuration, basic usage
 - [Authentication](../../wiki/Authentication) - OAuth tokens, scopes, security
 - [Quick Reference](../../wiki/Quick-Reference) - Code snippets for all API areas
 
 ## Samples
-
-The repository includes [sample applications](../../wiki/Home#samples) for common use cases:
 
 | Sample | Description |
 |--------|-------------|
