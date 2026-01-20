@@ -8,5 +8,7 @@
   <Folder Name="/samples/">
     <Project Path="samples/LichessSharp.Samples/LichessSharp.Samples.csproj" />
     <Project Path="samples/LichessSharp.SimpleBot/LichessSharp.SimpleBot.csproj" />
+    <Project Path="samples/LichessSharp.PuzzleSolver/LichessSharp.PuzzleSolver.csproj" />
+    <Project Path="samples/LichessSharp.GameArchiver/LichessSharp.GameArchiver.csproj" />
   </Folder>
 </Solution>
