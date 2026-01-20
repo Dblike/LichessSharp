@@ -6,16 +6,6 @@ A fully-featured .NET client library for the [Lichess API](https://lichess.org/a
 [![Lichess API](https://img.shields.io/badge/Lichess%20API-v2.0.112-blue.svg)](https://lichess.org/api)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## Features
-
-- **Complete API coverage** - 23 API areas with 176 endpoints fully implemented
-- **Async-first design** - All methods return `Task<T>` with full `CancellationToken` support
-- **Real-time streaming** - `IAsyncEnumerable<T>` for NDJSON streams (games, TV, tournaments, events)
-- **Strong typing** - Comprehensive models and enums matching Lichess semantics
-- **Resilient by default** - Built-in retry logic for rate limits (HTTP 429) and transient network failures
-- **DI-friendly** - Works seamlessly with `HttpClientFactory` and dependency injection
-- **Modern .NET** - Targets .NET 10.0, uses `System.Text.Json` with AOT preparation
-
 ## Installation
 
 ```bash
