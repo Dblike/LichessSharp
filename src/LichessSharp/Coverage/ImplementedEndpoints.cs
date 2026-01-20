@@ -153,7 +153,7 @@ public static class ImplementedEndpoints
         new("GET", "/api/fide/player", "Fide", "SearchPlayersAsync"),
 
         // ===== OAuth API =====
-        new("GET", "/oauth", "OAuth", "OAuthHelper.CreateAuthorizationUrl"),
+        new("GET", "/oauth", "OAuth", "CreateAuthorizationRequest"),
         new("POST", "/api/token", "OAuth", "GetTokenAsync"),
         new("DELETE", "/api/token", "OAuth", "RevokeTokenAsync"),
         new("POST", "/api/token/test", "OAuth", "TestTokensAsync"),

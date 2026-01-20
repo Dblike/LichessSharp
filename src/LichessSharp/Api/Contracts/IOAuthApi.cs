@@ -5,11 +5,28 @@ using System.Text.Json.Serialization;
 namespace LichessSharp.Api.Contracts;
 
 /// <summary>
-///     OAuth API - Token management for the Lichess API.
+///     OAuth API - Token management and authorization for the Lichess API.
 ///     See <see href="https://lichess.org/api#tag/OAuth" />.
 /// </summary>
 public interface IOAuthApi
 {
+    /// <summary>
+    ///     Generates PKCE values and creates the authorization URL for OAuth2 login.
+    ///     This is a convenience method that combines PKCE generation and URL building.
+    /// </summary>
+    /// <param name="clientId">Your application's client ID (arbitrary unique identifier).</param>
+    /// <param name="redirectUri">The URL to redirect back to after authorization.</param>
+    /// <param name="scopes">Optional OAuth scopes to request (e.g., "preference:read", "challenge:write").</param>
+    /// <param name="state">Optional state parameter for CSRF protection.</param>
+    /// <param name="username">Optional hint for which Lichess account to use.</param>
+    /// <returns>A tuple containing the authorization URL to redirect the user to and the code verifier to store.</returns>
+    (string AuthorizationUrl, string CodeVerifier) CreateAuthorizationRequest(
+        string clientId,
+        string redirectUri,
+        IEnumerable<string>? scopes = null,
+        string? state = null,
+        string? username = null);
+
     /// <summary>
     ///     Exchange an authorization code for an access token using the PKCE flow.
     /// </summary>
@@ -136,12 +153,12 @@ public class OAuthError
 /// </summary>
 /// <param name="CodeVerifier">The code verifier to store and use when exchanging the authorization code.</param>
 /// <param name="CodeChallenge">The code challenge to send in the authorization request.</param>
-public readonly record struct PkceValues(string CodeVerifier, string CodeChallenge);
+internal readonly record struct PkceValues(string CodeVerifier, string CodeChallenge);
 
 /// <summary>
-///     Helper class for OAuth2 PKCE flow with Lichess.
+///     Internal helper class for OAuth2 PKCE flow with Lichess.
 /// </summary>
-public static class OAuthHelper
+internal static class OAuthHelper
 {
     private const string AuthorizeUrl = "https://lichess.org/oauth";
 

@@ -12,6 +12,17 @@ internal sealed class OAuthApi(ILichessHttpClient httpClient) : IOAuthApi
     private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
     /// <inheritdoc />
+    public (string AuthorizationUrl, string CodeVerifier) CreateAuthorizationRequest(
+        string clientId,
+        string redirectUri,
+        IEnumerable<string>? scopes = null,
+        string? state = null,
+        string? username = null)
+    {
+        return OAuthHelper.CreateAuthorizationRequest(clientId, redirectUri, scopes, state, username);
+    }
+
+    /// <inheritdoc />
     public async Task<OAuthToken> GetTokenAsync(OAuthTokenRequest request,
         CancellationToken cancellationToken = default)
     {
