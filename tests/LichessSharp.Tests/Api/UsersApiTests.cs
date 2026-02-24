@@ -79,6 +79,59 @@ public class UsersApiTests
     }
 
     [Fact]
+    public async Task GetAsync_WithFideIdOption_BuildsCorrectQueryString()
+    {
+        // Arrange
+        var options = new GetUserOptions
+        {
+            FideId = true
+        };
+        var expectedUser = CreateTestUserExtended("DrNykterstein");
+        _httpClientMock
+            .Setup(x => x.GetAsync<UserExtended>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedUser);
+
+        // Act
+        await _usersApi.GetAsync("DrNykterstein", options);
+
+        // Assert
+        _httpClientMock.Verify(x => x.GetAsync<UserExtended>(
+            It.Is<string>(s =>
+                s.Contains("/api/user/DrNykterstein") &&
+                s.Contains("fideId=true")),
+            It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetAsync_WithAllOptions_BuildsCorrectQueryString()
+    {
+        // Arrange
+        var options = new GetUserOptions
+        {
+            Trophies = true,
+            Profile = false,
+            Rank = true,
+            FideId = true
+        };
+        var expectedUser = CreateTestUserExtended("thibault");
+        _httpClientMock
+            .Setup(x => x.GetAsync<UserExtended>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedUser);
+
+        // Act
+        await _usersApi.GetAsync("thibault", options);
+
+        // Assert
+        _httpClientMock.Verify(x => x.GetAsync<UserExtended>(
+            It.Is<string>(s =>
+                s.Contains("trophies=true") &&
+                s.Contains("profile=false") &&
+                s.Contains("rank=true") &&
+                s.Contains("fideId=true")),
+            It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
     public async Task GetAsync_WithNullUsername_ThrowsArgumentException()
     {
         // Act

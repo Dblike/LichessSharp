@@ -361,4 +361,105 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         pgn.Should().NotBeNullOrWhiteSpace("Tournament with finished rounds should have PGN");
         pgn.Should().Contain("[Event", "PGN should contain Event tag");
     }
+
+    [Fact]
+    public async Task ExportRoundPgnAsync_WithClocks_ReturnsPgn()
+    {
+        // First get a finished round
+        BroadcastRoundInfo? finishedRound = null;
+        await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(10))
+        {
+            finishedRound = broadcast.Rounds.FirstOrDefault(r => r.Finished == true);
+            if (finishedRound != null) break;
+        }
+
+        if (finishedRound == null) return;
+
+        // Act
+        var pgn = await Client.Broadcasts.ExportRoundPgnAsync(finishedRound.Id, clocks: true);
+
+        // Assert
+        pgn.Should().NotBeNullOrWhiteSpace("Finished rounds should have PGN");
+        pgn.Should().Contain("[Event", "PGN should contain Event tag");
+    }
+
+    [Fact]
+    public async Task ExportRoundPgnAsync_WithClocksAndComments_ReturnsPgn()
+    {
+        // First get a finished round
+        BroadcastRoundInfo? finishedRound = null;
+        await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(10))
+        {
+            finishedRound = broadcast.Rounds.FirstOrDefault(r => r.Finished == true);
+            if (finishedRound != null) break;
+        }
+
+        if (finishedRound == null) return;
+
+        // Act
+        var pgn = await Client.Broadcasts.ExportRoundPgnAsync(finishedRound.Id, clocks: true, comments: true);
+
+        // Assert
+        pgn.Should().NotBeNullOrWhiteSpace("Finished rounds should have PGN");
+        pgn.Should().Contain("[Event", "PGN should contain Event tag");
+    }
+
+    [Fact]
+    public async Task ExportAllRoundsPgnAsync_WithClocks_ReturnsPgn()
+    {
+        // First get a tournament with finished rounds
+        string? tournamentId = null;
+        await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(10))
+            if (broadcast.Rounds.Any(r => r.Finished == true))
+            {
+                tournamentId = broadcast.Tour.Id;
+                break;
+            }
+
+        if (tournamentId == null) return;
+
+        // Act
+        var pgn = await Client.Broadcasts.ExportAllRoundsPgnAsync(tournamentId, clocks: true);
+
+        // Assert
+        pgn.Should().NotBeNullOrWhiteSpace("Tournament with finished rounds should have PGN");
+        pgn.Should().Contain("[Event", "PGN should contain Event tag");
+    }
+
+    [Fact]
+    public async Task GetTeamStandingsAsync_WithKnownTournament_ReturnsTeams()
+    {
+        // First find a team tournament (higher tier tournaments with teamTable)
+        string? tournamentId = null;
+        await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(20))
+            if (broadcast.Tour.Tier >= 4)
+            {
+                tournamentId = broadcast.Tour.Id;
+                break;
+            }
+
+        // Fall back to any high-tier tournament
+        if (tournamentId == null)
+            await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(10))
+                if (broadcast.Tour.Tier >= 3)
+                {
+                    tournamentId = broadcast.Tour.Id;
+                    break;
+                }
+
+        if (tournamentId == null) return;
+
+        // Act - team standings may return empty list for non-team tournaments, that's OK
+        var result = await Client.Broadcasts.GetTeamStandingsAsync(tournamentId);
+
+        // Assert
+        result.Should().NotBeNull();
+        if (result.Count > 0)
+        {
+            var firstTeam = result[0];
+            firstTeam.Name.Should().NotBeNullOrWhiteSpace();
+            firstTeam.Matches.Should().NotBeNull();
+            firstTeam.Players.Should().NotBeNull();
+        }
+    }
 }

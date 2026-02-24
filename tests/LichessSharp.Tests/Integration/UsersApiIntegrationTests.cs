@@ -234,4 +234,33 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         streamers.Should().NotBeNull();
         // Streamers list might be empty if no one is streaming
     }
+
+    [Fact]
+    public async Task GetAsync_WithFideIdOption_ReturnsUserProfile()
+    {
+        // Act
+        var user = await Client.Users.GetAsync(ThibaultUsername, new GetUserOptions { FideId = true });
+
+        // Assert
+        user.Should().NotBeNull();
+        user.Id.Should().Be(ThibaultUsername);
+        user.Username.Should().BeEquivalentTo(ThibaultUsername);
+    }
+
+    [Fact]
+    public async Task GetAsync_WithAllOptions_ReturnsUserProfile()
+    {
+        // Act
+        var user = await Client.Users.GetAsync(ThibaultUsername, new GetUserOptions
+        {
+            Trophies = true,
+            Profile = true,
+            Rank = true,
+            FideId = true
+        });
+
+        // Assert
+        user.Should().NotBeNull();
+        user.Id.Should().Be(ThibaultUsername);
+    }
 }

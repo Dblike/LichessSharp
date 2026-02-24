@@ -257,6 +257,95 @@ public class FideApiTests
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
+    [Fact]
+    public async Task GetPlayerRatingsAsync_WithValidId_CallsCorrectEndpoint()
+    {
+        // Arrange
+        var playerId = 1503014;
+        var expectedRatings = CreateTestFidePlayerRatings();
+        _httpClientMock
+            .Setup(x => x.GetAsync<FidePlayerRatings>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedRatings);
+
+        // Act
+        var result = await _fideApi.GetPlayerRatingsAsync(playerId);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Standard.Should().NotBeEmpty();
+        result.Rapid.Should().NotBeEmpty();
+        result.Blitz.Should().NotBeEmpty();
+        _httpClientMock.Verify(x => x.GetAsync<FidePlayerRatings>(
+            $"/api/fide/player/{playerId}/ratings",
+            It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetPlayerRatingsAsync_WithZeroId_ThrowsArgumentOutOfRangeException()
+    {
+        // Act
+        var act = () => _fideApi.GetPlayerRatingsAsync(0);
+
+        // Assert
+        await act.Should().ThrowAsync<ArgumentOutOfRangeException>()
+            .WithParameterName("playerId");
+    }
+
+    [Fact]
+    public async Task GetPlayerRatingsAsync_WithNegativeId_ThrowsArgumentOutOfRangeException()
+    {
+        // Act
+        var act = () => _fideApi.GetPlayerRatingsAsync(-1);
+
+        // Assert
+        await act.Should().ThrowAsync<ArgumentOutOfRangeException>()
+            .WithParameterName("playerId");
+    }
+
+    [Fact]
+    public async Task GetPlayerRatingsAsync_WithCancellationToken_PassesTokenToHttpClient()
+    {
+        // Arrange
+        var playerId = 1503014;
+        var cts = new CancellationTokenSource();
+        var expectedRatings = CreateTestFidePlayerRatings();
+        _httpClientMock
+            .Setup(x => x.GetAsync<FidePlayerRatings>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedRatings);
+
+        // Act
+        await _fideApi.GetPlayerRatingsAsync(playerId, cts.Token);
+
+        // Assert
+        _httpClientMock.Verify(x => x.GetAsync<FidePlayerRatings>(
+            It.IsAny<string>(),
+            cts.Token), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetPlayerRatingsAsync_ReturnsAllTimeControls()
+    {
+        // Arrange
+        var playerId = 2020009;
+        var expectedRatings = new FidePlayerRatings
+        {
+            Standard = new List<long> { 2015081568, 2016012650, 2017032780 },
+            Rapid = new List<long> { 2018062700, 2019012750 },
+            Blitz = new List<long> { 2020012800, 2021062850 }
+        };
+        _httpClientMock
+            .Setup(x => x.GetAsync<FidePlayerRatings>(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedRatings);
+
+        // Act
+        var result = await _fideApi.GetPlayerRatingsAsync(playerId);
+
+        // Assert
+        result.Standard.Should().HaveCount(3);
+        result.Rapid.Should().HaveCount(2);
+        result.Blitz.Should().HaveCount(2);
+    }
+
     private static FidePlayer CreateTestFidePlayer(int id, string name)
     {
         return new FidePlayer
@@ -269,6 +358,16 @@ public class FideApiTests
             Standard = 2830,
             Rapid = 2823,
             Blitz = 2886
+        };
+    }
+
+    private static FidePlayerRatings CreateTestFidePlayerRatings()
+    {
+        return new FidePlayerRatings
+        {
+            Standard = new List<long> { 2015081568, 2016012650 },
+            Rapid = new List<long> { 2018062700 },
+            Blitz = new List<long> { 2020012800 }
         };
     }
 }

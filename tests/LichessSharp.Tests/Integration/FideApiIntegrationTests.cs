@@ -92,4 +92,40 @@ public class FideApiIntegrationTests : IntegrationTestBase
         players.Should().NotBeNull();
         players.Should().Contain(p => p.Id == MagnusCarlsenFideId);
     }
+
+    [Fact]
+    public async Task GetPlayerRatingsAsync_WithMagnusCarlsen_ReturnsRatings()
+    {
+        // Act
+        var ratings = await Client.Fide.GetPlayerRatingsAsync(MagnusCarlsenFideId);
+
+        // Assert
+        ratings.Should().NotBeNull();
+        ratings.Standard.Should().NotBeEmpty("Magnus Carlsen should have standard rating history");
+        ratings.Rapid.Should().NotBeEmpty("Magnus Carlsen should have rapid rating history");
+        ratings.Blitz.Should().NotBeEmpty("Magnus Carlsen should have blitz rating history");
+    }
+
+    [Fact]
+    public async Task GetPlayerRatingsAsync_WithFabianoCaruana_ReturnsRatings()
+    {
+        // Act
+        var ratings = await Client.Fide.GetPlayerRatingsAsync(FabianoCaruanaFideId);
+
+        // Assert
+        ratings.Should().NotBeNull();
+        ratings.Standard.Should().NotBeEmpty("Caruana should have standard rating history");
+    }
+
+    [Fact]
+    public async Task GetPlayerRatingsAsync_RatingDataPointsArePositive()
+    {
+        // Act
+        var ratings = await Client.Fide.GetPlayerRatingsAsync(MagnusCarlsenFideId);
+
+        // Assert - encoded data points should be positive numbers
+        ratings.Standard.Should().AllSatisfy(dp => dp.Should().BeGreaterThan(0));
+        ratings.Rapid.Should().AllSatisfy(dp => dp.Should().BeGreaterThan(0));
+        ratings.Blitz.Should().AllSatisfy(dp => dp.Should().BeGreaterThan(0));
+    }
 }

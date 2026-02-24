@@ -747,6 +747,278 @@ public class BroadcastsApiTests
         _httpClientMock.Verify(x => x.GetAsync<BroadcastTopPage>(It.IsAny<string>(), cts.Token), Times.Once);
     }
 
+    [Fact]
+    public async Task GetTeamStandingsAsync_CallsCorrectEndpoint()
+    {
+        // Arrange
+        var tournamentId = "tour123";
+        var teams = new List<BroadcastTeamLeaderboardEntry>
+        {
+            CreateTestTeamEntry("Team Alpha"),
+            CreateTestTeamEntry("Team Beta")
+        };
+        _httpClientMock
+            .Setup(x => x.GetAsync<List<BroadcastTeamLeaderboardEntry>>(
+                $"/broadcast/{tournamentId}/teams/standings",
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(teams);
+
+        // Act
+        var result = await _broadcastsApi.GetTeamStandingsAsync(tournamentId);
+
+        // Assert
+        result.Should().HaveCount(2);
+        _httpClientMock.Verify(
+            x => x.GetAsync<List<BroadcastTeamLeaderboardEntry>>(
+                $"/broadcast/{tournamentId}/teams/standings",
+                It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetTeamStandingsAsync_WithNullTournamentId_ThrowsArgumentException()
+    {
+        // Act
+        var act = () => _broadcastsApi.GetTeamStandingsAsync(null!);
+
+        // Assert
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    [Fact]
+    public async Task GetTeamStandingsAsync_ReturnsTeamsWithAllFields()
+    {
+        // Arrange
+        var tournamentId = "tour123";
+        var team = new BroadcastTeamLeaderboardEntry
+        {
+            Name = "Norway",
+            Mp = 5.0,
+            Gp = 18.5,
+            AverageRating = 2750,
+            Matches = new List<BroadcastTeamMatchEntry>
+            {
+                new()
+                {
+                    RoundId = "round1",
+                    Opponent = "India",
+                    Mp = 1.0,
+                    Gp = 3.5,
+                    Points = "1"
+                }
+            },
+            Players = new List<BroadcastPlayerEntry>
+            {
+                new() { Name = "Carlsen, Magnus", Rating = 2830 }
+            }
+        };
+        _httpClientMock
+            .Setup(x => x.GetAsync<List<BroadcastTeamLeaderboardEntry>>(It.IsAny<string>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<BroadcastTeamLeaderboardEntry> { team });
+
+        // Act
+        var result = await _broadcastsApi.GetTeamStandingsAsync(tournamentId);
+
+        // Assert
+        result.Should().HaveCount(1);
+        var entry = result[0];
+        entry.Name.Should().Be("Norway");
+        entry.Mp.Should().Be(5.0);
+        entry.Gp.Should().Be(18.5);
+        entry.AverageRating.Should().Be(2750);
+        entry.Matches.Should().HaveCount(1);
+        entry.Matches[0].RoundId.Should().Be("round1");
+        entry.Matches[0].Opponent.Should().Be("India");
+        entry.Matches[0].Points.Should().Be("1");
+        entry.Players.Should().HaveCount(1);
+        entry.Players[0].Name.Should().Be("Carlsen, Magnus");
+    }
+
+    [Fact]
+    public async Task GetTeamStandingsAsync_WithCancellationToken_PassesToken()
+    {
+        // Arrange
+        var cts = new CancellationTokenSource();
+        _httpClientMock
+            .Setup(x => x.GetAsync<List<BroadcastTeamLeaderboardEntry>>(It.IsAny<string>(), cts.Token))
+            .ReturnsAsync(new List<BroadcastTeamLeaderboardEntry>());
+
+        // Act
+        await _broadcastsApi.GetTeamStandingsAsync("tour123", cts.Token);
+
+        // Assert
+        _httpClientMock.Verify(
+            x => x.GetAsync<List<BroadcastTeamLeaderboardEntry>>(It.IsAny<string>(), cts.Token), Times.Once);
+    }
+
+    [Fact]
+    public async Task ExportRoundPgnAsync_WithClocks_IncludesClocksParameter()
+    {
+        // Arrange
+        var roundId = "round123";
+        _httpClientMock
+            .Setup(x => x.GetStringWithAcceptAsync(
+                It.Is<string>(s => s.Contains("clocks=true")),
+                "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync("[Event \"Test\"]\n1. e4 e5 *");
+
+        // Act
+        var result = await _broadcastsApi.ExportRoundPgnAsync(roundId, clocks: true);
+
+        // Assert
+        result.Should().NotBeNullOrWhiteSpace();
+        _httpClientMock.Verify(
+            x => x.GetStringWithAcceptAsync(
+                It.Is<string>(s => s.Contains($"/api/broadcast/round/{roundId}.pgn") && s.Contains("clocks=true")),
+                "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task ExportRoundPgnAsync_WithComments_IncludesCommentsParameter()
+    {
+        // Arrange
+        var roundId = "round123";
+        _httpClientMock
+            .Setup(x => x.GetStringWithAcceptAsync(
+                It.Is<string>(s => s.Contains("comments=true")),
+                "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync("[Event \"Test\"]\n1. e4 e5 *");
+
+        // Act
+        var result = await _broadcastsApi.ExportRoundPgnAsync(roundId, comments: true);
+
+        // Assert
+        result.Should().NotBeNullOrWhiteSpace();
+        _httpClientMock.Verify(
+            x => x.GetStringWithAcceptAsync(
+                It.Is<string>(s => s.Contains("comments=true")),
+                "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task ExportRoundPgnAsync_WithClocksAndComments_IncludesBothParameters()
+    {
+        // Arrange
+        var roundId = "round123";
+        _httpClientMock
+            .Setup(x => x.GetStringWithAcceptAsync(
+                It.Is<string>(s => s.Contains("clocks=true") && s.Contains("comments=false")),
+                "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync("[Event \"Test\"]\n1. e4 e5 *");
+
+        // Act
+        var result = await _broadcastsApi.ExportRoundPgnAsync(roundId, clocks: true, comments: false);
+
+        // Assert
+        result.Should().NotBeNullOrWhiteSpace();
+        _httpClientMock.Verify(
+            x => x.GetStringWithAcceptAsync(
+                It.Is<string>(s => s.Contains("clocks=true") && s.Contains("comments=false")),
+                "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task ExportAllRoundsPgnAsync_WithClocks_IncludesClocksParameter()
+    {
+        // Arrange
+        var tournamentId = "tour123";
+        _httpClientMock
+            .Setup(x => x.GetStringWithAcceptAsync(
+                It.Is<string>(s => s.Contains("clocks=true")),
+                "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync("[Event \"Test\"]\n1. e4 e5 *");
+
+        // Act
+        var result = await _broadcastsApi.ExportAllRoundsPgnAsync(tournamentId, clocks: true);
+
+        // Assert
+        result.Should().NotBeNullOrWhiteSpace();
+        _httpClientMock.Verify(
+            x => x.GetStringWithAcceptAsync(
+                It.Is<string>(s => s.Contains($"/api/broadcast/{tournamentId}.pgn") && s.Contains("clocks=true")),
+                "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task ExportAllRoundsPgnAsync_WithComments_IncludesCommentsParameter()
+    {
+        // Arrange
+        var tournamentId = "tour123";
+        _httpClientMock
+            .Setup(x => x.GetStringWithAcceptAsync(
+                It.Is<string>(s => s.Contains("comments=false")),
+                "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync("[Event \"Test\"]\n1. e4 e5 *");
+
+        // Act
+        var result = await _broadcastsApi.ExportAllRoundsPgnAsync(tournamentId, comments: false);
+
+        // Assert
+        result.Should().NotBeNullOrWhiteSpace();
+        _httpClientMock.Verify(
+            x => x.GetStringWithAcceptAsync(
+                It.Is<string>(s => s.Contains("comments=false")),
+                "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task StreamRoundPgnAsync_WithClocks_IncludesClocksParameter()
+    {
+        // Arrange
+        const string roundId = "round123";
+        const string expectedPgn = "[Event \"Test\"]\n1. e4 e5 *";
+        _httpClientMock
+            .Setup(x => x.GetStringWithAcceptAsync(
+                It.Is<string>(s => s.Contains("clocks=true")),
+                "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedPgn);
+
+        // Act
+        var result = new List<string>();
+        await foreach (var pgn in _broadcastsApi.StreamRoundPgnAsync(roundId, clocks: true)) result.Add(pgn);
+
+        // Assert
+        result.Should().HaveCount(1);
+        _httpClientMock.Verify(
+            x => x.GetStringWithAcceptAsync(
+                It.Is<string>(s => s.Contains($"/api/stream/broadcast/round/{roundId}.pgn") && s.Contains("clocks=true")),
+                "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task StreamRoundPgnAsync_WithClocksAndComments_IncludesBothParameters()
+    {
+        // Arrange
+        const string roundId = "round123";
+        const string expectedPgn = "[Event \"Test\"]\n1. e4 e5 *";
+        _httpClientMock
+            .Setup(x => x.GetStringWithAcceptAsync(
+                It.Is<string>(s => s.Contains("clocks=true") && s.Contains("comments=true")),
+                "application/x-chess-pgn",
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedPgn);
+
+        // Act
+        var result = new List<string>();
+        await foreach (var pgn in _broadcastsApi.StreamRoundPgnAsync(roundId, clocks: true, comments: true))
+            result.Add(pgn);
+
+        // Assert
+        result.Should().HaveCount(1);
+    }
+
     private static BroadcastTour CreateTestTour(string id)
     {
         return new BroadcastTour
@@ -826,6 +1098,32 @@ public class BroadcastsApiTests
             Round = CreateTestRoundInfo(id),
             Tour = CreateTestTour("tour1"),
             Study = CreateTestStudyInfo()
+        };
+    }
+
+    private static BroadcastTeamLeaderboardEntry CreateTestTeamEntry(string name)
+    {
+        return new BroadcastTeamLeaderboardEntry
+        {
+            Name = name,
+            Mp = 3.0,
+            Gp = 12.5,
+            AverageRating = 2700,
+            Matches = new List<BroadcastTeamMatchEntry>
+            {
+                new()
+                {
+                    RoundId = "round1",
+                    Opponent = "Opponent Team",
+                    Mp = 1.0,
+                    Gp = 3.5,
+                    Points = "1"
+                }
+            },
+            Players = new List<BroadcastPlayerEntry>
+            {
+                new() { Name = "Player 1", Rating = 2700 }
+            }
         };
     }
 }
