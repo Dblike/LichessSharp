@@ -160,6 +160,7 @@ namespace LichessSharp.Serialization;
 // FIDE types
 [JsonSerializable(typeof(FidePlayer))]
 [JsonSerializable(typeof(List<FidePlayer>))]
+[JsonSerializable(typeof(FidePlayerRatings))]
 // TV API types
 [JsonSerializable(typeof(TvChannels))]
 [JsonSerializable(typeof(TvGame))]
@@ -330,6 +331,10 @@ namespace LichessSharp.Serialization;
 [JsonSerializable(typeof(BroadcastPlayerGame))]
 [JsonSerializable(typeof(List<BroadcastPlayerGame>))]
 [JsonSerializable(typeof(BroadcastPlayerOpponent))]
+[JsonSerializable(typeof(BroadcastTeamLeaderboardEntry))]
+[JsonSerializable(typeof(List<BroadcastTeamLeaderboardEntry>))]
+[JsonSerializable(typeof(BroadcastTeamMatchEntry))]
+[JsonSerializable(typeof(List<BroadcastTeamMatchEntry>))]
 // Bulk Pairings API types
 [JsonSerializable(typeof(BulkPairingListResponse))]
 [JsonSerializable(typeof(BulkPairing))]

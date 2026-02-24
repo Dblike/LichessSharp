@@ -36,4 +36,15 @@ internal sealed class FideApi : IFideApi
         var players = await _httpClient.GetAsync<List<FidePlayer>>(endpoint, cancellationToken).ConfigureAwait(false);
         return players ?? [];
     }
+
+    /// <inheritdoc />
+    public async Task<FidePlayerRatings> GetPlayerRatingsAsync(int playerId,
+        CancellationToken cancellationToken = default)
+    {
+        if (playerId <= 0)
+            throw new ArgumentOutOfRangeException(nameof(playerId), playerId, "FIDE player ID must be positive.");
+
+        return await _httpClient.GetAsync<FidePlayerRatings>($"/api/fide/player/{playerId}/ratings", cancellationToken)
+            .ConfigureAwait(false);
+    }
 }

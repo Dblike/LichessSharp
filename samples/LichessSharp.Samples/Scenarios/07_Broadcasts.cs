@@ -168,7 +168,7 @@ public static class Broadcasts
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             try
             {
-                await foreach (var pgn in client.Broadcasts.StreamRoundPgnAsync(activeRound.Id, cts.Token))
+                await foreach (var pgn in client.Broadcasts.StreamRoundPgnAsync(activeRound.Id, cancellationToken: cts.Token))
                 {
                     // Show first 200 chars of PGN
                     var preview = pgn.Length > 200 ? pgn[..200] + "..." : pgn;

@@ -151,27 +151,35 @@ public interface IBroadcastsApi
     ///     Download all games of a single round of a broadcast tournament in PGN format.
     /// </summary>
     /// <param name="broadcastRoundId">The broadcast round ID.</param>
+    /// <param name="clocks">Include clock comments in PGN moves. Default: true.</param>
+    /// <param name="comments">Include analysis comments in PGN moves. Default: true.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>PGN content as a string.</returns>
-    Task<string> ExportRoundPgnAsync(string broadcastRoundId, CancellationToken cancellationToken = default);
+    Task<string> ExportRoundPgnAsync(string broadcastRoundId, bool? clocks = null, bool? comments = null,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Download all games of all rounds of a broadcast tournament in PGN format.
     /// </summary>
     /// <param name="broadcastTournamentId">The broadcast tournament ID.</param>
+    /// <param name="clocks">Include clock comments in PGN moves. Default: true.</param>
+    /// <param name="comments">Include analysis comments in PGN moves. Default: true.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>PGN content as a string.</returns>
-    Task<string> ExportAllRoundsPgnAsync(string broadcastTournamentId, CancellationToken cancellationToken = default);
+    Task<string> ExportAllRoundsPgnAsync(string broadcastTournamentId, bool? clocks = null, bool? comments = null,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Stream an ongoing broadcast round as PGN.
     ///     Returns a new PGN every time a game is updated in real-time.
     /// </summary>
     /// <param name="broadcastRoundId">The broadcast round ID.</param>
+    /// <param name="clocks">Include clock comments in PGN moves. Default: true.</param>
+    /// <param name="comments">Include analysis comments in PGN moves. Default: true.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Async enumerable of PGN strings.</returns>
-    IAsyncEnumerable<string>
-        StreamRoundPgnAsync(string broadcastRoundId, CancellationToken cancellationToken = default);
+    IAsyncEnumerable<string> StreamRoundPgnAsync(string broadcastRoundId, bool? clocks = null, bool? comments = null,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Get the list of players of a broadcast tournament, if available.
@@ -190,6 +198,15 @@ public interface IBroadcastsApi
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The player details with their games.</returns>
     Task<BroadcastPlayerWithGames> GetPlayerAsync(string tournamentId, string playerId,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    ///     Get the team leaderboard of a broadcast tournament, if available.
+    /// </summary>
+    /// <param name="broadcastTournamentId">The broadcast tournament ID.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>List of team leaderboard entries.</returns>
+    Task<IReadOnlyList<BroadcastTeamLeaderboardEntry>> GetTeamStandingsAsync(string broadcastTournamentId,
         CancellationToken cancellationToken = default);
 }
 
@@ -363,12 +380,6 @@ public class BroadcastTour
     /// </summary>
     [JsonPropertyName("description")]
     public string? Description { get; init; }
-
-    /// <summary>
-    ///     Whether auto-leaderboard is enabled.
-    /// </summary>
-    [JsonPropertyName("leaderboard")]
-    public bool? Leaderboard { get; init; }
 
     /// <summary>
     ///     Whether team standings table is enabled.
@@ -1185,6 +1196,12 @@ public class BroadcastPlayerGame
     /// </summary>
     [JsonPropertyName("ratingDiff")]
     public int? RatingDiff { get; init; }
+
+    /// <summary>
+    ///     FIDE rating category for this game (standard, rapid, blitz).
+    /// </summary>
+    [JsonPropertyName("fideTC")]
+    public string? FideTimeControl { get; init; }
 }
 
 /// <summary>
@@ -1221,4 +1238,82 @@ public class BroadcastPlayerOpponent
     /// </summary>
     [JsonPropertyName("fed")]
     public string? Federation { get; init; }
+}
+
+/// <summary>
+///     A team entry in a broadcast team leaderboard.
+/// </summary>
+public class BroadcastTeamLeaderboardEntry
+{
+    /// <summary>
+    ///     Team name.
+    /// </summary>
+    [JsonPropertyName("name")]
+    public required string Name { get; init; }
+
+    /// <summary>
+    ///     Total match points scored.
+    /// </summary>
+    [JsonPropertyName("mp")]
+    public double Mp { get; init; }
+
+    /// <summary>
+    ///     Total game points scored.
+    /// </summary>
+    [JsonPropertyName("gp")]
+    public double Gp { get; init; }
+
+    /// <summary>
+    ///     Average rating of the team's players.
+    /// </summary>
+    [JsonPropertyName("averageRating")]
+    public int? AverageRating { get; init; }
+
+    /// <summary>
+    ///     List of matches played by this team.
+    /// </summary>
+    [JsonPropertyName("matches")]
+    public required IReadOnlyList<BroadcastTeamMatchEntry> Matches { get; init; }
+
+    /// <summary>
+    ///     Players who have played for this team.
+    /// </summary>
+    [JsonPropertyName("players")]
+    public required IReadOnlyList<BroadcastPlayerEntry> Players { get; init; }
+}
+
+/// <summary>
+///     A match entry from a team's perspective in a broadcast team leaderboard.
+/// </summary>
+public class BroadcastTeamMatchEntry
+{
+    /// <summary>
+    ///     Round ID of the match.
+    /// </summary>
+    [JsonPropertyName("roundId")]
+    public required string RoundId { get; init; }
+
+    /// <summary>
+    ///     Name of the opposing team.
+    /// </summary>
+    [JsonPropertyName("opponent")]
+    public required string Opponent { get; init; }
+
+    /// <summary>
+    ///     Match points scored in this match.
+    /// </summary>
+    [JsonPropertyName("mp")]
+    public double? Mp { get; init; }
+
+    /// <summary>
+    ///     Game points scored in this match.
+    /// </summary>
+    [JsonPropertyName("gp")]
+    public double? Gp { get; init; }
+
+    /// <summary>
+    ///     Match result ("1", "1/2", or "0").
+    /// </summary>
+    [JsonPropertyName("points")]
+    public string? Points { get; init; }
 }

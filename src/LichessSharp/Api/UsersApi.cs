@@ -210,6 +210,8 @@ internal sealed class UsersApi(ILichessHttpClient httpClient) : IUsersApi
 
         if (options.Rank.HasValue) queryParams.Add($"rank={options.Rank.Value.ToString().ToLowerInvariant()}");
 
+        if (options.FideId.HasValue) queryParams.Add($"fideId={options.FideId.Value.ToString().ToLowerInvariant()}");
+
         if (queryParams.Count > 0)
         {
             sb.Append('?');

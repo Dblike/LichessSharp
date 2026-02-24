@@ -22,4 +22,12 @@ public interface IFideApi
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>List of matching FIDE players.</returns>
     Task<IReadOnlyList<FidePlayer>> SearchPlayersAsync(string query, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    ///     Get the historical standard, rapid, and blitz ratings of a FIDE player.
+    /// </summary>
+    /// <param name="playerId">The FIDE player ID.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Historical ratings by time control.</returns>
+    Task<FidePlayerRatings> GetPlayerRatingsAsync(int playerId, CancellationToken cancellationToken = default);
 }

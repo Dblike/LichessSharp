@@ -148,6 +148,12 @@ public class GetUserOptions
     ///     Default: false.
     /// </summary>
     public bool? Rank { get; set; }
+
+    /// <summary>
+    ///     Include public FIDE ID if any.
+    ///     Default: false.
+    /// </summary>
+    public bool? FideId { get; set; }
 }
 
 /// <summary>

@@ -151,6 +151,7 @@ public static class ImplementedEndpoints
         // ===== FIDE API =====
         new("GET", "/api/fide/player/{playerId}", "Fide", "GetPlayerAsync"),
         new("GET", "/api/fide/player", "Fide", "SearchPlayersAsync"),
+        new("GET", "/api/fide/player/{playerId}/ratings", "Fide", "GetPlayerRatingsAsync"),
 
         // ===== OAuth API =====
         new("GET", "/oauth", "OAuth", "CreateAuthorizationRequest"),
@@ -239,7 +240,8 @@ public static class ImplementedEndpoints
         new("GET", "/api/broadcast/{broadcastTournamentId}.pgn", "Broadcasts", "ExportAllRoundsPgnAsync"),
         new("GET", "/api/stream/broadcast/round/{broadcastRoundId}.pgn", "Broadcasts", "StreamRoundPgnAsync"),
         new("GET", "/broadcast/{broadcastTournamentId}/players", "Broadcasts", "GetPlayersAsync"),
-        new("GET", "/broadcast/{broadcastTournamentId}/players/{playerId}", "Broadcasts", "GetPlayerAsync")
+        new("GET", "/broadcast/{broadcastTournamentId}/players/{playerId}", "Broadcasts", "GetPlayerAsync"),
+        new("GET", "/broadcast/{broadcastTournamentId}/teams/standings", "Broadcasts", "GetTeamStandingsAsync")
     ];
 
     /// <summary>

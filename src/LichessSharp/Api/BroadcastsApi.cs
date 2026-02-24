@@ -206,37 +206,39 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
     }
 
     /// <inheritdoc />
-    public async Task<string> ExportRoundPgnAsync(string broadcastRoundId,
-        CancellationToken cancellationToken = default)
+    public async Task<string> ExportRoundPgnAsync(string broadcastRoundId, bool? clocks = null,
+        bool? comments = null, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(broadcastRoundId);
 
-        var endpoint = $"/api/broadcast/round/{Uri.EscapeDataString(broadcastRoundId)}.pgn";
+        var endpoint = BuildPgnExportEndpoint(
+            $"/api/broadcast/round/{Uri.EscapeDataString(broadcastRoundId)}.pgn", clocks, comments);
         return await _httpClient.GetStringWithAcceptAsync(endpoint, "application/x-chess-pgn", cancellationToken)
             .ConfigureAwait(false);
     }
 
     /// <inheritdoc />
-    public async Task<string> ExportAllRoundsPgnAsync(string broadcastTournamentId,
-        CancellationToken cancellationToken = default)
+    public async Task<string> ExportAllRoundsPgnAsync(string broadcastTournamentId, bool? clocks = null,
+        bool? comments = null, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(broadcastTournamentId);
 
-        var endpoint = $"/api/broadcast/{Uri.EscapeDataString(broadcastTournamentId)}.pgn";
+        var endpoint = BuildPgnExportEndpoint(
+            $"/api/broadcast/{Uri.EscapeDataString(broadcastTournamentId)}.pgn", clocks, comments);
         return await _httpClient.GetStringWithAcceptAsync(endpoint, "application/x-chess-pgn", cancellationToken)
             .ConfigureAwait(false);
     }
 
     /// <inheritdoc />
-    public async IAsyncEnumerable<string> StreamRoundPgnAsync(string broadcastRoundId,
-        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<string> StreamRoundPgnAsync(string broadcastRoundId, bool? clocks = null,
+        bool? comments = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(broadcastRoundId);
 
         // This endpoint streams raw PGN text, not NDJSON
         // Each update is a complete PGN of the round
-        // We need to implement a special streaming method for this
-        var endpoint = $"/api/stream/broadcast/round/{Uri.EscapeDataString(broadcastRoundId)}.pgn";
+        var endpoint = BuildPgnExportEndpoint(
+            $"/api/stream/broadcast/round/{Uri.EscapeDataString(broadcastRoundId)}.pgn", clocks, comments);
 
         // For now, yield a single PGN export
         // A proper implementation would require streaming support for plain text
@@ -265,6 +267,40 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
 
         var endpoint = $"/broadcast/{Uri.EscapeDataString(tournamentId)}/players/{Uri.EscapeDataString(playerId)}";
         return await _httpClient.GetAsync<BroadcastPlayerWithGames>(endpoint, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<BroadcastTeamLeaderboardEntry>> GetTeamStandingsAsync(
+        string broadcastTournamentId, CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(broadcastTournamentId);
+
+        var endpoint = $"/broadcast/{Uri.EscapeDataString(broadcastTournamentId)}/teams/standings";
+        return await _httpClient.GetAsync<List<BroadcastTeamLeaderboardEntry>>(endpoint, cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    private static string BuildPgnExportEndpoint(string basePath, bool? clocks, bool? comments)
+    {
+        var sb = new StringBuilder(basePath);
+        var hasParams = false;
+
+        if (clocks.HasValue)
+        {
+            sb.Append(hasParams ? '&' : '?');
+            sb.Append("clocks=");
+            sb.Append(clocks.Value.ToString().ToLowerInvariant());
+            hasParams = true;
+        }
+
+        if (comments.HasValue)
+        {
+            sb.Append(hasParams ? '&' : '?');
+            sb.Append("comments=");
+            sb.Append(comments.Value.ToString().ToLowerInvariant());
+        }
+
+        return sb.ToString();
     }
 
     private static List<KeyValuePair<string, string>> BuildTournamentParameters(BroadcastTournamentOptions options)
