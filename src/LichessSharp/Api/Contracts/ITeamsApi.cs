@@ -24,7 +24,8 @@ public interface ITeamsApi
     Task<TeamPaginator> GetPopularAsync(int page = 1, CancellationToken cancellationToken = default);
 
     /// <summary>
-    ///     Get teams a user is a member of.
+    ///     Get teams a user is a member of. Requires OAuth.
+    ///     Teams that hide their player list are only included if you also belong to the team.
     /// </summary>
     /// <param name="username">The username.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
