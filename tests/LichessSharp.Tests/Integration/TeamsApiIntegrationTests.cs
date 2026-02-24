@@ -75,28 +75,13 @@ public class TeamsApiIntegrationTests : IntegrationTestBase
     }
 
     [Fact]
-    public async Task GetUserTeamsAsync_WithValidUser_ReturnsTeams()
+    public async Task GetUserTeamsAsync_WithoutAuthentication_ThrowsLichessException()
     {
-        // Arrange
-        var username = "thibault"; // Lichess founder, member of many teams
-
-        // Act
-        var teams = await Client.Teams.GetUserTeamsAsync(username);
-
-        // Assert
-        teams.Should().NotBeNull();
-        // thibault should be part of at least one team
-        teams.Should().NotBeEmpty("thibault should be a member of at least one team");
-    }
-
-    [Fact]
-    public async Task GetUserTeamsAsync_WithInvalidUser_ThrowsLichessException()
-    {
-        // Arrange
-        var invalidUsername = "nonexistent_user_12345";
+        // Arrange - this endpoint now requires OAuth2 authentication (since API v2.0.123)
+        var username = "thibault";
 
         // Act & Assert
-        var act = async () => await Client.Teams.GetUserTeamsAsync(invalidUsername);
+        var act = async () => await Client.Teams.GetUserTeamsAsync(username);
 
         await act.Should().ThrowAsync<LichessException>();
     }
