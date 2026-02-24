@@ -1,0 +1,48 @@
+Loading specs...
+
+=============================================
+  API Spec Diff: v2.0.112 -> v2.0.123
+=============================================
+
+NEW ENDPOINTS (2):
+  GET    /broadcast/{broadcastTournamentId}/teams/standings [Broadcasts]
+         Get the team leaderboard of a broadcast
+  GET    /api/fide/player/{playerId}/ratings           [FIDE]
+         Get ratings history of a FIDE player
+
+REMOVED ENDPOINTS (0):
+  (none)
+
+CHANGED ENDPOINTS (4):
+  GET    /api/broadcast/{broadcastTournamentId}.pgn    [Broadcasts] [IMPLEMENTED: Broadcasts.ExportAllRoundsPgnAsync]
+         parameters changed (1 -> 3)
+  GET    /api/broadcast/round/{broadcastRoundId}.pgn   [Broadcasts] [IMPLEMENTED: Broadcasts.ExportRoundPgnAsync]
+         parameters changed (1 -> 3)
+  GET    /api/stream/broadcast/round/{broadcastRoundId}.pgn [Broadcasts] [IMPLEMENTED: Broadcasts.StreamRoundPgnAsync]
+         parameters changed (1 -> 3)
+  GET    /api/user/{username}                          [Users] [IMPLEMENTED: Users.GetAsync]
+         parameters changed (4 -> 5)
+
+NEW SCHEMAS (6):
+  BroadcastPointStr
+  BroadcastTeamLeaderboardEntry (averageRating, gp, matches, mp, name, ...)
+  BroadcastTeamPOVMatchEntry (gp, mp, opponent, points, roundId)
+  FIDEPlayerRatings (blitz, rapid, standard)
+  FideTimeControl
+  StatByFideTC (blitz, rapid, standard)
+
+REMOVED SCHEMAS (0):
+  (none)
+
+MODIFIED SCHEMAS (3):
+  BroadcastForm
+    ~ info.fideTC: string -> ref:FideTimeControl
+  BroadcastGameEntry
+    + fideTC (ref:FideTimeControl)
+    ~ points: string -> ref:BroadcastPointStr
+  BroadcastTour
+    - leaderboard
+
+=============================================
+  Summary: 6 endpoint changes, 9 schema changes
+=============================================

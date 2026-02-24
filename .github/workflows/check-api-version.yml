@@ -1,0 +1,91 @@
+name: Check Lichess API Version
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # Weekly on Monday at 9 AM UTC
+  workflow_dispatch:       # Allow manual trigger
+
+jobs:
+  check-version:
+    name: Check for API Updates
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Check API version
+        id: version-check
+        shell: pwsh
+        run: |
+          $output = & ./scripts/check-api-version.ps1 -Quiet
+          $exitCode = $LASTEXITCODE
+
+          echo "exit_code=$exitCode" >> $env:GITHUB_OUTPUT
+
+          if ($output -match 'local=(\S+)\s+remote=(\S+)') {
+            echo "local_version=$($Matches[1])" >> $env:GITHUB_OUTPUT
+            echo "remote_version=$($Matches[2])" >> $env:GITHUB_OUTPUT
+          }
+
+          Write-Host "Exit code: $exitCode"
+          Write-Host "Output: $output"
+
+      - name: Check for existing issue
+        if: steps.version-check.outputs.exit_code == '2'
+        id: existing-issue
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          count=$(gh issue list --label "api-update" --state open --json number --jq 'length')
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+          echo "Open api-update issues: $count"
+
+      - name: Create issue for new API version
+        if: steps.version-check.outputs.exit_code == '2' && steps.existing-issue.outputs.count == '0'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue create \
+            --title "Lichess API update available: v${{ steps.version-check.outputs.remote_version }} (current: v${{ steps.version-check.outputs.local_version }})" \
+            --label "api-update,automated" \
+            --body "$(cat <<'EOF'
+          ## Lichess API Update Available
+
+          | | Version |
+          |---|---|
+          | **Current** | v${{ steps.version-check.outputs.local_version }} |
+          | **Available** | v${{ steps.version-check.outputs.remote_version }} |
+
+          ### How to Update
+
+          Run the `/update-api` command in Claude Code:
+
+          ```
+          /update-api
+          ```
+
+          This will:
+          1. Fetch and bundle the latest spec
+          2. Archive the current spec as a snapshot
+          3. Show a diff of what changed (endpoints + schemas)
+          4. Run coverage and missing endpoint reports
+          5. Build and test to catch any breaking changes
+          6. Guide through implementation of new/changed endpoints
+
+          ### Links
+
+          - [Lichess API Documentation](https://lichess.org/api)
+          - [Lichess API Source](https://github.com/lichess-org/api)
+
+          ---
+          *This issue was created automatically by the [Check Lichess API Version](${{ github.server_url }}/${{ github.repository }}/actions/workflows/check-api-version.yml) workflow.*
+          EOF
+          )"
