@@ -5,6 +5,28 @@ All notable changes to LichessSharp will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-02-23
+
+### Added
+
+- **Lichess API spec update pipeline** — Automated scripts for fetching, archiving, and diffing OpenAPI spec updates (`check-api-version.ps1`, `diff-openapi-specs.ps1`, `update-openapi-spec.ps1`)
+- **`/update-api` Claude command** — Orchestrates the full spec update workflow including version check, fetch, diff, coverage analysis, and implementation guidance
+- **GitHub Actions version monitoring** — Weekly cron workflow (`check-api-version.yml`) that creates issues when a new Lichess API version is available
+- **FIDE player rating history** — New `GetPlayerRatingsAsync()` endpoint on `IFideApi` returning standard/rapid/blitz rating history
+- **Broadcast team standings** — New `GetTeamStandingsAsync()` endpoint on `IBroadcastsApi` returning team match and player data
+- **PGN export options** — Added `clocks` and `comments` parameters to `ExportRoundPgnAsync()`, `ExportAllRoundsPgnAsync()`, and `StreamRoundPgnAsync()`
+- **Users API FIDE ID option** — Added `FideId` option to `GetUserOptions` for including FIDE IDs in user profiles
+- **Lichess API version badge** — README now displays the tracked Lichess API version
+
+### Changed
+
+- **OpenAPI spec updated to v2.0.123** (from v2.0.112) — 11 versions of upstream changes incorporated
+- **`GetUserTeamsAsync` now requires OAuth** — Matches upstream API change (since v2.0.123). Teams that hide their player list are only included if the caller also belongs to the team.
+
+### Fixed
+
+- **`GetUserTeamsAsync` integration test** — Updated to expect authentication requirement matching the current API behavior
+
 ## [0.3.1] - 2026-01-20
 
 ### Fixed
@@ -123,6 +145,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Targets .NET 10.0
 - Uses `System.Text.Json` with AOT preparation (reflection enabled by default)
 
+[0.4.0]: https://github.com/Dblike/LichessSharp/releases/tag/v0.4.0
 [0.3.1]: https://github.com/Dblike/LichessSharp/releases/tag/v0.3.1
 [0.3.0]: https://github.com/Dblike/LichessSharp/releases/tag/v0.3.0
 [0.2.1]: https://github.com/Dblike/LichessSharp/releases/tag/v0.2.1
