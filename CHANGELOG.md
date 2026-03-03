@@ -5,6 +5,16 @@ All notable changes to LichessSharp will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.1] - 2026-03-03
+
+### Added
+
+- **Puzzle activity `since` parameter** — Added `DateTimeOffset? since` parameter to `StreamActivityAsync()` for filtering puzzle activity from a given timestamp (Lichess API v2.0.125)
+
+### Changed
+
+- **OpenAPI spec updated to v2.0.125** (from v2.0.123)
+
 ## [0.4.0] - 2026-02-23
 
 ### Added
@@ -145,6 +155,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Targets .NET 10.0
 - Uses `System.Text.Json` with AOT preparation (reflection enabled by default)
 
+[0.4.1]: https://github.com/Dblike/LichessSharp/releases/tag/v0.4.1
 [0.4.0]: https://github.com/Dblike/LichessSharp/releases/tag/v0.4.0
 [0.3.1]: https://github.com/Dblike/LichessSharp/releases/tag/v0.3.1
 [0.3.0]: https://github.com/Dblike/LichessSharp/releases/tag/v0.3.0
