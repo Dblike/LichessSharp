@@ -64,11 +64,12 @@ public interface IPuzzlesApi
     ///     Stream puzzle activity for the authenticated user.
     /// </summary>
     /// <param name="max">Maximum number of entries.</param>
-    /// <param name="before">Only entries before this timestamp.</param>
+    /// <param name="before">Only entries before this timestamp. Use with <paramref name="max"/> for pagination.</param>
+    /// <param name="since">Only entries since this timestamp. Defaults to account creation date.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Stream of puzzle activity.</returns>
     IAsyncEnumerable<PuzzleActivity> StreamActivityAsync(int? max = null, DateTimeOffset? before = null,
-        CancellationToken cancellationToken = default);
+        DateTimeOffset? since = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Get puzzles to replay (review incorrect puzzles).

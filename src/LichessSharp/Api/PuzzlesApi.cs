@@ -42,9 +42,10 @@ internal sealed class PuzzlesApi(ILichessHttpClient httpClient) : IPuzzlesApi
     public async IAsyncEnumerable<PuzzleActivity> StreamActivityAsync(
         int? max = null,
         DateTimeOffset? before = null,
+        DateTimeOffset? since = null,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        var endpoint = BuildActivityEndpoint(max, before);
+        var endpoint = BuildActivityEndpoint(max, before, since);
 
         await foreach (var activity in _httpClient.StreamNdjsonAsync<PuzzleActivity>(endpoint, cancellationToken)
                            .ConfigureAwait(false)) yield return activity;
@@ -142,7 +143,7 @@ internal sealed class PuzzlesApi(ILichessHttpClient httpClient) : IPuzzlesApi
         return sb.ToString();
     }
 
-    private static string BuildActivityEndpoint(int? max, DateTimeOffset? before)
+    private static string BuildActivityEndpoint(int? max, DateTimeOffset? before, DateTimeOffset? since)
     {
         var sb = new StringBuilder("/api/puzzle/activity");
         var hasQuery = false;
@@ -160,6 +161,14 @@ internal sealed class PuzzlesApi(ILichessHttpClient httpClient) : IPuzzlesApi
             sb.Append(hasQuery ? '&' : '?');
             sb.Append("before=");
             sb.Append(before.Value.ToUnixTimeMilliseconds());
+            hasQuery = true;
+        }
+
+        if (since.HasValue)
+        {
+            sb.Append(hasQuery ? '&' : '?');
+            sb.Append("since=");
+            sb.Append(since.Value.ToUnixTimeMilliseconds());
         }
 
         return sb.ToString();

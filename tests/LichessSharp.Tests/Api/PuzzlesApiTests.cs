@@ -317,6 +317,58 @@ public class PuzzlesApiTests
     }
 
     [Fact]
+    public async Task StreamActivityAsync_WithSince_AppendsQueryParameter()
+    {
+        // Arrange
+        var since = new DateTimeOffset(2023, 1, 1, 0, 0, 0, TimeSpan.Zero);
+        var activities = new List<PuzzleActivity>();
+
+        _httpClientMock
+            .Setup(x => x.StreamNdjsonAsync<PuzzleActivity>(
+                It.Is<string>(s => s.Contains($"since={since.ToUnixTimeMilliseconds()}")),
+                It.IsAny<CancellationToken>()))
+            .Returns(ToAsyncEnumerable(activities));
+
+        // Act
+        await foreach (var _ in _puzzlesApi.StreamActivityAsync(since: since))
+        {
+        }
+
+        // Assert
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<PuzzleActivity>(
+                It.Is<string>(s => s == $"/api/puzzle/activity?since={since.ToUnixTimeMilliseconds()}"),
+                It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task StreamActivityAsync_WithAllParameters_AppendsAllQueryParameters()
+    {
+        // Arrange
+        var before = new DateTimeOffset(2023, 12, 31, 23, 59, 59, TimeSpan.Zero);
+        var since = new DateTimeOffset(2023, 1, 1, 0, 0, 0, TimeSpan.Zero);
+        var activities = new List<PuzzleActivity>();
+
+        _httpClientMock
+            .Setup(x => x.StreamNdjsonAsync<PuzzleActivity>(It.Is<string>(s =>
+                s.Contains("max=50") &&
+                s.Contains("before=") &&
+                s.Contains("since=")), It.IsAny<CancellationToken>()))
+            .Returns(ToAsyncEnumerable(activities));
+
+        // Act
+        await foreach (var _ in _puzzlesApi.StreamActivityAsync(50, before, since))
+        {
+        }
+
+        // Assert
+        _httpClientMock.Verify(x => x.StreamNdjsonAsync<PuzzleActivity>(It.Is<string>(s =>
+            s.Contains("max=50") &&
+            s.Contains($"before={before.ToUnixTimeMilliseconds()}") &&
+            s.Contains($"since={since.ToUnixTimeMilliseconds()}")), It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
     public async Task GetDashboardAsync_WithDefaultDays_CallsCorrectEndpoint()
     {
         // Arrange
