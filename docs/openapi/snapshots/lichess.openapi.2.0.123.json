@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "version": "2.0.125",
+    "version": "2.0.123",
     "title": "Lichess.org API reference",
     "contact": {
       "name": "Lichess.org API",
@@ -83,7 +83,7 @@
     },
     {
       "name": "Opening Explorer",
-      "description": "Lookup positions from the [Lichess opening explorer](https://lichess.org/analysis#explorer).\n\nRuns <https://github.com/lichess-org/lila-openingexplorer>.\n\n**The endpoint hostname is not lichess.org but explorer.lichess.org.**\n"
+      "description": "Lookup positions from the [Lichess opening explorer](https://lichess.org/analysis#explorer).\n\nRuns <https://github.com/lichess-org/lila-openingexplorer>.\n\n**The endpoint hostname is not lichess.org but explorer.lichess.ovh.**\n"
     },
     {
       "name": "Puzzles",
@@ -103,7 +103,7 @@
     },
     {
       "name": "Tablebase",
-      "description": "Lookup positions from the [Lichess tablebase server](https://lichess.org/blog/W3WeMyQAACQAdfAL/7-piece-syzygy-tablebases-are-complete).\n\n**The endpoint hostname is not lichess.org but tablebase.lichess.org.**\n"
+      "description": "Lookup positions from the [Lichess tablebase server](https://lichess.org/blog/W3WeMyQAACQAdfAL/7-piece-syzygy-tablebases-are-complete).\n\n**The endpoint hostname is not lichess.org but tablebase.lichess.ovh.**\n"
     },
     {
       "name": "Teams",
@@ -957,15 +957,6 @@
             "in": "query",
             "name": "before",
             "description": "Download entries before this timestamp. Defaults to now. Use `before` and `max` for pagination.",
-            "schema": {
-              "type": "integer",
-              "minimum": 1356998400070
-            }
-          },
-          {
-            "in": "query",
-            "name": "since",
-            "description": "Download entries since this timestamp. Defaults to account creation date.",
             "schema": {
               "type": "integer",
               "minimum": 1356998400070
@@ -13620,21 +13611,17 @@
     "/masters": {
       "servers": [
         {
-          "url": "https://explorer.lichess.org"
+          "url": "https://explorer.lichess.ovh"
         }
       ],
       "get": {
         "operationId": "openingExplorerMaster",
         "summary": "Masters database",
-        "description": "**Endpoint: <https://explorer.lichess.org/masters>**\n\nExample: `curl https://explorer.lichess.org/masters?play=d2d4,d7d5,c2c4,c7c6,c4d5`\n",
+        "description": "**Endpoint: <https://explorer.lichess.ovh/masters>**\n\nExample: `curl https://explorer.lichess.ovh/masters?play=d2d4,d7d5,c2c4,c7c6,c4d5`\n",
         "tags": [
           "Opening Explorer"
         ],
-        "security": [
-          {
-            "OAuth2": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "in": "query",
@@ -13722,21 +13709,17 @@
     "/lichess": {
       "servers": [
         {
-          "url": "https://explorer.lichess.org"
+          "url": "https://explorer.lichess.ovh"
         }
       ],
       "get": {
         "operationId": "openingExplorerLichess",
         "summary": "Lichess games",
-        "description": "**Endpoint: <https://explorer.lichess.org/lichess>**\n\nAggregated rated games from all Lichess players.\n\nExample: `curl https://explorer.lichess.org/lichess?variant=standard&speeds=blitz,rapid,classical&ratings=2200,2500&fen=rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR%20w%20KQkq%20-%200%201`\n",
+        "description": "**Endpoint: <https://explorer.lichess.ovh/lichess>**\n\nAggregated rated games from all Lichess players.\n\nExample: `curl https://explorer.lichess.ovh/lichess?variant=standard&speeds=blitz,rapid,classical&ratings=2200,2500&fen=rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR%20w%20KQkq%20-%200%201`\n",
         "tags": [
           "Opening Explorer"
         ],
-        "security": [
-          {
-            "OAuth2": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "in": "query",
@@ -13886,21 +13869,17 @@
     "/player": {
       "servers": [
         {
-          "url": "https://explorer.lichess.org"
+          "url": "https://explorer.lichess.ovh"
         }
       ],
       "get": {
         "operationId": "openingExplorerPlayer",
         "summary": "Player games",
-        "description": "**Endpoint: <https://explorer.lichess.org/player>**\n\nGames of a Lichess player.\n\nResponds with a stream of [newline delimited JSON](#description/streaming-with-nd-json). Will start indexing\non demand, immediately respond with the current results, and stream\nmore updates until indexing is complete. The stream is throttled\nand deduplicated. Empty lines may be sent to avoid timeouts.\n\nWill index new games at most once per minute, and revisit previously\nongoing games at most once every day.\n\nExample: `curl https://explorer.lichess.org/player?player=revoof&color=white&play=d2d4,d7d5&recentGames=1`\n",
+        "description": "**Endpoint: <https://explorer.lichess.ovh/player>**\n\nGames of a Lichess player.\n\nResponds with a stream of [newline delimited JSON](#description/streaming-with-nd-json). Will start indexing\non demand, immediately respond with the current results, and stream\nmore updates until indexing is complete. The stream is throttled\nand deduplicated. Empty lines may be sent to avoid timeouts.\n\nWill index new games at most once per minute, and revisit previously\nongoing games at most once every day.\n\nExample: `curl https://explorer.lichess.ovh/player?player=revoof&color=white&play=d2d4,d7d5&recentGames=1`\n",
         "tags": [
           "Opening Explorer"
         ],
-        "security": [
-          {
-            "OAuth2": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "in": "query",
@@ -14047,21 +14026,17 @@
     "/master/pgn/{gameId}": {
       "servers": [
         {
-          "url": "https://explorer.lichess.org"
+          "url": "https://explorer.lichess.ovh"
         }
       ],
       "get": {
         "operationId": "openingExplorerMasterGame",
         "summary": "OTB master game",
-        "description": "**Endpoint: `https://explorer.lichess.org/masters/pgn/{gameId}`**\n\nExample: `curl https://explorer.lichess.org/masters/pgn/aAbqI4ey`\n",
+        "description": "**Endpoint: `https://explorer.lichess.ovh/masters/pgn/{gameId}`**\n\nExample: `curl https://explorer.lichess.ovh/masters/pgn/aAbqI4ey`\n",
         "tags": [
           "Opening Explorer"
         ],
-        "security": [
-          {
-            "OAuth2": []
-          }
-        ],
+        "security": [],
         "parameters": [
           {
             "in": "path",
@@ -14103,13 +14078,13 @@
     "/standard": {
       "servers": [
         {
-          "url": "https://tablebase.lichess.org"
+          "url": "https://tablebase.lichess.ovh"
         }
       ],
       "get": {
         "operationId": "tablebaseStandard",
         "summary": "Tablebase lookup",
-        "description": "**Endpoint: <https://tablebase.lichess.org>**\n\nExample: `curl http://tablebase.lichess.org/standard?fen=4k3/6KP/8/8/8/8/7p/8_w_-_-_0_1`\n",
+        "description": "**Endpoint: <https://tablebase.lichess.ovh>**\n\nExample: `curl http://tablebase.lichess.ovh/standard?fen=4k3/6KP/8/8/8/8/7p/8_w_-_-_0_1`\n",
         "tags": [
           "Tablebase"
         ],
@@ -14169,13 +14144,13 @@
     "/atomic": {
       "servers": [
         {
-          "url": "https://tablebase.lichess.org"
+          "url": "https://tablebase.lichess.ovh"
         }
       ],
       "get": {
         "operationId": "tablebaseAtomic",
         "summary": "Tablebase lookup for Atomic chess",
-        "description": "**Endpoint: <https://tablebase.lichess.org>**\n",
+        "description": "**Endpoint: <https://tablebase.lichess.ovh>**\n",
         "tags": [
           "Tablebase"
         ],
@@ -14221,13 +14196,13 @@
     "/antichess": {
       "servers": [
         {
-          "url": "https://tablebase.lichess.org"
+          "url": "https://tablebase.lichess.ovh"
         }
       ],
       "get": {
         "operationId": "antichessAtomic",
         "summary": "Tablebase lookup for Antichess",
-        "description": "**Endpoint: <https://tablebase.lichess.org>**\n",
+        "description": "**Endpoint: <https://tablebase.lichess.ovh>**\n",
         "tags": [
           "Tablebase"
         ],

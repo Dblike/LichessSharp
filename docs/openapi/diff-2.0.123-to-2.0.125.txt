@@ -1,0 +1,28 @@
+Loading specs...
+
+=============================================
+  API Spec Diff: v2.0.123 -> v2.0.125
+=============================================
+
+NEW ENDPOINTS (0):
+  (none)
+
+REMOVED ENDPOINTS (0):
+  (none)
+
+CHANGED ENDPOINTS (1):
+  GET    /api/puzzle/activity                          [Puzzles] [IMPLEMENTED: Puzzles.StreamActivityAsync]
+         parameters changed (2 -> 3)
+
+NEW SCHEMAS (0):
+  (none)
+
+REMOVED SCHEMAS (0):
+  (none)
+
+MODIFIED SCHEMAS (0):
+  (none)
+
+=============================================
+  Summary: 1 endpoint changes, 0 schema changes
+=============================================
