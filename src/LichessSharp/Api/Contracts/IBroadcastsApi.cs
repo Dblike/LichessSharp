@@ -1201,7 +1201,7 @@ public class BroadcastPlayerGame
     ///     FIDE rating category for this game (standard, rapid, blitz).
     /// </summary>
     [JsonPropertyName("fideTC")]
-    public string? FideTimeControl { get; init; }
+    public required string FideTimeControl { get; init; }
 }
 
 /// <summary>

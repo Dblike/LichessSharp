@@ -9,6 +9,16 @@ namespace LichessSharp.Api.Contracts;
 public interface IStudiesApi
 {
     /// <summary>
+    ///     Create a new study with an empty chapter.
+    ///     You can make up to 30 new studies per day.
+    ///     Requires OAuth with study:write scope.
+    /// </summary>
+    /// <param name="options">Options for creating the study.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The created study reference containing the study ID.</returns>
+    Task<StudyCreateResult> CreateStudyAsync(CreateStudyOptions options, CancellationToken cancellationToken = default);
+
+    /// <summary>
     ///     Export one study chapter in PGN format.
     ///     If authenticated, then all public, unlisted, and private study chapters are read.
     ///     If not, only public (non-unlisted) study chapters are read.
@@ -257,4 +267,64 @@ public class StudyChapterPlayer
     /// </summary>
     [JsonPropertyName("rating")]
     public int? Rating { get; init; }
+}
+
+/// <summary>
+///     Options for creating a new study.
+/// </summary>
+public class CreateStudyOptions
+{
+    /// <summary>
+    ///     The study name (2-100 characters).
+    /// </summary>
+    public required string Name { get; set; }
+
+    /// <summary>
+    ///     Who can view the study: "public", "unlisted", or "private".
+    ///     Default: "unlisted".
+    /// </summary>
+    public string Visibility { get; set; } = "unlisted";
+
+    /// <summary>
+    ///     Who can use the computer analysis: "nobody", "owner", "contributor", "member", or "everyone".
+    /// </summary>
+    public string Computer { get; set; } = "everyone";
+
+    /// <summary>
+    ///     Who can use the opening explorer: "nobody", "owner", "contributor", "member", or "everyone".
+    /// </summary>
+    public string Explorer { get; set; } = "everyone";
+
+    /// <summary>
+    ///     Who can clone the study: "nobody", "owner", "contributor", "member", or "everyone".
+    /// </summary>
+    public string Cloneable { get; set; } = "everyone";
+
+    /// <summary>
+    ///     Who can share the study: "nobody", "owner", "contributor", "member", or "everyone".
+    /// </summary>
+    public string Shareable { get; set; } = "everyone";
+
+    /// <summary>
+    ///     Who can use the chat: "nobody", "owner", "contributor", "member", or "everyone".
+    /// </summary>
+    public string Chat { get; set; } = "everyone";
+
+    /// <summary>
+    ///     Keep everyone on the same chapter and position.
+    ///     Default: true.
+    /// </summary>
+    public bool? Sticky { get; set; }
+}
+
+/// <summary>
+///     Result of creating a study.
+/// </summary>
+public class StudyCreateResult
+{
+    /// <summary>
+    ///     The created study ID.
+    /// </summary>
+    [JsonPropertyName("id")]
+    public required string Id { get; init; }
 }

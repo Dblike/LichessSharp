@@ -291,6 +291,7 @@ namespace LichessSharp.Serialization;
 // Studies API types
 [JsonSerializable(typeof(StudyMetadata))]
 [JsonSerializable(typeof(StudyImportResult))]
+[JsonSerializable(typeof(StudyCreateResult))]
 [JsonSerializable(typeof(StudyChapter))]
 [JsonSerializable(typeof(StudyChapterPlayer))]
 [JsonSerializable(typeof(List<StudyChapter>))]

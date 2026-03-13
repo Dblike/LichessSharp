@@ -441,4 +441,100 @@ public class StudiesApiTests
             x => x.PostAsync<StudyImportResult>(It.IsAny<string>(), It.IsAny<FormUrlEncodedContent>(), cts.Token),
             Times.Once);
     }
+
+    [Fact]
+    public async Task CreateStudyAsync_CallsCorrectEndpoint()
+    {
+        // Arrange
+        var options = new CreateStudyOptions { Name = "My Study" };
+        var expectedResult = new StudyCreateResult { Id = "abc12345" };
+        _httpClientMock
+            .Setup(x => x.PostAsync<StudyCreateResult>("/api/study", It.IsAny<FormUrlEncodedContent>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedResult);
+
+        // Act
+        var result = await _studiesApi.CreateStudyAsync(options);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Id.Should().Be("abc12345");
+        _httpClientMock.Verify(
+            x => x.PostAsync<StudyCreateResult>("/api/study", It.IsAny<FormUrlEncodedContent>(),
+                It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task CreateStudyAsync_WithStickyOption_IncludesStickyParameter()
+    {
+        // Arrange
+        var options = new CreateStudyOptions { Name = "Sticky Study", Sticky = true };
+        _httpClientMock
+            .Setup(x => x.PostAsync<StudyCreateResult>("/api/study", It.IsAny<FormUrlEncodedContent>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new StudyCreateResult { Id = "test123" });
+
+        // Act
+        await _studiesApi.CreateStudyAsync(options);
+
+        // Assert
+        _httpClientMock.Verify(
+            x => x.PostAsync<StudyCreateResult>("/api/study", It.IsAny<FormUrlEncodedContent>(),
+                It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task CreateStudyAsync_WithNullOptions_ThrowsArgumentNullException()
+    {
+        // Act
+        var act = () => _studiesApi.CreateStudyAsync(null!);
+
+        // Assert
+        await act.Should().ThrowAsync<ArgumentNullException>();
+    }
+
+    [Fact]
+    public async Task CreateStudyAsync_WithNullName_ThrowsArgumentException()
+    {
+        // Arrange
+        var options = new CreateStudyOptions { Name = null! };
+
+        // Act
+        var act = () => _studiesApi.CreateStudyAsync(options);
+
+        // Assert
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    [Fact]
+    public async Task CreateStudyAsync_WithEmptyName_ThrowsArgumentException()
+    {
+        // Arrange
+        var options = new CreateStudyOptions { Name = "" };
+
+        // Act
+        var act = () => _studiesApi.CreateStudyAsync(options);
+
+        // Assert
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    [Fact]
+    public async Task CreateStudyAsync_WithCancellationToken_PassesToken()
+    {
+        // Arrange
+        var cts = new CancellationTokenSource();
+        var options = new CreateStudyOptions { Name = "Test" };
+        _httpClientMock
+            .Setup(x => x.PostAsync<StudyCreateResult>("/api/study", It.IsAny<FormUrlEncodedContent>(), cts.Token))
+            .ReturnsAsync(new StudyCreateResult { Id = "test" });
+
+        // Act
+        await _studiesApi.CreateStudyAsync(options, cts.Token);
+
+        // Assert
+        _httpClientMock.Verify(
+            x => x.PostAsync<StudyCreateResult>("/api/study", It.IsAny<FormUrlEncodedContent>(), cts.Token),
+            Times.Once);
+    }
 }

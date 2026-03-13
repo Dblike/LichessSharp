@@ -141,7 +141,7 @@ public static class ImplementedEndpoints
         new("GET", "/masters", "OpeningExplorer", "GetMastersAsync"),
         new("GET", "/lichess", "OpeningExplorer", "GetLichessAsync"),
         new("GET", "/player", "OpeningExplorer", "GetPlayerAsync"),
-        new("GET", "/master/pgn/{gameId}", "OpeningExplorer", "GetMasterGamePgnAsync"),
+        new("GET", "/masters/pgn/{gameId}", "OpeningExplorer", "GetMasterGamePgnAsync"),
 
         // ===== Tablebase API =====
         new("GET", "/standard", "Tablebase", "LookupAsync"),
@@ -211,6 +211,7 @@ public static class ImplementedEndpoints
         new("GET", "/api/simul", "Simuls", "GetCurrentAsync"),
 
         // ===== Studies API =====
+        new("POST", "/api/study", "Studies", "CreateStudyAsync"),
         new("GET", "/api/study/{studyId}/{chapterId}.pgn", "Studies", "ExportChapterPgnAsync"),
         new("GET", "/api/study/{studyId}.pgn", "Studies", "ExportStudyPgnAsync"),
         new("GET", "/api/study/by/{username}/export.pgn", "Studies", "ExportUserStudiesPgnAsync"),

@@ -13,6 +13,32 @@ internal sealed class StudiesApi(ILichessHttpClient httpClient) : IStudiesApi
     private readonly ILichessHttpClient _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
     /// <inheritdoc />
+    public async Task<StudyCreateResult> CreateStudyAsync(CreateStudyOptions options,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentException.ThrowIfNullOrWhiteSpace(options.Name);
+
+        var parameters = new List<KeyValuePair<string, string>>
+        {
+            new("name", options.Name),
+            new("visibility", options.Visibility),
+            new("computer", options.Computer),
+            new("explorer", options.Explorer),
+            new("cloneable", options.Cloneable),
+            new("shareable", options.Shareable),
+            new("chat", options.Chat)
+        };
+
+        if (options.Sticky.HasValue)
+            parameters.Add(new("sticky", options.Sticky.Value ? "true" : "false"));
+
+        var content = new FormUrlEncodedContent(parameters);
+        return await _httpClient.PostAsync<StudyCreateResult>("/api/study", content, cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
     public async Task<string> ExportChapterPgnAsync(string studyId, string chapterId,
         StudyExportOptions? options = null, CancellationToken cancellationToken = default)
     {
