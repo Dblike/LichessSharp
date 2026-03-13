@@ -9,7 +9,7 @@ namespace LichessSharp.Tests.Api;
 
 public class TablebaseApiTests
 {
-    private readonly Uri _baseAddress = new("https://tablebase.lichess.ovh");
+    private readonly Uri _baseAddress = new("https://tablebase.lichess.org");
     private readonly Mock<ILichessHttpClient> _httpClientMock;
     private readonly TablebaseApi _tablebaseApi;
 
@@ -58,7 +58,7 @@ public class TablebaseApiTests
         result.Should().NotBeNull();
         _httpClientMock.Verify(x => x.GetAbsoluteAsync<TablebaseResult>(
             It.Is<Uri>(u =>
-                u.ToString().StartsWith("https://tablebase.lichess.ovh/standard?fen=")),
+                u.ToString().StartsWith("https://tablebase.lichess.org/standard?fen=")),
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -109,7 +109,7 @@ public class TablebaseApiTests
         result.Should().NotBeNull();
         _httpClientMock.Verify(x => x.GetAbsoluteAsync<TablebaseResult>(
             It.Is<Uri>(u =>
-                u.ToString().StartsWith("https://tablebase.lichess.ovh/atomic?fen=")),
+                u.ToString().StartsWith("https://tablebase.lichess.org/atomic?fen=")),
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -140,7 +140,7 @@ public class TablebaseApiTests
         result.Should().NotBeNull();
         _httpClientMock.Verify(x => x.GetAbsoluteAsync<TablebaseResult>(
             It.Is<Uri>(u =>
-                u.ToString().StartsWith("https://tablebase.lichess.ovh/antichess?fen=")),
+                u.ToString().StartsWith("https://tablebase.lichess.org/antichess?fen=")),
             It.IsAny<CancellationToken>()), Times.Once);
     }
 

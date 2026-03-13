@@ -6,7 +6,7 @@ namespace LichessSharp.Tests.Integration;
 /// <summary>
 ///     Integration tests for the Tablebase API.
 ///     These tests use FEN positions from the OpenAPI spec examples.
-///     Endpoint: tablebase.lichess.ovh
+///     Endpoint: tablebase.lichess.org
 /// </summary>
 [IntegrationTest]
 [LongRunningTest]

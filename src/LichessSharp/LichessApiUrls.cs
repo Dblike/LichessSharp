@@ -13,12 +13,12 @@ public static class LichessApiUrls
     /// <summary>
     ///     The base address for the Opening Explorer API.
     /// </summary>
-    public static readonly Uri ExplorerBaseAddress = new("https://explorer.lichess.ovh");
+    public static readonly Uri ExplorerBaseAddress = new("https://explorer.lichess.org");
 
     /// <summary>
     ///     The base address for the Tablebase API.
     /// </summary>
-    public static readonly Uri TablebaseBaseAddress = new("https://tablebase.lichess.ovh");
+    public static readonly Uri TablebaseBaseAddress = new("https://tablebase.lichess.org");
 
     /// <summary>
     ///     The base address for the External Engine API (analysis endpoints only).

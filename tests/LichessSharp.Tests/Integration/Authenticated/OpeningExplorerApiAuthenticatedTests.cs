@@ -2,18 +2,20 @@ using FluentAssertions;
 using LichessSharp.Api.Contracts;
 using Xunit;
 
-namespace LichessSharp.Tests.Integration;
+namespace LichessSharp.Tests.Integration.Authenticated;
 
 /// <summary>
-///     Integration tests for the Opening Explorer API.
-///     These tests use FEN positions and play sequences from the OpenAPI spec examples.
-///     Endpoint: explorer.lichess.ovh
+///     Authenticated integration tests for the Opening Explorer API.
+///     The Opening Explorer requires authentication since Feb 2026.
+///     Endpoint: explorer.lichess.org
 /// </summary>
 [IntegrationTest]
+[AuthenticatedTest]
 [LongRunningTest]
 [Trait("Category", "Integration")]
+[Trait("Category", "Authenticated")]
 [Trait("Category", "LongRunning")]
-public class OpeningExplorerApiIntegrationTests : IntegrationTestBase
+public class OpeningExplorerApiAuthenticatedTests : AuthenticatedTestBase
 {
     // Starting position FEN
     private const string StartingPositionFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
@@ -161,21 +163,4 @@ public class OpeningExplorerApiIntegrationTests : IntegrationTestBase
         // Just verify the call succeeds and returns valid structure
         result.Moves.Should().NotBeNull();
     }
-
-    //[Fact]
-    //public async Task GetPlayerAsync_WithColorOption_ReturnsColorSpecificData()
-    //{
-    //    // Arrange
-    //    var player = "thibault";
-    //    var options = new ExplorerOptions
-    //    {
-    //        Color = "white"
-    //    };
-
-    //    // Act
-    //    var result = await Client.OpeningExplorer.GetPlayerAsync(StartingPositionFen, player, options);
-
-    //    // Assert
-    //    result.Should().NotBeNull();
-    //}
 }

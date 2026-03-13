@@ -15,29 +15,37 @@ public interface IAnalysisApi
 /// <summary>
 ///     Opening Explorer API - Lookup positions from the Lichess opening explorer.
 /// </summary>
+/// <remarks>
+///     All Opening Explorer endpoints require authentication with a valid access token.
+///     The endpoint hostname is explorer.lichess.org, not lichess.org.
+/// </remarks>
 public interface IOpeningExplorerApi
 {
     /// <summary>
     ///     Get opening explorer data for masters database.
     /// </summary>
+    /// <remarks>Requires authentication.</remarks>
     Task<ExplorerResult> GetMastersAsync(string fen, ExplorerOptions? options = null,
         CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Get opening explorer data for Lichess database.
     /// </summary>
+    /// <remarks>Requires authentication.</remarks>
     Task<ExplorerResult> GetLichessAsync(string fen, ExplorerOptions? options = null,
         CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Get opening explorer data for a player.
     /// </summary>
+    /// <remarks>Requires authentication.</remarks>
     Task<ExplorerResult> GetPlayerAsync(string fen, string player, ExplorerOptions? options = null,
         CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Get a specific game from the masters database as PGN.
     /// </summary>
+    /// <remarks>Requires authentication.</remarks>
     /// <param name="gameId">The game ID from the masters database.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>PGN string of the game.</returns>

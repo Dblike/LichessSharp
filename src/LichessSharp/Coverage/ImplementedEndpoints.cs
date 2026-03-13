@@ -137,7 +137,7 @@ public static class ImplementedEndpoints
         new("GET", "/api/cloud-eval", "Analysis", "GetCloudEvaluationAsync"),
 
         // ===== Opening Explorer API =====
-        // Note: These endpoints are on explorer.lichess.ovh, not lichess.org
+        // Note: These endpoints are on explorer.lichess.org, not lichess.org (requires auth)
         new("GET", "/masters", "OpeningExplorer", "GetMastersAsync"),
         new("GET", "/lichess", "OpeningExplorer", "GetLichessAsync"),
         new("GET", "/player", "OpeningExplorer", "GetPlayerAsync"),

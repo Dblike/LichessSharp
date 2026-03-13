@@ -135,7 +135,7 @@ $totalImplemented = $implementedEndpoints.Count
 
 # Note: Our implemented count may differ from OpenAPI because:
 # 1. Some methods share the same endpoint (e.g., GetPgnAsync and ExportAsync both use /game/export/{gameId})
-# 2. Opening Explorer and Tablebase use different hosts (explorer.lichess.ovh, tablebase.lichess.ovh)
+# 2. Opening Explorer and Tablebase use different hosts (explorer.lichess.org, tablebase.lichess.org)
 # 3. Some endpoints may have path variations
 
 Write-Host "OpenAPI endpoints:   $totalOpenApi" -ForegroundColor White

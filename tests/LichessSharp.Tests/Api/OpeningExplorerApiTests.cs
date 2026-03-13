@@ -9,7 +9,7 @@ namespace LichessSharp.Tests.Api;
 
 public class OpeningExplorerApiTests
 {
-    private readonly Uri _baseAddress = new("https://explorer.lichess.ovh");
+    private readonly Uri _baseAddress = new("https://explorer.lichess.org");
     private readonly OpeningExplorerApi _explorerApi;
     private readonly Mock<ILichessHttpClient> _httpClientMock;
 
@@ -58,7 +58,7 @@ public class OpeningExplorerApiTests
         result.Should().NotBeNull();
         _httpClientMock.Verify(x => x.GetAbsoluteAsync<ExplorerResult>(
             It.Is<Uri>(u =>
-                u.ToString().StartsWith("https://explorer.lichess.ovh/masters?fen=") &&
+                u.ToString().StartsWith("https://explorer.lichess.org/masters?fen=") &&
                 u.ToString().Contains("rnbqkbnr")),
             It.IsAny<CancellationToken>()), Times.Once);
     }
@@ -116,7 +116,7 @@ public class OpeningExplorerApiTests
 
         // Assert
         _httpClientMock.Verify(x => x.GetAbsoluteAsync<ExplorerResult>(
-            It.Is<Uri>(u => u.ToString().StartsWith("https://explorer.lichess.ovh/lichess?fen=")),
+            It.Is<Uri>(u => u.ToString().StartsWith("https://explorer.lichess.org/lichess?fen=")),
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -177,7 +177,7 @@ public class OpeningExplorerApiTests
         // Assert
         _httpClientMock.Verify(x => x.GetAbsoluteNdjsonLastAsync<ExplorerResult>(
             It.Is<Uri>(u =>
-                u.ToString().StartsWith("https://explorer.lichess.ovh/player?fen=") &&
+                u.ToString().StartsWith("https://explorer.lichess.org/player?fen=") &&
                 u.ToString().Contains("player=DrNykterstein") &&
                 u.ToString().Contains("color=white")), // Default color
             It.IsAny<CancellationToken>()), Times.Once);
@@ -242,7 +242,7 @@ public class OpeningExplorerApiTests
         // Assert
         result.Should().Be(expectedPgn);
         _httpClientMock.Verify(x => x.GetAbsoluteStringAsync(
-            It.Is<Uri>(u => u.ToString() == "https://explorer.lichess.ovh/masters/pgn/aAbBcCdD"),
+            It.Is<Uri>(u => u.ToString() == "https://explorer.lichess.org/masters/pgn/aAbBcCdD"),
             "application/x-chess-pgn",
             It.IsAny<CancellationToken>()), Times.Once);
     }
