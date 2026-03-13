@@ -5,6 +5,24 @@ All notable changes to LichessSharp will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-03-13
+
+### Added
+
+- **Create Study endpoint** — New `CreateStudyAsync()` on `IStudiesApi` for creating studies via `POST /api/study` (requires `study:write` scope)
+
+### Changed
+
+- **OpenAPI spec updated to v2.0.129** (from v2.0.125)
+- **Opening Explorer now requires authentication** — All `IOpeningExplorerApi` endpoints require a valid access token following Lichess infrastructure changes
+- **Explorer domain migrated** — `explorer.lichess.ovh` → `explorer.lichess.org`
+- **Tablebase domain migrated** — `tablebase.lichess.ovh` → `tablebase.lichess.org`
+- **`BroadcastGameEntry.FideTimeControl` is now required** — Property changed from `string?` to `required string` per upstream schema change
+
+### Fixed
+
+- **Masters PGN endpoint path** — Fixed `/master/pgn/{gameId}` → `/masters/pgn/{gameId}` to match upstream rename
+
 ## [0.4.1] - 2026-03-03
 
 ### Added
@@ -155,6 +173,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Targets .NET 10.0
 - Uses `System.Text.Json` with AOT preparation (reflection enabled by default)
 
+[0.5.0]: https://github.com/Dblike/LichessSharp/releases/tag/v0.5.0
 [0.4.1]: https://github.com/Dblike/LichessSharp/releases/tag/v0.4.1
 [0.4.0]: https://github.com/Dblike/LichessSharp/releases/tag/v0.4.0
 [0.3.1]: https://github.com/Dblike/LichessSharp/releases/tag/v0.3.1
