@@ -3,7 +3,7 @@
 A fully-featured .NET client library for the [Lichess API](https://lichess.org/api).
 
 [![NuGet](https://img.shields.io/nuget/v/LichessSharp.svg)](https://www.nuget.org/packages/LichessSharp/)
-[![Lichess API](https://img.shields.io/badge/Lichess%20API-v2.0.125-blue.svg)](https://lichess.org/api)
+[![Lichess API](https://img.shields.io/badge/Lichess%20API-v2.0.129-blue.svg)](https://lichess.org/api)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ## Installation

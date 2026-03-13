@@ -1,0 +1,31 @@
+Loading specs...
+
+=============================================
+  API Spec Diff: v2.0.125 -> v2.0.129
+=============================================
+
+NEW ENDPOINTS (2):
+  GET    /masters/pgn/{gameId}                         [Opening Explorer]
+         OTB master game
+  POST   /api/study                                    [Studies]
+         Create a new Study
+
+REMOVED ENDPOINTS (1):
+  GET    /master/pgn/{gameId}                          [Opening Explorer] [IMPLEMENTED]
+
+CHANGED ENDPOINTS (0):
+  (none)
+
+NEW SCHEMAS (1):
+  StudyUserSelection
+
+REMOVED SCHEMAS (0):
+  (none)
+
+MODIFIED SCHEMAS (1):
+  BroadcastGameEntry
+    required+: fideTC
+
+=============================================
+  Summary: 3 endpoint changes, 2 schema changes
+=============================================
