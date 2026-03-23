@@ -56,9 +56,8 @@ public class OngoingGame
     /// <summary>
     ///     Game source.
     /// </summary>
-    /// TODO: Can this be enum?
     [JsonPropertyName("source")]
-    public string? Source { get; init; }
+    public GameSource? Source { get; init; }
 
     /// <summary>
     ///     Game status.

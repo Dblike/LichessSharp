@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using LichessSharp.Models.Enums;
 
 namespace LichessSharp.Models.Users;
 
@@ -24,7 +25,7 @@ public class Streamer
     ///     The user's title, if any.
     /// </summary>
     [JsonPropertyName("title")]
-    public string? Title { get; init; }
+    public Title? Title { get; init; }
 
     /// <summary>
     ///     Whether the user is online.
@@ -58,10 +59,10 @@ public class Streamer
 public class StreamInfo
 {
     /// <summary>
-    ///     Streaming service (twitch, youtube).
+    ///     Streaming service.
     /// </summary>
     [JsonPropertyName("service")]
-    public string? Service { get; init; }
+    public StreamingService? Service { get; init; }
 
     /// <summary>
     ///     Stream status.

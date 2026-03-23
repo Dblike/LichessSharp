@@ -1,6 +1,7 @@
 using FluentAssertions;
 using LichessSharp.Api;
 using LichessSharp.Http;
+using LichessSharp.Models.Enums;
 using LichessSharp.Models.Fide;
 using Moq;
 using Xunit;
@@ -82,7 +83,7 @@ public class FideApiTests
         {
             Id = playerId,
             Name = "Carlsen, Magnus",
-            Title = "GM",
+            Title = Title.GM,
             Federation = "NOR",
             Year = 1990,
             Standard = 2830,
@@ -100,7 +101,7 @@ public class FideApiTests
         result.Should().NotBeNull();
         result.Id.Should().Be(playerId);
         result.Name.Should().Be("Carlsen, Magnus");
-        result.Title.Should().Be("GM");
+        result.Title.Should().Be(Title.GM);
         result.Federation.Should().Be("NOR");
         result.Year.Should().Be(1990);
         result.Standard.Should().Be(2830);
@@ -352,7 +353,7 @@ public class FideApiTests
         {
             Id = id,
             Name = name,
-            Title = "GM",
+            Title = Title.GM,
             Federation = "NOR",
             Year = 1990,
             Standard = 2830,

@@ -123,5 +123,5 @@ public class PuzzlePlayer
     ///     The player's color.
     /// </summary>
     [JsonPropertyName("color")]
-    public string? Color { get; init; }
+    public Color? Color { get; init; }
 }

@@ -1,3 +1,4 @@
+using LichessSharp.Models.Enums;
 using LichessSharp.Samples.Helpers;
 
 namespace LichessSharp.Samples.Scenarios;
@@ -52,8 +53,8 @@ public static class Puzzles
                 SampleRunner.PrintKeyValue("Game ID", puzzle.Game.Id);
                 if (puzzle.Game.Players != null)
                 {
-                    var white = puzzle.Game.Players.FirstOrDefault(p => p.Color == "white");
-                    var black = puzzle.Game.Players.FirstOrDefault(p => p.Color == "black");
+                    var white = puzzle.Game.Players.FirstOrDefault(p => p.Color == Color.White);
+                    var black = puzzle.Game.Players.FirstOrDefault(p => p.Color == Color.Black);
                     Console.WriteLine($"    White: {white?.Name ?? "Unknown"}");
                     Console.WriteLine($"    Black: {black?.Name ?? "Unknown"}");
                 }

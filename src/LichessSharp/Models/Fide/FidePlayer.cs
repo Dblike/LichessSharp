@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using LichessSharp.Models.Enums;
 
 namespace LichessSharp.Models.Fide;
 
@@ -23,9 +24,8 @@ public class FidePlayer
     /// <summary>
     ///     Player's title (GM, IM, FM, WGM, etc.).
     /// </summary>
-    /// TODO: Use Title Enum
     [JsonPropertyName("title")]
-    public string? Title { get; init; }
+    public Title? Title { get; init; }
 
     /// <summary>
     ///     Federation (3-letter country code).

@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using LichessSharp.Models.Enums;
 
 namespace LichessSharp.Models.Games;
 
@@ -85,9 +86,8 @@ public class Judgment
     /// <summary>
     ///     Judgment name (Inaccuracy, Mistake, Blunder).
     /// </summary>
-    /// TODO: Introduce Judgment Enum
     [JsonPropertyName("name")]
-    public string? Name { get; init; }
+    public JudgmentName? Name { get; init; }
 
     /// <summary>
     ///     Comment about the judgment.

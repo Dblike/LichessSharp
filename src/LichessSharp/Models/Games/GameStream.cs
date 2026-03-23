@@ -50,10 +50,10 @@ public class MoveStreamEvent
     public string? Fen { get; init; }
 
     /// <summary>
-    ///     Color to play: "white" or "black" (first event only).
+    ///     Color to play (first event only).
     /// </summary>
     [JsonPropertyName("player")]
-    public string? Player { get; init; }
+    public Color? Player { get; init; }
 
     /// <summary>
     ///     Number of half-moves played (first event only).
@@ -70,9 +70,8 @@ public class MoveStreamEvent
     /// <summary>
     ///     Game source (first event only).
     /// </summary>
-    /// TODO: Can this be an enum?
     [JsonPropertyName("source")]
-    public string? Source { get; init; }
+    public GameSource? Source { get; init; }
 
     /// <summary>
     ///     Game status (first event only).
@@ -179,10 +178,10 @@ public class GameStreamEvent
     public GameStreamPlayers? Players { get; init; }
 
     /// <summary>
-    ///     Winner color ("white" or "black") if the game has ended.
+    ///     Winner color if the game has ended.
     /// </summary>
     [JsonPropertyName("winner")]
-    public string? Winner { get; init; }
+    public Color? Winner { get; init; }
 }
 
 /// <summary>

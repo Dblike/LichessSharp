@@ -111,10 +111,10 @@ public class GameJson : Game
     public Analysis[]? Analysis { get; init; }
 
     /// <summary>
-    ///     The source of the game (e.g., "pool", "friend", "ai", "arena", "swiss").
+    ///     The source of the game.
     /// </summary>
     [JsonPropertyName("source")]
-    public string? Source { get; init; }
+    public GameSource? Source { get; init; }
 
     /// <summary>
     ///     The initial FEN position, if not the standard starting position.

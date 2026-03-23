@@ -9,6 +9,7 @@
 // Run: dotnet run --project samples/LichessSharp.PuzzleSolver
 
 using LichessSharp;
+using LichessSharp.Models.Enums;
 
 Console.WriteLine("=== LichessSharp Puzzle Solver ===\n");
 
@@ -110,8 +111,8 @@ async Task ShowDailyPuzzleAsync()
     // Show the game info
     if (game.Players?.Length >= 2)
     {
-        var white = game.Players.FirstOrDefault(p => p.Color == "white");
-        var black = game.Players.FirstOrDefault(p => p.Color == "black");
+        var white = game.Players.FirstOrDefault(p => p.Color == Color.White);
+        var black = game.Players.FirstOrDefault(p => p.Color == Color.Black);
         Console.WriteLine($"From game: {white?.Name ?? "?"} vs {black?.Name ?? "?"}");
     }
     Console.WriteLine($"Game ID: {game.Id}");

@@ -266,7 +266,7 @@ public class PuzzleGameConverterTests
         result!.Id.Should().Be("game123");
         result.Players.Should().HaveCount(2);
         result.Players![0].UserId.Should().Be("player1");
-        result.Players[1].Color.Should().Be("black");
+        result.Players[1].Color.Should().Be(Color.Black);
     }
 
     [Fact]
@@ -347,7 +347,7 @@ public class PuzzleGameConverterTests
             Id = "players123",
             Players = new[]
             {
-                new PuzzlePlayer { UserId = "user1", Name = "User One", Color = "white" }
+                new PuzzlePlayer { UserId = "user1", Name = "User One", Color = Color.White }
             }
         };
 
