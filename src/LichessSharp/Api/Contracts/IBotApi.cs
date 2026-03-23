@@ -70,7 +70,8 @@ public interface IBotApi
     Task<bool> WriteChatAsync(string gameId, ChatRoom room, string text, CancellationToken cancellationToken = default);
 
     /// <summary>
-    ///     Get the chat messages of a game.
+    ///     Get the messages posted in the private player chat of a game.
+    ///     This is the chat between the 2 players of the game. Games also have a public spectator chat.
     ///     Requires OAuth scope: bot:play
     /// </summary>
     /// <param name="gameId">The game ID.</param>

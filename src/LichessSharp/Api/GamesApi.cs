@@ -146,6 +146,16 @@ internal sealed class GamesApi(ILichessHttpClient httpClient) : IGamesApi
     }
 
     /// <inheritdoc />
+    public async Task<IReadOnlyList<ChatMessage>> GetSpectatorChatAsync(string gameId,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(gameId);
+
+        var endpoint = $"/game/{Uri.EscapeDataString(gameId)}/chat";
+        return await _httpClient.GetAsync<List<ChatMessage>>(endpoint, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
     public async IAsyncEnumerable<MoveStreamEvent> StreamGameMovesAsync(
         string gameId,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)

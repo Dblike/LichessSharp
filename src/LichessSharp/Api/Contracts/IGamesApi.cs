@@ -135,4 +135,15 @@ public interface IGamesApi
     /// <returns>Stream of bookmarked games.</returns>
     IAsyncEnumerable<GameJson> StreamBookmarkedGamesAsync(ExportBookmarksOptions? options = null,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    ///     Fetch the messages posted in the public spectator chat of a game.
+    ///     Games also have a private players chat, which only the 2 players can see.
+    ///     No authentication required.
+    /// </summary>
+    /// <param name="gameId">The game ID.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>List of chat messages.</returns>
+    Task<IReadOnlyList<ChatMessage>> GetSpectatorChatAsync(string gameId,
+        CancellationToken cancellationToken = default);
 }

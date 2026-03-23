@@ -1,5 +1,6 @@
 using FluentAssertions;
 using LichessSharp.Api;
+using LichessSharp.Api.Contracts;
 using LichessSharp.Api.Options;
 using LichessSharp.Http;
 using LichessSharp.Models.Common;
@@ -1150,6 +1151,101 @@ public class GamesApiTests
         // Assert
         _httpClientMock.Verify(x => x.PostAsync<OkResponse>(It.IsAny<string>(), It.IsAny<HttpContent>(), cts.Token),
             Times.Once);
+    }
+
+    // ===== GetSpectatorChatAsync =====
+
+    [Fact]
+    public async Task GetSpectatorChatAsync_CallsCorrectEndpoint()
+    {
+        // Arrange
+        var gameId = "AbCdEfGh";
+        var messages = new List<ChatMessage>
+        {
+            new() { User = "spectator1", Text = "e4 here we go" },
+            new() { User = "spectator2", Text = "Woof!" }
+        };
+        _httpClientMock
+            .Setup(x => x.GetAsync<List<ChatMessage>>($"/game/{gameId}/chat", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(messages);
+
+        // Act
+        var result = await _gamesApi.GetSpectatorChatAsync(gameId);
+
+        // Assert
+        result.Should().HaveCount(2);
+        result[0].User.Should().Be("spectator1");
+        result[0].Text.Should().Be("e4 here we go");
+        result[1].User.Should().Be("spectator2");
+        _httpClientMock.Verify(
+            x => x.GetAsync<List<ChatMessage>>($"/game/{gameId}/chat", It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task GetSpectatorChatAsync_WithNullGameId_ThrowsArgumentException()
+    {
+        // Act
+        var act = async () => await _gamesApi.GetSpectatorChatAsync(null!);
+
+        // Assert
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    [Fact]
+    public async Task GetSpectatorChatAsync_WithEmptyGameId_ThrowsArgumentException()
+    {
+        // Act
+        var act = async () => await _gamesApi.GetSpectatorChatAsync("");
+
+        // Assert
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    [Fact]
+    public async Task GetSpectatorChatAsync_WithWhitespaceGameId_ThrowsArgumentException()
+    {
+        // Act
+        var act = async () => await _gamesApi.GetSpectatorChatAsync("   ");
+
+        // Assert
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    [Fact]
+    public async Task GetSpectatorChatAsync_EscapesGameId()
+    {
+        // Arrange
+        var gameId = "game/id";
+        _httpClientMock
+            .Setup(x => x.GetAsync<List<ChatMessage>>(It.Is<string>(s => s.Contains("game%2Fid")),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<ChatMessage>());
+
+        // Act
+        await _gamesApi.GetSpectatorChatAsync(gameId);
+
+        // Assert
+        _httpClientMock.Verify(
+            x => x.GetAsync<List<ChatMessage>>(It.Is<string>(s => s.Contains("game%2Fid")),
+                It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetSpectatorChatAsync_PassesCancellationToken()
+    {
+        // Arrange
+        var cts = new CancellationTokenSource();
+        var gameId = "AbCdEfGh";
+        _httpClientMock
+            .Setup(x => x.GetAsync<List<ChatMessage>>(It.IsAny<string>(), cts.Token))
+            .ReturnsAsync(new List<ChatMessage>());
+
+        // Act
+        await _gamesApi.GetSpectatorChatAsync(gameId, cts.Token);
+
+        // Assert
+        _httpClientMock.Verify(x => x.GetAsync<List<ChatMessage>>(It.IsAny<string>(), cts.Token), Times.Once);
     }
 
     private static GameJson CreateTestGameJson(string id)

@@ -57,6 +57,7 @@ public static class ImplementedEndpoints
         new("GET", "/api/stream/game/{id}", "Games", "StreamGameMovesAsync"),
         new("POST", "/api/stream/games/{streamId}", "Games", "StreamByIdsAsync"),
         new("POST", "/api/stream/games/{streamId}/add", "Games", "AddGameIdsToStreamAsync"),
+        new("GET", "/game/{gameId}/chat", "Games", "GetSpectatorChatAsync"),
 
         // ===== TV API =====
         new("GET", "/api/tv/channels", "Tv", "GetCurrentGamesAsync"),
