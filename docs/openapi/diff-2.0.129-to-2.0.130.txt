@@ -1,0 +1,30 @@
+Loading specs...
+
+=============================================
+  API Spec Diff: v2.0.129 -> v2.0.130
+=============================================
+
+NEW ENDPOINTS (1):
+  GET    /game/{gameId}/chat                           [Games]
+         Fetch the spectator game chat
+
+REMOVED ENDPOINTS (0):
+  (none)
+
+CHANGED ENDPOINTS (1):
+  GET    /api/board/game/{gameId}/chat                 [Board] [IMPLEMENTED: Board.GetChatAsync]
+         summary changed
+
+NEW SCHEMAS (2):
+  PlayerGameChat
+  SpectatorGameChat
+
+REMOVED SCHEMAS (1):
+  GameChat
+
+MODIFIED SCHEMAS (0):
+  (none)
+
+=============================================
+  Summary: 2 endpoint changes, 3 schema changes
+=============================================

@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "version": "2.0.130",
+    "version": "2.0.129",
     "title": "Lichess.org API reference",
     "contact": {
       "name": "Lichess.org API",
@@ -1803,48 +1803,6 @@
                   "application/json": {
                     "$ref": "#/components/examples/games-exportOneGame.json"
                   }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/game/{gameId}/chat": {
-      "parameters": [
-        {
-          "in": "path",
-          "name": "gameId",
-          "schema": {
-            "type": "string",
-            "example": "5IrD6Gzz"
-          },
-          "required": true
-        }
-      ],
-      "get": {
-        "operationId": "gameChatGet",
-        "summary": "Fetch the spectator game chat",
-        "description": "Get the messages posted in the public spectator chat of a game.\n\nGames also have a private players chat, which only the 2 players can see.\n",
-        "tags": [
-          "Games"
-        ],
-        "security": [],
-        "responses": {
-          "200": {
-            "description": "The messages posted in the chat.",
-            "headers": {
-              "Access-Control-Allow-Origin": {
-                "schema": {
-                  "type": "string",
-                  "default": "'*'"
-                }
-              }
-            },
-            "content": {
-              "application/x-ndjson": {
-                "schema": {
-                  "$ref": "#/components/schemas/SpectatorGameChat"
                 }
               }
             }
@@ -10118,8 +10076,8 @@
       },
       "get": {
         "operationId": "boardGameChatGet",
-        "summary": "Fetch the player chat",
-        "description": "Get the messages posted in the private game chat, i.e. the chat between the 2 players of the game.\n\nGames can also have a public spectator chat.\n",
+        "summary": "Fetch the game chat",
+        "description": "Get the messages posted in the game chat\n",
         "tags": [
           "Board"
         ],
@@ -10144,7 +10102,7 @@
             "content": {
               "application/x-ndjson": {
                 "schema": {
-                  "$ref": "#/components/schemas/PlayerGameChat"
+                  "$ref": "#/components/schemas/GameChat"
                 }
               }
             }
@@ -10957,7 +10915,7 @@
             "content": {
               "application/x-ndjson": {
                 "schema": {
-                  "$ref": "#/components/schemas/PlayerGameChat"
+                  "$ref": "#/components/schemas/GameChat"
                 }
               }
             }
@@ -17978,34 +17936,6 @@
           "players"
         ]
       },
-      "SpectatorGameChat": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "text": {
-              "type": "string"
-            },
-            "user": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "text",
-            "user"
-          ]
-        },
-        "example": [
-          {
-            "text": "e4 here we go",
-            "user": "Toby"
-          },
-          {
-            "text": "Woof!",
-            "user": "AnnoyingDog"
-          }
-        ]
-      },
       "GameStatusId": {
         "type": "integer",
         "enum": [
@@ -21953,7 +21883,7 @@
           "claimWinInSeconds": 8
         }
       },
-      "PlayerGameChat": {
+      "GameChat": {
         "type": "array",
         "items": {
           "type": "object",
