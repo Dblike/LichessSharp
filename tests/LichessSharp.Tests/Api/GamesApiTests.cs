@@ -1183,6 +1183,23 @@ public class GamesApiTests
     }
 
     [Fact]
+    public async Task GetSpectatorChatAsync_WithEmptyChat_ReturnsEmptyList()
+    {
+        // Arrange
+        var gameId = "AbCdEfGh";
+        _httpClientMock
+            .Setup(x => x.GetAsync<List<ChatMessage>>($"/game/{gameId}/chat", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<ChatMessage>());
+
+        // Act
+        var result = await _gamesApi.GetSpectatorChatAsync(gameId);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Should().BeEmpty();
+    }
+
+    [Fact]
     public async Task GetSpectatorChatAsync_WithNullGameId_ThrowsArgumentException()
     {
         // Act

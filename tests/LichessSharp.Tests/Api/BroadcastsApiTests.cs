@@ -1,7 +1,9 @@
+using System.Text.Json;
 using FluentAssertions;
 using LichessSharp.Api;
 using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
+using LichessSharp.Tests.Fixtures;
 using Moq;
 using Xunit;
 
@@ -1125,5 +1127,64 @@ public class BroadcastsApiTests
                 new() { Name = "Player 1", Rating = 2700 }
             }
         };
+    }
+
+    // ===== Model Deserialization =====
+
+    [Fact]
+    public void BroadcastPlayerGame_Deserialization_PopulatesFideTimeControl()
+    {
+        // Arrange
+        var json = """
+            {
+                "id": "chapter1",
+                "round": "round1",
+                "color": "white",
+                "points": "1",
+                "fideTC": "standard",
+                "ratingDiff": 5,
+                "opponent": { "name": "Opponent", "rating": 2600 }
+            }
+            """;
+
+        // Act
+        var game = JsonSerializer.Deserialize<BroadcastPlayerGame>(json, LichessJsonDefaults.Options);
+
+        // Assert
+        game.Should().NotBeNull();
+        game!.FideTimeControl.Should().Be("standard");
+        game.Id.Should().Be("chapter1");
+        game.Color.Should().Be("white");
+        game.RatingDiff.Should().Be(5);
+    }
+
+    [Theory]
+    [InlineData("standard")]
+    [InlineData("rapid")]
+    [InlineData("blitz")]
+    public void BroadcastPlayerGame_Deserialization_AcceptsAllFideTimeControlValues(string fideTimeControl)
+    {
+        // Arrange
+        var json = $$"""{"id": "ch1", "fideTC": "{{fideTimeControl}}"}""";
+
+        // Act
+        var game = JsonSerializer.Deserialize<BroadcastPlayerGame>(json, LichessJsonDefaults.Options);
+
+        // Assert
+        game.Should().NotBeNull();
+        game!.FideTimeControl.Should().Be(fideTimeControl);
+    }
+
+    [Fact]
+    public void BroadcastPlayerGame_Deserialization_WithoutFideTimeControl_ThrowsJsonException()
+    {
+        // Arrange - missing required "fideTC" field
+        var json = """{"id": "ch1"}""";
+
+        // Act
+        var act = () => JsonSerializer.Deserialize<BroadcastPlayerGame>(json, LichessJsonDefaults.Options);
+
+        // Assert
+        act.Should().Throw<JsonException>();
     }
 }

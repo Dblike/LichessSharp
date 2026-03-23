@@ -221,4 +221,19 @@ public class GamesApiIntegrationTests : IntegrationTestBase
         // Assert - We should get events for the completed games
         if (events.Count > 0) events.Should().AllSatisfy(e => e.Id.Should().NotBeNullOrEmpty());
     }
+
+    [Fact]
+    public async Task GetSpectatorChatAsync_WithKnownGameId_ReturnsChatMessages()
+    {
+        // Act - q7ZvsdUF is a well-known completed game; spectator chat may be empty
+        var messages = await Client.Games.GetSpectatorChatAsync(GameId1);
+
+        // Assert - Should return a list (possibly empty for older games)
+        messages.Should().NotBeNull();
+        messages.Should().AllSatisfy(msg =>
+        {
+            msg.User.Should().NotBeNullOrEmpty();
+            msg.Text.Should().NotBeNullOrEmpty();
+        });
+    }
 }
