@@ -13,21 +13,17 @@ namespace LichessSharp.Tests.Integration;
 [LongRunningTest]
 [Trait("Category", "Integration")]
 [Trait("Category", "LongRunning")]
-public class TournamentsIntegrationTests : IDisposable
+[Collection("Lichess API")]
+public class TournamentsIntegrationTests : IntegrationTestBase
 {
-    private readonly LichessClient _client = new();
-
-    public void Dispose()
-    {
-        _client.Dispose();
-        GC.SuppressFinalize(this);
-    }
+    public TournamentsIntegrationTests(LichessTestFixture fixture) : base(fixture) { }
 
     [Fact]
     public async Task ArenaTournaments_GetCurrentAsync_ReturnsCurrentTournaments()
     {
         // Act
-        var result = await _client.ArenaTournaments.GetCurrentAsync();
+        await ThrottleAsync();
+        var result = await Client.ArenaTournaments.GetCurrentAsync();
 
         // Assert
         result.Should().NotBeNull();
@@ -40,7 +36,8 @@ public class TournamentsIntegrationTests : IDisposable
     public async Task ArenaTournaments_GetAsync_WithValidId_ReturnsTournament()
     {
         // First get current tournaments to find a valid ID
-        var current = await _client.ArenaTournaments.GetCurrentAsync();
+        await ThrottleAsync();
+        var current = await Client.ArenaTournaments.GetCurrentAsync();
         var anyTournament = current.Started.FirstOrDefault() ??
                             current.Created.FirstOrDefault() ?? current.Finished.FirstOrDefault();
 
@@ -49,7 +46,8 @@ public class TournamentsIntegrationTests : IDisposable
             return;
 
         // Act
-        var result = await _client.ArenaTournaments.GetAsync(anyTournament.Id);
+        await ThrottleAsync();
+        var result = await Client.ArenaTournaments.GetAsync(anyTournament.Id);
 
         // Assert
         result.Should().NotBeNull();
@@ -61,7 +59,8 @@ public class TournamentsIntegrationTests : IDisposable
     public async Task ArenaTournaments_StreamResultsAsync_WithValidId_ReturnsResults()
     {
         // First get current tournaments to find a valid ID
-        var current = await _client.ArenaTournaments.GetCurrentAsync();
+        await ThrottleAsync();
+        var current = await Client.ArenaTournaments.GetCurrentAsync();
         var finishedTournament = current.Finished.FirstOrDefault();
 
         if (finishedTournament == null)
@@ -70,7 +69,8 @@ public class TournamentsIntegrationTests : IDisposable
 
         // Act
         var results = new List<ArenaPlayerResult>();
-        await foreach (var result in _client.ArenaTournaments.StreamResultsAsync(finishedTournament.Id, 5))
+        await ThrottleAsync();
+        await foreach (var result in Client.ArenaTournaments.StreamResultsAsync(finishedTournament.Id, 5))
         {
             results.Add(result);
             if (results.Count >= 5) break;
@@ -95,7 +95,8 @@ public class TournamentsIntegrationTests : IDisposable
         var tournaments = new List<ArenaTournamentSummary>();
         try
         {
-            await foreach (var tournament in _client.ArenaTournaments.StreamCreatedByAsync(username))
+            await ThrottleAsync();
+            await foreach (var tournament in Client.ArenaTournaments.StreamCreatedByAsync(username))
             {
                 tournaments.Add(tournament);
                 if (tournaments.Count >= 5) break;
@@ -121,7 +122,8 @@ public class TournamentsIntegrationTests : IDisposable
         var tournaments = new List<ArenaTournamentSummary>();
         try
         {
-            await foreach (var tournament in _client.ArenaTournaments.StreamTeamTournamentsAsync(teamId, 5))
+            await ThrottleAsync();
+            await foreach (var tournament in Client.ArenaTournaments.StreamTeamTournamentsAsync(teamId, 5))
             {
                 tournaments.Add(tournament);
                 if (tournaments.Count >= 5) break;
@@ -149,22 +151,25 @@ public class TournamentsIntegrationTests : IDisposable
         };
 
         // Act & Assert - Should fail without authentication
+        await ThrottleAsync();
         await Assert.ThrowsAnyAsync<Exception>(async () =>
-            await _client.ArenaTournaments.CreateAsync(options));
+            await Client.ArenaTournaments.CreateAsync(options));
     }
 
     [Fact]
     public async Task ArenaTournaments_JoinAsync_WithoutAuth_ThrowsException()
     {
         // Get a tournament ID first
-        var current = await _client.ArenaTournaments.GetCurrentAsync();
+        await ThrottleAsync();
+        var current = await Client.ArenaTournaments.GetCurrentAsync();
         var tournament = current.Created.FirstOrDefault() ?? current.Started.FirstOrDefault();
 
         if (tournament == null) return;
 
         // Act & Assert - Should fail without authentication
+        await ThrottleAsync();
         await Assert.ThrowsAnyAsync<Exception>(async () =>
-            await _client.ArenaTournaments.JoinAsync(tournament.Id));
+            await Client.ArenaTournaments.JoinAsync(tournament.Id));
     }
 
     [Fact]
@@ -173,7 +178,8 @@ public class TournamentsIntegrationTests : IDisposable
         // Use a known Swiss tournament ID from a team
         // First get Swiss tournaments from lichess-swiss team
         var tournaments = new List<SwissTournament>();
-        await foreach (var t in _client.SwissTournaments.StreamTeamTournamentsAsync("lichess-swiss", 1))
+        await ThrottleAsync();
+        await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync("lichess-swiss", 1))
         {
             tournaments.Add(t);
             break;
@@ -184,7 +190,8 @@ public class TournamentsIntegrationTests : IDisposable
             return;
 
         // Act
-        var result = await _client.SwissTournaments.GetAsync(tournaments[0].Id);
+        await ThrottleAsync();
+        var result = await Client.SwissTournaments.GetAsync(tournaments[0].Id);
 
         // Assert
         result.Should().NotBeNull();
@@ -200,7 +207,8 @@ public class TournamentsIntegrationTests : IDisposable
 
         // Act
         var tournaments = new List<SwissTournament>();
-        await foreach (var tournament in _client.SwissTournaments.StreamTeamTournamentsAsync(teamId, 5))
+        await ThrottleAsync();
+        await foreach (var tournament in Client.SwissTournaments.StreamTeamTournamentsAsync(teamId, 5))
         {
             tournaments.Add(tournament);
             if (tournaments.Count >= 5) break;
@@ -220,7 +228,8 @@ public class TournamentsIntegrationTests : IDisposable
     {
         // Get a finished Swiss tournament
         var tournaments = new List<SwissTournament>();
-        await foreach (var t in _client.SwissTournaments.StreamTeamTournamentsAsync("lichess-swiss", 10))
+        await ThrottleAsync();
+        await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync("lichess-swiss", 10))
             if (t.Status == "finished")
             {
                 tournaments.Add(t);
@@ -233,7 +242,8 @@ public class TournamentsIntegrationTests : IDisposable
 
         // Act
         var results = new List<SwissPlayerResult>();
-        await foreach (var result in _client.SwissTournaments.StreamResultsAsync(tournaments[0].Id, 5))
+        await ThrottleAsync();
+        await foreach (var result in Client.SwissTournaments.StreamResultsAsync(tournaments[0].Id, 5))
         {
             results.Add(result);
             if (results.Count >= 5) break;
@@ -261,8 +271,9 @@ public class TournamentsIntegrationTests : IDisposable
         };
 
         // Act & Assert - Should fail without authentication
+        await ThrottleAsync();
         await Assert.ThrowsAnyAsync<Exception>(async () =>
-            await _client.SwissTournaments.CreateAsync("lichess-swiss", options));
+            await Client.SwissTournaments.CreateAsync("lichess-swiss", options));
     }
 
     [Fact]
@@ -270,7 +281,8 @@ public class TournamentsIntegrationTests : IDisposable
     {
         // Get a tournament ID first
         var tournaments = new List<SwissTournament>();
-        await foreach (var t in _client.SwissTournaments.StreamTeamTournamentsAsync("lichess-swiss", 1))
+        await ThrottleAsync();
+        await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync("lichess-swiss", 1))
             if (t.Status == "created")
             {
                 tournaments.Add(t);
@@ -280,7 +292,8 @@ public class TournamentsIntegrationTests : IDisposable
         if (tournaments.Count == 0) return;
 
         // Act & Assert - Should fail without authentication
+        await ThrottleAsync();
         await Assert.ThrowsAnyAsync<Exception>(async () =>
-            await _client.SwissTournaments.JoinAsync(tournaments[0].Id));
+            await Client.SwissTournaments.JoinAsync(tournaments[0].Id));
     }
 }

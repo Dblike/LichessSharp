@@ -2,7 +2,7 @@ namespace LichessSharp.Tests.Integration;
 
 /// <summary>
 ///     Base class for integration tests that require authentication.
-///     Creates a LichessClient with a token from the environment variable.
+///     Uses <see cref="LichessTestFixture" /> for request throttling to avoid rate limits.
 /// </summary>
 /// <remarks>
 ///     <para>
@@ -10,56 +10,31 @@ namespace LichessSharp.Tests.Integration;
 ///         Set the <c>LICHESS_TEST_TOKEN</c> environment variable to run these tests.
 ///     </para>
 ///     <para>
-///         The client is configured with <see cref="LichessClientOptions.UnlimitedRateLimitRetries" /> enabled,
-///         which means it will automatically wait and retry when rate limited by Lichess.
-///         This ensures tests eventually complete rather than failing due to rate limits.
-///     </para>
-///     <para>
-///         Example usage:
-///         <code>
-/// [AuthenticatedTest]
-/// public class MyAuthenticatedTests : AuthenticatedTestBase
-/// {
-///     [Fact]
-///     public async Task MyTest()
-///     {
-///         var profile = await Client.Account.GetProfileAsync();
-///         // ...
-///     }
-/// }
-/// </code>
+///         All subclasses must be annotated with <c>[Collection("Lichess API")]</c> to share
+///         the fixture and run sequentially. Call <see cref="ThrottleAsync" /> before each API call.
 ///     </para>
 /// </remarks>
 public abstract class AuthenticatedTestBase : IDisposable
 {
-    /// <summary>
-    ///     Gets the username of the authenticated user (cached after first call).
-    /// </summary>
     private string? _username;
 
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="AuthenticatedTestBase" /> class.
-    ///     Creates a LichessClient configured for integration testing with unlimited rate limit retries
-    ///     and an extended timeout to handle long waits when Lichess rate limits requests.
-    /// </summary>
     /// <exception cref="InvalidOperationException">
     ///     Thrown when the test token environment variable is not set.
     /// </exception>
-    protected AuthenticatedTestBase()
+    protected AuthenticatedTestBase(LichessTestFixture fixture)
     {
         var token = TestConfiguration.LichessToken;
 
         if (string.IsNullOrWhiteSpace(token)) throw new InvalidOperationException(TestConfiguration.SkipReason);
 
-        Client = new LichessClient(
-            new HttpClient(),
-            new LichessClientOptions
-            {
-                AccessToken = token,
-                DefaultTimeout = TimeSpan.FromMinutes(10),
-                UnlimitedRateLimitRetries = true
-            });
+        Fixture = fixture;
+        Client = fixture.CreateAuthenticatedClient(token);
     }
+
+    /// <summary>
+    ///     The shared test fixture providing throttling and client creation.
+    /// </summary>
+    protected LichessTestFixture Fixture { get; }
 
     /// <summary>
     ///     Gets the authenticated Lichess client.
@@ -67,8 +42,12 @@ public abstract class AuthenticatedTestBase : IDisposable
     protected LichessClient Client { get; }
 
     /// <summary>
-    ///     Disposes the client.
+    ///     Throttles the next API request to respect Lichess rate limits.
+    ///     Call this before each API call.
     /// </summary>
+    protected Task ThrottleAsync(CancellationToken cancellationToken = default) =>
+        Fixture.ThrottleAsync(cancellationToken);
+
     public void Dispose()
     {
         Client.Dispose();
@@ -79,12 +58,11 @@ public abstract class AuthenticatedTestBase : IDisposable
     ///     Gets the username of the authenticated user.
     ///     Makes an API call on first access, then caches the result.
     /// </summary>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>The username of the authenticated user.</returns>
     protected async Task<string> GetAuthenticatedUsernameAsync(CancellationToken cancellationToken = default)
     {
         if (_username == null)
         {
+            await ThrottleAsync(cancellationToken);
             var profile = await Client.Account.GetProfileAsync(cancellationToken);
             _username = profile.Username;
         }

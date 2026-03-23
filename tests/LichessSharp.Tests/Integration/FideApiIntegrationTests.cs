@@ -1,4 +1,5 @@
 using FluentAssertions;
+using LichessSharp.Models.Enums;
 using Xunit;
 
 namespace LichessSharp.Tests.Integration;
@@ -10,8 +11,11 @@ namespace LichessSharp.Tests.Integration;
 [IntegrationTest]
 [LongRunningTest]
 [Trait("Category", "Integration")]
+[Collection("Lichess API")]
 public class FideApiIntegrationTests : IntegrationTestBase
 {
+    public FideApiIntegrationTests(LichessTestFixture fixture) : base(fixture) { }
+
     // Well-known FIDE player IDs
     private const int MagnusCarlsenFideId = 1503014;
     private const int FabianoCaruanaFideId = 2020009;
@@ -20,13 +24,14 @@ public class FideApiIntegrationTests : IntegrationTestBase
     public async Task GetPlayerAsync_WithMagnusCarlsen_ReturnsPlayer()
     {
         // Act
+        await ThrottleAsync();
         var player = await Client.Fide.GetPlayerAsync(MagnusCarlsenFideId);
 
         // Assert
         player.Should().NotBeNull();
         player.Id.Should().Be(MagnusCarlsenFideId);
         player.Name.Should().Contain("Carlsen");
-        player.Title.Should().Be("GM");
+        player.Title.Should().Be(Title.GM);
         player.Federation.Should().Be("NOR");
     }
 
@@ -34,19 +39,21 @@ public class FideApiIntegrationTests : IntegrationTestBase
     public async Task GetPlayerAsync_WithFabianoCaruana_ReturnsPlayer()
     {
         // Act
+        await ThrottleAsync();
         var player = await Client.Fide.GetPlayerAsync(FabianoCaruanaFideId);
 
         // Assert
         player.Should().NotBeNull();
         player.Id.Should().Be(FabianoCaruanaFideId);
         player.Name.Should().Contain("Caruana");
-        player.Title.Should().Be("GM");
+        player.Title.Should().Be(Title.GM);
     }
 
     [Fact]
     public async Task GetPlayerAsync_ReturnsRatings()
     {
         // Act
+        await ThrottleAsync();
         var player = await Client.Fide.GetPlayerAsync(MagnusCarlsenFideId);
 
         // Assert
@@ -62,6 +69,7 @@ public class FideApiIntegrationTests : IntegrationTestBase
     public async Task SearchPlayersAsync_WithCarlsen_ReturnsPlayers()
     {
         // Act
+        await ThrottleAsync();
         var players = await Client.Fide.SearchPlayersAsync("Carlsen");
 
         // Assert
@@ -74,6 +82,7 @@ public class FideApiIntegrationTests : IntegrationTestBase
     public async Task SearchPlayersAsync_WithCaruana_ReturnsPlayers()
     {
         // Act
+        await ThrottleAsync();
         var players = await Client.Fide.SearchPlayersAsync("Caruana");
 
         // Assert
@@ -86,6 +95,7 @@ public class FideApiIntegrationTests : IntegrationTestBase
     public async Task SearchPlayersAsync_WithExactName_ReturnsMagnusCarlsen()
     {
         // Act
+        await ThrottleAsync();
         var players = await Client.Fide.SearchPlayersAsync("Magnus Carlsen");
 
         // Assert
@@ -97,6 +107,7 @@ public class FideApiIntegrationTests : IntegrationTestBase
     public async Task GetPlayerRatingsAsync_WithMagnusCarlsen_ReturnsRatings()
     {
         // Act
+        await ThrottleAsync();
         var ratings = await Client.Fide.GetPlayerRatingsAsync(MagnusCarlsenFideId);
 
         // Assert
@@ -110,6 +121,7 @@ public class FideApiIntegrationTests : IntegrationTestBase
     public async Task GetPlayerRatingsAsync_WithFabianoCaruana_ReturnsRatings()
     {
         // Act
+        await ThrottleAsync();
         var ratings = await Client.Fide.GetPlayerRatingsAsync(FabianoCaruanaFideId);
 
         // Assert
@@ -121,6 +133,7 @@ public class FideApiIntegrationTests : IntegrationTestBase
     public async Task GetPlayerRatingsAsync_RatingDataPointsArePositive()
     {
         // Act
+        await ThrottleAsync();
         var ratings = await Client.Fide.GetPlayerRatingsAsync(MagnusCarlsenFideId);
 
         // Assert - encoded data points should be positive numbers

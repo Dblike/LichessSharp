@@ -10,12 +10,16 @@ namespace LichessSharp.Tests.Integration;
 [IntegrationTest]
 [LongRunningTest]
 [Trait("Category", "Integration")]
+[Collection("Lichess API")]
 public class SimulsApiIntegrationTests : IntegrationTestBase
 {
+    public SimulsApiIntegrationTests(LichessTestFixture fixture) : base(fixture) { }
+
     [Fact]
     public async Task GetCurrentAsync_ReturnsSimulList()
     {
         // Act
+        await ThrottleAsync();
         var result = await Client.Simuls.GetCurrentAsync();
 
         // Assert
@@ -31,6 +35,7 @@ public class SimulsApiIntegrationTests : IntegrationTestBase
     public async Task GetCurrentAsync_ReturnsValidSimulStructure()
     {
         // Act
+        await ThrottleAsync();
         var result = await Client.Simuls.GetCurrentAsync();
 
         // Assert - check any simul we can find has valid structure
@@ -56,6 +61,7 @@ public class SimulsApiIntegrationTests : IntegrationTestBase
     public async Task GetCurrentAsync_StartedSimulsAreRunning()
     {
         // Act
+        await ThrottleAsync();
         var result = await Client.Simuls.GetCurrentAsync();
 
         // Assert - started simuls should have IsRunning = true
@@ -70,6 +76,7 @@ public class SimulsApiIntegrationTests : IntegrationTestBase
     public async Task GetCurrentAsync_FinishedSimulsAreMarkedFinished()
     {
         // Act
+        await ThrottleAsync();
         var result = await Client.Simuls.GetCurrentAsync();
 
         // Assert - finished simuls should have IsFinished = true
@@ -84,6 +91,7 @@ public class SimulsApiIntegrationTests : IntegrationTestBase
     public async Task GetCurrentAsync_CreatedSimulsAreNotStarted()
     {
         // Act
+        await ThrottleAsync();
         var result = await Client.Simuls.GetCurrentAsync();
 
         // Assert - created simuls should have IsCreated = true and not be running/finished
@@ -99,6 +107,7 @@ public class SimulsApiIntegrationTests : IntegrationTestBase
     public async Task GetCurrentAsync_SimulsHaveVariants()
     {
         // Act
+        await ThrottleAsync();
         var result = await Client.Simuls.GetCurrentAsync();
 
         // Assert - any simul should have at least one variant

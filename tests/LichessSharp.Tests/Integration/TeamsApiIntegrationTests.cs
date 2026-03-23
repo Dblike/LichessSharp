@@ -13,8 +13,11 @@ namespace LichessSharp.Tests.Integration;
 [LongRunningTest]
 [Trait("Category", "Integration")]
 [Trait("Category", "LongRunning")]
+[Collection("Lichess API")]
 public class TeamsApiIntegrationTests : IntegrationTestBase
 {
+    public TeamsApiIntegrationTests(LichessTestFixture fixture) : base(fixture) { }
+
     [Fact]
     public async Task GetAsync_WithValidTeamId_ReturnsTeamInfo()
     {
@@ -22,6 +25,7 @@ public class TeamsApiIntegrationTests : IntegrationTestBase
         var teamId = "lichess-swiss"; // A well-known Lichess team
 
         // Act
+        await ThrottleAsync();
         var team = await Client.Teams.GetAsync(teamId);
 
         // Assert
@@ -37,6 +41,8 @@ public class TeamsApiIntegrationTests : IntegrationTestBase
         // Arrange
         var invalidTeamId = "nonexistent-team-12345";
 
+        await ThrottleAsync();
+
         // Act & Assert
         var act = async () => await Client.Teams.GetAsync(invalidTeamId);
 
@@ -47,6 +53,7 @@ public class TeamsApiIntegrationTests : IntegrationTestBase
     public async Task GetPopularAsync_ReturnsTeams()
     {
         // Act
+        await ThrottleAsync();
         var result = await Client.Teams.GetPopularAsync();
 
         // Assert
@@ -61,6 +68,7 @@ public class TeamsApiIntegrationTests : IntegrationTestBase
     public async Task GetPopularAsync_WithPage2_ReturnsDifferentTeams()
     {
         // Act
+        await ThrottleAsync();
         var page1 = await Client.Teams.GetPopularAsync(1);
         var page2 = await Client.Teams.GetPopularAsync(2);
 
@@ -80,6 +88,8 @@ public class TeamsApiIntegrationTests : IntegrationTestBase
         // Arrange - this endpoint now requires OAuth2 authentication (since API v2.0.123)
         var username = "thibault";
 
+        await ThrottleAsync();
+
         // Act & Assert
         var act = async () => await Client.Teams.GetUserTeamsAsync(username);
 
@@ -93,6 +103,7 @@ public class TeamsApiIntegrationTests : IntegrationTestBase
         var searchTerm = "chess";
 
         // Act
+        await ThrottleAsync();
         var result = await Client.Teams.SearchAsync(searchTerm);
 
         // Assert
@@ -109,6 +120,7 @@ public class TeamsApiIntegrationTests : IntegrationTestBase
         var searchTerm = "chess";
 
         // Act
+        await ThrottleAsync();
         var result = await Client.Teams.SearchAsync(searchTerm, 2);
 
         // Assert
@@ -124,6 +136,7 @@ public class TeamsApiIntegrationTests : IntegrationTestBase
         var members = new List<TeamMember>();
 
         // Act
+        await ThrottleAsync();
         await foreach (var member in Client.Teams.StreamMembersAsync(teamId))
         {
             members.Add(member);
@@ -142,6 +155,8 @@ public class TeamsApiIntegrationTests : IntegrationTestBase
         // Arrange
         var teamId = "lichess-swiss";
 
+        await ThrottleAsync();
+
         // Act & Assert
         var act = async () => await Client.Teams.JoinAsync(teamId);
 
@@ -154,6 +169,8 @@ public class TeamsApiIntegrationTests : IntegrationTestBase
     {
         // Arrange
         var teamId = "lichess-swiss";
+
+        await ThrottleAsync();
 
         // Act & Assert
         var act = async () => await Client.Teams.LeaveAsync(teamId);
@@ -168,6 +185,8 @@ public class TeamsApiIntegrationTests : IntegrationTestBase
         // Arrange
         var teamId = "lichess-swiss";
 
+        await ThrottleAsync();
+
         // Act & Assert
         var act = async () => await Client.Teams.GetJoinRequestsAsync(teamId);
 
@@ -178,6 +197,8 @@ public class TeamsApiIntegrationTests : IntegrationTestBase
     [Fact]
     public async Task AcceptJoinRequestAsync_WithoutAuthentication_ThrowsLichessException()
     {
+        await ThrottleAsync();
+
         // Act & Assert
         var act = async () => await Client.Teams.AcceptJoinRequestAsync("some-team", "some-user");
 
@@ -187,6 +208,8 @@ public class TeamsApiIntegrationTests : IntegrationTestBase
     [Fact]
     public async Task DeclineJoinRequestAsync_WithoutAuthentication_ThrowsLichessException()
     {
+        await ThrottleAsync();
+
         // Act & Assert
         var act = async () => await Client.Teams.DeclineJoinRequestAsync("some-team", "some-user");
 
@@ -196,6 +219,8 @@ public class TeamsApiIntegrationTests : IntegrationTestBase
     [Fact]
     public async Task KickMemberAsync_WithoutAuthentication_ThrowsLichessException()
     {
+        await ThrottleAsync();
+
         // Act & Assert
         var act = async () => await Client.Teams.KickMemberAsync("some-team", "some-user");
 
@@ -205,6 +230,8 @@ public class TeamsApiIntegrationTests : IntegrationTestBase
     [Fact]
     public async Task MessageAllMembersAsync_WithoutAuthentication_ThrowsLichessException()
     {
+        await ThrottleAsync();
+
         // Act & Assert
         var act = async () => await Client.Teams.MessageAllMembersAsync("some-team", "Hello!");
 

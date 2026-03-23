@@ -21,12 +21,16 @@ namespace LichessSharp.Tests.Integration.Manual;
 [Trait("Category", "Manual")]
 [Trait("Category", "LongRunning")]
 [RequiresScope("engine:read", "engine:write")]
+[Collection("Lichess API")]
 public class ExternalEngineApiManualTests : AuthenticatedTestBase
 {
+    public ExternalEngineApiManualTests(LichessTestFixture fixture) : base(fixture) { }
+
     [Fact]
     public async Task ListAsync_WithValidToken_ReturnsEngineList()
     {
         // Act
+        await ThrottleAsync();
         var engines = await Client.ExternalEngine.ListAsync();
 
         // Assert
@@ -38,6 +42,7 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
     public async Task ListAsync_WhenEnginesExist_ReturnsValidStructure()
     {
         // Act
+        await ThrottleAsync();
         var engines = await Client.ExternalEngine.ListAsync();
 
         // Assert
@@ -69,6 +74,7 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
         };
 
         // Act
+        await ThrottleAsync();
         var engine = await Client.ExternalEngine.CreateAsync(registration);
 
         // Assert
@@ -86,6 +92,7 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
     public async Task GetAsync_WithValidId_ReturnsEngine()
     {
         // Arrange - first list engines to get an ID
+        await ThrottleAsync();
         var engines = await Client.ExternalEngine.ListAsync();
         if (engines.Count == 0) return; // No engines to test with
 
@@ -103,6 +110,7 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
     public async Task UpdateAsync_WithValidData_UpdatesEngine()
     {
         // Arrange - first list engines to get an ID
+        await ThrottleAsync();
         var engines = await Client.ExternalEngine.ListAsync();
         if (engines.Count == 0) return;
 
@@ -150,6 +158,7 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
             ProviderSecret = "test-secret-at-least-16-chars"
         };
 
+        await ThrottleAsync();
         var engine = await Client.ExternalEngine.CreateAsync(registration);
 
         // Act
@@ -164,6 +173,7 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
     public async Task AnalyseAsync_WithValidRequest_ReturnsAnalysisLines()
     {
         // Arrange
+        await ThrottleAsync();
         var engines = await Client.ExternalEngine.ListAsync();
         if (engines.Count == 0) return;
 
@@ -206,6 +216,7 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
         const string providerSecret = "your-provider-secret-here";
 
         // Act
+        await ThrottleAsync();
         var work = await Client.ExternalEngine.AcquireWorkAsync(providerSecret);
 
         // Assert
@@ -226,11 +237,16 @@ public class ExternalEngineApiManualTests : AuthenticatedTestBase
 [LongRunningTest]
 [Trait("Category", "Integration")]
 [Trait("Category", "LongRunning")]
+[Collection("Lichess API")]
 public class ExternalEngineApiAuthRequiredTests : IntegrationTestBase
 {
+    public ExternalEngineApiAuthRequiredTests(LichessTestFixture fixture) : base(fixture) { }
+
     [Fact]
     public async Task ListAsync_WithoutAuth_ThrowsException()
     {
+        await ThrottleAsync();
+
         // Act & Assert
         await Assert.ThrowsAnyAsync<Exception>(async () =>
             await Client.ExternalEngine.ListAsync());
@@ -248,6 +264,8 @@ public class ExternalEngineApiAuthRequiredTests : IntegrationTestBase
             Variants = ["standard"],
             ProviderSecret = "test-secret-at-least-16-chars"
         };
+
+        await ThrottleAsync();
 
         // Act & Assert
         await Assert.ThrowsAnyAsync<Exception>(async () =>

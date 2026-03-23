@@ -5,27 +5,36 @@ namespace LichessSharp.Tests.Integration;
 
 /// <summary>
 ///     Base class for integration tests that make real HTTP calls to Lichess.
-///     These tests verify that the API client works correctly against the live API.
+///     Uses <see cref="LichessTestFixture" /> for request throttling to avoid rate limits.
 /// </summary>
 /// <remarks>
-///     The client is configured with <see cref="LichessClientOptions.UnlimitedRateLimitRetries" /> enabled,
-///     which means it will automatically wait and retry when rate limited by Lichess.
-///     This ensures tests eventually complete rather than failing due to rate limits.
+///     All subclasses must be annotated with <c>[Collection("Lichess API")]</c> to share
+///     the fixture and run sequentially. Call <see cref="ThrottleAsync" /> before each API call.
 /// </remarks>
 public abstract class IntegrationTestBase : IDisposable
 {
+    protected IntegrationTestBase(LichessTestFixture fixture)
+    {
+        Fixture = fixture;
+        Client = fixture.CreateClient();
+    }
+
     /// <summary>
-    ///     Creates the LichessClient configured for integration testing.
-    ///     The client has unlimited rate limit retries and an extended timeout to handle
-    ///     long waits when Lichess rate limits requests (up to 60 seconds per retry).
+    ///     The shared test fixture providing throttling and client creation.
     /// </summary>
-    protected LichessClient Client { get; } = new(
-        new HttpClient(),
-        new LichessClientOptions
-        {
-            DefaultTimeout = TimeSpan.FromMinutes(10),
-            UnlimitedRateLimitRetries = true
-        });
+    protected LichessTestFixture Fixture { get; }
+
+    /// <summary>
+    ///     The LichessClient configured for integration testing.
+    /// </summary>
+    protected LichessClient Client { get; }
+
+    /// <summary>
+    ///     Throttles the next API request to respect Lichess rate limits.
+    ///     Call this before each API call.
+    /// </summary>
+    protected Task ThrottleAsync(CancellationToken cancellationToken = default) =>
+        Fixture.ThrottleAsync(cancellationToken);
 
     public void Dispose()
     {

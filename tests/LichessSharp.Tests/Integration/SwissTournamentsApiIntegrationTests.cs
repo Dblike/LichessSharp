@@ -13,8 +13,11 @@ namespace LichessSharp.Tests.Integration;
 [LongRunningTest]
 [Trait("Category", "Integration")]
 [Trait("Category", "LongRunning")]
+[Collection("Lichess API")]
 public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
 {
+    public SwissTournamentsApiIntegrationTests(LichessTestFixture fixture) : base(fixture) { }
+
     // Known team that hosts Swiss tournaments
     private const string TestTeamId = "lichess-swiss";
 
@@ -23,6 +26,7 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
     {
         // First find a valid Swiss tournament
         SwissTournament? tournament = null;
+        await ThrottleAsync();
         await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, 1))
         {
             tournament = t;
@@ -45,6 +49,7 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
     {
         // Find a tournament
         SwissTournament? tournament = null;
+        await ThrottleAsync();
         await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, 1))
         {
             tournament = t;
@@ -68,6 +73,7 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
     {
         // Act
         var tournaments = new List<SwissTournament>();
+        await ThrottleAsync();
         await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, 5))
         {
             tournaments.Add(t);
@@ -87,6 +93,7 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
     public async Task StreamTeamTournamentsAsync_TournamentsHaveValidStatus()
     {
         // Act
+        await ThrottleAsync();
         await foreach (var tournament in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, 10))
         {
             // Assert - Status should be one of the valid values
@@ -100,6 +107,7 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
     {
         // Find a finished tournament
         SwissTournament? finishedTournament = null;
+        await ThrottleAsync();
         await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, 20))
             if (t.Status == "finished")
             {
@@ -131,6 +139,7 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
     {
         // Find a finished tournament
         SwissTournament? finishedTournament = null;
+        await ThrottleAsync();
         await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, 20))
             if (t.Status == "finished")
             {
@@ -159,6 +168,7 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
     {
         // Find a finished tournament
         SwissTournament? finishedTournament = null;
+        await ThrottleAsync();
         await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, 20))
             if (t.Status == "finished" && t.NbOngoing == 0)
             {
@@ -186,6 +196,7 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
     {
         // Find a finished tournament
         SwissTournament? finishedTournament = null;
+        await ThrottleAsync();
         await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, 20))
             if (t.Status == "finished")
             {
@@ -216,6 +227,8 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
             NbRounds = 5
         };
 
+        await ThrottleAsync();
+
         // Act & Assert
         await Assert.ThrowsAnyAsync<Exception>(async () =>
             await Client.SwissTournaments.CreateAsync(TestTeamId, options));
@@ -226,6 +239,7 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
     {
         // Find a created (not started) tournament
         SwissTournament? createdTournament = null;
+        await ThrottleAsync();
         await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, 20))
             if (t.Status == "created")
             {
@@ -245,6 +259,7 @@ public class SwissTournamentsApiIntegrationTests : IntegrationTestBase
     {
         // Find any tournament
         SwissTournament? tournament = null;
+        await ThrottleAsync();
         await foreach (var t in Client.SwissTournaments.StreamTeamTournamentsAsync(TestTeamId, 1))
         {
             tournament = t;

@@ -12,8 +12,11 @@ namespace LichessSharp.Tests.Integration;
 [LongRunningTest]
 [Trait("Category", "Integration")]
 [Trait("Category", "LongRunning")]
+[Collection("Lichess API")]
 public class BroadcastsApiIntegrationTests : IntegrationTestBase
 {
+    public BroadcastsApiIntegrationTests(LichessTestFixture fixture) : base(fixture) { }
+
     [Fact]
     public async Task StreamOfficialBroadcastsAsync_ReturnsOfficialBroadcasts()
     {
@@ -21,6 +24,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         var broadcasts = new List<BroadcastWithRounds>();
 
         // Act
+        await ThrottleAsync();
         await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(5))
         {
             broadcasts.Add(broadcast);
@@ -40,6 +44,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
     public async Task StreamOfficialBroadcastsAsync_BroadcastsHaveValidStructure()
     {
         // Act
+        await ThrottleAsync();
         await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(3))
         {
             // Assert - each broadcast should have valid structure
@@ -64,6 +69,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
     public async Task GetTopBroadcastsAsync_ReturnsTopBroadcasts()
     {
         // Act
+        await ThrottleAsync();
         var result = await Client.Broadcasts.GetTopBroadcastsAsync();
 
         // Assert
@@ -77,6 +83,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
     public async Task GetTopBroadcastsAsync_ActiveBroadcastsHaveValidStructure()
     {
         // Act
+        await ThrottleAsync();
         var result = await Client.Broadcasts.GetTopBroadcastsAsync();
 
         // Assert
@@ -93,6 +100,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
     public async Task GetTopBroadcastsAsync_WithPage2_ReturnsDifferentResults()
     {
         // Act
+        await ThrottleAsync();
         var page1 = await Client.Broadcasts.GetTopBroadcastsAsync(1);
         var page2 = await Client.Broadcasts.GetTopBroadcastsAsync(2);
 
@@ -112,6 +120,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
     public async Task SearchBroadcastsAsync_WithQuery_ReturnsResults()
     {
         // Act
+        await ThrottleAsync();
         var result = await Client.Broadcasts.SearchBroadcastsAsync("chess");
 
         // Assert
@@ -125,6 +134,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
     public async Task SearchBroadcastsAsync_ResultsHaveValidStructure()
     {
         // Act
+        await ThrottleAsync();
         var result = await Client.Broadcasts.SearchBroadcastsAsync("tournament");
 
         // Assert
@@ -142,6 +152,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
     public async Task SearchBroadcastsAsync_WithRareQuery_MayReturnEmptyResults()
     {
         // Act
+        await ThrottleAsync();
         var result = await Client.Broadcasts.SearchBroadcastsAsync("xyznonexistent12345broadcast");
 
         // Assert
@@ -155,6 +166,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
     {
         // First get a known tournament ID from official broadcasts
         string? tournamentId = null;
+        await ThrottleAsync();
         await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(1))
         {
             tournamentId = broadcast.Tour.Id;
@@ -180,6 +192,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
     {
         // First get a known tournament ID from official broadcasts
         string? tournamentId = null;
+        await ThrottleAsync();
         await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(1))
         {
             tournamentId = broadcast.Tour.Id;
@@ -207,6 +220,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         // First get a known round from official broadcasts
         BroadcastRoundInfo? roundInfo = null;
         string? tournamentSlug = null;
+        await ThrottleAsync();
         await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(1))
             if (broadcast.Rounds.Count > 0)
             {
@@ -234,6 +248,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         // First get a known round from official broadcasts
         BroadcastRoundInfo? roundInfo = null;
         string? tournamentSlug = null;
+        await ThrottleAsync();
         await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(5))
         {
             // Look for a round that might have games
@@ -270,6 +285,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
         var broadcasts = new List<BroadcastByUser>();
 
         // Act
+        await ThrottleAsync();
         await foreach (var broadcast in Client.Broadcasts.StreamUserBroadcastsAsync("lichess", 5))
         {
             broadcasts.Add(broadcast);
@@ -286,6 +302,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
     {
         // First get a known tournament ID
         string? tournamentId = null;
+        await ThrottleAsync();
         await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(5))
             // Look for a tournament that might have player data
             if (broadcast.Tour.Tier >= 3) // Higher tier tournaments usually have player data
@@ -322,6 +339,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
     {
         // First get a finished round that should have PGN
         BroadcastRoundInfo? finishedRound = null;
+        await ThrottleAsync();
         await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(10))
         {
             finishedRound = broadcast.Rounds.FirstOrDefault(r => r.Finished == true);
@@ -345,6 +363,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
     {
         // First get a tournament with finished rounds
         string? tournamentId = null;
+        await ThrottleAsync();
         await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(10))
             if (broadcast.Rounds.Any(r => r.Finished == true))
             {
@@ -367,6 +386,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
     {
         // First get a finished round
         BroadcastRoundInfo? finishedRound = null;
+        await ThrottleAsync();
         await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(10))
         {
             finishedRound = broadcast.Rounds.FirstOrDefault(r => r.Finished == true);
@@ -388,6 +408,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
     {
         // First get a finished round
         BroadcastRoundInfo? finishedRound = null;
+        await ThrottleAsync();
         await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(10))
         {
             finishedRound = broadcast.Rounds.FirstOrDefault(r => r.Finished == true);
@@ -409,6 +430,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
     {
         // First get a tournament with finished rounds
         string? tournamentId = null;
+        await ThrottleAsync();
         await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(10))
             if (broadcast.Rounds.Any(r => r.Finished == true))
             {
@@ -431,6 +453,7 @@ public class BroadcastsApiIntegrationTests : IntegrationTestBase
     {
         // First find a team tournament (higher tier tournaments with teamTable)
         string? tournamentId = null;
+        await ThrottleAsync();
         await foreach (var broadcast in Client.Broadcasts.StreamOfficialBroadcastsAsync(20))
             if (broadcast.Tour.Tier >= 4)
             {

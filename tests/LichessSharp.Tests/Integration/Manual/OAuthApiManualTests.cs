@@ -32,8 +32,11 @@ namespace LichessSharp.Tests.Integration.Manual;
 [Trait("Category", "Integration")]
 [Trait("Category", "Manual")]
 [Trait("Category", "LongRunning")]
+[Collection("Lichess API")]
 public class OAuthApiManualTests : AuthenticatedTestBase
 {
+    public OAuthApiManualTests(LichessTestFixture fixture) : base(fixture) { }
+
     [Fact]
     public async Task TestTokensAsync_WithValidToken_ReturnsTokenInfo()
     {
@@ -42,6 +45,7 @@ public class OAuthApiManualTests : AuthenticatedTestBase
         if (string.IsNullOrWhiteSpace(token)) return;
 
         // Act
+        await ThrottleAsync();
         var results = await Client.OAuth.TestTokensAsync([token]);
 
         // Assert
@@ -58,6 +62,7 @@ public class OAuthApiManualTests : AuthenticatedTestBase
         const string invalidToken = "lip_invalid_token_12345678";
 
         // Act
+        await ThrottleAsync();
         var results = await Client.OAuth.TestTokensAsync([invalidToken]);
 
         // Assert
@@ -76,6 +81,7 @@ public class OAuthApiManualTests : AuthenticatedTestBase
         const string invalidToken = "lip_invalid_token_12345678";
 
         // Act
+        await ThrottleAsync();
         var results = await Client.OAuth.TestTokensAsync([validToken, invalidToken]);
 
         // Assert
@@ -92,6 +98,7 @@ public class OAuthApiManualTests : AuthenticatedTestBase
         if (string.IsNullOrWhiteSpace(token)) return;
 
         // Act
+        await ThrottleAsync();
         var results = await Client.OAuth.TestTokensAsync([token]);
         var tokenInfo = results[token];
 
@@ -112,6 +119,7 @@ public class OAuthApiManualTests : AuthenticatedTestBase
     public async Task RevokeTokenAsync_WithValidToken_RevokesToken()
     {
         // Act
+        await ThrottleAsync();
         await Client.OAuth.RevokeTokenAsync();
 
         // Assert - verify token is revoked by trying to use it
@@ -146,6 +154,7 @@ public class OAuthApiManualTests : AuthenticatedTestBase
         };
 
         // Act
+        await ThrottleAsync();
         var token = await Client.OAuth.GetTokenAsync(request);
 
         // Assert
@@ -162,12 +171,16 @@ public class OAuthApiManualTests : AuthenticatedTestBase
 [LongRunningTest]
 [Trait("Category", "Integration")]
 [Trait("Category", "LongRunning")]
+[Collection("Lichess API")]
 public class OAuthApiIntegrationTests : IntegrationTestBase
 {
+    public OAuthApiIntegrationTests(LichessTestFixture fixture) : base(fixture) { }
+
     [Fact]
     public async Task TestTokensAsync_WithEmptyList_ReturnsEmptyDictionary()
     {
         // Act
+        await ThrottleAsync();
         var results = await Client.OAuth.TestTokensAsync([]);
 
         // Assert
@@ -182,6 +195,7 @@ public class OAuthApiIntegrationTests : IntegrationTestBase
         const string invalidToken = "lip_completely_fake_token_xyz";
 
         // Act
+        await ThrottleAsync();
         var results = await Client.OAuth.TestTokensAsync([invalidToken]);
 
         // Assert
@@ -201,6 +215,7 @@ public class OAuthApiIntegrationTests : IntegrationTestBase
         };
 
         // Act
+        await ThrottleAsync();
         var results = await Client.OAuth.TestTokensAsync(invalidTokens);
 
         // Assert
@@ -215,6 +230,7 @@ public class OAuthApiIntegrationTests : IntegrationTestBase
         // (there's no token to revoke)
 
         // Act & Assert - should not throw
+        await ThrottleAsync();
         await Client.OAuth.RevokeTokenAsync();
     }
 }

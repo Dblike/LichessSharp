@@ -11,12 +11,16 @@ namespace LichessSharp.Tests.Integration;
 [IntegrationTest]
 [LongRunningTest]
 [Trait("Category", "Integration")]
+[Collection("Lichess API")]
 public class PuzzlesApiIntegrationTests : IntegrationTestBase
 {
+    public PuzzlesApiIntegrationTests(LichessTestFixture fixture) : base(fixture) { }
+
     [Fact]
     public async Task GetDailyAsync_ReturnsDailyPuzzle()
     {
         // Act
+        await ThrottleAsync();
         var puzzle = await Client.Puzzles.GetDailyAsync();
 
         // Assert
@@ -32,6 +36,7 @@ public class PuzzlesApiIntegrationTests : IntegrationTestBase
     public async Task GetAsync_WithDailyPuzzleId_ReturnsPuzzle()
     {
         // Arrange - Get the daily puzzle to get a known valid ID
+        await ThrottleAsync();
         var dailyPuzzle = await Client.Puzzles.GetDailyAsync();
         var puzzleId = dailyPuzzle.Puzzle!.Id;
 
@@ -54,6 +59,7 @@ public class PuzzlesApiIntegrationTests : IntegrationTestBase
         var username = "DrNykterstein";
 
         // Act
+        await ThrottleAsync();
         var dashboard = await Client.Puzzles.GetStormDashboardAsync(username);
 
         // Assert
@@ -70,6 +76,7 @@ public class PuzzlesApiIntegrationTests : IntegrationTestBase
         var username = "DrNykterstein";
 
         // Act
+        await ThrottleAsync();
         var dashboard = await Client.Puzzles.GetStormDashboardAsync(username, 7);
 
         // Assert
@@ -83,6 +90,7 @@ public class PuzzlesApiIntegrationTests : IntegrationTestBase
     public async Task GetDailyAsync_ReturnsValidPuzzleData()
     {
         // Act
+        await ThrottleAsync();
         var puzzle = await Client.Puzzles.GetDailyAsync();
 
         // Assert - Validate puzzle data structure
@@ -99,6 +107,7 @@ public class PuzzlesApiIntegrationTests : IntegrationTestBase
     public async Task GetDailyAsync_ReturnsValidGameData()
     {
         // Act
+        await ThrottleAsync();
         var puzzle = await Client.Puzzles.GetDailyAsync();
 
         // Assert - Validate game data structure
@@ -112,6 +121,8 @@ public class PuzzlesApiIntegrationTests : IntegrationTestBase
         // Arrange - Use a random race ID that likely doesn't exist
         // Note: Puzzle races are only available for 30 minutes after creation
         var raceId = "nonexistent123";
+
+        await ThrottleAsync();
 
         // Act & Assert - Should throw LichessNotFoundException for non-existent races
         await Assert.ThrowsAsync<LichessNotFoundException>(async () =>

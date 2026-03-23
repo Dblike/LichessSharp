@@ -10,8 +10,11 @@ namespace LichessSharp.Tests.Integration;
 [IntegrationTest]
 [LongRunningTest]
 [Trait("Category", "Integration")]
+[Collection("Lichess API")]
 public class AnalysisApiIntegrationTests : IntegrationTestBase
 {
+    public AnalysisApiIntegrationTests(LichessTestFixture fixture) : base(fixture) { }
+
     // Well-known FEN from OpenAPI spec - Ruy Lopez position
     private const string RuyLopezFen = "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3";
 
@@ -25,6 +28,7 @@ public class AnalysisApiIntegrationTests : IntegrationTestBase
     public async Task GetCloudEvaluationAsync_WithStartingPosition_ReturnsEvaluation()
     {
         // Act
+        await ThrottleAsync();
         var evaluation = await Client.Analysis.GetCloudEvaluationAsync(StartingPositionFen);
 
         // Assert
@@ -37,6 +41,7 @@ public class AnalysisApiIntegrationTests : IntegrationTestBase
     public async Task GetCloudEvaluationAsync_WithRuyLopezPosition_ReturnsEvaluationOrNull()
     {
         // Act - This position may or may not be in the database
+        await ThrottleAsync();
         var evaluation = await Client.Analysis.GetCloudEvaluationAsync(RuyLopezFen);
 
         // Assert - Either returns evaluation or null (404 from API)
@@ -52,6 +57,7 @@ public class AnalysisApiIntegrationTests : IntegrationTestBase
     public async Task GetCloudEvaluationAsync_WithMultiPv_ReturnsMultipleVariations()
     {
         // Act
+        await ThrottleAsync();
         var evaluation = await Client.Analysis.GetCloudEvaluationAsync(StartingPositionFen, 3);
 
         // Assert
@@ -65,6 +71,7 @@ public class AnalysisApiIntegrationTests : IntegrationTestBase
     public async Task GetCloudEvaluationAsync_WithItalianGame_ReturnsEvaluationOrNull()
     {
         // Act
+        await ThrottleAsync();
         var evaluation = await Client.Analysis.GetCloudEvaluationAsync(ItalianGameFen);
 
         // Assert - Common opening position, likely to be in database

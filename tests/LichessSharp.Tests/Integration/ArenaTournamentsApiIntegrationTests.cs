@@ -14,8 +14,11 @@ namespace LichessSharp.Tests.Integration;
 [LongRunningTest]
 [Trait("Category", "Integration")]
 [Trait("Category", "LongRunning")]
+[Collection("Lichess API")]
 public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
 {
+    public ArenaTournamentsApiIntegrationTests(LichessTestFixture fixture) : base(fixture) { }
+
     // Known team that hosts tournaments
     private const string TestTeamId = "lichess-swiss";
 
@@ -23,6 +26,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
     public async Task GetCurrentAsync_ReturnsCurrentTournaments()
     {
         // Act
+        await ThrottleAsync();
         var result = await Client.ArenaTournaments.GetCurrentAsync();
 
         // Assert
@@ -36,6 +40,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
     public async Task GetCurrentAsync_TournamentsHaveValidStructure()
     {
         // Act
+        await ThrottleAsync();
         var result = await Client.ArenaTournaments.GetCurrentAsync();
 
         // Assert
@@ -52,6 +57,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
     public async Task GetCurrentAsync_StartedTournamentsAreOngoing()
     {
         // Act
+        await ThrottleAsync();
         var result = await Client.ArenaTournaments.GetCurrentAsync();
 
         // Assert - Started tournaments have status 20 (integer)
@@ -63,6 +69,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
     public async Task GetAsync_WithValidId_ReturnsTournament()
     {
         // First get current tournaments
+        await ThrottleAsync();
         var current = await Client.ArenaTournaments.GetCurrentAsync();
         var anyTournament = current.Started.FirstOrDefault()
                             ?? current.Created.FirstOrDefault()
@@ -83,6 +90,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
     public async Task GetAsync_ReturnsDetailedTournamentInfo()
     {
         // Get a tournament
+        await ThrottleAsync();
         var current = await Client.ArenaTournaments.GetCurrentAsync();
         var tournament = current.Started.FirstOrDefault() ?? current.Finished.FirstOrDefault();
 
@@ -103,6 +111,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
     public async Task StreamResultsAsync_WithFinishedTournament_ReturnsResults()
     {
         // Get a finished tournament
+        await ThrottleAsync();
         var current = await Client.ArenaTournaments.GetCurrentAsync();
         var finishedTournament = current.Finished.FirstOrDefault();
 
@@ -129,6 +138,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
     public async Task StreamResultsAsync_ResultsAreOrderedByRank()
     {
         // Get a finished tournament
+        await ThrottleAsync();
         var current = await Client.ArenaTournaments.GetCurrentAsync();
         var finishedTournament = current.Finished.FirstOrDefault();
 
@@ -152,6 +162,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
     public async Task StreamResultsAsync_WithSheet_IncludesFireStreak()
     {
         // Get a finished tournament
+        await ThrottleAsync();
         var current = await Client.ArenaTournaments.GetCurrentAsync();
         var finishedTournament = current.Finished.FirstOrDefault();
 
@@ -173,6 +184,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
     public async Task StreamGamesAsync_WithFinishedTournament_ReturnsGames()
     {
         // Get a finished tournament
+        await ThrottleAsync();
         var current = await Client.ArenaTournaments.GetCurrentAsync();
         var finishedTournament = current.Finished.FirstOrDefault();
 
@@ -196,6 +208,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
     {
         // This test requires finding a team battle tournament
         // Team battles are less common, so we check current tournaments
+        await ThrottleAsync();
         var current = await Client.ArenaTournaments.GetCurrentAsync();
 
         // Look for a team battle (has teamBattle property set)
@@ -224,6 +237,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
         var tournaments = new List<ArenaTournamentSummary>();
         try
         {
+            await ThrottleAsync();
             await foreach (var tournament in Client.ArenaTournaments.StreamCreatedByAsync(username))
             {
                 tournaments.Add(tournament);
@@ -249,6 +263,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
         var tournaments = new List<ArenaTournamentSummary>();
         try
         {
+            await ThrottleAsync();
             await foreach (var tournament in Client.ArenaTournaments.StreamCreatedByAsync(username,
                                ArenaStatusFilter.Finished))
             {
@@ -276,6 +291,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
         var tournaments = new List<ArenaPlayedTournament>();
         try
         {
+            await ThrottleAsync();
             await foreach (var tournament in Client.ArenaTournaments.StreamPlayedByAsync(username, 5))
             {
                 tournaments.Add(tournament);
@@ -302,6 +318,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
         var tournaments = new List<ArenaTournamentSummary>();
         try
         {
+            await ThrottleAsync();
             await foreach (var tournament in Client.ArenaTournaments.StreamTeamTournamentsAsync(TestTeamId, 5))
             {
                 tournaments.Add(tournament);
@@ -328,6 +345,8 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
             Minutes = 45
         };
 
+        await ThrottleAsync();
+
         // Act & Assert
         await Assert.ThrowsAnyAsync<Exception>(async () =>
             await Client.ArenaTournaments.CreateAsync(options));
@@ -337,6 +356,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
     public async Task JoinAsync_WithoutAuth_ThrowsException()
     {
         // Get a created tournament
+        await ThrottleAsync();
         var current = await Client.ArenaTournaments.GetCurrentAsync();
         var tournament = current.Created.FirstOrDefault() ?? current.Started.FirstOrDefault();
 
@@ -351,6 +371,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
     public async Task WithdrawAsync_WithoutAuth_ThrowsException()
     {
         // Get any tournament
+        await ThrottleAsync();
         var current = await Client.ArenaTournaments.GetCurrentAsync();
         var tournament = current.Started.FirstOrDefault() ?? current.Created.FirstOrDefault();
 
@@ -365,6 +386,7 @@ public class ArenaTournamentsApiIntegrationTests : IntegrationTestBase
     public async Task TerminateAsync_WithoutAuth_ThrowsException()
     {
         // Get any tournament
+        await ThrottleAsync();
         var current = await Client.ArenaTournaments.GetCurrentAsync();
         var tournament = current.Started.FirstOrDefault();
 

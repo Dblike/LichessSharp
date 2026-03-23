@@ -15,8 +15,11 @@ namespace LichessSharp.Tests.Integration.Authenticated;
 [Trait("Category", "Integration")]
 [Trait("Category", "Authenticated")]
 [Trait("Category", "LongRunning")]
+[Collection("Lichess API")]
 public class OpeningExplorerApiAuthenticatedTests : AuthenticatedTestBase
 {
+    public OpeningExplorerApiAuthenticatedTests(LichessTestFixture fixture) : base(fixture) { }
+
     // Starting position FEN
     private const string StartingPositionFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
@@ -30,6 +33,7 @@ public class OpeningExplorerApiAuthenticatedTests : AuthenticatedTestBase
     public async Task GetMastersAsync_WithStartingPosition_ReturnsOpeningData()
     {
         // Act
+        await ThrottleAsync();
         var result = await Client.OpeningExplorer.GetMastersAsync(StartingPositionFen);
 
         // Assert
@@ -44,6 +48,7 @@ public class OpeningExplorerApiAuthenticatedTests : AuthenticatedTestBase
     public async Task GetMastersAsync_WithSicilianPosition_ReturnsMoves()
     {
         // Act
+        await ThrottleAsync();
         var result = await Client.OpeningExplorer.GetMastersAsync(SicilianFen);
 
         // Assert
@@ -64,6 +69,7 @@ public class OpeningExplorerApiAuthenticatedTests : AuthenticatedTestBase
         };
 
         // Act
+        await ThrottleAsync();
         var result = await Client.OpeningExplorer.GetMastersAsync(StartingPositionFen, options);
 
         // Assert
@@ -75,6 +81,7 @@ public class OpeningExplorerApiAuthenticatedTests : AuthenticatedTestBase
     public async Task GetLichessAsync_WithStartingPosition_ReturnsOpeningData()
     {
         // Act
+        await ThrottleAsync();
         var result = await Client.OpeningExplorer.GetLichessAsync(StartingPositionFen);
 
         // Assert
@@ -87,6 +94,7 @@ public class OpeningExplorerApiAuthenticatedTests : AuthenticatedTestBase
     public async Task GetLichessAsync_WithQueensGambit_ReturnsMoves()
     {
         // Act
+        await ThrottleAsync();
         var result = await Client.OpeningExplorer.GetLichessAsync(QueensGambitFen);
 
         // Assert
@@ -106,6 +114,7 @@ public class OpeningExplorerApiAuthenticatedTests : AuthenticatedTestBase
         };
 
         // Act
+        await ThrottleAsync();
         var result = await Client.OpeningExplorer.GetLichessAsync(StartingPositionFen, options);
 
         // Assert
@@ -123,6 +132,7 @@ public class OpeningExplorerApiAuthenticatedTests : AuthenticatedTestBase
         };
 
         // Act
+        await ThrottleAsync();
         var result = await Client.OpeningExplorer.GetLichessAsync(StartingPositionFen, options);
 
         // Assert
@@ -136,6 +146,7 @@ public class OpeningExplorerApiAuthenticatedTests : AuthenticatedTestBase
         var gameId = "aAbqI4ey";
 
         // Act
+        await ThrottleAsync();
         var pgn = await Client.OpeningExplorer.GetMasterGamePgnAsync(gameId);
 
         // Assert
@@ -155,6 +166,7 @@ public class OpeningExplorerApiAuthenticatedTests : AuthenticatedTestBase
         var player = "thibault";
 
         // Act
+        await ThrottleAsync();
         var result = await Client.OpeningExplorer.GetPlayerAsync(StartingPositionFen, player);
 
         // Assert

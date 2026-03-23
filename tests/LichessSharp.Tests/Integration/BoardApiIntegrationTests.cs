@@ -13,11 +13,16 @@ namespace LichessSharp.Tests.Integration;
 [IntegrationTest]
 [LongRunningTest]
 [Trait("Category", "Integration")]
+[Collection("Lichess API")]
 public class BoardApiIntegrationTests : IntegrationTestBase
 {
+    public BoardApiIntegrationTests(LichessTestFixture fixture) : base(fixture) { }
+
     [Fact]
     public async Task StreamEventsAsync_WithoutAuthentication_ThrowsLichessException()
     {
+        await ThrottleAsync();
+
         // Act & Assert
         var act = async () =>
         {
@@ -33,6 +38,8 @@ public class BoardApiIntegrationTests : IntegrationTestBase
     {
         // Arrange
         var gameId = "somegameid";
+
+        await ThrottleAsync();
 
         // Act & Assert
         var act = async () =>
@@ -51,6 +58,8 @@ public class BoardApiIntegrationTests : IntegrationTestBase
         var gameId = "somegameid";
         var move = "e2e4";
 
+        await ThrottleAsync();
+
         // Act & Assert
         var act = async () => await Client.Board.MakeMoveAsync(gameId, move);
 
@@ -62,6 +71,8 @@ public class BoardApiIntegrationTests : IntegrationTestBase
     {
         // Arrange
         var gameId = "somegameid";
+
+        await ThrottleAsync();
 
         // Act & Assert
         var act = async () => await Client.Board.GetChatAsync(gameId);
@@ -75,6 +86,8 @@ public class BoardApiIntegrationTests : IntegrationTestBase
         // Arrange
         var gameId = "somegameid";
 
+        await ThrottleAsync();
+
         // Act & Assert
         var act = async () => await Client.Board.WriteChatAsync(gameId, ChatRoom.Player, "Hello");
 
@@ -86,6 +99,8 @@ public class BoardApiIntegrationTests : IntegrationTestBase
     {
         // Arrange
         var gameId = "somegameid";
+
+        await ThrottleAsync();
 
         // Act & Assert
         var act = async () => await Client.Board.AbortAsync(gameId);
@@ -99,6 +114,8 @@ public class BoardApiIntegrationTests : IntegrationTestBase
         // Arrange
         var gameId = "somegameid";
 
+        await ThrottleAsync();
+
         // Act & Assert
         var act = async () => await Client.Board.ResignAsync(gameId);
 
@@ -110,6 +127,8 @@ public class BoardApiIntegrationTests : IntegrationTestBase
     {
         // Arrange
         var gameId = "somegameid";
+
+        await ThrottleAsync();
 
         // Act & Assert
         var act = async () => await Client.Board.HandleDrawAsync(gameId, true);
@@ -123,6 +142,8 @@ public class BoardApiIntegrationTests : IntegrationTestBase
         // Arrange
         var gameId = "somegameid";
 
+        await ThrottleAsync();
+
         // Act & Assert
         var act = async () => await Client.Board.HandleTakebackAsync(gameId, true);
 
@@ -135,6 +156,8 @@ public class BoardApiIntegrationTests : IntegrationTestBase
         // Arrange
         var gameId = "somegameid";
 
+        await ThrottleAsync();
+
         // Act & Assert
         var act = async () => await Client.Board.ClaimVictoryAsync(gameId);
 
@@ -146,6 +169,8 @@ public class BoardApiIntegrationTests : IntegrationTestBase
     {
         // Arrange
         var gameId = "somegameid";
+
+        await ThrottleAsync();
 
         // Act & Assert
         var act = async () => await Client.Board.BerserkAsync(gameId);
@@ -163,6 +188,8 @@ public class BoardApiIntegrationTests : IntegrationTestBase
             Time = 10,
             Increment = 0
         };
+
+        await ThrottleAsync();
 
         // Act & Assert
         var act = async () =>

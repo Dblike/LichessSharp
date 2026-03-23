@@ -12,8 +12,11 @@ namespace LichessSharp.Tests.Integration;
 [IntegrationTest]
 [LongRunningTest]
 [Trait("Category", "Integration")]
+[Collection("Lichess API")]
 public class BotApiIntegrationTests : IntegrationTestBase
 {
+    public BotApiIntegrationTests(LichessTestFixture fixture) : base(fixture) { }
+
     [Fact]
     public async Task GetOnlineBotsAsync_ReturnsOnlineBots()
     {
@@ -21,6 +24,7 @@ public class BotApiIntegrationTests : IntegrationTestBase
         var bots = new List<BotUser>();
 
         // Act
+        await ThrottleAsync();
         await foreach (var bot in Client.Bot.GetOnlineBotsAsync(10))
         {
             bots.Add(bot);
@@ -41,6 +45,7 @@ public class BotApiIntegrationTests : IntegrationTestBase
         var bots = new List<BotUser>();
 
         // Act
+        await ThrottleAsync();
         await foreach (var bot in Client.Bot.GetOnlineBotsAsync())
         {
             bots.Add(bot);
@@ -58,6 +63,7 @@ public class BotApiIntegrationTests : IntegrationTestBase
         BotUser? firstBot = null;
 
         // Act
+        await ThrottleAsync();
         await foreach (var bot in Client.Bot.GetOnlineBotsAsync(5))
         {
             firstBot = bot;
@@ -79,6 +85,7 @@ public class BotApiIntegrationTests : IntegrationTestBase
         var bots = new List<BotUser>();
 
         // Act
+        await ThrottleAsync();
         await foreach (var bot in Client.Bot.GetOnlineBotsAsync(3)) bots.Add(bot);
 
         // Assert

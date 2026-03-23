@@ -14,12 +14,16 @@ namespace LichessSharp.Tests.Integration;
 [LongRunningTest]
 [Trait("Category", "Integration")]
 [Trait("Category", "LongRunning")]
+[Collection("Lichess API")]
 public class TvApiIntegrationTests : IntegrationTestBase
 {
+    public TvApiIntegrationTests(LichessTestFixture fixture) : base(fixture) { }
+
     [Fact]
     public async Task GetCurrentGamesAsync_ReturnsChannels()
     {
         // Act
+        await ThrottleAsync();
         var channels = await Client.Tv.GetCurrentGamesAsync();
 
         // Assert
@@ -38,6 +42,7 @@ public class TvApiIntegrationTests : IntegrationTestBase
     public async Task GetCurrentGamesAsync_BestChannelHasValidData()
     {
         // Act
+        await ThrottleAsync();
         var channels = await Client.Tv.GetCurrentGamesAsync();
 
         // Assert
@@ -51,6 +56,7 @@ public class TvApiIntegrationTests : IntegrationTestBase
     public async Task GetCurrentGamesAsync_GameHasValidUserInfo()
     {
         // Act
+        await ThrottleAsync();
         var channels = await Client.Tv.GetCurrentGamesAsync();
 
         // Assert
@@ -71,6 +77,7 @@ public class TvApiIntegrationTests : IntegrationTestBase
         // Act
         try
         {
+            await ThrottleAsync();
             await foreach (var evt in Client.Tv.StreamCurrentGameAsync(cts.Token))
             {
                 receivedEvents.Add(evt);
@@ -102,6 +109,7 @@ public class TvApiIntegrationTests : IntegrationTestBase
         // Act
         try
         {
+            await ThrottleAsync();
             await foreach (var evt in Client.Tv.StreamChannelAsync("bullet", cts.Token))
             {
                 receivedEvents.Add(evt);
@@ -131,6 +139,7 @@ public class TvApiIntegrationTests : IntegrationTestBase
         var games = new List<GameJson>();
 
         // Act
+        await ThrottleAsync();
         await foreach (var game in Client.Tv.StreamChannelGamesAsync("blitz", options))
         {
             games.Add(game);
@@ -152,6 +161,7 @@ public class TvApiIntegrationTests : IntegrationTestBase
         var games = new List<GameJson>();
 
         // Act
+        await ThrottleAsync();
         await foreach (var game in Client.Tv.StreamChannelGamesAsync("rapid"))
         {
             games.Add(game);
@@ -175,6 +185,7 @@ public class TvApiIntegrationTests : IntegrationTestBase
         };
 
         // Act
+        await ThrottleAsync();
         await foreach (var game in Client.Tv.StreamChannelGamesAsync("bullet", options))
             // Assert - at least one game should have moves if it's ongoing
             if (!string.IsNullOrEmpty(game.Moves))
@@ -191,6 +202,7 @@ public class TvApiIntegrationTests : IntegrationTestBase
     public async Task GetCurrentGamesAsync_VariantChannelsPresent()
     {
         // Act
+        await ThrottleAsync();
         var channels = await Client.Tv.GetCurrentGamesAsync();
 
         // Assert

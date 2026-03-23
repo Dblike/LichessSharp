@@ -11,8 +11,11 @@ namespace LichessSharp.Tests.Integration;
 [IntegrationTest]
 [LongRunningTest]
 [Trait("Category", "Integration")]
+[Collection("Lichess API")]
 public class TablebaseApiIntegrationTests : IntegrationTestBase
 {
+    public TablebaseApiIntegrationTests(LichessTestFixture fixture) : base(fixture) { }
+
     // KPK endgame position from OpenAPI spec example
     // FEN: 4k3/6KP/8/8/8/8/7p/8 w - - 0 1
     // White king on g7, white pawn on h7, black king on e8, black pawn on h2
@@ -31,6 +34,7 @@ public class TablebaseApiIntegrationTests : IntegrationTestBase
     public async Task LookupAsync_WithKqkEndgame_ReturnsWinningPosition()
     {
         // Act
+        await ThrottleAsync();
         var result = await Client.Tablebase.LookupAsync(KqkEndgameFen);
 
         // Assert
@@ -45,6 +49,7 @@ public class TablebaseApiIntegrationTests : IntegrationTestBase
     public async Task LookupAsync_WithKrkEndgame_ReturnsWinningPosition()
     {
         // Act
+        await ThrottleAsync();
         var result = await Client.Tablebase.LookupAsync(KrkEndgameFen);
 
         // Assert
@@ -59,6 +64,7 @@ public class TablebaseApiIntegrationTests : IntegrationTestBase
     public async Task LookupAsync_WithKpkEndgame_ReturnsMoves()
     {
         // Act
+        await ThrottleAsync();
         var result = await Client.Tablebase.LookupAsync(SimpleKpkFen);
 
         // Assert
@@ -77,6 +83,7 @@ public class TablebaseApiIntegrationTests : IntegrationTestBase
     {
         // This is the example from the OpenAPI spec
         // Act
+        await ThrottleAsync();
         var result = await Client.Tablebase.LookupAsync(KpkEndgameFen);
 
         // Assert
@@ -89,6 +96,7 @@ public class TablebaseApiIntegrationTests : IntegrationTestBase
     public async Task LookupAsync_ReturnsMovesWithCorrectStructure()
     {
         // Act
+        await ThrottleAsync();
         var result = await Client.Tablebase.LookupAsync(KqkEndgameFen);
 
         // Assert
@@ -111,6 +119,7 @@ public class TablebaseApiIntegrationTests : IntegrationTestBase
         var atomicFen = "4k3/8/8/8/8/8/8/4K2R w - - 0 1";
 
         // Act
+        await ThrottleAsync();
         var result = await Client.Tablebase.LookupAtomicAsync(atomicFen);
 
         // Assert
@@ -126,6 +135,7 @@ public class TablebaseApiIntegrationTests : IntegrationTestBase
         var antichessFen = "4k3/8/8/8/8/8/8/4K3 w - - 0 1";
 
         // Act
+        await ThrottleAsync();
         var result = await Client.Tablebase.LookupAntichessAsync(antichessFen);
 
         // Assert

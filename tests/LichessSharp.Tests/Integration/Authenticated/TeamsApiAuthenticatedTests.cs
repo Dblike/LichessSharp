@@ -12,13 +12,17 @@ namespace LichessSharp.Tests.Integration.Authenticated;
 [LongRunningTest]
 [Trait("Category", "Integration")]
 [Trait("Category", "Authenticated")]
+[Collection("Lichess API")]
 public class TeamsApiAuthenticatedTests : AuthenticatedTestBase
 {
+    public TeamsApiAuthenticatedTests(LichessTestFixture fixture) : base(fixture) { }
+
     [RequiresAuthentication]
     public async Task GetUserTeamsAsync_WithValidUser_ReturnsTeams()
     {
         // Arrange
         var username = await GetAuthenticatedUsernameAsync();
+        await ThrottleAsync();
 
         // Act
         var teams = await Client.Teams.GetUserTeamsAsync(username);

@@ -12,13 +12,17 @@ namespace LichessSharp.Tests.Integration.Authenticated;
 [LongRunningTest]
 [Trait("Category", "Integration")]
 [Trait("Category", "Authenticated")]
+[Collection("Lichess API")]
 public class AccountApiAuthenticatedTests : AuthenticatedTestBase
 {
+    public AccountApiAuthenticatedTests(LichessTestFixture fixture) : base(fixture) { }
+
     [RequiresAuthentication]
     [RequiresScope("email:read")]
     public async Task GetProfileAsync_WithValidToken_ReturnsUserProfile()
     {
         // Act
+        await ThrottleAsync();
         var profile = await Client.Account.GetProfileAsync();
 
         // Assert
@@ -32,6 +36,7 @@ public class AccountApiAuthenticatedTests : AuthenticatedTestBase
     public async Task GetEmailAsync_WithValidToken_ReturnsEmail()
     {
         // Act
+        await ThrottleAsync();
         var email = await Client.Account.GetEmailAsync();
 
         // Assert
@@ -44,6 +49,7 @@ public class AccountApiAuthenticatedTests : AuthenticatedTestBase
     public async Task GetPreferencesAsync_WithValidToken_ReturnsPreferences()
     {
         // Act
+        await ThrottleAsync();
         var preferences = await Client.Account.GetPreferencesAsync();
 
         // Assert
@@ -55,6 +61,7 @@ public class AccountApiAuthenticatedTests : AuthenticatedTestBase
     public async Task GetKidModeAsync_WithValidToken_ReturnsBool()
     {
         // Act
+        await ThrottleAsync();
         var kidMode = await Client.Account.GetKidModeAsync();
 
         // Assert
@@ -66,6 +73,7 @@ public class AccountApiAuthenticatedTests : AuthenticatedTestBase
     public async Task GetProfileAsync_ReturnsConsistentUsername()
     {
         // Act - Get profile twice
+        await ThrottleAsync();
         var profile1 = await Client.Account.GetProfileAsync();
         var profile2 = await Client.Account.GetProfileAsync();
 
@@ -78,6 +86,7 @@ public class AccountApiAuthenticatedTests : AuthenticatedTestBase
     public async Task GetAuthenticatedUsernameAsync_CachesResult()
     {
         // Act - Use the helper method from base class
+        await ThrottleAsync();
         var username1 = await GetAuthenticatedUsernameAsync();
         var username2 = await GetAuthenticatedUsernameAsync();
 

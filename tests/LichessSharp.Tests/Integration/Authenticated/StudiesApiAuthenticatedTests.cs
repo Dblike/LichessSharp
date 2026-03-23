@@ -15,13 +15,17 @@ namespace LichessSharp.Tests.Integration.Authenticated;
 [Trait("Category", "Authenticated")]
 [Trait("Category", "LongRunning")]
 [RequiresScope("study:read")]
+[Collection("Lichess API")]
 public class StudiesApiAuthenticatedTests : AuthenticatedTestBase
 {
+    public StudiesApiAuthenticatedTests(LichessTestFixture fixture) : base(fixture) { }
+
     [Fact]
     public async Task StreamUserStudiesAsync_WithAuthenticatedUser_ReturnsStudies()
     {
         // Arrange
         var username = await GetAuthenticatedUsernameAsync();
+        await ThrottleAsync();
         var studies = new List<StudyMetadata>();
 
         // Act
@@ -50,6 +54,7 @@ public class StudiesApiAuthenticatedTests : AuthenticatedTestBase
         var studies = new List<StudyMetadata>();
 
         // Act
+        await ThrottleAsync();
         await foreach (var study in Client.Studies.StreamUserStudiesAsync(username))
         {
             studies.Add(study);
@@ -68,6 +73,7 @@ public class StudiesApiAuthenticatedTests : AuthenticatedTestBase
         const string username = "thibault";
         string? studyId = null;
 
+        await ThrottleAsync();
         await foreach (var study in Client.Studies.StreamUserStudiesAsync(username))
         {
             studyId = study.Id;
@@ -94,6 +100,7 @@ public class StudiesApiAuthenticatedTests : AuthenticatedTestBase
         const string username = "thibault";
         string? studyId = null;
 
+        await ThrottleAsync();
         await foreach (var study in Client.Studies.StreamUserStudiesAsync(username))
         {
             studyId = study.Id;
@@ -132,6 +139,7 @@ public class StudiesApiAuthenticatedTests : AuthenticatedTestBase
     {
         // Arrange
         var username = await GetAuthenticatedUsernameAsync();
+        await ThrottleAsync();
 
         // Act
         var pgn = await Client.Studies.ExportUserStudiesPgnAsync(username);
@@ -150,6 +158,7 @@ public class StudiesApiAuthenticatedTests : AuthenticatedTestBase
         const string username = "thibault";
 
         // Act
+        await ThrottleAsync();
         var pgn = await Client.Studies.ExportUserStudiesPgnAsync(username);
 
         // Assert
@@ -166,8 +175,11 @@ public class StudiesApiAuthenticatedTests : AuthenticatedTestBase
 [LongRunningTest]
 [Trait("Category", "Integration")]
 [Trait("Category", "LongRunning")]
+[Collection("Lichess API")]
 public class StudiesApiIntegrationTests : IntegrationTestBase
 {
+    public StudiesApiIntegrationTests(LichessTestFixture fixture) : base(fixture) { }
+
     [Fact]
     public async Task StreamUserStudiesAsync_WithKnownUser_ReturnsPublicStudies()
     {
@@ -176,6 +188,7 @@ public class StudiesApiIntegrationTests : IntegrationTestBase
         var studies = new List<StudyMetadata>();
 
         // Act
+        await ThrottleAsync();
         await foreach (var study in Client.Studies.StreamUserStudiesAsync(username))
         {
             studies.Add(study);
@@ -194,6 +207,7 @@ public class StudiesApiIntegrationTests : IntegrationTestBase
         const string username = "thibault";
 
         // Act
+        await ThrottleAsync();
         await foreach (var study in Client.Studies.StreamUserStudiesAsync(username))
         {
             // Assert
@@ -212,6 +226,7 @@ public class StudiesApiIntegrationTests : IntegrationTestBase
         const string username = "thibault";
         string? studyId = null;
 
+        await ThrottleAsync();
         await foreach (var study in Client.Studies.StreamUserStudiesAsync(username))
         {
             studyId = study.Id;
@@ -234,6 +249,7 @@ public class StudiesApiIntegrationTests : IntegrationTestBase
         const string username = "thibault";
 
         // Act
+        await ThrottleAsync();
         var pgn = await Client.Studies.ExportUserStudiesPgnAsync(username);
 
         // Assert

@@ -14,14 +14,18 @@ namespace LichessSharp.Tests.Integration.Authenticated;
 [LongRunningTest]
 [Trait("Category", "Integration")]
 [Trait("Category", "Authenticated")]
+[Collection("Lichess API")]
 public class RelationsApiAuthenticatedTests : AuthenticatedTestBase
 {
+    public RelationsApiAuthenticatedTests(LichessTestFixture fixture) : base(fixture) { }
+
     [RequiresAuthentication]
     [RequiresScope("follow:read")]
     public async Task StreamFollowingAsync_WithValidToken_ReturnsFollowedUsers()
     {
         // Act
         var following = new List<UserExtended>();
+        await ThrottleAsync();
         await foreach (var user in Client.Relations.StreamFollowingUsersAsync())
         {
             following.Add(user);
@@ -50,6 +54,7 @@ public class RelationsApiAuthenticatedTests : AuthenticatedTestBase
         try
         {
             // Act - Follow the user
+            await ThrottleAsync();
             var followResult = await Client.Relations.FollowUserAsync(targetUser);
 
             // Assert

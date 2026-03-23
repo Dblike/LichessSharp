@@ -13,11 +13,16 @@ namespace LichessSharp.Tests.Integration;
 [IntegrationTest]
 [LongRunningTest]
 [Trait("Category", "Integration")]
+[Collection("Lichess API")]
 public class ChallengesApiIntegrationTests : IntegrationTestBase
 {
+    public ChallengesApiIntegrationTests(LichessTestFixture fixture) : base(fixture) { }
+
     [Fact]
     public async Task GetPendingAsync_WithoutAuthentication_ThrowsLichessException()
     {
+        await ThrottleAsync();
+
         // Act & Assert
         // The pending challenges endpoint requires authentication
         var act = async () => await Client.Challenges.GetPendingAsync();
@@ -31,6 +36,8 @@ public class ChallengesApiIntegrationTests : IntegrationTestBase
         // Arrange
         var invalidChallengeId = "nonexistent123";
 
+        await ThrottleAsync();
+
         // Act & Assert
         var act = async () => await Client.Challenges.ShowAsync(invalidChallengeId);
 
@@ -41,6 +48,8 @@ public class ChallengesApiIntegrationTests : IntegrationTestBase
     [Fact]
     public async Task CreateAsync_WithoutAuthentication_ThrowsLichessException()
     {
+        await ThrottleAsync();
+
         // Act & Assert
         // Creating a challenge requires authentication
         var act = async () => await Client.Challenges.CreateAsync("DrNykterstein");
@@ -51,6 +60,8 @@ public class ChallengesApiIntegrationTests : IntegrationTestBase
     [Fact]
     public async Task AcceptAsync_WithoutAuthentication_ThrowsLichessException()
     {
+        await ThrottleAsync();
+
         // Act & Assert
         var act = async () => await Client.Challenges.AcceptAsync("somechallenge");
 
@@ -60,6 +71,8 @@ public class ChallengesApiIntegrationTests : IntegrationTestBase
     [Fact]
     public async Task DeclineAsync_WithoutAuthentication_ThrowsLichessException()
     {
+        await ThrottleAsync();
+
         // Act & Assert
         var act = async () => await Client.Challenges.DeclineAsync("somechallenge");
 
@@ -69,6 +82,8 @@ public class ChallengesApiIntegrationTests : IntegrationTestBase
     [Fact]
     public async Task CancelAsync_WithoutAuthentication_ThrowsLichessException()
     {
+        await ThrottleAsync();
+
         // Act & Assert
         var act = async () => await Client.Challenges.CancelAsync("somechallenge");
 
@@ -81,6 +96,8 @@ public class ChallengesApiIntegrationTests : IntegrationTestBase
         // Arrange
         var options = new ChallengeAiOptions { Level = 5 };
 
+        await ThrottleAsync();
+
         // Act & Assert
         var act = async () => await Client.Challenges.ChallengeAiAsync(options);
 
@@ -90,6 +107,8 @@ public class ChallengesApiIntegrationTests : IntegrationTestBase
     [Fact]
     public async Task CreateOpenAsync_WithoutAuthentication_MaySucceedOrThrow()
     {
+        await ThrottleAsync();
+
         // Act & Assert
         // Note: Open challenges may or may not require authentication depending on Lichess behavior
         // The endpoint might succeed anonymously or throw an auth exception

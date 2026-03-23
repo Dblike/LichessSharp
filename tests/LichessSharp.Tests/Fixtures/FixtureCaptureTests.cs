@@ -13,11 +13,12 @@ namespace LichessSharp.Tests.Fixtures;
 /// </summary>
 [IntegrationTest]
 [Trait("Category", "FixtureCapture")]
+[Collection("Lichess API")]
 public class FixtureCaptureTests : IntegrationTestBase
 {
     private readonly ITestOutputHelper _output;
 
-    public FixtureCaptureTests(ITestOutputHelper output)
+    public FixtureCaptureTests(LichessTestFixture fixture, ITestOutputHelper output) : base(fixture)
     {
         _output = output;
     }
@@ -25,6 +26,7 @@ public class FixtureCaptureTests : IntegrationTestBase
     [Fact(Skip = "Run manually to capture fixtures")]
     public async Task Capture_UserExtended_Thibault()
     {
+        await ThrottleAsync();
         var user = await Client.Users.GetAsync("thibault");
         FixtureLoader.Save("Users/user_extended_thibault.json", user);
         _output.WriteLine($"Saved user fixture for: {user.Username}");
@@ -33,6 +35,7 @@ public class FixtureCaptureTests : IntegrationTestBase
     [Fact(Skip = "Run manually to capture fixtures")]
     public async Task Capture_UserStatus_Multiple()
     {
+        await ThrottleAsync();
         var statuses = await Client.Users.GetRealTimeStatusAsync(new[] { "thibault", "maia1", "maia5" });
         FixtureLoader.Save("Users/user_status_multiple.json", statuses);
         _output.WriteLine($"Saved {statuses.Count} user statuses");
@@ -41,6 +44,7 @@ public class FixtureCaptureTests : IntegrationTestBase
     [Fact(Skip = "Run manually to capture fixtures")]
     public async Task Capture_RatingHistory()
     {
+        await ThrottleAsync();
         var history = await Client.Users.GetRatingHistoryAsync("thibault");
         FixtureLoader.Save("Users/rating_history_thibault.json", history);
         _output.WriteLine($"Saved {history.Count} rating history entries");
@@ -50,6 +54,7 @@ public class FixtureCaptureTests : IntegrationTestBase
     public async Task Capture_GameJson()
     {
         // Use a well-known game ID from the OpenAPI examples
+        await ThrottleAsync();
         var game = await Client.Games.ExportAsync("q7ZvsdUF");
         FixtureLoader.Save("Games/game_json_full.json", game);
         _output.WriteLine($"Saved game fixture: {game.Id}");
@@ -58,6 +63,7 @@ public class FixtureCaptureTests : IntegrationTestBase
     [Fact(Skip = "Run manually to capture fixtures")]
     public async Task Capture_DailyPuzzle()
     {
+        await ThrottleAsync();
         var puzzle = await Client.Puzzles.GetDailyAsync();
         FixtureLoader.Save("Puzzles/puzzle_daily.json", puzzle);
         _output.WriteLine($"Saved daily puzzle fixture");
@@ -67,6 +73,7 @@ public class FixtureCaptureTests : IntegrationTestBase
     public async Task Capture_Leaderboard()
     {
         // Get bullet leaderboard as an example
+        await ThrottleAsync();
         var leaderboard = await Client.Users.GetLeaderboardAsync("bullet");
         FixtureLoader.Save("Users/leaderboard_bullet.json", leaderboard);
         _output.WriteLine($"Saved leaderboard fixture with {leaderboard.Count} players");
@@ -75,6 +82,7 @@ public class FixtureCaptureTests : IntegrationTestBase
     [Fact(Skip = "Run manually to capture fixtures")]
     public async Task Capture_Crosstable()
     {
+        await ThrottleAsync();
         var crosstable = await Client.Users.GetCrosstableAsync("thibault", "DrNykterstein");
         FixtureLoader.Save("Users/crosstable.json", crosstable);
         _output.WriteLine($"Saved crosstable fixture");
@@ -85,6 +93,7 @@ public class FixtureCaptureTests : IntegrationTestBase
     {
         _output.WriteLine("Capturing all fixtures...\n");
 
+        await ThrottleAsync();
         await CaptureWithReport("Users/user_extended_thibault.json", async () =>
             await Client.Users.GetAsync("thibault"));
 

@@ -17,8 +17,11 @@ namespace LichessSharp.Tests.Integration.Authenticated;
 [LongRunningTest]
 [Trait("Category", "Integration")]
 [Trait("Category", "Authenticated")]
+[Collection("Lichess API")]
 public class MessagingApiAuthenticatedTests : AuthenticatedTestBase
 {
+    public MessagingApiAuthenticatedTests(LichessTestFixture fixture) : base(fixture) { }
+
     [RequiresAuthentication]
     [RequiresScope("msg:write")]
     public async Task SendAsync_ToNonexistentUser_ThrowsNotFoundException()
@@ -26,6 +29,8 @@ public class MessagingApiAuthenticatedTests : AuthenticatedTestBase
         // Arrange
         const string nonexistentUser = "this_user_definitely_does_not_exist_12345xyz";
         const string message = "Test message";
+
+        await ThrottleAsync();
 
         // Act
         var act = async () => await Client.Messaging.SendAsync(nonexistentUser, message);
@@ -40,6 +45,7 @@ public class MessagingApiAuthenticatedTests : AuthenticatedTestBase
     {
         // Arrange - Get our own username
         var username = await GetAuthenticatedUsernameAsync();
+        await ThrottleAsync();
         const string message = "Test message to self";
 
         // Act
@@ -67,6 +73,8 @@ public class MessagingApiAuthenticatedTests : AuthenticatedTestBase
         const string validUser = "thibault";
         const string emptyMessage = "";
 
+        await ThrottleAsync();
+
         // Act
         var act = async () => await Client.Messaging.SendAsync(validUser, emptyMessage);
 
@@ -81,6 +89,8 @@ public class MessagingApiAuthenticatedTests : AuthenticatedTestBase
         // Arrange
         const string validUser = "thibault";
         const string whitespaceMessage = "   ";
+
+        await ThrottleAsync();
 
         // Act
         var act = async () => await Client.Messaging.SendAsync(validUser, whitespaceMessage);

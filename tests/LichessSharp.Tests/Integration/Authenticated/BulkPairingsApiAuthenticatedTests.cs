@@ -18,13 +18,17 @@ namespace LichessSharp.Tests.Integration.Authenticated;
 [LongRunningTest]
 [Trait("Category", "Integration")]
 [Trait("Category", "Authenticated")]
+[Collection("Lichess API")]
 public class BulkPairingsApiAuthenticatedTests : AuthenticatedTestBase
 {
+    public BulkPairingsApiAuthenticatedTests(LichessTestFixture fixture) : base(fixture) { }
+
     [RequiresAuthentication]
     [RequiresScope("challenge:bulk")]
     public async Task GetAllAsync_WithValidToken_ReturnsListOrEmpty()
     {
         // Act
+        await ThrottleAsync();
         var bulkPairings = await Client.BulkPairings.GetAllAsync();
 
         // Assert
@@ -45,6 +49,8 @@ public class BulkPairingsApiAuthenticatedTests : AuthenticatedTestBase
         // Arrange
         const string nonexistentId = "nonexistent_bulk_pairing_id_12345";
 
+        await ThrottleAsync();
+
         // Act
         var act = async () => await Client.BulkPairings.GetAsync(nonexistentId);
 
@@ -64,6 +70,8 @@ public class BulkPairingsApiAuthenticatedTests : AuthenticatedTestBase
             ClockIncrement = 3
         };
 
+        await ThrottleAsync();
+
         // Act
         var act = async () => await Client.BulkPairings.CreateAsync(options);
 
@@ -77,6 +85,8 @@ public class BulkPairingsApiAuthenticatedTests : AuthenticatedTestBase
     {
         // Arrange
         const string nonexistentId = "nonexistent_bulk_pairing_id_12345";
+
+        await ThrottleAsync();
 
         // Act
         var act = async () => await Client.BulkPairings.CancelAsync(nonexistentId);
@@ -92,6 +102,8 @@ public class BulkPairingsApiAuthenticatedTests : AuthenticatedTestBase
         // Arrange
         const string nonexistentId = "nonexistent_bulk_pairing_id_12345";
 
+        await ThrottleAsync();
+
         // Act
         var act = async () => await Client.BulkPairings.StartClocksAsync(nonexistentId);
 
@@ -105,6 +117,8 @@ public class BulkPairingsApiAuthenticatedTests : AuthenticatedTestBase
     {
         // Arrange
         const string nonexistentId = "nonexistent_bulk_pairing_id_12345";
+
+        await ThrottleAsync();
 
         // Act
         var act = async () => await Client.BulkPairings.ExportGamesAsync(nonexistentId);

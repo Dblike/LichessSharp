@@ -14,8 +14,11 @@ namespace LichessSharp.Tests.Integration;
 [LongRunningTest]
 [Trait("Category", "Integration")]
 [Trait("Category", "LongRunning")]
+[Collection("Lichess API")]
 public class GamesApiIntegrationTests : IntegrationTestBase
 {
+    public GamesApiIntegrationTests(LichessTestFixture fixture) : base(fixture) { }
+
     // Well-known game IDs from OpenAPI spec examples
     private const string GameId1 = "q7ZvsdUF";
     private const string GameId2 = "TJxUmbWK";
@@ -25,6 +28,7 @@ public class GamesApiIntegrationTests : IntegrationTestBase
     public async Task GetAsync_WithValidGameId_ReturnsGame()
     {
         // Act
+        await ThrottleAsync();
         var game = await Client.Games.ExportAsync(GameId1);
 
         // Assert
@@ -44,6 +48,7 @@ public class GamesApiIntegrationTests : IntegrationTestBase
         };
 
         // Act
+        await ThrottleAsync();
         var game = await Client.Games.ExportAsync(GameId1, options);
 
         // Assert
@@ -56,6 +61,7 @@ public class GamesApiIntegrationTests : IntegrationTestBase
     public async Task GetPgnAsync_WithValidGameId_ReturnsPgn()
     {
         // Act
+        await ThrottleAsync();
         var pgn = await Client.Games.GetPgnAsync(GameId1);
 
         // Assert
@@ -75,6 +81,7 @@ public class GamesApiIntegrationTests : IntegrationTestBase
         };
 
         // Act
+        await ThrottleAsync();
         var pgn = await Client.Games.GetPgnAsync(GameId1, options);
 
         // Assert
@@ -93,6 +100,7 @@ public class GamesApiIntegrationTests : IntegrationTestBase
 
         // Act
         var games = new List<GameJson>();
+        await ThrottleAsync();
         await foreach (var game in Client.Games.StreamUserGamesAsync(ThibaultUsername, options))
         {
             games.Add(game);
@@ -116,6 +124,7 @@ public class GamesApiIntegrationTests : IntegrationTestBase
 
         // Act
         var games = new List<GameJson>();
+        await ThrottleAsync();
         await foreach (var game in Client.Games.StreamUserGamesAsync(ThibaultUsername, options)) games.Add(game);
 
         // Assert - May be empty if user has no blitz games, but shouldn't throw
@@ -130,6 +139,7 @@ public class GamesApiIntegrationTests : IntegrationTestBase
 
         // Act
         var games = new List<GameJson>();
+        await ThrottleAsync();
         await foreach (var game in Client.Games.StreamByIdsAsync(gameIds)) games.Add(game);
 
         // Assert
@@ -150,6 +160,7 @@ public class GamesApiIntegrationTests : IntegrationTestBase
 
         // Act
         var games = new List<GameJson>();
+        await ThrottleAsync();
         await foreach (var game in Client.Games.StreamByIdsAsync(gameIds, options)) games.Add(game);
 
         // Assert
@@ -166,6 +177,7 @@ public class GamesApiIntegrationTests : IntegrationTestBase
 
         try
         {
+            await ThrottleAsync();
             await foreach (var evt in Client.Games.StreamGameMovesAsync(GameId1).WithCancellation(cts.Token))
             {
                 events.Add(evt);
@@ -207,6 +219,7 @@ public class GamesApiIntegrationTests : IntegrationTestBase
 
         try
         {
+            await ThrottleAsync();
             await foreach (var evt in Client.Games.StreamByIdsAsync(streamId, gameIds).WithCancellation(cts.Token))
             {
                 events.Add(evt);
@@ -229,6 +242,7 @@ public class GamesApiIntegrationTests : IntegrationTestBase
         // Act - Some games may not have spectator chat available (404)
         try
         {
+            await ThrottleAsync();
             var messages = await Client.Games.GetSpectatorChatAsync(GameId1);
 
             // Assert - Should return a list (possibly empty for older games)

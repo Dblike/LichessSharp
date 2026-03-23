@@ -12,8 +12,11 @@ namespace LichessSharp.Tests.Integration;
 [LongRunningTest]
 [Trait("Category", "Integration")]
 [Trait("Category", "LongRunning")]
+[Collection("Lichess API")]
 public class UsersApiIntegrationTests : IntegrationTestBase
 {
+    public UsersApiIntegrationTests(LichessTestFixture fixture) : base(fixture) { }
+
     // Well-known usernames from OpenAPI spec examples
     private const string ThibaultUsername = "thibault";
     private const string Maia1Username = "maia1";
@@ -23,6 +26,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
     public async Task GetAsync_WithValidUsername_ReturnsUserProfile()
     {
         // Act
+        await ThrottleAsync();
         var user = await Client.Users.GetAsync(ThibaultUsername);
 
         // Assert
@@ -35,6 +39,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
     public async Task GetAsync_WithTrophiesOption_ReturnsTrophies()
     {
         // Act
+        await ThrottleAsync();
         var user = await Client.Users.GetAsync(ThibaultUsername, new GetUserOptions { Trophies = true });
 
         // Assert
@@ -49,6 +54,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         var userIds = new[] { ThibaultUsername, Maia1Username, Maia5Username };
 
         // Act
+        await ThrottleAsync();
         var users = await Client.Users.GetManyAsync(userIds);
 
         // Assert
@@ -64,6 +70,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         var userIds = new[] { ThibaultUsername, Maia1Username };
 
         // Act
+        await ThrottleAsync();
         var statuses = await Client.Users.GetRealTimeStatusAsync(userIds);
 
         // Assert
@@ -80,6 +87,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
         var options = new GetUserStatusOptions { WithSignal = true };
 
         // Act
+        await ThrottleAsync();
         var statuses = await Client.Users.GetRealTimeStatusAsync(userIds, options);
 
         // Assert
@@ -91,6 +99,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
     public async Task GetAllTop10Async_ReturnsLeaderboards()
     {
         // Act
+        await ThrottleAsync();
         var leaderboards = await Client.Users.GetAllTop10Async();
 
         // Assert
@@ -106,6 +115,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
     public async Task GetLeaderboardAsync_WithBulletPerf_ReturnsTopPlayers()
     {
         // Act
+        await ThrottleAsync();
         var players = await Client.Users.GetLeaderboardAsync("bullet", 10);
 
         // Assert
@@ -122,6 +132,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
     public async Task GetLeaderboardAsync_WithBlitzPerf_ReturnsTopPlayers()
     {
         // Act
+        await ThrottleAsync();
         var players = await Client.Users.GetLeaderboardAsync("blitz", 5);
 
         // Assert
@@ -133,6 +144,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
     public async Task GetRatingHistoryAsync_WithValidUsername_ReturnsHistory()
     {
         // Act
+        await ThrottleAsync();
         var history = await Client.Users.GetRatingHistoryAsync(ThibaultUsername);
 
         // Assert
@@ -145,6 +157,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
     public async Task GetPerformanceAsync_WithValidUsernameAndPerfType_ReturnsPerformance()
     {
         // Act
+        await ThrottleAsync();
         var performance = await Client.Users.GetPerformanceAsync(ThibaultUsername, "blitz");
 
         // Assert
@@ -156,6 +169,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
     public async Task GetPerformanceAsync_WithBulletPerf_ReturnsPerformance()
     {
         // Act
+        await ThrottleAsync();
         var performance = await Client.Users.GetPerformanceAsync(ThibaultUsername, "bullet");
 
         // Assert
@@ -167,6 +181,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
     public async Task GetActivityAsync_WithValidUsername_ReturnsActivity()
     {
         // Act
+        await ThrottleAsync();
         var activity = await Client.Users.GetActivityAsync(ThibaultUsername);
 
         // Assert
@@ -178,6 +193,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
     public async Task AutocompleteAsync_WithValidTerm_ReturnsUsernames()
     {
         // Act
+        await ThrottleAsync();
         var usernames = await Client.Users.AutocompleteAsync("thibault");
 
         // Assert
@@ -190,6 +206,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
     public async Task AutocompletePlayersAsync_WithValidTerm_ReturnsPlayers()
     {
         // Act
+        await ThrottleAsync();
         var players = await Client.Users.AutocompletePlayersAsync("thibault");
 
         // Assert
@@ -206,6 +223,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
     public async Task GetCrosstableAsync_WithValidUsernames_ReturnsCrosstable()
     {
         // Act
+        await ThrottleAsync();
         var crosstable = await Client.Users.GetCrosstableAsync(ThibaultUsername, "DrNykterstein");
 
         // Assert
@@ -217,6 +235,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
     public async Task GetCrosstableAsync_WithMatchupOption_ReturnsCrosstable()
     {
         // Act
+        await ThrottleAsync();
         var crosstable = await Client.Users.GetCrosstableAsync(ThibaultUsername, "DrNykterstein", true);
 
         // Assert
@@ -228,6 +247,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
     public async Task GetLiveStreamersAsync_ReturnsStreamers()
     {
         // Act
+        await ThrottleAsync();
         var streamers = await Client.Users.GetLiveStreamersAsync();
 
         // Assert
@@ -239,6 +259,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
     public async Task GetAsync_WithFideIdOption_ReturnsUserProfile()
     {
         // Act
+        await ThrottleAsync();
         var user = await Client.Users.GetAsync(ThibaultUsername, new GetUserOptions { FideId = true });
 
         // Assert
@@ -251,6 +272,7 @@ public class UsersApiIntegrationTests : IntegrationTestBase
     public async Task GetAsync_WithAllOptions_ReturnsUserProfile()
     {
         // Act
+        await ThrottleAsync();
         var user = await Client.Users.GetAsync(ThibaultUsername, new GetUserOptions
         {
             Trophies = true,
