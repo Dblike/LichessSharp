@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using LichessSharp.Models.Enums;
 
 namespace LichessSharp.Api.Contracts;
 
@@ -212,7 +213,7 @@ public class TeamLeader
     ///     The leader's title (GM, IM, etc.).
     /// </summary>
     [JsonPropertyName("title")]
-    public string? Title { get; init; }
+    public Title? Title { get; init; }
 
     /// <summary>
     ///     The leader's flair emoji.
@@ -302,7 +303,7 @@ public class TeamMember
     ///     The member's title (GM, IM, etc.).
     /// </summary>
     [JsonPropertyName("title")]
-    public string? Title { get; init; }
+    public Title? Title { get; init; }
 
     /// <summary>
     ///     Patron wing color if they are a patron.

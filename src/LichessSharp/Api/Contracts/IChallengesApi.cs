@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using LichessSharp.Models.Enums;
 
 namespace LichessSharp.Api.Contracts;
 
@@ -338,7 +339,7 @@ public class ChallengeJson
     public ChallengeTimeControl? TimeControl { get; init; }
 
     /// <summary>
-    ///     Color preference requested.
+    ///     Color preference requested ("random", "white", or "black").
     /// </summary>
     [JsonPropertyName("color")]
     public string? Color { get; init; }
@@ -413,7 +414,7 @@ public class ChallengeUser
     ///     User title (GM, IM, BOT, etc.).
     /// </summary>
     [JsonPropertyName("title")]
-    public string? Title { get; init; }
+    public Title? Title { get; init; }
 
     /// <summary>
     ///     User flair.

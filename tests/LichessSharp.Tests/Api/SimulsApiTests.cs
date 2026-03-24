@@ -2,6 +2,7 @@ using FluentAssertions;
 using LichessSharp.Api;
 using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
+using LichessSharp.Models.Enums;
 using Moq;
 using Xunit;
 
@@ -167,7 +168,7 @@ public class SimulsApiTests
             {
                 Id = "testhost",
                 Name = "TestHost",
-                Title = "GM",
+                Title = Title.GM,
                 Rating = 2800,
                 Online = true
             },
@@ -197,7 +198,7 @@ public class SimulsApiTests
 
         // Assert
         result.Started.Should().HaveCount(1);
-        result.Started[0].Host.Title.Should().Be("GM");
+        result.Started[0].Host.Title.Should().Be(Title.GM);
         result.Started[0].Host.Rating.Should().Be(2800);
         result.Started[0].Host.Online.Should().BeTrue();
     }

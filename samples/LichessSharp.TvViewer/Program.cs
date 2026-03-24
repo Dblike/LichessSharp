@@ -7,6 +7,7 @@
 // Channels: bullet, blitz, rapid, classical, ultraBullet, chess960, computer, bot
 
 using LichessSharp;
+using LichessSharp.Models.Enums;
 
 Console.WriteLine("=== LichessSharp TV Viewer ===\n");
 
@@ -129,7 +130,7 @@ async Task StreamFeaturedGameAsync()
                 {
                     foreach (var player in evt.Data.Players)
                     {
-                        var color = player.Color == "white" ? "White" : "Black";
+                        var color = player.Color == Color.White ? "White" : "Black";
                         Console.WriteLine($"{color}: {player.User?.Name ?? "Unknown"} ({player.Rating})");
                     }
                     Console.WriteLine();
@@ -191,7 +192,7 @@ async Task StreamChannelAsync(string channelName)
                 {
                     foreach (var player in evt.Data.Players)
                     {
-                        var color = player.Color == "white" ? "White" : "Black";
+                        var color = player.Color == Color.White ? "White" : "Black";
                         Console.WriteLine($"{color}: {player.User?.Name ?? "Unknown"} ({player.Rating})   ");
                     }
                     Console.WriteLine();

@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using LichessSharp.Models.Enums;
 using LichessSharp.Models.Games;
 
 namespace LichessSharp.Api.Contracts;
@@ -217,7 +218,7 @@ public class TvGame
     ///     The featured player's color.
     /// </summary>
     [JsonPropertyName("color")]
-    public string? Color { get; init; }
+    public Color? Color { get; init; }
 }
 
 /// <summary>
@@ -241,7 +242,7 @@ public class TvUser
     ///     The user's title (GM, IM, etc.).
     /// </summary>
     [JsonPropertyName("title")]
-    public string? Title { get; init; }
+    public Title? Title { get; init; }
 }
 
 /// <summary>
@@ -322,7 +323,7 @@ public class TvFeedPlayer
     ///     The player's color.
     /// </summary>
     [JsonPropertyName("color")]
-    public string? Color { get; init; }
+    public Color? Color { get; init; }
 
     /// <summary>
     ///     The player's user info.

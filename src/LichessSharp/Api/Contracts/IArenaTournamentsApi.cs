@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using LichessSharp.Models.Enums;
 using LichessSharp.Models.Games;
 using LichessSharp.Serialization.Converters;
 
@@ -823,7 +824,7 @@ public class ArenaWinner
     ///     Title (GM, IM, etc.).
     /// </summary>
     [JsonPropertyName("title")]
-    public string? Title { get; init; }
+    public Title? Title { get; init; }
 }
 
 /// <summary>
@@ -1003,7 +1004,7 @@ public class ArenaStandingPlayer
     ///     Player title.
     /// </summary>
     [JsonPropertyName("title")]
-    public string? Title { get; init; }
+    public Title? Title { get; init; }
 
     /// <summary>
     ///     Team ID.
@@ -1063,7 +1064,7 @@ public class ArenaPodiumPlayer
     ///     Player title.
     /// </summary>
     [JsonPropertyName("title")]
-    public string? Title { get; init; }
+    public Title? Title { get; init; }
 
     /// <summary>
     ///     Performance rating.
@@ -1129,7 +1130,7 @@ public class ArenaFeaturedGame
     ///     Color whose turn it is.
     /// </summary>
     [JsonPropertyName("color")]
-    public string? Color { get; init; }
+    public Color? Color { get; init; }
 
     /// <summary>
     ///     Last move.
@@ -1177,7 +1178,7 @@ public class ArenaFeaturedPlayer
     ///     Player title.
     /// </summary>
     [JsonPropertyName("title")]
-    public string? Title { get; init; }
+    public Title? Title { get; init; }
 
     /// <summary>
     ///     Whether the player berserked.
@@ -1231,7 +1232,7 @@ public class ArenaDuelPlayer
     ///     Player title (e.g., "GM", "FM").
     /// </summary>
     [JsonPropertyName("t")]
-    public string? Title { get; init; }
+    public Title? Title { get; init; }
 }
 
 /// <summary>
@@ -1299,7 +1300,7 @@ public class ArenaPlayerResult
     ///     Player title.
     /// </summary>
     [JsonPropertyName("title")]
-    public string? Title { get; init; }
+    public Title? Title { get; init; }
 
     /// <summary>
     ///     Performance rating.
@@ -1407,7 +1408,7 @@ public class ArenaTeamPlayerUser
     ///     Title.
     /// </summary>
     [JsonPropertyName("title")]
-    public string? Title { get; init; }
+    public Title? Title { get; init; }
 }
 
 /// <summary>

@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using LichessSharp.Models.Enums;
 
 namespace LichessSharp.Api.Contracts;
 
@@ -751,7 +752,7 @@ public class BroadcastGamePlayer
     ///     Chess title (GM, IM, FM, etc.).
     /// </summary>
     [JsonPropertyName("title")]
-    public string? Title { get; init; }
+    public Title? Title { get; init; }
 
     /// <summary>
     ///     Player rating.
@@ -1003,7 +1004,7 @@ public class BroadcastPlayerEntry
     ///     Chess title (GM, IM, FM, etc.).
     /// </summary>
     [JsonPropertyName("title")]
-    public string? Title { get; init; }
+    public Title? Title { get; init; }
 
     /// <summary>
     ///     Player rating.
@@ -1177,7 +1178,7 @@ public class BroadcastPlayerGame
     ///     Color the player had in this game.
     /// </summary>
     [JsonPropertyName("color")]
-    public string? Color { get; init; }
+    public Color? Color { get; init; }
 
     /// <summary>
     ///     Points earned ("1", "1/2", "0").
@@ -1219,7 +1220,7 @@ public class BroadcastPlayerOpponent
     ///     Chess title (GM, IM, FM, etc.).
     /// </summary>
     [JsonPropertyName("title")]
-    public string? Title { get; init; }
+    public Title? Title { get; init; }
 
     /// <summary>
     ///     Opponent rating.

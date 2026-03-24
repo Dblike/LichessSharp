@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using LichessSharp.Models.Enums;
 using LichessSharp.Models.Games;
 
 namespace LichessSharp.Api.Contracts;
@@ -649,7 +650,7 @@ public class SwissPlayerResult
     ///     Player title.
     /// </summary>
     [JsonPropertyName("title")]
-    public string? Title { get; init; }
+    public Title? Title { get; init; }
 
     /// <summary>
     ///     Performance rating.

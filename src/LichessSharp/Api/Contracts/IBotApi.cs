@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using LichessSharp.Models.Enums;
 using LichessSharp.Serialization.Converters;
 
 namespace LichessSharp.Api.Contracts;
@@ -187,7 +188,7 @@ public class BotAccountGameInfo
     ///     Your color in the game.
     /// </summary>
     [JsonPropertyName("color")]
-    public string? Color { get; init; }
+    public Color? Color { get; init; }
 
     /// <summary>
     ///     Last move in UCI format.
@@ -644,7 +645,7 @@ public class BotPlayer
     ///     Player title (GM, IM, BOT, etc.).
     /// </summary>
     [JsonPropertyName("title")]
-    public string? Title { get; init; }
+    public Title? Title { get; init; }
 
     /// <summary>
     ///     Player rating.
@@ -686,7 +687,7 @@ public class BotUser
     ///     User title (should be "BOT").
     /// </summary>
     [JsonPropertyName("title")]
-    public string? Title { get; init; }
+    public Title? Title { get; init; }
 
     /// <summary>
     ///     Whether the bot is online.

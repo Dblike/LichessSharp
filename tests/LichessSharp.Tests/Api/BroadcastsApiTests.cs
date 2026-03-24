@@ -3,6 +3,7 @@ using FluentAssertions;
 using LichessSharp.Api;
 using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
+using LichessSharp.Models.Enums;
 using LichessSharp.Tests.Fixtures;
 using Moq;
 using Xunit;
@@ -1154,7 +1155,7 @@ public class BroadcastsApiTests
         game.Should().NotBeNull();
         game!.FideTimeControl.Should().Be("standard");
         game.Id.Should().Be("chapter1");
-        game.Color.Should().Be("white");
+        game.Color.Should().Be(Color.White);
         game.RatingDiff.Should().Be(5);
     }
 

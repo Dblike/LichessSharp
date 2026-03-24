@@ -203,7 +203,7 @@ public static class Broadcasts
                     foreach (var player in players.Take(10))
                     {
                         var rating = player.Rating > 0 ? $"({player.Rating})" : "";
-                        var title = !string.IsNullOrEmpty(player.Title) ? $"{player.Title} " : "";
+                        var title = player.Title.HasValue ? $"{player.Title} " : "";
                         Console.WriteLine($"  - {title}{player.Name} {rating}");
                     }
                 }

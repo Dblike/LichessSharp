@@ -417,28 +417,28 @@ public class TvApiTests
                 GameId = "bestgame",
                 User = new TvUser { Id = "player1", Name = "Player1" },
                 Rating = 2500,
-                Color = "white"
+                Color = Color.White
             },
             Bullet = new TvGame
             {
                 GameId = "bulletgame",
                 User = new TvUser { Id = "player2", Name = "Player2" },
                 Rating = 2400,
-                Color = "black"
+                Color = Color.Black
             },
             Blitz = new TvGame
             {
                 GameId = "blitzgame",
                 User = new TvUser { Id = "player3", Name = "Player3" },
                 Rating = 2300,
-                Color = "white"
+                Color = Color.White
             },
             Rapid = new TvGame
             {
                 GameId = "rapidgame",
                 User = new TvUser { Id = "player4", Name = "Player4" },
                 Rating = 2200,
-                Color = "black"
+                Color = Color.Black
             }
         };
     }
@@ -457,14 +457,14 @@ public class TvApiTests
                 {
                     new()
                     {
-                        Color = "white",
+                        Color = Color.White,
                         User = new TvUser { Id = "player1", Name = "Player1" },
                         Rating = 2500,
                         Seconds = 180
                     },
                     new()
                     {
-                        Color = "black",
+                        Color = Color.Black,
                         User = new TvUser { Id = "player2", Name = "Player2" },
                         Rating = 2400,
                         Seconds = 180

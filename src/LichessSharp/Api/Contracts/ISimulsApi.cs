@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using LichessSharp.Models.Enums;
 
 namespace LichessSharp.Api.Contracts;
 
@@ -160,7 +161,7 @@ public class SimulHost
     ///     Chess title if any (GM, IM, FM, etc.).
     /// </summary>
     [JsonPropertyName("title")]
-    public string? Title { get; init; }
+    public Title? Title { get; init; }
 
     /// <summary>
     ///     Patron status (true if Lichess supporter).
