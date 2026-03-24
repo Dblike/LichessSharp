@@ -5,6 +5,23 @@ All notable changes to LichessSharp will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2026-03-23
+
+### Added
+
+- **`GameSource` enum** — Replaces stringly-typed `Source` properties on `GameJson`, `MoveStreamEvent`, and `OngoingGame` with a strongly-typed enum (13 values: Lobby, Friend, Ai, Api, Tournament, Position, Import, ImportLive, Simul, Relay, Pool, Arena, Swiss)
+- **`JudgmentName` enum** — Replaces `Judgment.Name` string with Inaccuracy, Mistake, Blunder enum values
+- **`StreamingService` enum** — Replaces `StreamInfo.Service` string with Twitch, YouTube enum values
+- **Rate-limit-aware integration test framework** — `LichessTestFixture` with 1.5s request throttling and sequential test execution via xUnit `[Collection]`
+
+### Changed
+
+- **BREAKING: Stringly-typed response properties replaced with enums** — All `Title`, `Color`, and `Source` properties on response models now use strongly-typed enums instead of `string?`. This affects 30+ properties across all API contracts. Consumers must update string comparisons (e.g., `game.Source == "pool"` → `game.Source == GameSource.Pool`, `player.Title == "GM"` → `player.Title == Title.GM`)
+- **`ChallengeJson.Color` now uses `ChallengeColor` enum** — Supports `Random`, `White`, and `Black` values (previously `string?`)
+- **`ChallengeColor` enum now has `[JsonConverter]`** — Enables lowercase JSON deserialization
+- **Integration tests run sequentially** — All tests share `LichessTestFixture` via `[Collection("Lichess API")]`, eliminating parallel rate limit collisions
+- **Integration test timeout reduced** — From 10 minutes to 60 seconds per test (throttling prevents rate limits)
+
 ## [0.5.1] - 2026-03-23
 
 ### Added
@@ -185,6 +202,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Targets .NET 10.0
 - Uses `System.Text.Json` with AOT preparation (reflection enabled by default)
 
+[1.0.0]: https://github.com/Dblike/LichessSharp/releases/tag/v1.0.0
 [0.5.1]: https://github.com/Dblike/LichessSharp/releases/tag/v0.5.1
 [0.5.0]: https://github.com/Dblike/LichessSharp/releases/tag/v0.5.0
 [0.4.1]: https://github.com/Dblike/LichessSharp/releases/tag/v0.4.1
