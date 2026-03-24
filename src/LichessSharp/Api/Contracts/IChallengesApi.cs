@@ -206,6 +206,7 @@ public enum ChallengeDeclineReason
 /// <summary>
 ///     Color preference for challenges.
 /// </summary>
+[JsonConverter(typeof(JsonStringEnumConverter<ChallengeColor>))]
 public enum ChallengeColor
 {
     /// <summary>
@@ -339,10 +340,10 @@ public class ChallengeJson
     public ChallengeTimeControl? TimeControl { get; init; }
 
     /// <summary>
-    ///     Color preference requested ("random", "white", or "black").
+    ///     Color preference requested (random, white, or black).
     /// </summary>
     [JsonPropertyName("color")]
-    public string? Color { get; init; }
+    public ChallengeColor? Color { get; init; }
 
     /// <summary>
     ///     The actual color assigned (after acceptance).
