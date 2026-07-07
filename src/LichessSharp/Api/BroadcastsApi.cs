@@ -14,7 +14,7 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
 
     /// <inheritdoc />
     public async IAsyncEnumerable<BroadcastWithRounds> StreamOfficialBroadcastsAsync(int? nb = null, bool? html = null,
-        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        bool? live = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var sb = new StringBuilder("/api/broadcast");
         var hasParams = false;
@@ -32,6 +32,14 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
             sb.Append(hasParams ? '&' : '?');
             sb.Append("html=");
             sb.Append(html.Value.ToString().ToLowerInvariant());
+            hasParams = true;
+        }
+
+        if (live.HasValue)
+        {
+            sb.Append(hasParams ? '&' : '?');
+            sb.Append("live=");
+            sb.Append(live.Value.ToString().ToLowerInvariant());
         }
 
         await foreach (var broadcast in _httpClient

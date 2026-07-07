@@ -96,6 +96,27 @@ public class BroadcastsApiTests
     }
 
     [Fact]
+    public async Task StreamOfficialBroadcastsAsync_WithLiveParameter_IncludesInEndpoint()
+    {
+        // Arrange
+        var broadcasts = new List<BroadcastWithRounds>();
+        _httpClientMock
+            .Setup(x => x.StreamNdjsonAsync<BroadcastWithRounds>(It.Is<string>(s => s.Contains("live=true")),
+                It.IsAny<CancellationToken>()))
+            .Returns(broadcasts.ToAsyncEnumerable());
+
+        // Act
+        await foreach (var _ in _broadcastsApi.StreamOfficialBroadcastsAsync(live: true))
+        {
+        }
+
+        // Assert
+        _httpClientMock.Verify(
+            x => x.StreamNdjsonAsync<BroadcastWithRounds>(It.Is<string>(s => s.Contains("live=true")),
+                It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
     public async Task GetTopBroadcastsAsync_CallsCorrectEndpoint()
     {
         // Arrange

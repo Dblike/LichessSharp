@@ -34,6 +34,12 @@ public class FidePlayer
     public string? Federation { get; init; }
 
     /// <summary>
+    ///     FIDE-recorded binary gender ("M" or "F").
+    /// </summary>
+    [JsonPropertyName("gender")]
+    public string? Gender { get; init; }
+
+    /// <summary>
     ///     Year of birth.
     /// </summary>
     [JsonPropertyName("year")]

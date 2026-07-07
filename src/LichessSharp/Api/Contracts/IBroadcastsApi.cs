@@ -16,10 +16,11 @@ public interface IBroadcastsApi
     /// </summary>
     /// <param name="nb">Max number of broadcasts to fetch (1-100, default 20).</param>
     /// <param name="html">Convert the description from markdown to HTML.</param>
+    /// <param name="live">When <c>true</c>, only return broadcasts where a round is currently ongoing.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Async enumerable of broadcasts with their rounds.</returns>
     IAsyncEnumerable<BroadcastWithRounds> StreamOfficialBroadcastsAsync(int? nb = null, bool? html = null,
-        CancellationToken cancellationToken = default);
+        bool? live = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Get paginated top broadcast previews, same data as shown on https://lichess.org/broadcast.
@@ -389,6 +390,12 @@ public class BroadcastTour
     public bool? TeamTable { get; init; }
 
     /// <summary>
+    ///     Whether team scores are shown for this broadcast.
+    /// </summary>
+    [JsonPropertyName("showTeamScores")]
+    public bool? ShowTeamScores { get; init; }
+
+    /// <summary>
     ///     URL to the broadcast on Lichess.
     /// </summary>
     [JsonPropertyName("url")]
@@ -427,7 +434,7 @@ public class BroadcastTourInfo
     /// <summary>
     ///     FIDE rating category (standard, rapid, blitz).
     /// </summary>
-    [JsonPropertyName("fideTc")]
+    [JsonPropertyName("fideTC")]
     public string? FideTimeControl { get; init; }
 
     /// <summary>
@@ -441,6 +448,12 @@ public class BroadcastTourInfo
     /// </summary>
     [JsonPropertyName("standings")]
     public string? Standings { get; init; }
+
+    /// <summary>
+    ///     External URL to the official tournament regulations.
+    /// </summary>
+    [JsonPropertyName("regulations")]
+    public string? Regulations { get; init; }
 
     /// <summary>
     ///     Tournament format description.
@@ -1272,6 +1285,12 @@ public class BroadcastPlayerGame
     /// </summary>
     [JsonPropertyName("fideTC")]
     public required string FideTimeControl { get; init; }
+
+    /// <summary>
+    ///     Whether the game is currently ongoing.
+    /// </summary>
+    [JsonPropertyName("ongoing")]
+    public bool? Ongoing { get; init; }
 }
 
 /// <summary>

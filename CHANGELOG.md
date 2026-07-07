@@ -12,11 +12,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **OpenAPI spec updated to v2.0.152** (from v2.0.130)
 - **`GameJson.ArenaTour` / `GameJson.SwissTour`** — new tournament-reference objects (`GameTournamentRef`, with `Id` and, for arenas, `Name`). The Lichess API now returns these objects for tournament games instead of the former `tournament`/`swiss` ID strings.
 - **`BroadcastWithFullGroup` and `BroadcastPhoto` models** — the get-tournament endpoint now returns full group details and player photos (keyed by FIDE ID).
+- **`StreamOfficialBroadcastsAsync` `live` filter** — new optional `live` parameter restricting results to broadcasts with a currently-ongoing round.
+- **`FidePlayer.Gender`** — FIDE-recorded binary gender ("M"/"F").
+- **`BroadcastTour.ShowTeamScores`**, **`BroadcastTourInfo.Regulations`** (official regulations URL), and **`BroadcastPlayerGame.Ongoing`** — new response fields added in v2.0.152.
+- **`ImplementedEndpoints.IntentionallyNotImplemented`** — records endpoints deliberately excluded from the library, with rationale. Seeded with `POST /api/token/admin-challenge` (a Lichess-admin-only endpoint, not usable by regular API consumers — will not be implemented). Coverage tooling now reports these separately from genuine gaps.
 
 ### Changed
 
 - **BREAKING: `IBroadcastsApi.GetTournamentAsync` now returns `BroadcastWithFullGroup`** (was `BroadcastWithRounds`). As of Lichess API v2.0.152 this endpoint's response includes the full `BroadcastGroup` object and player photos, so it maps to a distinct type. The common `Tour` and `Rounds` members are unchanged.
 - **BREAKING: `BroadcastWithRounds.Group` is now `string?`** (was `BroadcastGroup?`). The streaming (`StreamOfficialBroadcastsAsync`) and create endpoints now return the group as a plain name string.
+- **`BroadcastTourInfo.FideTimeControl`** JSON mapping aligned to the spec's `fideTC` casing (was `fideTc`; behavior unchanged as matching is case-insensitive).
 
 ### Deprecated
 

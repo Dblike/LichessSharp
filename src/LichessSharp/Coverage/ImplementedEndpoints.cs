@@ -247,6 +247,17 @@ public static class ImplementedEndpoints
     ];
 
     /// <summary>
+    /// Endpoints that are intentionally NOT implemented, with the rationale.
+    /// Coverage tooling treats these as deliberate exclusions rather than gaps.
+    /// </summary>
+    public static readonly ExcludedEndpoint[] IntentionallyNotImplemented =
+    [
+        new("POST", "/api/token/admin-challenge",
+            "Lichess-admin-only endpoint that mints challenge tokens on behalf of arbitrary users. " +
+            "It is not usable by regular API consumers, so it is out of scope for this library and will not be implemented."),
+    ];
+
+    /// <summary>
     /// Gets the count of implemented endpoints.
     /// </summary>
     public static int Count => All.Length;
@@ -275,4 +286,18 @@ public readonly record struct EndpointInfo(string Method, string Path, string Ap
     /// Gets the full method reference in "Api.Method" format.
     /// </summary>
     public string FullMethodName => $"{ApiName}.{MethodName}";
+}
+
+/// <summary>
+/// Represents an API endpoint that is intentionally not implemented by the library.
+/// </summary>
+/// <param name="Method">HTTP method (GET, POST, PUT, DELETE)</param>
+/// <param name="Path">API path template (e.g., "/api/token/admin-challenge")</param>
+/// <param name="Reason">Why the endpoint is excluded from the library.</param>
+public readonly record struct ExcludedEndpoint(string Method, string Path, string Reason)
+{
+    /// <summary>
+    /// Gets the endpoint key in "METHOD /path" format.
+    /// </summary>
+    public string Key => $"{Method} {Path}";
 }
