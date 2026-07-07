@@ -57,8 +57,8 @@ public interface IBroadcastsApi
     /// <param name="broadcastTournamentId">The broadcast tournament ID.</param>
     /// <param name="html">Convert the description from markdown to HTML.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>The broadcast tournament with rounds.</returns>
-    Task<BroadcastWithRounds> GetTournamentAsync(string broadcastTournamentId, bool? html = null,
+    /// <returns>The broadcast tournament with its rounds and full group details.</returns>
+    Task<BroadcastWithFullGroup> GetTournamentAsync(string broadcastTournamentId, bool? html = null,
         CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -539,7 +539,46 @@ public class BroadcastWithRounds
     public required BroadcastTour Tour { get; init; }
 
     /// <summary>
-    ///     Optional group information.
+    ///     Optional group name this broadcast belongs to.
+    /// </summary>
+    /// <remarks>
+    ///     As of Lichess API v2.0.152 this is a plain group name string.
+    ///     Previously it was a <see cref="BroadcastGroup" /> object.
+    /// </remarks>
+    [JsonPropertyName("group")]
+    public string? Group { get; init; }
+
+    /// <summary>
+    ///     List of rounds in this tournament.
+    /// </summary>
+    [JsonPropertyName("rounds")]
+    public required IReadOnlyList<BroadcastRoundInfo> Rounds { get; init; }
+
+    /// <summary>
+    ///     The default round ID to show.
+    /// </summary>
+    [JsonPropertyName("defaultRoundId")]
+    public string? DefaultRoundId { get; init; }
+}
+
+/// <summary>
+///     A broadcast tournament with its rounds and full group details.
+/// </summary>
+/// <remarks>
+///     Returned by the "get tournament by id" endpoint since Lichess API v2.0.152.
+///     Unlike <see cref="BroadcastWithRounds" /> (whose <c>group</c> is a name string),
+///     this exposes the full <see cref="BroadcastGroup" /> object and player photos.
+/// </remarks>
+public class BroadcastWithFullGroup
+{
+    /// <summary>
+    ///     The broadcast tournament.
+    /// </summary>
+    [JsonPropertyName("tour")]
+    public required BroadcastTour Tour { get; init; }
+
+    /// <summary>
+    ///     Optional full group information this broadcast belongs to.
     /// </summary>
     [JsonPropertyName("group")]
     public BroadcastGroup? Group { get; init; }
@@ -555,6 +594,36 @@ public class BroadcastWithRounds
     /// </summary>
     [JsonPropertyName("defaultRoundId")]
     public string? DefaultRoundId { get; init; }
+
+    /// <summary>
+    ///     Player photos when available, keyed by FIDE ID.
+    /// </summary>
+    [JsonPropertyName("photos")]
+    public IReadOnlyDictionary<string, BroadcastPhoto>? Photos { get; init; }
+}
+
+/// <summary>
+///     A player photo in a broadcast, in multiple sizes.
+/// </summary>
+public class BroadcastPhoto
+{
+    /// <summary>
+    ///     URL of a small (100x100) thumbnail of the photo.
+    /// </summary>
+    [JsonPropertyName("small")]
+    public string? Small { get; init; }
+
+    /// <summary>
+    ///     URL of a medium (500x500) version of the photo.
+    /// </summary>
+    [JsonPropertyName("medium")]
+    public string? Medium { get; init; }
+
+    /// <summary>
+    ///     Attribution credit to display next to the photo, if set.
+    /// </summary>
+    [JsonPropertyName("credit")]
+    public string? Credit { get; init; }
 }
 
 /// <summary>

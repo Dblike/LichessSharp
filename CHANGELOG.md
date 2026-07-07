@@ -5,6 +5,27 @@ All notable changes to LichessSharp will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **OpenAPI spec updated to v2.0.152** (from v2.0.130)
+- **`GameJson.ArenaTour` / `GameJson.SwissTour`** — new tournament-reference objects (`GameTournamentRef`, with `Id` and, for arenas, `Name`). The Lichess API now returns these objects for tournament games instead of the former `tournament`/`swiss` ID strings.
+- **`BroadcastWithFullGroup` and `BroadcastPhoto` models** — the get-tournament endpoint now returns full group details and player photos (keyed by FIDE ID).
+
+### Changed
+
+- **BREAKING: `IBroadcastsApi.GetTournamentAsync` now returns `BroadcastWithFullGroup`** (was `BroadcastWithRounds`). As of Lichess API v2.0.152 this endpoint's response includes the full `BroadcastGroup` object and player photos, so it maps to a distinct type. The common `Tour` and `Rounds` members are unchanged.
+- **BREAKING: `BroadcastWithRounds.Group` is now `string?`** (was `BroadcastGroup?`). The streaming (`StreamOfficialBroadcastsAsync`) and create endpoints now return the group as a plain name string.
+
+### Deprecated
+
+- **`GameJson.Tournament` and `GameJson.Swiss`** — removed from the Lichess API in v2.0.152 and always `null` now. Use `ArenaTour.Id` / `SwissTour.Id` instead. Marked `[Obsolete]`; will be removed in a future release.
+
+### Fixed
+
+- **`GetSpectatorChatAsync` was non-functional and now works.** It targeted `GET /game/{gameId}/chat`, which returns 404 (no redirect); the endpoint is `GET /api/game/{gameId}/chat`. It also deserializes the actual `{ "lines": [...] }` response object (the OpenAPI spec incorrectly declares a bare array). The public signature (`Task<IReadOnlyList<ChatMessage>>`) is unchanged.
+
 ## [1.0.0] - 2026-03-23
 
 ### Added

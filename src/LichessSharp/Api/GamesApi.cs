@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json.Serialization;
 using LichessSharp.Api.Contracts;
 using LichessSharp.Api.Options;
 using LichessSharp.Http;
@@ -151,8 +152,10 @@ internal sealed class GamesApi(ILichessHttpClient httpClient) : IGamesApi
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(gameId);
 
-        var endpoint = $"/game/{Uri.EscapeDataString(gameId)}/chat";
-        return await _httpClient.GetAsync<List<ChatMessage>>(endpoint, cancellationToken).ConfigureAwait(false);
+        var endpoint = $"/api/game/{Uri.EscapeDataString(gameId)}/chat";
+        var response = await _httpClient.GetAsync<SpectatorChatResponse>(endpoint, cancellationToken)
+            .ConfigureAwait(false);
+        return response?.Lines ?? [];
     }
 
     /// <inheritdoc />
@@ -417,4 +420,17 @@ internal sealed class GamesApi(ILichessHttpClient httpClient) : IGamesApi
             hasQuery = true;
         }
     }
+}
+
+/// <summary>
+///     Transport wrapper for the spectator game chat response, which the Lichess API
+///     returns as an object with a <c>lines</c> array (despite the OpenAPI spec declaring a bare array).
+/// </summary>
+internal sealed class SpectatorChatResponse
+{
+    /// <summary>
+    ///     The chat messages.
+    /// </summary>
+    [JsonPropertyName("lines")]
+    public List<ChatMessage>? Lines { get; init; }
 }

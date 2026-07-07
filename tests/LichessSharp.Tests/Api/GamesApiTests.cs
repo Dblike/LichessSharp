@@ -1160,14 +1160,17 @@ public class GamesApiTests
     {
         // Arrange
         var gameId = "AbCdEfGh";
-        var messages = new List<ChatMessage>
+        var response = new SpectatorChatResponse
         {
-            new() { User = "spectator1", Text = "e4 here we go" },
-            new() { User = "spectator2", Text = "Woof!" }
+            Lines =
+            [
+                new() { User = "spectator1", Text = "e4 here we go" },
+                new() { User = "spectator2", Text = "Woof!" }
+            ]
         };
         _httpClientMock
-            .Setup(x => x.GetAsync<List<ChatMessage>>($"/game/{gameId}/chat", It.IsAny<CancellationToken>()))
-            .ReturnsAsync(messages);
+            .Setup(x => x.GetAsync<SpectatorChatResponse>($"/api/game/{gameId}/chat", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response);
 
         // Act
         var result = await _gamesApi.GetSpectatorChatAsync(gameId);
@@ -1178,7 +1181,7 @@ public class GamesApiTests
         result[0].Text.Should().Be("e4 here we go");
         result[1].User.Should().Be("spectator2");
         _httpClientMock.Verify(
-            x => x.GetAsync<List<ChatMessage>>($"/game/{gameId}/chat", It.IsAny<CancellationToken>()),
+            x => x.GetAsync<SpectatorChatResponse>($"/api/game/{gameId}/chat", It.IsAny<CancellationToken>()),
             Times.Once);
     }
 
@@ -1188,8 +1191,8 @@ public class GamesApiTests
         // Arrange
         var gameId = "AbCdEfGh";
         _httpClientMock
-            .Setup(x => x.GetAsync<List<ChatMessage>>($"/game/{gameId}/chat", It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<ChatMessage>());
+            .Setup(x => x.GetAsync<SpectatorChatResponse>($"/api/game/{gameId}/chat", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new SpectatorChatResponse { Lines = [] });
 
         // Act
         var result = await _gamesApi.GetSpectatorChatAsync(gameId);
@@ -1235,16 +1238,16 @@ public class GamesApiTests
         // Arrange
         var gameId = "game/id";
         _httpClientMock
-            .Setup(x => x.GetAsync<List<ChatMessage>>(It.Is<string>(s => s.Contains("game%2Fid")),
+            .Setup(x => x.GetAsync<SpectatorChatResponse>(It.Is<string>(s => s.Contains("game%2Fid")),
                 It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<ChatMessage>());
+            .ReturnsAsync(new SpectatorChatResponse { Lines = [] });
 
         // Act
         await _gamesApi.GetSpectatorChatAsync(gameId);
 
         // Assert
         _httpClientMock.Verify(
-            x => x.GetAsync<List<ChatMessage>>(It.Is<string>(s => s.Contains("game%2Fid")),
+            x => x.GetAsync<SpectatorChatResponse>(It.Is<string>(s => s.Contains("game%2Fid")),
                 It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -1255,14 +1258,14 @@ public class GamesApiTests
         var cts = new CancellationTokenSource();
         var gameId = "AbCdEfGh";
         _httpClientMock
-            .Setup(x => x.GetAsync<List<ChatMessage>>(It.IsAny<string>(), cts.Token))
-            .ReturnsAsync(new List<ChatMessage>());
+            .Setup(x => x.GetAsync<SpectatorChatResponse>(It.IsAny<string>(), cts.Token))
+            .ReturnsAsync(new SpectatorChatResponse { Lines = [] });
 
         // Act
         await _gamesApi.GetSpectatorChatAsync(gameId, cts.Token);
 
         // Assert
-        _httpClientMock.Verify(x => x.GetAsync<List<ChatMessage>>(It.IsAny<string>(), cts.Token), Times.Once);
+        _httpClientMock.Verify(x => x.GetAsync<SpectatorChatResponse>(It.IsAny<string>(), cts.Token), Times.Once);
     }
 
     private static GameJson CreateTestGameJson(string id)

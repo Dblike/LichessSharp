@@ -94,7 +94,7 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
     }
 
     /// <inheritdoc />
-    public async Task<BroadcastWithRounds> GetTournamentAsync(string broadcastTournamentId, bool? html = null,
+    public async Task<BroadcastWithFullGroup> GetTournamentAsync(string broadcastTournamentId, bool? html = null,
         CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(broadcastTournamentId);
@@ -103,7 +103,7 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
             ? $"/api/broadcast/{Uri.EscapeDataString(broadcastTournamentId)}?html=1"
             : $"/api/broadcast/{Uri.EscapeDataString(broadcastTournamentId)}";
 
-        return await _httpClient.GetAsync<BroadcastWithRounds>(endpoint, cancellationToken).ConfigureAwait(false);
+        return await _httpClient.GetAsync<BroadcastWithFullGroup>(endpoint, cancellationToken).ConfigureAwait(false);
     }
 
     /// <inheritdoc />

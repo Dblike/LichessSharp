@@ -215,9 +215,9 @@ public class BroadcastsApiTests
     {
         // Arrange
         var tournamentId = "tour123";
-        var expectedResult = CreateTestBroadcast(tournamentId);
+        var expectedResult = CreateTestBroadcastWithFullGroup(tournamentId);
         _httpClientMock
-            .Setup(x => x.GetAsync<BroadcastWithRounds>($"/api/broadcast/{tournamentId}",
+            .Setup(x => x.GetAsync<BroadcastWithFullGroup>($"/api/broadcast/{tournamentId}",
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
@@ -227,7 +227,7 @@ public class BroadcastsApiTests
         // Assert
         result.Should().NotBeNull();
         _httpClientMock.Verify(
-            x => x.GetAsync<BroadcastWithRounds>($"/api/broadcast/{tournamentId}", It.IsAny<CancellationToken>()),
+            x => x.GetAsync<BroadcastWithFullGroup>($"/api/broadcast/{tournamentId}", It.IsAny<CancellationToken>()),
             Times.Once);
     }
 
@@ -236,9 +236,9 @@ public class BroadcastsApiTests
     {
         // Arrange
         var tournamentId = "tour123";
-        var expectedResult = CreateTestBroadcast(tournamentId);
+        var expectedResult = CreateTestBroadcastWithFullGroup(tournamentId);
         _httpClientMock
-            .Setup(x => x.GetAsync<BroadcastWithRounds>($"/api/broadcast/{tournamentId}?html=1",
+            .Setup(x => x.GetAsync<BroadcastWithFullGroup>($"/api/broadcast/{tournamentId}?html=1",
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
 
@@ -1061,6 +1061,18 @@ public class BroadcastsApiTests
     private static BroadcastWithRounds CreateTestBroadcast(string id)
     {
         return new BroadcastWithRounds
+        {
+            Tour = CreateTestTour(id),
+            Rounds = new List<BroadcastRoundInfo>
+            {
+                CreateTestRoundInfo("round1")
+            }
+        };
+    }
+
+    private static BroadcastWithFullGroup CreateTestBroadcastWithFullGroup(string id)
+    {
+        return new BroadcastWithFullGroup
         {
             Tour = CreateTestTour(id),
             Rounds = new List<BroadcastRoundInfo>

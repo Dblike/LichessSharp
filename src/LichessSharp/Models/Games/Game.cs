@@ -131,20 +131,55 @@ public class GameJson : Game
     /// <summary>
     ///     The tournament ID if this game is part of an arena tournament.
     /// </summary>
+    [Obsolete(
+        "Removed from the Lichess API in v2.0.152; the API now returns an ArenaTour object instead. Use ArenaTour.Id. This property is always null.")]
     [JsonPropertyName("tournament")]
     public string? Tournament { get; init; }
 
     /// <summary>
     ///     The Swiss tournament ID if this game is part of a Swiss tournament.
     /// </summary>
+    [Obsolete(
+        "Removed from the Lichess API in v2.0.152; the API now returns a SwissTour object instead. Use SwissTour.Id. This property is always null.")]
     [JsonPropertyName("swiss")]
     public string? Swiss { get; init; }
+
+    /// <summary>
+    ///     The arena tournament this game is from, if any.
+    /// </summary>
+    [JsonPropertyName("arenaTour")]
+    public GameTournamentRef? ArenaTour { get; init; }
+
+    /// <summary>
+    ///     The Swiss tournament this game is from, if any.
+    /// </summary>
+    [JsonPropertyName("swissTour")]
+    public GameTournamentRef? SwissTour { get; init; }
 
     /// <summary>
     ///     Game division information (middle game and endgame ply markers).
     /// </summary>
     [JsonPropertyName("division")]
     public GameDivision? Division { get; init; }
+}
+
+/// <summary>
+///     Reference to the tournament (arena or Swiss) a game belongs to.
+/// </summary>
+[ResponseOnly]
+public class GameTournamentRef
+{
+    /// <summary>
+    ///     The tournament's unique identifier.
+    /// </summary>
+    [JsonPropertyName("id")]
+    public string? Id { get; init; }
+
+    /// <summary>
+    ///     The tournament's display name. Present for arena tournaments; absent for Swiss.
+    /// </summary>
+    [JsonPropertyName("name")]
+    public string? Name { get; init; }
 }
 
 /// <summary>

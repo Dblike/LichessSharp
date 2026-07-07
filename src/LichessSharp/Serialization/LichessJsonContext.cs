@@ -97,6 +97,7 @@ namespace LichessSharp.Serialization;
 // Game types
 [JsonSerializable(typeof(Game))]
 [JsonSerializable(typeof(GameJson))]
+[JsonSerializable(typeof(GameTournamentRef))]
 [JsonSerializable(typeof(GamePlayers))]
 [JsonSerializable(typeof(GamePlayer))]
 [JsonSerializable(typeof(List<Game>))]
@@ -197,6 +198,7 @@ namespace LichessSharp.Serialization;
 [JsonSerializable(typeof(BoardPlayer))]
 [JsonSerializable(typeof(ChatMessage))]
 [JsonSerializable(typeof(List<ChatMessage>))]
+[JsonSerializable(typeof(SpectatorChatResponse))]
 [JsonSerializable(typeof(SeekResult))]
 // Bot API types
 [JsonSerializable(typeof(BotAccountEvent))]
@@ -300,6 +302,9 @@ namespace LichessSharp.Serialization;
 [JsonSerializable(typeof(BroadcastTourInfo))]
 [JsonSerializable(typeof(BroadcastRoundInfo))]
 [JsonSerializable(typeof(BroadcastWithRounds))]
+[JsonSerializable(typeof(BroadcastWithFullGroup))]
+[JsonSerializable(typeof(BroadcastPhoto))]
+[JsonSerializable(typeof(Dictionary<string, BroadcastPhoto>))]
 [JsonSerializable(typeof(BroadcastGroup))]
 [JsonSerializable(typeof(BroadcastGroupTour))]
 [JsonSerializable(typeof(BroadcastRound))]
