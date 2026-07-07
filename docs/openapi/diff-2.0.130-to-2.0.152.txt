@@ -1,0 +1,62 @@
+Loading specs...
+
+=============================================
+  API Spec Diff: v2.0.130 -> v2.0.152
+=============================================
+
+NEW ENDPOINTS (3):
+  GET    /api/stream/broadcast/group/{broadcastGroupId}.pgn [Broadcasts]
+         Stream ongoing broadcast rounds of a group as PGN
+  GET    /api/game/{gameId}/chat                       [Games]
+         Fetch the spectator game chat
+  POST   /api/study/{studyId}/{chapterId}/moves        [Studies]
+         Update the moves of a study chapter
+
+REMOVED ENDPOINTS (1):
+  GET    /game/{gameId}/chat                           [Games] [IMPLEMENTED]
+
+CHANGED ENDPOINTS (1):
+  GET    /api/broadcast                                [Broadcasts] [IMPLEMENTED: Broadcasts.StreamOfficialBroadcastsAsync]
+         parameters changed (2 -> 3)
+
+NEW SCHEMAS (2):
+  BroadcastTourInfo (fideTC, format, location, players, regulations, ...)
+  BroadcastWithRoundsAndFullGroup (defaultRoundId, group, photos, rounds, tour)
+
+REMOVED SCHEMAS (0):
+  (none)
+
+MODIFIED SCHEMAS (7):
+  BroadcastForm
+    + info (ref:BroadcastTourInfo)
+    + grouping (object)
+    + tiebreaks (array)
+    - info.website
+    - info.location
+    - tiebreaks[]
+    - info.tc
+    - info.standings
+    - info.timeZone
+    - info.players
+    - info.format
+    - info.fideTC
+  BroadcastGameEntry
+    + ongoing (boolean)
+  BroadcastTour
+    + showTeamScores (boolean)
+    ~ info: object -> ref:BroadcastTourInfo
+  BroadcastWithRounds
+    ~ group: ref:BroadcastGroup -> string
+  FIDEPlayer
+    + gender (string)
+  GameEventInfo
+    + rating (integer)
+  GameJson
+    + arenaTour (object)
+    + swissTour (object)
+    - swiss
+    - tournament
+
+=============================================
+  Summary: 5 endpoint changes, 9 schema changes
+=============================================
