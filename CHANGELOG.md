@@ -16,11 +16,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`FidePlayer.Gender`** — FIDE-recorded binary gender ("M"/"F").
 - **`BroadcastTour.ShowTeamScores`**, **`BroadcastTourInfo.Regulations`** (official regulations URL), and **`BroadcastPlayerGame.Ongoing`** — new response fields added in v2.0.152.
 - **`ImplementedEndpoints.IntentionallyNotImplemented`** — records endpoints deliberately excluded from the library, with rationale. Seeded with `POST /api/token/admin-challenge` (a Lichess-admin-only endpoint, not usable by regular API consumers — will not be implemented). Coverage tooling now reports these separately from genuine gaps.
+- **`IStudiesApi.UpdateChapterMovesAsync`** — new method for `POST /api/study/{studyId}/{chapterId}/moves`, replacing a study chapter's moves from PGN (requires `study:write` scope).
+- **`IBroadcastsApi.StreamGroupPgnAsync`** — new method for `GET /api/stream/broadcast/group/{broadcastGroupId}.pgn`, streaming a broadcast group's ongoing rounds as PGN.
 
 ### Changed
 
 - **BREAKING: `IBroadcastsApi.GetTournamentAsync` now returns `BroadcastWithFullGroup`** (was `BroadcastWithRounds`). As of Lichess API v2.0.152 this endpoint's response includes the full `BroadcastGroup` object and player photos, so it maps to a distinct type. The common `Tour` and `Rounds` members are unchanged.
 - **BREAKING: `BroadcastWithRounds.Group` is now `string?`** (was `BroadcastGroup?`). The streaming (`StreamOfficialBroadcastsAsync`) and create endpoints now return the group as a plain name string.
+- **BREAKING: `IBroadcastsApi.UpdateTournamentAsync` now returns `Task<bool>`** (was `Task<BroadcastWithRounds>`). The `POST /broadcast/{id}/edit` endpoint returns only an acknowledgement (`{"ok":true}`), not the tournament — the previous return type would fail to deserialize. Read back with `GetTournamentAsync` if you need the updated tournament.
 - **`BroadcastTourInfo.FideTimeControl`** JSON mapping aligned to the spec's `fideTC` casing (was `fideTc`; behavior unchanged as matching is case-insensitive).
 
 ### Deprecated

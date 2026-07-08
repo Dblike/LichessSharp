@@ -3,6 +3,7 @@ using FluentAssertions;
 using LichessSharp.Api;
 using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
+using LichessSharp.Models.Common;
 using LichessSharp.Models.Enums;
 using LichessSharp.Tests.Fixtures;
 using Moq;
@@ -422,17 +423,19 @@ public class BroadcastsApiTests
         // Arrange
         var tournamentId = "tour123";
         var options = new BroadcastTournamentOptions { Name = "Updated Tournament" };
-        var expectedResult = CreateTestBroadcast(tournamentId);
         _httpClientMock
-            .Setup(x => x.PostAsync<BroadcastWithRounds>($"/broadcast/{tournamentId}/edit",
+            .Setup(x => x.PostAsync<OkResponse>($"/broadcast/{tournamentId}/edit",
                 It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(expectedResult);
+            .ReturnsAsync(new OkResponse { Ok = true });
 
         // Act
         var result = await _broadcastsApi.UpdateTournamentAsync(tournamentId, options);
 
         // Assert
-        result.Should().NotBeNull();
+        result.Should().BeTrue();
+        _httpClientMock.Verify(
+            x => x.PostAsync<OkResponse>($"/broadcast/{tournamentId}/edit",
+                It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -750,6 +753,62 @@ public class BroadcastsApiTests
         await Assert.ThrowsAnyAsync<ArgumentException>(async () =>
         {
             await foreach (var _ in _broadcastsApi.StreamRoundPgnAsync(null!))
+            {
+            }
+        });
+    }
+
+    [Fact]
+    public async Task StreamGroupPgnAsync_CallsCorrectEndpoint()
+    {
+        // Arrange
+        const string groupId = "group123";
+        const string expectedPgn = "[Event \"Test\"]\n1. e4 e5 *";
+        _httpClientMock
+            .Setup(x => x.GetStringWithAcceptAsync($"/api/stream/broadcast/group/{groupId}.pgn",
+                "application/x-chess-pgn", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedPgn);
+
+        // Act
+        var result = new List<string>();
+        await foreach (var pgn in _broadcastsApi.StreamGroupPgnAsync(groupId)) result.Add(pgn);
+
+        // Assert
+        result.Should().HaveCount(1);
+        result[0].Should().Be(expectedPgn);
+    }
+
+    [Fact]
+    public async Task StreamGroupPgnAsync_WithClocksAndComments_IncludesQueryParams()
+    {
+        // Arrange
+        const string groupId = "group123";
+        _httpClientMock
+            .Setup(x => x.GetStringWithAcceptAsync(
+                It.Is<string>(s => s.Contains("clocks=true") && s.Contains("comments=false")),
+                "application/x-chess-pgn", It.IsAny<CancellationToken>()))
+            .ReturnsAsync("[Event \"Test\"]");
+
+        // Act
+        var result = new List<string>();
+        await foreach (var pgn in _broadcastsApi.StreamGroupPgnAsync(groupId, clocks: true, comments: false))
+            result.Add(pgn);
+
+        // Assert
+        result.Should().HaveCount(1);
+        _httpClientMock.Verify(
+            x => x.GetStringWithAcceptAsync(
+                It.Is<string>(s => s.Contains("clocks=true") && s.Contains("comments=false")),
+                "application/x-chess-pgn", It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task StreamGroupPgnAsync_WithNullGroupId_ThrowsArgumentException()
+    {
+        // Act & Assert
+        await Assert.ThrowsAnyAsync<ArgumentException>(async () =>
+        {
+            await foreach (var _ in _broadcastsApi.StreamGroupPgnAsync(null!))
             {
             }
         });

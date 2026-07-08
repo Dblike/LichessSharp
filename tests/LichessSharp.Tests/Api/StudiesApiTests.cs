@@ -367,6 +367,58 @@ public class StudiesApiTests
     }
 
     [Fact]
+    public async Task UpdateChapterMovesAsync_CallsCorrectEndpoint()
+    {
+        // Arrange
+        var studyId = "abc12345";
+        var chapterId = "xyz67890";
+        var pgn = "1. e4 e5 2. Nf3 Nc6";
+        _httpClientMock
+            .Setup(x => x.PostNoContentAsync($"/api/study/{studyId}/{chapterId}/moves",
+                It.IsAny<FormUrlEncodedContent>(), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _studiesApi.UpdateChapterMovesAsync(studyId, chapterId, pgn);
+
+        // Assert
+        result.Should().BeTrue();
+        _httpClientMock.Verify(
+            x => x.PostNoContentAsync($"/api/study/{studyId}/{chapterId}/moves", It.IsAny<FormUrlEncodedContent>(),
+                It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task UpdateChapterMovesAsync_WithNullStudyId_ThrowsArgumentException()
+    {
+        // Act
+        var act = () => _studiesApi.UpdateChapterMovesAsync(null!, "chapter123", "1. e4 e5");
+
+        // Assert
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    [Fact]
+    public async Task UpdateChapterMovesAsync_WithNullChapterId_ThrowsArgumentException()
+    {
+        // Act
+        var act = () => _studiesApi.UpdateChapterMovesAsync("study123", null!, "1. e4 e5");
+
+        // Assert
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    [Fact]
+    public async Task UpdateChapterMovesAsync_WithNullPgn_ThrowsArgumentException()
+    {
+        // Act
+        var act = () => _studiesApi.UpdateChapterMovesAsync("study123", "chapter123", null!);
+
+        // Assert
+        await act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    [Fact]
     public async Task DeleteChapterAsync_CallsCorrectEndpoint()
     {
         // Arrange

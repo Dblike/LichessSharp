@@ -133,6 +133,25 @@ internal sealed class StudiesApi(ILichessHttpClient httpClient) : IStudiesApi
     }
 
     /// <inheritdoc />
+    public async Task<bool> UpdateChapterMovesAsync(string studyId, string chapterId, string pgn,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(studyId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(chapterId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(pgn);
+
+        var parameters = new List<KeyValuePair<string, string>>
+        {
+            new("pgn", pgn)
+        };
+
+        var content = new FormUrlEncodedContent(parameters);
+        var endpoint = $"/api/study/{Uri.EscapeDataString(studyId)}/{Uri.EscapeDataString(chapterId)}/moves";
+        await _httpClient.PostNoContentAsync(endpoint, content, cancellationToken).ConfigureAwait(false);
+        return true;
+    }
+
+    /// <inheritdoc />
     public async Task<bool> DeleteChapterAsync(string studyId, string chapterId,
         CancellationToken cancellationToken = default)
     {

@@ -219,6 +219,7 @@ public static class ImplementedEndpoints
         new("GET", "/api/study/by/{username}", "Studies", "StreamUserStudiesAsync"),
         new("POST", "/api/study/{studyId}/import-pgn", "Studies", "ImportPgnAsync"),
         new("POST", "/api/study/{studyId}/{chapterId}/tags", "Studies", "UpdateChapterTagsAsync"),
+        new("POST", "/api/study/{studyId}/{chapterId}/moves", "Studies", "UpdateChapterMovesAsync"),
         new("DELETE", "/api/study/{studyId}/{chapterId}", "Studies", "DeleteChapterAsync"),
 
         // ===== Messaging API =====
@@ -241,6 +242,7 @@ public static class ImplementedEndpoints
         new("GET", "/api/broadcast/round/{broadcastRoundId}.pgn", "Broadcasts", "ExportRoundPgnAsync"),
         new("GET", "/api/broadcast/{broadcastTournamentId}.pgn", "Broadcasts", "ExportAllRoundsPgnAsync"),
         new("GET", "/api/stream/broadcast/round/{broadcastRoundId}.pgn", "Broadcasts", "StreamRoundPgnAsync"),
+        new("GET", "/api/stream/broadcast/group/{broadcastGroupId}.pgn", "Broadcasts", "StreamGroupPgnAsync"),
         new("GET", "/broadcast/{broadcastTournamentId}/players", "Broadcasts", "GetPlayersAsync"),
         new("GET", "/broadcast/{broadcastTournamentId}/players/{playerId}", "Broadcasts", "GetPlayerAsync"),
         new("GET", "/broadcast/{broadcastTournamentId}/teams/standings", "Broadcasts", "GetTeamStandingsAsync")

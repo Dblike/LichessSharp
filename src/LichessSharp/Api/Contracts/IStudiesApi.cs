@@ -99,6 +99,19 @@ public interface IStudiesApi
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    ///     Update the moves of a study chapter, replacing the chapter's existing moves.
+    ///     Any PGN tags provided are ignored.
+    ///     Requires OAuth with study:write scope.
+    /// </summary>
+    /// <param name="studyId">The study ID (8 characters).</param>
+    /// <param name="chapterId">The chapter ID (8 characters).</param>
+    /// <param name="pgn">PGN text containing the moves that will replace the chapter's existing moves.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>True if the moves were updated successfully.</returns>
+    Task<bool> UpdateChapterMovesAsync(string studyId, string chapterId, string pgn,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     ///     Delete a chapter of a study you own. This is definitive.
     ///     A study must have at least one chapter; so if you delete the last chapter,
     ///     an empty one will be automatically created to replace it.

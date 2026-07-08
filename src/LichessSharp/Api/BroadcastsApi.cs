@@ -2,6 +2,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
+using LichessSharp.Models.Common;
 
 namespace LichessSharp.Api;
 
@@ -150,7 +151,7 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
     }
 
     /// <inheritdoc />
-    public async Task<BroadcastWithRounds> UpdateTournamentAsync(string broadcastTournamentId,
+    public async Task<bool> UpdateTournamentAsync(string broadcastTournamentId,
         BroadcastTournamentOptions options, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(broadcastTournamentId);
@@ -159,8 +160,8 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
 
         var content = new FormUrlEncodedContent(BuildTournamentParameters(options));
         var endpoint = $"/broadcast/{Uri.EscapeDataString(broadcastTournamentId)}/edit";
-        return await _httpClient.PostAsync<BroadcastWithRounds>(endpoint, content, cancellationToken)
-            .ConfigureAwait(false);
+        await _httpClient.PostAsync<OkResponse>(endpoint, content, cancellationToken).ConfigureAwait(false);
+        return true;
     }
 
     /// <inheritdoc />
@@ -250,6 +251,22 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
 
         // For now, yield a single PGN export
         // A proper implementation would require streaming support for plain text
+        var pgn = await _httpClient.GetStringWithAcceptAsync(endpoint, "application/x-chess-pgn", cancellationToken)
+            .ConfigureAwait(false);
+        yield return pgn;
+    }
+
+    /// <inheritdoc />
+    public async IAsyncEnumerable<string> StreamGroupPgnAsync(string broadcastGroupId, bool? clocks = null,
+        bool? comments = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(broadcastGroupId);
+
+        // This endpoint streams raw PGN text, not NDJSON
+        // Each update is a complete PGN of the group's ongoing rounds
+        var endpoint = BuildPgnExportEndpoint(
+            $"/api/stream/broadcast/group/{Uri.EscapeDataString(broadcastGroupId)}.pgn", clocks, comments);
+
         var pgn = await _httpClient.GetStringWithAcceptAsync(endpoint, "application/x-chess-pgn", cancellationToken)
             .ConfigureAwait(false);
         yield return pgn;

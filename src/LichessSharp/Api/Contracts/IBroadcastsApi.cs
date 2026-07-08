@@ -101,8 +101,12 @@ public interface IBroadcastsApi
     /// <param name="broadcastTournamentId">The broadcast tournament ID.</param>
     /// <param name="options">Tournament update options.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>The updated broadcast tournament.</returns>
-    Task<BroadcastWithRounds> UpdateTournamentAsync(string broadcastTournamentId, BroadcastTournamentOptions options,
+    /// <returns>True if the tournament was updated successfully.</returns>
+    /// <remarks>
+    ///     The Lichess API returns only an acknowledgement (<c>{"ok":true}</c>) for this endpoint,
+    ///     not the updated tournament. Use <see cref="GetTournamentAsync" /> to read back the result.
+    /// </remarks>
+    Task<bool> UpdateTournamentAsync(string broadcastTournamentId, BroadcastTournamentOptions options,
         CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -181,6 +185,18 @@ public interface IBroadcastsApi
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Async enumerable of PGN strings.</returns>
     IAsyncEnumerable<string> StreamRoundPgnAsync(string broadcastRoundId, bool? clocks = null, bool? comments = null,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    ///     Stream all ongoing broadcast rounds of a group as PGN.
+    ///     Returns a new PGN every time a game is updated in real-time.
+    /// </summary>
+    /// <param name="broadcastGroupId">The broadcast group ID.</param>
+    /// <param name="clocks">Include clock comments in PGN moves. Default: true.</param>
+    /// <param name="comments">Include analysis comments in PGN moves. Default: true.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Async enumerable of PGN strings.</returns>
+    IAsyncEnumerable<string> StreamGroupPgnAsync(string broadcastGroupId, bool? clocks = null, bool? comments = null,
         CancellationToken cancellationToken = default);
 
     /// <summary>
