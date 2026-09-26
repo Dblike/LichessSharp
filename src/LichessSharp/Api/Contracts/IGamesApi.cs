@@ -137,6 +137,19 @@ public interface IGamesApi
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    ///     Add or remove a bookmark on a game for the authenticated user.
+    ///     By default the bookmark is toggled: added if absent, removed if present.
+    ///     Pass <paramref name="bookmarked" /> to set it explicitly, which makes the request idempotent.
+    ///     Requires OAuth with preference:write scope.
+    ///     Bookmarked games can be exported with <see cref="StreamBookmarkedGamesAsync" />.
+    /// </summary>
+    /// <param name="gameId">The game ID.</param>
+    /// <param name="bookmarked">True to add the bookmark, false to remove it, or null to toggle it.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>True if the bookmark was added or removed.</returns>
+    Task<bool> BookmarkAsync(string gameId, bool? bookmarked = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
     ///     Fetch the messages posted in the public spectator chat of a game.
     ///     Games also have a private players chat, which only the 2 players can see.
     ///     No authentication required.

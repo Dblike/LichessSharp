@@ -3,6 +3,7 @@ using System.Text;
 using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
 using LichessSharp.Models.Common;
+using LichessSharp.Models.Teams;
 
 namespace LichessSharp.Api;
 
@@ -165,5 +166,27 @@ internal sealed class TeamsApi(ILichessHttpClient httpClient) : ITeamsApi
 
         await _httpClient.PostAsync<OkResponse>(endpoint, content, cancellationToken).ConfigureAwait(false);
         return true;
+    }
+
+    /// <inheritdoc />
+    public async Task<TeamUpdates> GetUpdatesAsync(int page = 1, CancellationToken cancellationToken = default)
+    {
+        if (page < 1) throw new ArgumentOutOfRangeException(nameof(page), "Page must be at least 1.");
+
+        var endpoint = page > 1 ? $"/team/updates?page={page}" : "/team/updates";
+        return await _httpClient.GetAsync<TeamUpdates>(endpoint, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<TeamUpdatesOfTeam> GetTeamUpdatesAsync(string teamId, int page = 1,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(teamId);
+        if (page < 1) throw new ArgumentOutOfRangeException(nameof(page), "Page must be at least 1.");
+
+        var endpoint = $"/team/updates/{Uri.EscapeDataString(teamId)}";
+        if (page > 1) endpoint += $"?page={page}";
+
+        return await _httpClient.GetAsync<TeamUpdatesOfTeam>(endpoint, cancellationToken).ConfigureAwait(false);
     }
 }

@@ -30,12 +30,14 @@ public class UserPreferences
     /// <summary>
     ///     Dark mode setting.
     /// </summary>
+    [Obsolete("Removed from the Lichess API in v2.0.174. This property is always null.")]
     [JsonPropertyName("dark")]
     public bool? Dark { get; init; }
 
     /// <summary>
     ///     Whether the background is transparent.
     /// </summary>
+    [Obsolete("Removed from the Lichess API in v2.0.174. This property is always null.")]
     [JsonPropertyName("transp")]
     public bool? TransparentBackground { get; init; }
 

@@ -1268,6 +1268,71 @@ public class GamesApiTests
         _httpClientMock.Verify(x => x.GetAsync<SpectatorChatResponse>(It.IsAny<string>(), cts.Token), Times.Once);
     }
 
+    [Fact]
+    public async Task BookmarkAsync_WithoutValue_PostsToggleEndpoint()
+    {
+        // Arrange
+        var gameId = "5IrD6Gzz";
+        _httpClientMock
+            .Setup(x => x.PostNoContentAsync($"/bookmark/{gameId}", null, It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        // Act
+        var result = await _gamesApi.BookmarkAsync(gameId);
+
+        // Assert
+        result.Should().BeTrue();
+        _httpClientMock.Verify(
+            x => x.PostNoContentAsync($"/bookmark/{gameId}", null, It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Theory]
+    [InlineData(true, "?v=true")]
+    [InlineData(false, "?v=false")]
+    public async Task BookmarkAsync_WithExplicitValue_IncludesVParam(bool bookmarked, string expectedQuery)
+    {
+        // Arrange
+        var gameId = "5IrD6Gzz";
+        _httpClientMock
+            .Setup(x => x.PostNoContentAsync($"/bookmark/{gameId}{expectedQuery}", null,
+                It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        // Act
+        await _gamesApi.BookmarkAsync(gameId, bookmarked);
+
+        // Assert
+        _httpClientMock.Verify(
+            x => x.PostNoContentAsync($"/bookmark/{gameId}{expectedQuery}", null, It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task BookmarkAsync_UrlEncodesGameId()
+    {
+        // Arrange
+        _httpClientMock
+            .Setup(x => x.PostNoContentAsync(It.Is<string>(s => s.Contains("game%2Fid")), null,
+                It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        // Act
+        await _gamesApi.BookmarkAsync("game/id");
+
+        // Assert
+        _httpClientMock.Verify(
+            x => x.PostNoContentAsync(It.Is<string>(s => s.Contains("game%2Fid")), null,
+                It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task BookmarkAsync_WithNullGameId_ThrowsArgumentException()
+    {
+        // Act & Assert
+        await Assert.ThrowsAnyAsync<ArgumentException>(async () =>
+            await _gamesApi.BookmarkAsync(null!));
+    }
+
     private static GameJson CreateTestGameJson(string id)
     {
         return new GameJson

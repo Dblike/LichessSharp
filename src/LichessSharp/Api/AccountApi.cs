@@ -52,6 +52,8 @@ internal sealed class AccountApi(ILichessHttpClient httpClient) : IAccountApi
     }
 
     /// <inheritdoc />
+    [Obsolete(
+        "Removed from the Lichess API in v2.0.174; no OAuth scope grants access to GET /api/timeline, so calls with an access token fail with 401. This method will be removed in a future release.")]
     public async Task<Timeline> GetTimelineAsync(int? nb = null, DateTimeOffset? since = null,
         CancellationToken cancellationToken = default)
     {

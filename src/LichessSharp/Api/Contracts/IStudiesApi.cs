@@ -232,6 +232,12 @@ public class StudyImportResult
     /// </summary>
     [JsonPropertyName("chapters")]
     public IReadOnlyList<StudyChapter> Chapters { get; init; } = [];
+
+    /// <summary>
+    ///     An error message if some of the games could not be imported; null otherwise.
+    /// </summary>
+    [JsonPropertyName("error")]
+    public string? Error { get; init; }
 }
 
 /// <summary>

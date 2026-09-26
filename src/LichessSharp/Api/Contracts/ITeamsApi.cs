@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using LichessSharp.Models.Enums;
+using LichessSharp.Models.Teams;
 
 namespace LichessSharp.Api.Contracts;
 
@@ -115,15 +116,36 @@ public interface ITeamsApi
     Task<bool> KickMemberAsync(string teamId, string userId, CancellationToken cancellationToken = default);
 
     /// <summary>
-    ///     Send a private message to all members of a team.
-    ///     You must be a team leader with the "Messages" permission.
+    ///     Send a team update to all members of a team.
+    ///     You must be a team leader with the "Updates" permission.
     ///     Requires OAuth with team:lead scope.
+    ///     Members read these updates with <see cref="GetUpdatesAsync" /> and <see cref="GetTeamUpdatesAsync" />.
     /// </summary>
     /// <param name="teamId">The team ID.</param>
-    /// <param name="message">The message to send.</param>
+    /// <param name="message">The update text to send.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>True if the message was sent.</returns>
+    /// <returns>True if the update was posted.</returns>
     Task<bool> MessageAllMembersAsync(string teamId, string message, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    ///     Get the most recent updates posted by the leaders of the teams you have joined (paginated).
+    ///     Requires OAuth with team:read scope.
+    /// </summary>
+    /// <param name="page">Page number (1-indexed).</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>A page of team updates plus a per-team unread summary.</returns>
+    Task<TeamUpdates> GetUpdatesAsync(int page = 1, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    ///     Get the most recent updates posted by the leaders of one team you have joined (paginated).
+    ///     Requires OAuth with team:read scope.
+    /// </summary>
+    /// <param name="teamId">The team ID.</param>
+    /// <param name="page">Page number (1-indexed).</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>A page of that team's updates plus a per-team unread summary across all joined teams.</returns>
+    Task<TeamUpdatesOfTeam> GetTeamUpdatesAsync(string teamId, int page = 1,
+        CancellationToken cancellationToken = default);
 }
 
 /// <summary>

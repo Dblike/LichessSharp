@@ -273,6 +273,22 @@ internal sealed class BroadcastsApi(ILichessHttpClient httpClient) : IBroadcasts
     }
 
     /// <inheritdoc />
+    public async IAsyncEnumerable<string> StreamTourPgnAsync(string broadcastTourId, bool? clocks = null,
+        bool? comments = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(broadcastTourId);
+
+        // This endpoint streams raw PGN text, not NDJSON
+        // Each update is a complete PGN of the tournament's ongoing rounds
+        var endpoint = BuildPgnExportEndpoint(
+            $"/api/stream/broadcast/tour/{Uri.EscapeDataString(broadcastTourId)}.pgn", clocks, comments);
+
+        var pgn = await _httpClient.GetStringWithAcceptAsync(endpoint, "application/x-chess-pgn", cancellationToken)
+            .ConfigureAwait(false);
+        yield return pgn;
+    }
+
+    /// <inheritdoc />
     public async Task<IReadOnlyList<BroadcastPlayerEntry>> GetPlayersAsync(string tournamentId,
         CancellationToken cancellationToken = default)
     {

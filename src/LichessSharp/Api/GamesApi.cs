@@ -147,6 +147,20 @@ internal sealed class GamesApi(ILichessHttpClient httpClient) : IGamesApi
     }
 
     /// <inheritdoc />
+    public async Task<bool> BookmarkAsync(string gameId, bool? bookmarked = null,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(gameId);
+
+        var endpoint = $"/bookmark/{Uri.EscapeDataString(gameId)}";
+        if (bookmarked.HasValue) endpoint += bookmarked.Value ? "?v=true" : "?v=false";
+
+        // The endpoint answers 204 No Content on success.
+        await _httpClient.PostNoContentAsync(endpoint, null, cancellationToken).ConfigureAwait(false);
+        return true;
+    }
+
+    /// <inheritdoc />
     public async Task<IReadOnlyList<ChatMessage>> GetSpectatorChatAsync(string gameId,
         CancellationToken cancellationToken = default)
     {
@@ -424,7 +438,8 @@ internal sealed class GamesApi(ILichessHttpClient httpClient) : IGamesApi
 
 /// <summary>
 ///     Transport wrapper for the spectator game chat response, which the Lichess API
-///     returns as an object with a <c>lines</c> array (despite the OpenAPI spec declaring a bare array).
+///     returns as an object with a <c>lines</c> array (the OpenAPI spec has declared this shape since v2.0.174;
+///     earlier versions wrongly declared a bare array).
 /// </summary>
 internal sealed class SpectatorChatResponse
 {

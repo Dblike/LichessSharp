@@ -109,7 +109,7 @@ public class AccountApiTests
         var expectedPrefs = new AccountPreferences
         {
             Language = "en-GB",
-            Prefs = new UserPreferences { Dark = true }
+            Prefs = new UserPreferences { Is3d = true }
         };
         _httpClientMock
             .Setup(x => x.GetAsync<AccountPreferences>("/api/account/preferences", It.IsAny<CancellationToken>()))
@@ -121,7 +121,7 @@ public class AccountApiTests
         // Assert
         result.Should().NotBeNull();
         result.Language.Should().Be("en-GB");
-        result.Prefs?.Dark.Should().BeTrue();
+        result.Prefs?.Is3d.Should().BeTrue();
         _httpClientMock.Verify(
             x => x.GetAsync<AccountPreferences>("/api/account/preferences", It.IsAny<CancellationToken>()), Times.Once);
     }
@@ -212,6 +212,7 @@ public class AccountApiTests
         result.Should().BeFalse();
     }
 
+#pragma warning disable CS0618 // GetTimelineAsync is obsolete (endpoint removed from the Lichess API in v2.0.174)
     [Fact]
     public async Task GetTimelineAsync_WithoutParams_CallsBaseEndpoint()
     {
@@ -261,6 +262,7 @@ public class AccountApiTests
             It.Is<string>(s => s.Contains("since=")),
             It.IsAny<CancellationToken>()), Times.Once);
     }
+#pragma warning restore CS0618
 
     private static UserExtended CreateTestUserExtended()
     {

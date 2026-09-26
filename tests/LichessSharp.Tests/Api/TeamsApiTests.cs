@@ -3,6 +3,7 @@ using LichessSharp.Api;
 using LichessSharp.Api.Contracts;
 using LichessSharp.Http;
 using LichessSharp.Models.Common;
+using LichessSharp.Models.Teams;
 using Moq;
 using Xunit;
 
@@ -536,6 +537,122 @@ public class TeamsApiTests
             await _teamsApi.MessageAllMembersAsync("team", null!));
     }
 
+    [Fact]
+    public async Task GetUpdatesAsync_DefaultPage_CallsBaseEndpoint()
+    {
+        // Arrange
+        _httpClientMock
+            .Setup(x => x.GetAsync<TeamUpdates>("/team/updates", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(CreateTestTeamUpdates());
+
+        // Act
+        var result = await _teamsApi.GetUpdatesAsync();
+
+        // Assert
+        result.Updates.CurrentPageResults.Should().HaveCount(1);
+        result.Updates.CurrentPageResults[0].Message.Sender.Id.Should().Be("mary");
+        result.ByTeam.Should().HaveCount(1);
+        result.ByTeam[0].Unread.Should().Be(2);
+        _httpClientMock.Verify(x => x.GetAsync<TeamUpdates>("/team/updates", It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task GetUpdatesAsync_WithPage_IncludesPageParam()
+    {
+        // Arrange
+        _httpClientMock
+            .Setup(x => x.GetAsync<TeamUpdates>("/team/updates?page=3", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(CreateTestTeamUpdates());
+
+        // Act
+        await _teamsApi.GetUpdatesAsync(3);
+
+        // Assert
+        _httpClientMock.Verify(x => x.GetAsync<TeamUpdates>("/team/updates?page=3", It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task GetUpdatesAsync_WithInvalidPage_ThrowsArgumentOutOfRangeException()
+    {
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
+            await _teamsApi.GetUpdatesAsync(0));
+    }
+
+    [Fact]
+    public async Task GetTeamUpdatesAsync_CallsCorrectEndpoint()
+    {
+        // Arrange
+        var teamId = "open-chess-club";
+        _httpClientMock
+            .Setup(x => x.GetAsync<TeamUpdatesOfTeam>($"/team/updates/{teamId}", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(CreateTestTeamUpdatesOfTeam(teamId));
+
+        // Act
+        var result = await _teamsApi.GetTeamUpdatesAsync(teamId);
+
+        // Assert
+        result.Team.Id.Should().Be(teamId);
+        result.Subscribed.Should().BeTrue();
+        result.Updates.CurrentPageResults.Should().HaveCount(1);
+        _httpClientMock.Verify(
+            x => x.GetAsync<TeamUpdatesOfTeam>($"/team/updates/{teamId}", It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task GetTeamUpdatesAsync_WithPage_IncludesPageParam()
+    {
+        // Arrange
+        _httpClientMock
+            .Setup(x => x.GetAsync<TeamUpdatesOfTeam>("/team/updates/coders?page=2", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(CreateTestTeamUpdatesOfTeam("coders"));
+
+        // Act
+        await _teamsApi.GetTeamUpdatesAsync("coders", 2);
+
+        // Assert
+        _httpClientMock.Verify(
+            x => x.GetAsync<TeamUpdatesOfTeam>("/team/updates/coders?page=2", It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task GetTeamUpdatesAsync_UrlEncodesTeamId()
+    {
+        // Arrange
+        _httpClientMock
+            .Setup(x => x.GetAsync<TeamUpdatesOfTeam>(It.Is<string>(s => s.Contains("team%20id")),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(CreateTestTeamUpdatesOfTeam("team id"));
+
+        // Act
+        await _teamsApi.GetTeamUpdatesAsync("team id");
+
+        // Assert
+        _httpClientMock.Verify(
+            x => x.GetAsync<TeamUpdatesOfTeam>(It.Is<string>(s => s.Contains("team%20id")),
+                It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetTeamUpdatesAsync_WithNullTeamId_ThrowsArgumentException()
+    {
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            await _teamsApi.GetTeamUpdatesAsync(null!));
+    }
+
+    [Fact]
+    public async Task GetTeamUpdatesAsync_WithInvalidPage_ThrowsArgumentOutOfRangeException()
+    {
+        // Act & Assert
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
+            await _teamsApi.GetTeamUpdatesAsync("coders", 0));
+    }
+
     private static Team CreateTestTeam(string id)
     {
         return new Team
@@ -545,6 +662,65 @@ public class TeamsApiTests
             Description = "A test team",
             NbMembers = 100,
             Open = true
+        };
+    }
+
+    private static TeamUpdatesPager CreateTestUpdatesPager(string teamId)
+    {
+        return new TeamUpdatesPager
+        {
+            CurrentPage = 1,
+            MaxPerPage = 6,
+            CurrentPageResults =
+            [
+                new TeamUpdate
+                {
+                    Message = new TeamUpdateMessage
+                    {
+                        Id = "AAAAAAC4",
+                        Date = DateTimeOffset.FromUnixTimeMilliseconds(1789662367160),
+                        Sender = new LightUser { Id = "mary", Name = "Mary" },
+                        Team = new LightTeam { Id = teamId, Name = "Open Chess Club" },
+                        Text = "Nice work in the last league match, on to the next round!"
+                    },
+                    Seen = false
+                }
+            ],
+            NbResults = 1,
+            NbPages = 1
+        };
+    }
+
+    private static IReadOnlyList<TeamUpdatesByTeamEntry> CreateTestByTeam(string teamId)
+    {
+        return
+        [
+            new TeamUpdatesByTeamEntry
+            {
+                Team = new LightTeam { Id = teamId, Name = "Open Chess Club" },
+                Last = DateTimeOffset.FromUnixTimeMilliseconds(1789662367160),
+                Unread = 2
+            }
+        ];
+    }
+
+    private static TeamUpdates CreateTestTeamUpdates()
+    {
+        return new TeamUpdates
+        {
+            Updates = CreateTestUpdatesPager("open-chess-club"),
+            ByTeam = CreateTestByTeam("open-chess-club")
+        };
+    }
+
+    private static TeamUpdatesOfTeam CreateTestTeamUpdatesOfTeam(string teamId)
+    {
+        return new TeamUpdatesOfTeam
+        {
+            Team = new LightTeam { Id = teamId, Name = "Open Chess Club" },
+            Subscribed = true,
+            Updates = CreateTestUpdatesPager(teamId),
+            ByTeam = CreateTestByTeam(teamId)
         };
     }
 

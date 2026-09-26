@@ -18,7 +18,7 @@ public static class ImplementedEndpoints
         new("GET", "/api/account/preferences", "Account", "GetPreferencesAsync"),
         new("GET", "/api/account/kid", "Account", "GetKidModeAsync"),
         new("POST", "/api/account/kid", "Account", "SetKidModeAsync"),
-        new("GET", "/api/timeline", "Account", "GetTimelineAsync"),
+        // GET /api/timeline was removed from the spec in v2.0.174; Account.GetTimelineAsync is [Obsolete].
 
         // ===== Users API =====
         new("GET", "/api/user/{username}", "Users", "GetAsync"),
@@ -58,6 +58,7 @@ public static class ImplementedEndpoints
         new("POST", "/api/stream/games/{streamId}", "Games", "StreamByIdsAsync"),
         new("POST", "/api/stream/games/{streamId}/add", "Games", "AddGameIdsToStreamAsync"),
         new("GET", "/api/game/{gameId}/chat", "Games", "GetSpectatorChatAsync"),
+        new("POST", "/bookmark/{gameId}", "Games", "BookmarkAsync"),
 
         // ===== TV API =====
         new("GET", "/api/tv/channels", "Tv", "GetCurrentGamesAsync"),
@@ -91,6 +92,8 @@ public static class ImplementedEndpoints
         new("POST", "/api/team/{teamId}/request/{userId}/decline", "Teams", "DeclineJoinRequestAsync"),
         new("POST", "/api/team/{teamId}/kick/{userId}", "Teams", "KickMemberAsync"),
         new("POST", "/team/{teamId}/pm-all", "Teams", "MessageAllMembersAsync"),
+        new("GET", "/team/updates", "Teams", "GetUpdatesAsync"),
+        new("GET", "/team/updates/{teamId}", "Teams", "GetTeamUpdatesAsync"),
 
         // ===== Board API =====
         new("GET", "/api/stream/event", "Board", "StreamEventsAsync"),
@@ -243,6 +246,7 @@ public static class ImplementedEndpoints
         new("GET", "/api/broadcast/{broadcastTournamentId}.pgn", "Broadcasts", "ExportAllRoundsPgnAsync"),
         new("GET", "/api/stream/broadcast/round/{broadcastRoundId}.pgn", "Broadcasts", "StreamRoundPgnAsync"),
         new("GET", "/api/stream/broadcast/group/{broadcastGroupId}.pgn", "Broadcasts", "StreamGroupPgnAsync"),
+        new("GET", "/api/stream/broadcast/tour/{broadcastTourId}.pgn", "Broadcasts", "StreamTourPgnAsync"),
         new("GET", "/broadcast/{broadcastTournamentId}/players", "Broadcasts", "GetPlayersAsync"),
         new("GET", "/broadcast/{broadcastTournamentId}/players/{playerId}", "Broadcasts", "GetPlayerAsync"),
         new("GET", "/broadcast/{broadcastTournamentId}/teams/standings", "Broadcasts", "GetTeamStandingsAsync")

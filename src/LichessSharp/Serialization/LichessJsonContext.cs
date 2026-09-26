@@ -7,6 +7,7 @@ using LichessSharp.Models.Enums;
 using LichessSharp.Models.Fide;
 using LichessSharp.Models.Games;
 using LichessSharp.Models.Puzzles;
+using LichessSharp.Models.Teams;
 using LichessSharp.Models.Users;
 
 namespace LichessSharp.Serialization;
@@ -21,6 +22,7 @@ namespace LichessSharp.Serialization;
     WriteIndented = false)]
 // Common types
 [JsonSerializable(typeof(LightUser))]
+[JsonSerializable(typeof(LightTeam))]
 [JsonSerializable(typeof(Clock))]
 [JsonSerializable(typeof(Opening))]
 [JsonSerializable(typeof(OkResponse))]
@@ -233,6 +235,14 @@ namespace LichessSharp.Serialization;
 [JsonSerializable(typeof(List<Team>))]
 [JsonSerializable(typeof(List<TeamLeader>))]
 [JsonSerializable(typeof(List<TeamRequestWithUser>))]
+[JsonSerializable(typeof(TeamUpdates))]
+[JsonSerializable(typeof(TeamUpdatesOfTeam))]
+[JsonSerializable(typeof(TeamUpdatesPager))]
+[JsonSerializable(typeof(TeamUpdate))]
+[JsonSerializable(typeof(TeamUpdateMessage))]
+[JsonSerializable(typeof(TeamUpdatesByTeamEntry))]
+[JsonSerializable(typeof(List<TeamUpdate>))]
+[JsonSerializable(typeof(List<TeamUpdatesByTeamEntry>))]
 // Arena Tournaments API types
 [JsonSerializable(typeof(ArenaTournamentList))]
 [JsonSerializable(typeof(ArenaTournamentSummary))]

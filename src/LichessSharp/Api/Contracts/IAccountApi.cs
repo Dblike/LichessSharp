@@ -50,12 +50,17 @@ public interface IAccountApi
 
     /// <summary>
     ///     Get the timeline of the authenticated user.
-    ///     Requires OAuth.
     /// </summary>
+    /// <remarks>
+    ///     Removed from the Lichess API in v2.0.174: upstream dropped <c>GET /api/timeline</c> as unused, and no OAuth
+    ///     scope grants access to it, so calls with an access token fail with 401 Unauthorized.
+    /// </remarks>
     /// <param name="nb">Maximum number of entries to return (default 15, max 30).</param>
     /// <param name="since">Only return entries after this timestamp.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The user's timeline.</returns>
+    [Obsolete(
+        "Removed from the Lichess API in v2.0.174; no OAuth scope grants access to GET /api/timeline, so calls with an access token fail with 401. This method will be removed in a future release.")]
     Task<Timeline> GetTimelineAsync(int? nb = null, DateTimeOffset? since = null,
         CancellationToken cancellationToken = default);
 }

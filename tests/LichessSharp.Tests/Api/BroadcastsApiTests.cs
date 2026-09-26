@@ -815,6 +815,63 @@ public class BroadcastsApiTests
     }
 
     [Fact]
+    public async Task StreamTourPgnAsync_CallsCorrectEndpoint()
+    {
+        // Arrange
+        const string tourId = "n1pPI5Q0";
+        const string expectedPgn = "[Event \"Olymp 2026 Open\"]\n1. e4 e5 *";
+        _httpClientMock
+            .Setup(x => x.GetStringWithAcceptAsync($"/api/stream/broadcast/tour/{tourId}.pgn",
+                "application/x-chess-pgn", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedPgn);
+
+        // Act
+        var result = new List<string>();
+        await foreach (var pgn in _broadcastsApi.StreamTourPgnAsync(tourId)) result.Add(pgn);
+
+        // Assert
+        result.Should().HaveCount(1);
+        result[0].Should().Be(expectedPgn);
+    }
+
+    [Fact]
+    public async Task StreamTourPgnAsync_WithClocksAndComments_IncludesQueryParams()
+    {
+        // Arrange
+        const string tourId = "n1pPI5Q0";
+        _httpClientMock
+            .Setup(x => x.GetStringWithAcceptAsync(
+                It.Is<string>(s => s.StartsWith($"/api/stream/broadcast/tour/{tourId}.pgn?") &&
+                                   s.Contains("clocks=false") && s.Contains("comments=true")),
+                "application/x-chess-pgn", It.IsAny<CancellationToken>()))
+            .ReturnsAsync("[Event \"Test\"]");
+
+        // Act
+        var result = new List<string>();
+        await foreach (var pgn in _broadcastsApi.StreamTourPgnAsync(tourId, clocks: false, comments: true))
+            result.Add(pgn);
+
+        // Assert
+        result.Should().HaveCount(1);
+        _httpClientMock.Verify(
+            x => x.GetStringWithAcceptAsync(
+                It.Is<string>(s => s.Contains("clocks=false") && s.Contains("comments=true")),
+                "application/x-chess-pgn", It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task StreamTourPgnAsync_WithNullTourId_ThrowsArgumentException()
+    {
+        // Act & Assert
+        await Assert.ThrowsAnyAsync<ArgumentException>(async () =>
+        {
+            await foreach (var _ in _broadcastsApi.StreamTourPgnAsync(null!))
+            {
+            }
+        });
+    }
+
+    [Fact]
     public async Task GetTopBroadcastsAsync_WithCancellationToken_PassesToken()
     {
         // Arrange

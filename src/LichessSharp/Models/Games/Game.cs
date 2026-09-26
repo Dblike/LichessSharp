@@ -245,10 +245,20 @@ public class GamePlayer
     public int? RatingDiff { get; init; }
 
     /// <summary>
-    ///     AI level if playing against AI.
+    ///     Stockfish level (1-8) when this side is played by the AI. Null for human players.
     /// </summary>
+    /// <remarks>
+    ///     Since Lichess API v2.0.174 the spec models AI sides as a separate <c>GamePlayerAi</c> shape
+    ///     (<c>aiLevel</c> and <c>analysis</c> only, no <c>user</c> or <c>rating</c>). This class covers both shapes.
+    /// </remarks>
     [JsonPropertyName("aiLevel")]
     public int? AiLevel { get; init; }
+
+    /// <summary>
+    ///     Whether the player berserked. Only present in Arena tournament games.
+    /// </summary>
+    [JsonPropertyName("berserk")]
+    public bool? Berserk { get; init; }
 
     /// <summary>
     ///     Whether the player offered a draw.

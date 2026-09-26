@@ -200,6 +200,20 @@ public interface IBroadcastsApi
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    ///     Stream all ongoing (and recently finished) rounds of a broadcast tournament as PGN.
+    ///     Returns a new PGN every time a game is updated in real-time, and when games are added to a round.
+    ///     This is the best way to follow an ongoing broadcast tournament across all of its rounds;
+    ///     to follow a single round use <see cref="StreamRoundPgnAsync" />.
+    /// </summary>
+    /// <param name="broadcastTourId">The broadcast tournament ID (8 characters).</param>
+    /// <param name="clocks">Include clock comments in PGN moves. Default: true.</param>
+    /// <param name="comments">Include analysis comments in PGN moves. Default: true.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Async enumerable of PGN strings.</returns>
+    IAsyncEnumerable<string> StreamTourPgnAsync(string broadcastTourId, bool? clocks = null, bool? comments = null,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     ///     Get the list of players of a broadcast tournament, if available.
     /// </summary>
     /// <param name="tournamentId">The broadcast tournament ID.</param>
@@ -502,16 +516,16 @@ public class BroadcastRoundInfo
     public required string Slug { get; init; }
 
     /// <summary>
-    ///     Creation timestamp (Unix milliseconds).
+    ///     Creation timestamp (Unix milliseconds). Optional since Lichess API v2.0.174.
     /// </summary>
     [JsonPropertyName("createdAt")]
-    public long CreatedAt { get; init; }
+    public long? CreatedAt { get; init; }
 
     /// <summary>
-    ///     Whether the round is used for rating calculations.
+    ///     Whether the round is used for rating calculations. Optional since Lichess API v2.0.174.
     /// </summary>
     [JsonPropertyName("rated")]
-    public bool Rated { get; init; }
+    public bool? Rated { get; init; }
 
     /// <summary>
     ///     Whether the round is currently ongoing.
@@ -552,6 +566,7 @@ public class BroadcastRoundInfo
     /// <summary>
     ///     Broadcast delay in seconds.
     /// </summary>
+    [Obsolete("Removed from the BroadcastRoundInfo response in Lichess API v2.0.174. This property is always null.")]
     [JsonPropertyName("delay")]
     public long? Delay { get; init; }
 }
