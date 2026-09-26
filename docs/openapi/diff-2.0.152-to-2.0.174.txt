@@ -1,0 +1,74 @@
+Loading specs...
+
+=============================================
+  API Spec Diff: v2.0.152 -> v2.0.174
+=============================================
+
+NEW ENDPOINTS (4):
+  GET    /api/stream/broadcast/tour/{broadcastTourId}.pgn [Broadcasts]
+         Stream ongoing broadcast rounds of a tournament as PGN
+  POST   /bookmark/{gameId}                            [Games]
+         Bookmark a game
+  GET    /team/updates                                 [Teams]
+         Get updates from your teams
+  GET    /team/updates/{teamId}                        [Teams]
+         Get updates from one of your teams
+
+REMOVED ENDPOINTS (1):
+  GET    /api/timeline                                 [Account] [IMPLEMENTED]
+
+CHANGED ENDPOINTS (1):
+  POST   /team/{teamId}/pm-all                         [Teams] [IMPLEMENTED: Teams.MessageAllMembersAsync]
+         summary changed
+
+NEW SCHEMAS (8):
+  BroadcastPgn
+  GamePlayerAi (aiLevel, analysis)
+  LightTeam (flair, id, name)
+  TeamUpdate (msg, seen)
+  TeamUpdates (byTeam, updates)
+  TeamUpdatesByTeam
+  TeamUpdatesOfTeam (byTeam, subscribed, team, updates)
+  TeamUpdatesPager (currentPage, currentPageResults, maxPerPage, nbPages, nbResults, ...)
+
+REMOVED SCHEMAS (15):
+  Timeline
+  TimelineEntryBlogPost
+  TimelineEntryFollow
+  TimelineEntryForumPost
+  TimelineEntryGameEnd
+  TimelineEntryPlanRenew
+  TimelineEntryPlanStart
+  TimelineEntrySimul
+  TimelineEntryStreamStart
+  TimelineEntryStudyLike
+  TimelineEntryTeamCreate
+  TimelineEntryTeamJoin
+  TimelineEntryTourJoin
+  TimelineEntryUblogPost
+  TimelineEntryUblogPostLike
+
+MODIFIED SCHEMAS (7):
+  BroadcastRoundInfo
+    - delay
+    required-: createdAt, rated
+  BulkPairing
+    ~ startClocksAt: integer -> integer|null
+  GamePlayers
+    ~ black: ref:GamePlayerUser -> ref:GamePlayerAi|ref:GamePlayerUser
+    ~ white: ref:GamePlayerUser -> ref:GamePlayerAi|ref:GamePlayerUser
+  GamePlayerUser
+    + berserk (boolean)
+    - aiLevel
+  SpectatorGameChat
+    + lines (array)
+    required+: lines
+  StudyImportPgnChapters
+    + error (null|string)
+  UserPreferences
+    - dark
+    - transp
+
+=============================================
+  Summary: 6 endpoint changes, 30 schema changes
+=============================================
