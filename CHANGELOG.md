@@ -5,10 +5,18 @@ All notable changes to LichessSharp will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.0.0] - 2026-09-26
+
+Catches the library up with Lichess API v2.0.174 (from v2.0.130, via the previously unreleased v2.0.152 work). Major version because several response types changed shape.
 
 ### Added
 
+- **OpenAPI spec updated to v2.0.174** (from v2.0.152; snapshots and diff reports in `docs/openapi/`)
+- **`ITeamsApi.GetUpdatesAsync` / `ITeamsApi.GetTeamUpdatesAsync`** — new methods for `GET /team/updates` and `GET /team/updates/{teamId}` (require `team:read`): paginated updates posted by the leaders of teams you have joined, plus a per-team unread summary. New models `TeamUpdates`, `TeamUpdatesOfTeam`, `TeamUpdatesPager`, `TeamUpdate`, `TeamUpdateMessage`, `TeamUpdatesByTeamEntry` (namespace `LichessSharp.Models.Teams`) and `LightTeam` (`LichessSharp.Models.Common`).
+- **`IGamesApi.BookmarkAsync`** — new method for `POST /bookmark/{gameId}` (requires `preference:write`): toggles a game bookmark, or sets it explicitly via the optional `bookmarked` parameter.
+- **`IBroadcastsApi.StreamTourPgnAsync`** — new method for `GET /api/stream/broadcast/tour/{broadcastTourId}.pgn`, streaming all ongoing rounds of a broadcast tournament as PGN (verified live: 200 `application/x-chess-pgn` for a real tournament, 404 for an unknown id). Same single-PGN streaming limitation as `StreamRoundPgnAsync`.
+- **`GamePlayer.Berserk`** — whether the player berserked (Arena games only), new in v2.0.174.
+- **`StudyImportResult.Error`** — error message returned by `ImportPgnAsync` when some games could not be imported, new in v2.0.174.
 - **OpenAPI spec updated to v2.0.152** (from v2.0.130)
 - **`GameJson.ArenaTour` / `GameJson.SwissTour`** — new tournament-reference objects (`GameTournamentRef`, with `Id` and, for arenas, `Name`). The Lichess API now returns these objects for tournament games instead of the former `tournament`/`swiss` ID strings.
 - **`BroadcastWithFullGroup` and `BroadcastPhoto` models** — the get-tournament endpoint now returns full group details and player photos (keyed by FIDE ID).
@@ -21,6 +29,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **BREAKING: `BroadcastRoundInfo.CreatedAt` is now `long?` and `BroadcastRoundInfo.Rated` is now `bool?`** (were `long` / `bool`). Both became optional in the spec in v2.0.174; a missing value now reads as `null` instead of `0` / `false`.
+- **`ITeamsApi.MessageAllMembersAsync`** — `POST /team/{teamId}/pm-all` is now documented by Lichess as "Send a team update" (requires the leader "Updates" permission); the messages it posts are what `GetUpdatesAsync` returns. Signature and behavior unchanged.
+- **`GamePlayer`** — documented as covering both spec shapes for a side: `GamePlayerUser` (human) and the new `GamePlayerAi` (`aiLevel` + `analysis`, no `user`/`rating`).
+- **Microsoft.SourceLink.GitHub 10.0.102 → 10.0.401** (build-time only; drops the transitive Microsoft.Build.Tasks.Git 10.0.102 flagged by NU1902).
 - **BREAKING: `IBroadcastsApi.GetTournamentAsync` now returns `BroadcastWithFullGroup`** (was `BroadcastWithRounds`). As of Lichess API v2.0.152 this endpoint's response includes the full `BroadcastGroup` object and player photos, so it maps to a distinct type. The common `Tour` and `Rounds` members are unchanged.
 - **BREAKING: `BroadcastWithRounds.Group` is now `string?`** (was `BroadcastGroup?`). The streaming (`StreamOfficialBroadcastsAsync`) and create endpoints now return the group as a plain name string.
 - **BREAKING: `IBroadcastsApi.UpdateTournamentAsync` now returns `Task<bool>`** (was `Task<BroadcastWithRounds>`). The `POST /broadcast/{id}/edit` endpoint returns only an acknowledgement (`{"ok":true}`), not the tournament — the previous return type would fail to deserialize. Read back with `GetTournamentAsync` if you need the updated tournament.
@@ -28,11 +40,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Deprecated
 
+- **`IAccountApi.GetTimelineAsync`** — `GET /api/timeline` was removed from the Lichess API in v2.0.174 (upstream: unused, and no OAuth scope grants access to it, so calls with an access token fail with 401). Marked `[Obsolete]` and dropped from `ImplementedEndpoints`; will be removed in a future release together with the `Timeline` models.
+- **`UserPreferences.Dark` and `UserPreferences.TransparentBackground`** — removed from the Lichess API in v2.0.174 and always `null` now. Marked `[Obsolete]`.
+- **`BroadcastRoundInfo.Delay`** — removed from the round response in v2.0.174 and always `null` now. Marked `[Obsolete]`. (The `delay` option on round create/update forms is unaffected.)
 - **`GameJson.Tournament` and `GameJson.Swiss`** — removed from the Lichess API in v2.0.152 and always `null` now. Use `ArenaTour.Id` / `SwissTour.Id` instead. Marked `[Obsolete]`; will be removed in a future release.
 
 ### Fixed
 
-- **`GetSpectatorChatAsync` was non-functional and now works.** It targeted `GET /game/{gameId}/chat`, which returns 404 (no redirect); the endpoint is `GET /api/game/{gameId}/chat`. It also deserializes the actual `{ "lines": [...] }` response object (the OpenAPI spec incorrectly declares a bare array). The public signature (`Task<IReadOnlyList<ChatMessage>>`) is unchanged.
+- **`GetSpectatorChatAsync` was non-functional and now works.** It targeted `GET /game/{gameId}/chat`, which returns 404 (no redirect); the endpoint is `GET /api/game/{gameId}/chat`. It also deserializes the actual `{ "lines": [...] }` response object (the OpenAPI spec declared a bare array until v2.0.174, which now matches the real response). The public signature (`Task<IReadOnlyList<ChatMessage>>`) is unchanged.
 
 ## [1.0.0] - 2026-03-23
 
@@ -231,6 +246,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Targets .NET 10.0
 - Uses `System.Text.Json` with AOT preparation (reflection enabled by default)
 
+[2.0.0]: https://github.com/Dblike/LichessSharp/releases/tag/v2.0.0
 [1.0.0]: https://github.com/Dblike/LichessSharp/releases/tag/v1.0.0
 [0.5.1]: https://github.com/Dblike/LichessSharp/releases/tag/v0.5.1
 [0.5.0]: https://github.com/Dblike/LichessSharp/releases/tag/v0.5.0
